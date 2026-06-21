@@ -4,7 +4,11 @@ import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.PhoenixConfig;
 import com.froggylord.constellation.core.BaseConstellation;
 import com.froggylord.constellation.core.InitContext;
+import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class PhoenixQol extends BaseConstellation {
 
@@ -40,6 +44,22 @@ public class PhoenixQol extends BaseConstellation {
         if (cfg.fullbright) {
             Minecraft mc = Minecraft.getInstance();
             mc.options.gamma().set(15.0);
+        }
+        if (cfg.etherwarpOverlay) {
+            ConstellationClient.world().register(wctx -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.player == null || mc.hitResult == null) return;
+                if (mc.hitResult.getType() != HitResult.Type.BLOCK) return;
+                var stack = mc.player.getMainHandItem();
+                if (stack.isEmpty()) return;
+                String name = stack.getItem().getDescriptionId();
+                if (!name.contains("aspect_of_the_end") && !name.contains("aspect_of_the_void")
+                    && !name.contains("ender_pearl"))
+                    return;
+                var hit = (BlockHitResult) mc.hitResult;
+                AABB box = new AABB(hit.getBlockPos());
+                wctx.outline(box, 0xFFAA00FF, true);
+            });
         }
         if (cfg.hidePlayersInDungeon) {
             ConstellationClient.tick().every(1, "phoenix-hideplayers", () -> {
