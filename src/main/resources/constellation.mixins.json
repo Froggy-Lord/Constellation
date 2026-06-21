@@ -3,7 +3,6 @@
     "package": "com.froggylord.constellation.mixin",
     "compatibilityLevel": "JAVA_25",
     "client": [
-        "BossHealthOverlayAccessor",
         "ClientPacketListenerMixin",
         "EffectsInInventoryMixin",
         "GameRendererMixin",
