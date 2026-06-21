@@ -25,5 +25,22 @@ public class PhoenixQol extends BaseConstellation {
                 }
             });
         }
+        // hide fire overlay — just keep extinguishing the fire ticks each frame
+        if (cfg.hideFireOverlay) {
+            ConstellationClient.tick().every(1, "phoenix-fire", () -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.player != null) mc.player.setRemainingFireTicks(0);
+            });
+        }
+        if (cfg.disableVignette) {
+            // vignette is a client option — set once per init and leave it off
+            Minecraft mc = Minecraft.getInstance();
+            mc.options.vignette().set(false);
+        }
+        if (cfg.disableFog) {
+            // fog is toggled via the client option
+            Minecraft mc = Minecraft.getInstance();
+            mc.options.fovEffectScale().set(0.0);
+        }
     }
 }
