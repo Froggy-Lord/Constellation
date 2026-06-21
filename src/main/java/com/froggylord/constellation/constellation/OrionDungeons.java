@@ -103,13 +103,15 @@ public class OrionDungeons extends BaseConstellation {
                 return 1;
             }));
 
-        // force a room scan right now (bypasses the inDungeons gate for testing)
+        // force a room scan right now with full diagnostics
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomscan")
             .executes(ctx -> {
-                RoomMatch.update();
+                String dbg = RoomMatch.debugScan();
                 var mc = Minecraft.getInstance();
-                if (mc.player != null) mc.player.sendSystemMessage(
-                    Component.literal("§e[Orion]§r forced scan → room: '" + RoomMatch.currentRoom() + "'"));
+                if (mc.player != null) {
+                    mc.player.sendSystemMessage(Component.literal("§e[Orion scan]§r " + dbg));
+                    mc.player.sendSystemMessage(Component.literal("§7→ room: '" + RoomMatch.currentRoom() + "'"));
+                }
                 return 1;
             }));
     }
