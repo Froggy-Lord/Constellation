@@ -61,5 +61,3 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean triggerSafeMode = false; // only leader/friends can trigger in safe mode
     public List<String> triggerWhitelist = new ArrayList<>();
 }
-echo "128"
-rtk gain
