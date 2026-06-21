@@ -193,6 +193,9 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("craft"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("skills")
             .executes(ctx -> { sendCmd("skills"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("profile")
+            .executes(ctx -> { var mc = Minecraft.getInstance(); if (mc.player != null) mc.player.connection.sendCommand("pv " + mc.player.getName().getString()); return 1; }))
+            .executes(ctx -> { sendCmd("skills"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ec")
             .executes(ctx -> { sendCmd("enderchest"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
