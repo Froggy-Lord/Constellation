@@ -8,6 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -87,35 +89,46 @@ public class WorldRenderer {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        Vec3 cam = context.levelState().cameraRenderState.pos;
+        var camState = context.levelState().cameraRenderState;
+        Vec3 cam = camState.pos;
         Ctx ctx = new Ctx(cam);
         for (Consumer<Ctx> r : featureRenderers) {
             try { r.accept(ctx); }
             catch (Exception ignored) { /* one bad feature shouldn't drop the frame */ }
         }
-        if (ctx.boxes.isEmpty() && ctx.lines.isEmpty()) return;
+        if (ctx.boxes.isEmpty() && ctx.lines.isEmpty() && ctx.labels.isEmpty()) return;
 
         PoseStack pose = context.poseStack();
         pose.pushPose();
-        pose.translate(-cam.x, -cam.y, -cam.z); // hand the collector plain world coords
+        pose.translate(-cam.x, -cam.y, -cam.z);
         SubmitNodeCollector collector = context.submitNodeCollector();
 
-        // filled faces first, then the wire edges on top
-        for (BoxPrim b : ctx.boxes) {
-            if (b.filled()) submitFilled(collector, pose, b.box(), b.colour());
+        // depth-tested layer first (combat ESP), then through-walls (waypoints/routes)
+        for (boolean tw : new boolean[]{false, true}) {
+            for (BoxPrim b : ctx.boxes) {
+                if (b.throughWalls() != tw) continue;
+                if (b.filled()) submitFilled(collector, pose, b.box(), b.colour());
+                else submitBoxLines(collector, pose, b.box(), b.colour());
+            }
+            for (LinePrim l : ctx.lines) {
+                if (l.throughWalls() != tw) continue;
+                submitLine(collector, pose, l.from(), l.to(), l.colour());
+            }
         }
-        for (BoxPrim b : ctx.boxes) {
-            if (!b.filled()) submitBoxLines(collector, pose, b.box(), b.colour());
-        }
-        for (LinePrim l : ctx.lines) {
-            submitLine(collector, pose, l.from(), l.to(), l.colour());
+
+        // world-space labels via the collector's native name-tag submitter (supports see-through)
+        for (LabelPrim l : ctx.labels) {
+            Component c = Component.literal(l.text());
+            int bg = ((l.colour() >>> 24) << 24); // alpha → background
+            collector.submitNameTag(pose, l.pos(), LightCoordsUtil.FULL_BRIGHT, c, l.throughWalls(), bg, camState);
         }
 
         pose.popPose();
     }
 
-    // TODO: through-walls (no-depth) render types + world-space text labels are a follow-up.
-    // depth-tested vanilla types for now — secrets still show whenever they're in view.
+    // no-depth (through-walls) render types need custom shader pipelines — deferred.
+    // both paths use the vanilla depth-tested types for now; the throughWalls flag is plumbed
+    // so switching to no-depth pipelines later is a one-line change per submit method.
     private static RenderType filledType() { return RenderTypes.debugFilledBox(); }
     private static RenderType lineType() { return RenderTypes.lines(); }
 
