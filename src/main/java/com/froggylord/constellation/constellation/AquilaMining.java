@@ -59,22 +59,24 @@ public class AquilaMining extends BaseConstellation {
             || a == SkyblockArea.GLACITE_TUNNELS || a == SkyblockArea.GLACITE_MINESHAFT;
     }
 
-    /** Mithril / Gemstone powder totals read off the sidebar. */
+    /** All powder types from the sidebar. */
     private static String powderLine() {
-        String mithril = null, gemstone = null;
+        String mithril = null, gemstone = null, glacite = null;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = POWDER.matcher(line);
             if (!m.find()) continue;
             switch (m.group(1)) {
                 case "Mithril" -> mithril = m.group(2);
                 case "Gemstone" -> gemstone = m.group(2);
+                case "Glacite" -> glacite = m.group(2);
                 default -> { }
             }
         }
-        if (mithril == null && gemstone == null) return null;
+        if (mithril == null && gemstone == null && glacite == null) return null;
         StringBuilder sb = new StringBuilder();
         if (mithril != null) sb.append("§2").append(mithril).append("m");
         if (gemstone != null) sb.append(sb.length() > 0 ? "  " : "").append("§d").append(gemstone).append("g");
+        if (glacite != null) sb.append(sb.length() > 0 ? "  " : "").append("§b").append(glacite).append("g");
         return sb.toString();
     }
 
