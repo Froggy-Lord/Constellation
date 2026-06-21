@@ -29,6 +29,7 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern POWDER = Pattern.compile("(Mithril|Gemstone|Glacite) Powder:?\\s*([\\d,]+)");
     private static final Pattern COMMISSION = Pattern.compile("(?<name>[A-Za-z ]+?): (?<val>\\d+(?:\\.\\d+)?%|DONE)");
     private static final Pattern FORGE = Pattern.compile("(?<slot>\\d+)\\. (?<item>.+): (?<time>\\d+h|\\d+m|\\d+s|Ready!)");
+    private static final Pattern COMPASS = Pattern.compile("Wishing Compass:?\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)");
 
     private AquilaConfig cfg;
 
@@ -54,6 +55,9 @@ public class AquilaMining extends BaseConstellation {
             hud.register(new HudWidget("aquila-forge", "Forge",
                 () -> inMining() ? forgeLine() : null,
                 HudPosition.of(2, 80), cfg.commissionHud));
+            hud.register(new HudWidget("aquila-compass", "Compass",
+                () -> inMining() ? compassLine() : null,
+                HudPosition.of(2, 90), cfg.commissionHud));
         }
     }
 
@@ -118,5 +122,13 @@ public class AquilaMining extends BaseConstellation {
             sb.append("§f").append(m.group("item").trim()).append(" §7").append(time);
         }
         return sb.length() == 0 ? null : "§6" + sb.toString();
+    }
+
+    private static String compassLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = COMPASS.matcher(line);
+            if (m.find()) return "§6🧭 " + m.group(1) + " " + m.group(2) + " " + m.group(3);
+        }
+        return null;
     }
 }
