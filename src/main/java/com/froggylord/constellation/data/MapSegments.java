@@ -35,9 +35,20 @@ public class MapSegments {
     private static boolean calibrated = false;
     private static int mapEntranceX, mapEntranceZ;        // map pixel of entrance top-left
     private static int physEntranceX, physEntranceZ;      // world NW corner of entrance room
+    private static int mapStep = 0;                        // pixels per room cell (size + gap)
 
     /** Reset on dungeon enter/leave so a new run re-calibrates. */
     public static void reset() { calibrated = false; }
+
+    /** Map pixel (0-128) → approximate world x,z, using the cached Mort anchor. Null if not ready. */
+    public static int[] worldXZFromMapPixel(int mpx, int mpz) {
+        if (!calibrated || mapStep <= 0) return null;
+        double cellsX = (mpx - mapEntranceX) / (double) mapStep;
+        double cellsZ = (mpz - mapEntranceZ) / (double) mapStep;
+        int x = (int) Math.round(physEntranceX + cellsX * 32 + 15); // +15 ≈ room centre
+        int z = (int) Math.round(physEntranceZ + cellsZ * 32 + 15);
+        return new int[]{ x, z };
+    }
 
     /** Returns the set of physical NW-corner cell keys for the room the player is in, or empty. */
     public static Set<Long> footprint() {
@@ -80,6 +91,7 @@ public class MapSegments {
         // otherwise anchor on the player's own map cell ↔ physical cell this scan.
         int anchorMapX, anchorMapZ, anchorPhysX, anchorPhysZ;
         String anchorSrc;
+        mapStep = step;
         tryCalibrateMort(mc, entrance[0], entrance[1]);
         if (calibrated) {
             anchorMapX = mapEntranceX; anchorMapZ = mapEntranceZ;

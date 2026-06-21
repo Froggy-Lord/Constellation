@@ -86,57 +86,91 @@ public class DungeonMap {
         }
     }
 
-    /** Player markers: an arrow facing your direction for yourself, dots for others. */
+    private static final net.minecraft.resources.Identifier ARROW_TEX =
+        net.minecraft.resources.Identifier.fromNamespaceAndPath("minecraft", "textures/map/decorations/player.png");
+    private static final com.mojang.blaze3d.pipeline.RenderPipeline VANILLA_TEX_PIPE =
+        net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED;
+
+    /** Player markers: the vanilla arrow for yourself, teammate heads for everyone else. */
     private static void drawMarkers(GuiGraphicsExtractor g, int ox, int oy, MapItemSavedData data) {
         var decos = ((MapDataAccessor) (Object) data).constellation$decorations();
         if (decos == null) return;
         Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        // self = the decoration mapped nearest to the player's real position (robust even when
+        // several markers share a type). fall back to FRAME/PLAYER type if uncalibrated.
+        Object self = pickSelf(decos.values(), mc);
 
         for (var deco : decos.values()) {
-            int mx = clamp((deco.x() / 2) + 64);
-            int my = clamp((deco.y() / 2) + 64);
-            int sx = ox + (mx * screenSize()) / MAP;
-            int sy = oy + (my * screenSize()) / MAP;
+            int mpx = (deco.x() / 2) + 64, mpz = (deco.y() / 2) + 64;
+            int sx = ox + (clamp(mpx) * screenSize()) / MAP;
+            int sy = oy + (clamp(mpz) * screenSize()) / MAP;
 
-            // the player's own marker is the PLAYER/FRAME decoration TYPE (usually unnamed)
-            var type = deco.type();
-            boolean isSelf = type.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.PLAYER)
-                          || type.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.FRAME);
-
-            if (isSelf && mc.player != null) {
+            if (deco == self) {
                 drawArrow(g, sx, sy, mc.player.getYRot());
             } else {
-                // teammate marker — small dot
-                g.fill(sx - 1, sy - 1, sx + 2, sy + 2, 0xFF000000);
-                g.fill(sx, sy, sx + 1, sy + 1, 0xAAFFFFFF);
+                drawHead(g, sx, sy, skinForDeco(mc, mpx, mpz));
             }
         }
     }
 
-    /** Vanilla-style white player arrow — drawn in local space and rotated by the GPU pose,
-     *  so it stays crisp at any angle (the old scanline triangle glitched as it rotated). */
+    private static Object pickSelf(Iterable<? extends net.minecraft.world.level.saveddata.maps.MapDecoration> decos, Minecraft mc) {
+        Object self = null;
+        double best = Double.MAX_VALUE;
+        for (var deco : decos) {
+            int[] w = com.froggylord.constellation.data.MapSegments.worldXZFromMapPixel((deco.x() / 2) + 64, (deco.y() / 2) + 64);
+            if (w == null) continue;
+            double dx = w[0] - mc.player.getX(), dz = w[1] - mc.player.getZ();
+            double d = dx * dx + dz * dz;
+            if (d < best) { best = d; self = deco; }
+        }
+        if (self != null) return self;
+        // uncalibrated fallback: first FRAME, else first decoration
+        for (var deco : decos) {
+            var t = deco.type();
+            if (t.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.FRAME)
+             || t.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.PLAYER)) return deco;
+        }
+        return null;
+    }
+
+    /** Skin of the loaded player nearest this marker's world position; default skin otherwise. */
+    private static net.minecraft.resources.Identifier skinForDeco(Minecraft mc, int mpx, int mpz) {
+        int[] w = com.froggylord.constellation.data.MapSegments.worldXZFromMapPixel(mpx, mpz);
+        if (w != null && mc.level != null) {
+            net.minecraft.client.player.AbstractClientPlayer best = null;
+            double bestD = 22 * 22;
+            for (var p : mc.level.players()) {
+                if (p == mc.player) continue;
+                double dx = p.getX() - w[0], dz = p.getZ() - w[1];
+                double d = dx * dx + dz * dz;
+                if (d < bestD) { bestD = d; best = p; }
+            }
+            if (best != null) return best.getSkin().body().texturePath();
+        }
+        return net.minecraft.client.resources.DefaultPlayerSkin.get(java.util.UUID.nameUUIDFromBytes(
+            new byte[]{ (byte) mpx, (byte) mpz })).body().texturePath();
+    }
+
+    /** A player head (face + hat overlay) drawn upright at a map marker. */
+    private static void drawHead(GuiGraphicsExtractor g, int cx, int cy, net.minecraft.resources.Identifier skin) {
+        int s = Math.max(7, screenSize() / 13);
+        int h = s / 2;
+        g.blit(VANILLA_TEX_PIPE, skin, cx - h, cy - h, 8f, 8f, s, s, 8, 8, 64, 64);   // face
+        g.blit(VANILLA_TEX_PIPE, skin, cx - h, cy - h, 40f, 8f, s, s, 8, 8, 64, 64);  // hat overlay
+    }
+
+    /** The real vanilla map decorations player pointer (8×8 arrow), blitted rotated by the pose
+     *  matrix so it stays crisp at any angle — identical to Hypixel's held-map marker. */
     private static void drawArrow(GuiGraphicsExtractor g, int cx, int cy, float yaw) {
-        int s = Math.max(3, screenSize() / 38);   // arrow size, scales with the map
+        int s = Math.max(5, screenSize() / 27);   // size, scales with map
+        int h = s / 2;
         g.pose().pushMatrix();
         g.pose().translate(cx + 0.5f, cy + 0.5f);
         g.pose().rotate((float) Math.toRadians(yaw + 180)); // MC yaw 0 = south(+z) = down on map
-        // arrow points UP (-y) in local space, drawn as horizontal strips. white head over a
-        // 1px black outline, matching the held-map player marker.
-        for (int row = -s - 1; row <= s + 1; row++) {       // outline pass (1px bigger)
-            int half = triHalf(row, s) + 1;
-            if (half > 0) g.fill(-half, row, half, row + 1, 0xFF000000);
-        }
-        for (int row = -s; row <= s; row++) {               // white fill
-            int half = triHalf(row, s);
-            if (half > 0) g.fill(-half, row, half, row + 1, 0xFFFFFFFF);
-        }
+        g.blit(VANILLA_TEX_PIPE, ARROW_TEX, -h, -h, 0, 0, s, s, 8, 8);
         g.pose().popMatrix();
-    }
-
-    /** Half-width of an upward arrowhead at a local row (tip at -s, base at +s). */
-    private static int triHalf(int row, int s) {
-        if (row < -s || row > s) return 0;
-        return (row + s + 1) / 2; // 0 at the tip, widening to the base
     }
 
     /** Current room name overlaid along the top of the map. */
