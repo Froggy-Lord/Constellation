@@ -20,7 +20,6 @@ import java.util.*;
 public class RoomMatch {
 
     private static final int MIN_MAPPED = 12;
-    private static final int CONFIRMS = 2;
 
     // committed result
     private static String currentRoom = "";
@@ -32,11 +31,6 @@ public class RoomMatch {
     private static boolean fpValid = false;
     private static int cellX = Integer.MIN_VALUE, cellZ = Integer.MIN_VALUE;
     private static int retryTick = 0;
-
-    // confirm streak
-    private static String pendName = null;
-    private static RoomTransform.Direction pendDir = null;
-    private static int pendAnchorX, pendAnchorZ, pendCount = 0;
 
     public static String lastDebug = "no scan yet";
 
@@ -57,7 +51,6 @@ public class RoomMatch {
         if (cx != cellX || cz != cellZ) {
             cellX = cx; cellZ = cz;
             currentRoom = ""; fpValid = false; retryTick = 0;
-            pendName = null; pendDir = null; pendCount = 0;
         }
         if (!currentRoom.isEmpty()) return;
         // retry ~4x/sec until we get it (blocks may not be loaded the instant you walk in)
@@ -127,23 +120,48 @@ public class RoomMatch {
         }
         if (minY == Integer.MAX_VALUE) minY = floorY;
 
-        // 5. eliminate candidates per observed block (scan deep enough for sunken rooms)
+        // 5. elimination loop — remove candidates that don't contain each observed block.
+        // once a single survivor remains with ≥MIN_MAPPED blocks, continue scanning to
+        // double-check it (10 more block confirmations within the SAME scan → commit).
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
+        DungeonData.Candidate survivor = null;
+        RoomTransform.Direction survDir = null;
+        int survAX = 0, survAZ = 0;
+        int[] survFp = null;
+        int doubleChecked = 0;
+        boolean committed = false;
+
         outer:
         for (int dy = -50; dy <= 60; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    // doorway exclusion: skip blocks in the 4-block gaps between rooms.
-                    // doorways are shared blocks that don't belong to either room's skeleton,
-                    // so feeding them into the matcher falsely eliminates candidates.
                     if (inDoorway(wx, y, wz)) continue;
                     byte id = blockId(level, wx, y, wz);
                     if (id == 0) continue;
                     mapped++;
                     if (debug && sample.length() < 40) sample.append(id).append(' ');
+
+                    if (survivor != null) {
+                        // double-check phase: does this block exist in the survivor's fp?
+                        long[] rel = RoomTransform.actualToRelative(survDir, survAX, survAZ, wx, y, wz);
+                        int rx = (int) rel[0], rz = (int) rel[2];
+                        if (rx >= 0 && rx <= maxDim && rz >= 0 && rz <= maxDim) {
+                            int enc = RoomTransform.posId(rx, y - minY, rz, id);
+                            if (Arrays.binarySearch(survFp, enc) >= 0) {
+                                doubleChecked++;
+                                if (doubleChecked >= 10) {
+                                    committed = true;
+                                    break outer;
+                                }
+                            }
+                        }
+                        continue; // don't eliminate anything — we already know the room
+                    }
+
+                    // elimination phase: remove candidates that don't contain this block
                     for (int di = 0; di < dirs.length; di++) {
                         List<DungeonData.Candidate> list = cands.get(di);
                         if (list.isEmpty()) continue;
@@ -155,50 +173,44 @@ public class RoomMatch {
                     }
                     int remaining = cands.stream().mapToInt(List::size).sum();
                     if (remaining == 0) break outer;
-                    if (remaining == 1 && mapped >= MIN_MAPPED) break outer;
+
+                    // found a single survivor? lock it in and switch to double-check
+                    if (remaining == 1 && mapped >= MIN_MAPPED) {
+                        for (int di = 0; di < dirs.length; di++) {
+                            if (cands.get(di).size() == 1) {
+                                survivor = cands.get(di).get(0);
+                                survDir = dirs[di];
+                                survAX = corner[di][0];
+                                survAZ = corner[di][1];
+                                survFp = survivor.fp();
+                                break;
+                            }
+                        }
+                    }
                 }
         }
 
-        // 6. reverse-verify survivors, pick best
-        String best = null; RoomTransform.Direction bestDir = null; double bestScore = 0; int bestAX = 0, bestAZ = 0;
-        for (int di = 0; di < dirs.length; di++) {
-            for (var c : cands.get(di)) {
-                double score = verifyRatio(level, c.fp(), dirs[di], corner[di], minY);
-                if (score > bestScore) {
-                    bestScore = score; best = c.name(); bestDir = dirs[di];
-                    bestAX = corner[di][0]; bestAZ = corner[di][1];
-                }
-            }
+        // 6. single-scan commit: if we locked in a survivor and double-checked ≥10 blocks within
+        //    this scan, commit immediately. no multi-scan streak needed.
+        if (committed && survivor != null) {
+            currentRoom = survivor.name();
+            currentDir = survDir;
+            anchorX = survAX;
+            anchorZ = survAZ;
+            fpMinX = wMinX; fpMinZ = wMinZ;
+            fpMaxX = wMaxX - 31; fpMaxZ = wMaxZ - 31;
+            fpValid = true;
+            ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
         }
 
-        int survivors = cands.stream().mapToInt(List::size).sum();
-        boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= 0.80;
-        // a scan where almost nothing mapped = blocks not loaded this tick, not a real "no match"
-        boolean transientFail = mapped < MIN_MAPPED;
-
+        int survivors = survivor != null ? 1 : cands.stream().mapToInt(List::size).sum();
         if (debug) {
             lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + (width + 1) + "x" + (length + 1)
                 + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §aminY§r=" + minY
-                + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
-                + (mapped == 0 ? " §c[0 blocks mapped - block ids dont match db]§r" : "")
+                + " §asurv§r=" + survivors + " §adbl§r=" + doubleChecked
+                + " §aresult§r=" + (committed ? "§a" + currentRoom : (survivor != null ? "§edouble-checking" : "§cnone"))
+                + (mapped == 0 ? " §c[0 blocks mapped]§r" : "")
                 + " §7ids:[" + sample.toString().trim() + "]";
-        }
-
-        // 7. confirm streak — transient failures (blocks unloaded) don't reset it
-        if (confident && best.equals(pendName) && bestDir == pendDir && bestAX == pendAnchorX && bestAZ == pendAnchorZ) {
-            pendCount++;
-        } else if (confident) {
-            pendName = best; pendDir = bestDir; pendAnchorX = bestAX; pendAnchorZ = bestAZ; pendCount = 1;
-        } else if (!transientFail) {
-            // a real confident-but-different / no-survivor result clears the streak;
-            // a transient "nothing loaded" scan leaves it alone so we don't lose progress
-            pendName = null; pendDir = null; pendCount = 0;
-        }
-
-        if (pendCount >= CONFIRMS) {
-            currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
-            fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
-            ConstellationClient.bus().post(new RoomEnteredEvent(best, bestDir, anchorX, anchorZ));
         }
     }
 
