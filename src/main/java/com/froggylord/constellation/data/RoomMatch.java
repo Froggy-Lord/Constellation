@@ -20,6 +20,12 @@ import java.util.*;
 public class RoomMatch {
 
     private static final int MIN_MAPPED = 12;
+    private static final double VERIFY_MIN = 0.85;
+
+    // pending confirm streak (reduces transient flukes)
+    private static String pendName = null;
+    private static RoomTransform.Direction pendDir = null;
+    private static int pendAnchorX, pendAnchorZ, pendCount = 0;
 
     // committed result
     private static String currentRoom = "";
@@ -51,6 +57,7 @@ public class RoomMatch {
         if (cx != cellX || cz != cellZ) {
             cellX = cx; cellZ = cz;
             currentRoom = ""; fpValid = false; retryTick = 0;
+            pendName = null; pendDir = null; pendCount = 0;
         }
         if (!currentRoom.isEmpty()) return;
         // retry ~4x/sec until we get it (blocks may not be loaded the instant you walk in)
@@ -84,9 +91,8 @@ public class RoomMatch {
             wMinX = Math.min(wMinX, ccx); wMinZ = Math.min(wMinZ, ccz);
             wMaxX = Math.max(wMaxX, ccx); wMaxZ = Math.max(wMaxZ, ccz);
         }
-        wMaxX += 31; wMaxZ += 31;
+        wMaxX += 30; wMaxZ += 30;
         int width = wMaxX - wMinX, length = wMaxZ - wMinZ;
-        int maxDim = Math.max(width, length);
 
         // 3. filter candidates by footprint fit (either rotation), ±2 tolerance
         List<DungeonData.Candidate> pool = new ArrayList<>();
@@ -96,7 +102,7 @@ public class RoomMatch {
             if (fit) pool.add(c);
         }
         if (pool.isEmpty()) {
-            lastDebug = "§cno candidates fit§r " + (width + 1) + "x" + (length + 1) + " (cells=" + cells.size() + ")";
+            lastDebug = "§cno candidates fit§r " + width + "x" + length + " (cells=" + cells.size() + ")";
             return;
         }
 
@@ -107,61 +113,33 @@ public class RoomMatch {
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
         for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 4. foundation Y — go deep enough for sunken rooms (double-stair, etc.)
+        // 4. foundation Y — scan the depth cryptkit uses (-8..+35). the skeleton db is
+        //    floor-normalised and rooms have a 1-3 block foundation below the walkable floor.
         int minY = Integer.MAX_VALUE;
-        for (int dy = -50; dy <= 60; dy++) {
+        for (int dy = -8; dy <= 35; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    if (inDoorway(wx, y, wz)) continue;
                     if (blockId(level, wx, y, wz) != 0 && y < minY) minY = y;
                 }
         }
         if (minY == Integer.MAX_VALUE) minY = floorY;
 
-        // 5. elimination loop — remove candidates that don't contain each observed block.
-        // once a single survivor remains with ≥MIN_MAPPED blocks, continue scanning to
-        // double-check it (10 more block confirmations within the SAME scan → commit).
+        // 5. elimination loop — remove candidates that don't contain each observed block
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
-        DungeonData.Candidate survivor = null;
-        RoomTransform.Direction survDir = null;
-        int survAX = 0, survAZ = 0;
-        int[] survFp = null;
-        int doubleChecked = 0;
-        boolean committed = false;
-
+        int maxDim = Math.max(width, length);
         outer:
-        for (int dy = -50; dy <= 60; dy++) {
+        for (int dy = -8; dy <= 35; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    if (inDoorway(wx, y, wz)) continue;
                     byte id = blockId(level, wx, y, wz);
                     if (id == 0) continue;
                     mapped++;
                     if (debug && sample.length() < 40) sample.append(id).append(' ');
-
-                    if (survivor != null) {
-                        // double-check phase: does this block exist in the survivor's fp?
-                        long[] rel = RoomTransform.actualToRelative(survDir, survAX, survAZ, wx, y, wz);
-                        int rx = (int) rel[0], rz = (int) rel[2];
-                        if (rx >= 0 && rx <= maxDim && rz >= 0 && rz <= maxDim) {
-                            int enc = RoomTransform.posId(rx, y - minY, rz, id);
-                            if (Arrays.binarySearch(survFp, enc) >= 0) {
-                                doubleChecked++;
-                                if (doubleChecked >= 10) {
-                                    committed = true;
-                                    break outer;
-                                }
-                            }
-                        }
-                        continue; // don't eliminate anything — we already know the room
-                    }
-
-                    // elimination phase: remove candidates that don't contain this block
                     for (int di = 0; di < dirs.length; di++) {
                         List<DungeonData.Candidate> list = cands.get(di);
                         if (list.isEmpty()) continue;
@@ -173,44 +151,47 @@ public class RoomMatch {
                     }
                     int remaining = cands.stream().mapToInt(List::size).sum();
                     if (remaining == 0) break outer;
-
-                    // found a single survivor? lock it in and switch to double-check
-                    if (remaining == 1 && mapped >= MIN_MAPPED) {
-                        for (int di = 0; di < dirs.length; di++) {
-                            if (cands.get(di).size() == 1) {
-                                survivor = cands.get(di).get(0);
-                                survDir = dirs[di];
-                                survAX = corner[di][0];
-                                survAZ = corner[di][1];
-                                survFp = survivor.fp();
-                                break;
-                            }
-                        }
-                    }
+                    if (remaining == 1 && mapped >= MIN_MAPPED) break outer;
                 }
         }
 
-        // 6. single-scan commit: if we locked in a survivor and double-checked ≥10 blocks within
-        //    this scan, commit immediately. no multi-scan streak needed.
-        if (committed && survivor != null) {
-            currentRoom = survivor.name();
-            currentDir = survDir;
-            anchorX = survAX;
-            anchorZ = survAZ;
-            fpMinX = wMinX; fpMinZ = wMinZ;
-            fpMaxX = wMaxX - 31; fpMaxZ = wMaxZ - 31;
-            fpValid = true;
-            ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
+        // 6. reverse-verify every survivor: fingerprint-against-world eliminates supersets
+        String best = null; RoomTransform.Direction bestDir = null;
+        double bestScore = 0; int bestAX = 0, bestAZ = 0;
+        for (int di = 0; di < dirs.length; di++) {
+            for (var c : cands.get(di)) {
+                double score = verifyRatio(level, c.fp(), dirs[di], corner[di], minY);
+                if (score > bestScore) {
+                    bestScore = score; best = c.name(); bestDir = dirs[di];
+                    bestAX = corner[di][0]; bestAZ = corner[di][1];
+                }
+            }
         }
 
-        int survivors = survivor != null ? 1 : cands.stream().mapToInt(List::size).sum();
+        int survivors = cands.stream().mapToInt(List::size).sum();
+        boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= VERIFY_MIN;
+
         if (debug) {
-            lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + (width + 1) + "x" + (length + 1)
+            lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + width + "x" + length
                 + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §aminY§r=" + minY
-                + " §asurv§r=" + survivors + " §adbl§r=" + doubleChecked
-                + " §aresult§r=" + (committed ? "§a" + currentRoom : (survivor != null ? "§edouble-checking" : "§cnone"))
+                + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
                 + (mapped == 0 ? " §c[0 blocks mapped]§r" : "")
                 + " §7ids:[" + sample.toString().trim() + "]";
+        }
+
+        // 7. multi-scan confirm streak (cryptkit-style, filters transient flukes)
+        if (confident && best.equals(pendName) && bestDir == pendDir && bestAX == pendAnchorX && bestAZ == pendAnchorZ) {
+            pendCount++;
+        } else if (confident) {
+            pendName = best; pendDir = bestDir; pendAnchorX = bestAX; pendAnchorZ = bestAZ; pendCount = 1;
+        } else {
+            pendName = null; pendDir = null; pendCount = 0;
+        }
+
+        if (pendCount >= 2) {
+            currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
+            fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
+            ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
         }
     }
 
@@ -284,7 +265,7 @@ public class RoomMatch {
         }
         // at least 35% open = same room. doorway walls are ~3 wide, multi-tile
         // passages 10+. this threshold catches both without merging different rooms.
-        return present * 3 >= samples;
+        return present * 2 >= samples;
     }
 
     private static boolean openColumn(Level level, int x, int z, int floorY) {
@@ -297,14 +278,6 @@ public class RoomMatch {
             if (level.getBlockState(m).isAir()) return true;
         }
         return false;
-    }
-
-    /** Doorway zones: the 4-block gap between rooms (shared blocks, not in any skeleton). */
-    private static boolean inDoorway(int x, int y, int z) {
-        if (y < 66 || y > 73) return false;
-        int lx = Math.floorMod(x, 32);
-        int lz = Math.floorMod(z, 32);
-        return (lx <= 3 || lx >= 28) || (lz <= 3 || lz >= 28);
     }
 
     private static byte blockId(Level level, int x, int y, int z) {
