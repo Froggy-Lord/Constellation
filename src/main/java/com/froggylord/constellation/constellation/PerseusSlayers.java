@@ -22,6 +22,7 @@ public class PerseusSlayers extends BaseConstellation {
     @Override public String description() { return "Slayers — XP bar, boss timer (TBD)"; }
 
     private static final Pattern SLAYER_XP = Pattern.compile("Slayer XP:?\\s*([\\d,]+)");
+    private static final Pattern RNG = Pattern.compile("RNG Meter.*?([\\d.]+)%");
 
     private PerseusConfig cfg;
 
@@ -37,6 +38,9 @@ public class PerseusSlayers extends BaseConstellation {
             hud.register(new HudWidget("perseus-xp", "SlayerXP",
                 () -> ConstellationClient.loc().onHypixel() ? xpLine() : null,
                 HudPosition.of(50, 78), cfg.xpBar));
+            hud.register(new HudWidget("perseus-rng", "RNG",
+                () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,
+                HudPosition.of(50, 86), cfg.xpBar));
         }
     }
 
@@ -44,6 +48,14 @@ public class PerseusSlayers extends BaseConstellation {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = SLAYER_XP.matcher(line);
             if (m.find()) return "§d" + compact(parse(m.group(1))) + " XP";
+        }
+        return null;
+    }
+
+    private static String rngLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = RNG.matcher(line);
+            if (m.find()) return "§eRNG " + m.group(1) + "%";
         }
         return null;
     }
