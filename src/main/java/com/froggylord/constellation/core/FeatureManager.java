@@ -19,6 +19,7 @@ public class FeatureManager {
         register(new OrionDungeons());
         register(new PhoenixQol());
         register(new AquilaMining());
+        register(new LyraEconomy());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {
