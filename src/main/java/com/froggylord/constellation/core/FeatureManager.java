@@ -23,6 +23,9 @@ public class FeatureManager {
         register(new CygnusEvents());
         register(new PerseusSlayers());
         register(new HerculesFarming());
+        register(new DracoCrimson());
+        register(new HydraFishing());
+        register(new AndromedaRift());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {

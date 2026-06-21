@@ -21,7 +21,10 @@ public class ConstellationConfig {
     @SerializedName("lyra")       public LyraConfig lyra = new LyraConfig();
     @SerializedName("cygnus")     public CygnusConfig cygnus = new CygnusConfig();
     @SerializedName("hercules")   public HerculesConfig hercules = new HerculesConfig();
+    @SerializedName("draco")      public DracoConfig draco = new DracoConfig();
+    @SerializedName("hydra")      public HydraConfig hydra = new HydraConfig();
     @SerializedName("perseus")    public PerseusConfig perseus = new PerseusConfig();
+    @SerializedName("andromeda")  public AndromedaConfig andromeda = new AndromedaConfig();
 
     /**
      * Migrate from older config versions. Called after deserialization.
@@ -50,7 +53,10 @@ public class ConstellationConfig {
             case "lyra"       -> lyra;
             case "cygnus"     -> cygnus;
             case "hercules"   -> hercules;
+            case "draco"      -> draco;
+            case "hydra"      -> hydra;
             case "perseus"    -> perseus;
+            case "andromeda"  -> andromeda;
             default -> null;
         };
     }
