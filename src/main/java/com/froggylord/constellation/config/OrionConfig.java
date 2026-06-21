@@ -52,4 +52,9 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean starredMobs = true;
     public boolean secretBats = true;
     public boolean teammateBoxes = false;
+
+    // defensive ability tracker (Bonzo / Spirit / Phoenix cooldowns)
+    public boolean abilityTracker = true;
+    public boolean abilityReadyDing = true;
+    public boolean lowHealthAlert = true;
 }

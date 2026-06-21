@@ -42,8 +42,11 @@ public class OrionDungeons extends BaseConstellation {
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
-            if (!overlay && ConstellationClient.loc().inDungeons())
-                com.froggylord.constellation.data.DungeonScore.onChat(message.getString());
+            if (!overlay && ConstellationClient.loc().inDungeons()) {
+                String s = message.getString();
+                com.froggylord.constellation.data.DungeonScore.onChat(s);
+                com.froggylord.constellation.data.DefensiveTracker.onChat(s);
+            }
             return true;
         });
 
@@ -52,6 +55,7 @@ public class OrionDungeons extends BaseConstellation {
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
                 com.froggylord.constellation.data.SkeletonScraper.tick();
+                com.froggylord.constellation.data.DefensiveTracker.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
                 // left the dungeon — print the run summary, then reset detection + score state
@@ -59,6 +63,7 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.MapSegments.reset();
                 RoomMatch.resetCache();
                 com.froggylord.constellation.data.DungeonScore.reset();
+                com.froggylord.constellation.data.DefensiveTracker.reset();
                 wasInDungeon = false;
             }
         });
@@ -124,6 +129,11 @@ public class OrionDungeons extends BaseConstellation {
                     return SecretWaypoints.collectedCount() + "/" + SecretWaypoints.totalCount();
                 },
                 HudPosition.of(6, 138), cfg.perRoomCount));
+        }
+        if (cfg.abilityTracker) {
+            hud.register(new HudWidget("orion-defensive", "Defensive",
+                () -> inDungeon() ? com.froggylord.constellation.data.DefensiveTracker.hudLine() : null,
+                HudPosition.of(6, 150), cfg.abilityTracker));
         }
         // dungeon map — lives in the same registry/editor as everything else
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
