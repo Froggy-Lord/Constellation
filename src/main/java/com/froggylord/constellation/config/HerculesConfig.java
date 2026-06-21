@@ -1,0 +1,10 @@
+package com.froggylord.constellation.config;
+
+/** Config for the Hercules constellation (farming + garden). */
+public class HerculesConfig extends BaseConfigGroup {
+
+    @Override public int currentVersion() { return 0; }
+
+    public boolean contestHud = true;
+    public boolean visitorsHud = false;
+}

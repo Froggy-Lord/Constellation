@@ -21,6 +21,8 @@ public class FeatureManager {
         register(new AquilaMining());
         register(new LyraEconomy());
         register(new CygnusEvents());
+        register(new PerseusSlayers());
+        register(new HerculesFarming());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {
