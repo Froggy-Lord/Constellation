@@ -52,12 +52,15 @@ public class OrionDungeons extends BaseConstellation {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
                 }
-                // key pickup alerts
+                // key pickup alerts — also count them
                 if (s.contains("Wither Key") || s.contains("Blood Key")) {
-                    var mc = Minecraft.getInstance();
-                    if (mc.player != null) {
-                        mc.gui.hud.resetTitleTimes();
-                        mc.gui.hud.setTitle(Component.literal("§c🔑 " + s.trim()));
+                    if (s.contains("picked up")) {
+                        if (s.contains("Wither")) doorsOpened++;
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) {
+                            mc.gui.hud.resetTitleTimes();
+                            mc.gui.hud.setTitle(Component.literal("§c🔑 " + s.trim()));
+                        }
                     }
                 }
                 // wither door open — notify party
