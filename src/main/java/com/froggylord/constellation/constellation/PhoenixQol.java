@@ -61,6 +61,24 @@ public class PhoenixQol extends BaseConstellation {
                 wctx.outline(box, 0xFFAA00FF, true);
             });
         }
+        if (cfg.hideLightning) {
+            ConstellationClient.tick().every(4, "phoenix-lightning", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.level == null) return;
+                for (var e : mc.level.entitiesForRendering()) {
+                    if (e instanceof net.minecraft.world.entity.LightningBolt) e.setRemoved(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
+                }
+            });
+        }
+        if (cfg.hideFallingBlocks) {
+            ConstellationClient.tick().every(4, "phoenix-falling", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.level == null) return;
+                for (var e : mc.level.entitiesForRendering()) {
+                    if (e instanceof net.minecraft.world.entity.item.FallingBlockEntity) e.discard();
+                }
+            });
+        }
         if (cfg.hidePlayersInDungeon) {
             ConstellationClient.tick().every(1, "phoenix-hideplayers", () -> {
                 Minecraft mc = Minecraft.getInstance();
