@@ -8,6 +8,7 @@ import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class ApolloHud extends BaseConstellation {
 
@@ -20,6 +21,20 @@ public class ApolloHud extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
+        // compact damage numbers — strip trailing zeros from chat damage lines
+        ApolloConfig cfg2 = (ApolloConfig) getConfig();
+        if (cfg2 != null && cfg2.compactDamage) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
+                String s = message.getString();
+                // "✧ 1,234,567 ✧" → "✧ 1.2M ✧" on damage lines
+                if (s.contains("✧") && s.length() < 40) {
+                    s = java.util.regex.Pattern.compile("[\\d,]{4,}").matcher(s).replaceAll(
+                        mr -> compactDamage(mr.group()));
+                    return Component.literal(s);
+                }
+                return message;
+            });
+        }
         // estimate server TPS: how fast world game-time advances against the wall clock
         ConstellationClient.tick().every(20, "apollo-tps", () -> {
             Minecraft mc = Minecraft.getInstance();
@@ -127,6 +142,16 @@ public class ApolloHud extends BaseConstellation {
 
     private static HudPosition toPos(ApolloConfig.HudEntry e) {
         return new HudPosition(e.x, e.y);
+    }
+
+    private static String compactDamage(String num) {
+        try {
+            long n = Long.parseLong(num.replace(",", ""));
+            if (n < 10000) return num;
+            if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+            if (n < 1_000_000_000) return String.format("%.1fM", n / 1_000_000.0);
+            return String.format("%.1fB", n / 1_000_000_000.0);
+        } catch (NumberFormatException e) { return num; }
     }
 
     /** 1234 -> 1.2k, 1500000 -> 1.5M */
