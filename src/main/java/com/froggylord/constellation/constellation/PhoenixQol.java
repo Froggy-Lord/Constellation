@@ -41,6 +41,16 @@ public class PhoenixQol extends BaseConstellation {
             Minecraft mc = Minecraft.getInstance();
             mc.options.gamma().set(15.0);
         }
+        if (cfg.hidePlayersInDungeon) {
+            ConstellationClient.tick().every(1, "phoenix-hideplayers", () -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.level == null || mc.player == null) return;
+                if (!ConstellationClient.loc().inDungeons()) return;
+                for (var p : mc.level.players()) {
+                    if (p != mc.player) p.setInvisible(true);
+                }
+            });
+        }
         if (cfg.instantSneak) {
             ConstellationClient.tick().every(1, "phoenix-sneak", () -> {
                 Minecraft mc = Minecraft.getInstance();

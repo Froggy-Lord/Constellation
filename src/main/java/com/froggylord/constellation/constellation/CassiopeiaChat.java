@@ -103,6 +103,18 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
+        // ---- GAME: mention alert ----
+        if (cfg.mentionAlert) {
+            pipeline.onGame(msg -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player == null) return;
+                String myName = mc.player.getName().getString();
+                if (myName.isEmpty()) return;
+                if (msg.getString().toLowerCase(Locale.ROOT).contains(myName.toLowerCase(Locale.ROOT)))
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1.8f);
+            });
+        }
+
         // ---- GAME: party triggers ----
         if (cfg.partyTriggers) {
             pipeline.onGame(msg -> handlePartyTrigger(msg));
