@@ -113,18 +113,11 @@ public class RoomMatch {
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
         for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 4. foundation Y — scan the depth cryptkit uses (-8..+35). the skeleton db is
-        //    floor-normalised and rooms have a 1-3 block foundation below the walkable floor.
-        int minY = Integer.MAX_VALUE;
-        for (int dy = -8; dy <= 35; dy++) {
-            int y = floorY + dy;
-            for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
-                for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
-                    if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    if (blockId(level, wx, y, wz) != 0 && y < minY) minY = y;
-                }
-        }
-        if (minY == Integer.MAX_VALUE) minY = floorY;
+        // 4. reference Y — floorVote is the walkable floor. skeletons are normalised so
+        //    the lowest tracked block = 0. rooms sit 2-3 blocks above a bedrock foundation,
+        //    so the lower blocks of the scan start at floorY (the walkable surface) and
+        //    the foundation lies 0-2 blocks below. using floorY keeps the encode stable.
+        int minY = floorY;
 
         // 5. elimination loop — remove candidates that don't contain each observed block
         int mapped = 0;
