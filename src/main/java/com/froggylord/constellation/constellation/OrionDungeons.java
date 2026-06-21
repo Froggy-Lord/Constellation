@@ -59,6 +59,14 @@ public class OrionDungeons extends BaseConstellation {
                         mc.gui.hud.setTitle(Component.literal("§c🔑 " + s.trim()));
                     }
                 }
+                // wither door open — notify party
+                if (s.contains("opened a Wither door") || s.contains("opened a Blood door")) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(Component.literal("§5🚪 " + s.trim()));
+                    }
+                }
                 // rare room alerts — Trinity, Tomioka, Duncan
                 if (s.contains("Trinity") || s.contains("Tomioka") || s.contains("Duncan")) {
                     var mc = Minecraft.getInstance();
