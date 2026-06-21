@@ -42,8 +42,6 @@ public class ConfigScreen extends Screen {
     private int scrollTarget = 0, maxScroll = 0;
     private int lastMx, lastMy;
     private long lastNanos = 0;
-    private double guiScale = 1.0;
-
     private static final int TB = 34;
     private static final int CARD_H = 44;
     private static final int CARD_GAP = 4;
@@ -55,15 +53,10 @@ public class ConfigScreen extends Screen {
         buildModules();
     }
 
-    @Override
-    protected void init() {
-        guiScale = Minecraft.getInstance().getWindow().getGuiScale();
-    }
-
-    // ---- layout (scaled by vanilla GUI scale) ----
-    private int panelW(int w) { return (int)(Math.max(500, Math.min(w, w * 72 / 100)) / guiScale * guiScale); }
-    private int panelH(int h) { return (int)(Math.max(350, Math.min(h, h * 82 / 100)) / guiScale * guiScale); }
-    private int sideW(int w) { return Math.max(90, Math.min(120, panelW(w) * 20 / 100)); }
+    // ---- layout ----
+    private int panelW(int w) { return Math.max(500, w * 72 / 100); }
+    private int panelH(int h) { return Math.max(350, h * 82 / 100); }
+    private int sideW(int w) { return Math.max(80, Math.min(110, panelW(w) * 18 / 100)); }
     private int gridTop() { return TB + 24; }
     private int gridX(int w) { return sideW(w) + 12; }
     private int gridRight(int w) { return panelW(w) - 10; }
@@ -352,18 +345,15 @@ public class ConfigScreen extends Screen {
             int cx = gx + (idx % cols) * (cardW + CARD_GAP);
             int cy = gTop + (idx / cols) * (CARD_H + CARD_GAP) - sc;
             if (mx >= cx && mx < cx + cardW && my >= cy && my < cy + CARD_H && my >= gTop) {
-                if (rightClick && !m.subs.isEmpty()) {
-                    // right-click opens modal
-                    openModule = (openModule == m) ? null : m;
-                } else if (!rightClick && m.subs.isEmpty()) {
-                    // left-click on no-subs module toggles it
+                if (rightClick) {
+                    // right-click: open settings modal if module has sub-options
+                    if (!m.subs.isEmpty()) openModule = (openModule == m) ? null : m;
+                } else {
+                    // left-click: toggle master switch
                     boolean next = !m.get.getAsBoolean();
                     m.set.accept(next);
                     m.knob = next ? 1 : 0;
                     ConstellationClient.saveConfig();
-                } else if (!rightClick) {
-                    // left-click on module with subs opens modal
-                    openModule = (openModule == m) ? null : m;
                 }
                 return true;
             }
