@@ -91,7 +91,7 @@ public class RoomMatch {
             wMinX = Math.min(wMinX, ccx); wMinZ = Math.min(wMinZ, ccz);
             wMaxX = Math.max(wMaxX, ccx); wMaxZ = Math.max(wMaxZ, ccz);
         }
-        wMaxX += 30; wMaxZ += 30;
+        wMaxX += 31; wMaxZ += 31;
         int width = wMaxX - wMinX, length = wMaxZ - wMinZ;
         int maxDim = Math.max(width, length);
 
@@ -114,9 +114,9 @@ public class RoomMatch {
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
         for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 4. foundation Y
+        // 4. foundation Y — go deep enough for sunken rooms (double-stair, etc.)
         int minY = Integer.MAX_VALUE;
-        for (int dy = -8; dy <= 35; dy++) {
+        for (int dy = -25; dy <= 35; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
@@ -126,11 +126,11 @@ public class RoomMatch {
         }
         if (minY == Integer.MAX_VALUE) minY = floorY;
 
-        // 5. eliminate candidates per observed block
+        // 5. eliminate candidates per observed block (scan deep enough for sunken rooms)
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         outer:
-        for (int dy = -8; dy <= 35; dy++) {
+        for (int dy = -25; dy <= 35; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
@@ -265,7 +265,9 @@ public class RoomMatch {
             int seamZ = dz > 0 ? czA + 31 : czA - 1;
             for (int lx = 2; lx <= 28; lx += 2) { samples++; if (openColumn(level, cxA + lx, seamZ, floorY)) present++; }
         }
-        return present * 2 >= samples;
+        // at least 35% open = same room. doorway walls are ~3 wide, multi-tile
+        // passages 10+. this threshold catches both without merging different rooms.
+        return present * 3 >= samples;
     }
 
     private static boolean openColumn(Level level, int x, int z, int floorY) {

@@ -64,7 +64,7 @@ public class DungeonMap {
             for (int mx = 0; mx < MAP; mx += STEP) {
                 int packed = colors[mx + my * MAP] & 0xFF;
                 if (packed < 4) continue; // 0-3 = transparent
-                int argb = abgrToArgb(MapColor.getColorFromPackedId(packed));
+                int argb = MapColor.getColorFromPackedId(packed);
                 int sx = ox + (mx / STEP) * cell;
                 int sy = oy + (my / STEP) * cell;
                 g.fill(sx, sy, sx + cell, sy + cell, argb);
@@ -81,22 +81,55 @@ public class DungeonMap {
                 if (packed != WHITE && packed != GREEN) continue;
                 int sx = ox + (mx * screenSize()) / MAP;
                 int sy = oy + (my * screenSize()) / MAP;
-                g.fill(sx, sy, sx + sz, sy + sz, abgrToArgb(MapColor.getColorFromPackedId(packed)));
+                g.fill(sx, sy, sx + sz, sy + sz, MapColor.getColorFromPackedId(packed));
             }
         }
     }
 
-    /** Player heads / markers from the map's decoration data. */
+    /** Player markers: arrow for yourself, dots for others. */
     private static void drawMarkers(GuiGraphicsExtractor g, int ox, int oy, MapItemSavedData data) {
         var decos = ((MapDataAccessor) (Object) data).constellation$decorations();
         if (decos == null) return;
+        Minecraft mc = Minecraft.getInstance();
+        var selfUUID = mc.player != null ? mc.player.getUUID() : null;
+
         for (var deco : decos.values()) {
             int mx = clamp((deco.x() / 2) + 64);
             int my = clamp((deco.y() / 2) + 64);
             int sx = ox + (mx * screenSize()) / MAP;
             int sy = oy + (my * screenSize()) / MAP;
-            g.fill(sx - 1, sy - 1, sx + 2, sy + 2, 0xFF000000);                // outline
-            g.fill(sx,     sy,     sx + 1, sy + 1, NebulaTheme.ACCENT_GOLD);   // accent dot
+
+            // check if this decoration is the player themselves (name matches)
+            // hypixel puts the player's own head on the map
+            boolean isSelf = false;
+            if (selfUUID != null && deco.name().isPresent()) {
+                try {
+                    var name = deco.name().get().getString();
+                    if (name.equals(mc.player.getName().getString())) isSelf = true;
+                } catch (Exception ignored) {}
+            }
+
+            if (isSelf) {
+                // arrow pointing in the player's facing direction
+                float yaw = mc.player.getYRot();
+                double rad = Math.toRadians(yaw + 180); // minecraft yaw: 0=south, 90=west
+                int sz = Math.max(3, screenSize() / 50);
+                int tipX = sx + (int)(Math.sin(rad) * sz * 1.8);
+                int tipY = sy + (int)(Math.cos(rad) * sz * 1.8);
+                int lx = sx + (int)(Math.sin(rad + 2.3) * sz);
+                int ly = sy + (int)(Math.cos(rad + 2.3) * sz);
+                int rx = sx + (int)(Math.sin(rad - 2.3) * sz);
+                int ry = sy + (int)(Math.cos(rad - 2.3) * sz);
+                g.fill(sx, sy, sx + 1, sy + 1, 0xFF000000);
+                for (int[] p : new int[][]{{tipX, tipY}, {lx, ly}, {rx, ry}}) {
+                    if (Math.abs(p[0] - sx) + Math.abs(p[1] - sy) < sz * 3)
+                        g.fill(p[0], p[1], p[0] + 1, p[1] + 1, NebulaTheme.ACCENT_GOLD);
+                }
+            } else {
+                // teammate marker — simple dot
+                g.fill(sx - 1, sy - 1, sx + 2, sy + 2, 0xFF000000);
+                g.fill(sx, sy, sx + 1, sy + 1, 0xAAFFFFFF);
+            }
         }
     }
 
@@ -114,12 +147,6 @@ public class DungeonMap {
     }
 
     private static int clamp(int v) { return v < 0 ? 0 : Math.min(v, MAP - 1); }
-
-    /** Map colours are packed ABGR (native image order); the GUI wants ARGB. */
-    private static int abgrToArgb(int c) {
-        int r = c & 0xFF, gg = (c >> 8) & 0xFF, b = (c >> 16) & 0xFF;
-        return 0xFF000000 | (r << 16) | (gg << 8) | b;
-    }
 
     /** First inventory item carrying a map id = Hypixel's dungeon map. */
     private static MapItemSavedData findMap() {
