@@ -84,8 +84,11 @@ public class RoomMatch {
         int scannedFloor = floorVote(level, cx, cz);
         int floorY = scannedFloor == Integer.MIN_VALUE ? 68 : scannedFloor;
 
-        // 2. footprint (seam-connected cells)
-        Set<Long> cells = flood(level, cx, cz, floorY);
+        // 2. footprint — prefer the dungeon map (deterministic, handles multi-level rooms
+        //    like sewers/stairs); fall back to world-block seam flood if the map isn't ready.
+        Set<Long> cells = MapSegments.footprint();
+        boolean fromMap = !cells.isEmpty() && cells.contains(RoomGrid.cellKey(cx, cz));
+        if (!fromMap) cells = flood(level, cx, cz, floorY);
         int wMinX = Integer.MAX_VALUE, wMinZ = Integer.MAX_VALUE, wMaxX = Integer.MIN_VALUE, wMaxZ = Integer.MIN_VALUE;
         for (long c : cells) {
             int ccx = (int) (c >> 32), ccz = (int) c;
@@ -187,7 +190,7 @@ public class RoomMatch {
         boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= VERIFY_MIN;
 
         if (debug) {
-            lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + width + "x" + length
+            lastDebug = "§a" + (fromMap ? "MAP" : "flood") + "§r cells=" + cells.size() + " §asize§r=" + width + "x" + length
                 + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §afloorY§r=" + floorY
                 + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
                 + (mapped == 0 ? " §c[0 blocks mapped]§r" : "")
