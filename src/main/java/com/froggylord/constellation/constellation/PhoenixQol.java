@@ -103,6 +103,11 @@ public class PhoenixQol extends BaseConstellation {
             Minecraft mc = Minecraft.getInstance();
             mc.options.fovEffectScale().set(0.0);
         }
+        if (cfg.hideUnderwaterBlur) {
+            var mc = Minecraft.getInstance();
+            // screen effect scale at 0 disables the underwater blur overlay
+            mc.options.screenEffectScale().set(0.0);
+        }
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
                 var mc = Minecraft.getInstance();

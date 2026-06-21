@@ -164,6 +164,22 @@ public class OrionDungeons extends BaseConstellation {
                 () -> inDungeon() ? com.froggylord.constellation.data.DefensiveTracker.hudLine() : null,
                 HudPosition.of(6, 150), cfg.abilityTracker));
         }
+        if (cfg.dungeonCopilot) {
+            hud.register(new HudWidget("orion-copilot", "Copilot",
+                () -> {
+                    if (!scoreReady()) return null;
+                    int c = com.froggylord.constellation.data.DungeonScore.crypts();
+                    int pct = com.froggylord.constellation.data.DungeonScore.secretPercent();
+                    int s = com.froggylord.constellation.data.DungeonScore.score();
+                    if (c < 5 && pct < 100) return "§eFind " + (5 - c) + " crypts & secrets";
+                    if (pct < 70) return "§cNeed secrets: " + pct + "%";
+                    if (s >= 300) return "§aS+ secured!";
+                    if (s >= 270) return "§6S — " + (300 - s) + " more for S+";
+                    if (c < 4) return "§e" + (5 - c) + " crypts missing";
+                    return null;
+                },
+                HudPosition.of(6, 162), cfg.dungeonCopilot));
+        }
         // dungeon map — lives in the same registry/editor as everything else
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }
