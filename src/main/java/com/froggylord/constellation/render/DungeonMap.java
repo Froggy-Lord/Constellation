@@ -113,48 +113,30 @@ public class DungeonMap {
         }
     }
 
-    /** A filled arrowhead pointing in the player's facing direction (yaw degrees). */
+    /** Vanilla-style white player arrow — drawn in local space and rotated by the GPU pose,
+     *  so it stays crisp at any angle (the old scanline triangle glitched as it rotated). */
     private static void drawArrow(GuiGraphicsExtractor g, int cx, int cy, float yaw) {
-        double rad = Math.toRadians(yaw + 180); // MC yaw: 0=south(+z); screen +y is south
-        double dirX = -Math.sin(rad), dirY = Math.cos(rad);   // facing vector
-        double perpX = -dirY, perpY = dirX;                   // perpendicular
-        int len = Math.max(4, screenSize() / 32);             // arrow length, scales with map
-        int wide = Math.max(2, len / 2);
-
-        // three points: tip, back-left, back-right
-        double tipX = cx + dirX * len,        tipY = cy + dirY * len;
-        double blX  = cx - dirX * len * 0.4 + perpX * wide, blY = cy - dirY * len * 0.4 + perpY * wide;
-        double brX  = cx - dirX * len * 0.4 - perpX * wide, brY = cy - dirY * len * 0.4 - perpY * wide;
-
-        // outline (black) then fill (gold) the triangle by scanning
-        fillTriangle(g, tipX, tipY, blX, blY, brX, brY, 0xFF000000, 1.0);
-        fillTriangle(g, tipX, tipY, blX, blY, brX, brY, NebulaTheme.ACCENT_GOLD, 0.0);
+        int s = Math.max(3, screenSize() / 38);   // arrow size, scales with the map
+        g.pose().pushMatrix();
+        g.pose().translate(cx + 0.5f, cy + 0.5f);
+        g.pose().rotate((float) Math.toRadians(yaw + 180)); // MC yaw 0 = south(+z) = down on map
+        // arrow points UP (-y) in local space, drawn as horizontal strips. white head over a
+        // 1px black outline, matching the held-map player marker.
+        for (int row = -s - 1; row <= s + 1; row++) {       // outline pass (1px bigger)
+            int half = triHalf(row, s) + 1;
+            if (half > 0) g.fill(-half, row, half, row + 1, 0xFF000000);
+        }
+        for (int row = -s; row <= s; row++) {               // white fill
+            int half = triHalf(row, s);
+            if (half > 0) g.fill(-half, row, half, row + 1, 0xFFFFFFFF);
+        }
+        g.pose().popMatrix();
     }
 
-    /** Scanline-fill a triangle (expand by `grow` px for a cheap outline pass). */
-    private static void fillTriangle(GuiGraphicsExtractor g, double ax, double ay,
-                                     double bx, double by, double ccx, double ccy, int col, double grow) {
-        double cx = (ax + bx + ccx) / 3, cy = (ay + by + ccy) / 3;
-        ax += Math.signum(ax - cx) * grow; ay += Math.signum(ay - cy) * grow;
-        bx += Math.signum(bx - cx) * grow; by += Math.signum(by - cy) * grow;
-        ccx += Math.signum(ccx - cx) * grow; ccy += Math.signum(ccy - cy) * grow;
-        int minY = (int) Math.floor(Math.min(ay, Math.min(by, ccy)));
-        int maxY = (int) Math.ceil(Math.max(ay, Math.max(by, ccy)));
-        for (int y = minY; y <= maxY; y++) {
-            Double xL = null, xR = null;
-            double[][] edges = {{ax, ay, bx, by}, {bx, by, ccx, ccy}, {ccx, ccy, ax, ay}};
-            for (double[] e : edges) {
-                double y1 = e[1], y2 = e[3];
-                if ((y >= y1 && y < y2) || (y >= y2 && y < y1)) {
-                    double t = (y - y1) / (y2 - y1);
-                    double x = e[0] + t * (e[2] - e[0]);
-                    if (xL == null || x < xL) xL = x;
-                    if (xR == null || x > xR) xR = x;
-                }
-            }
-            if (xL != null && xR != null)
-                g.fill((int) Math.floor(xL), y, (int) Math.ceil(xR) + 1, y + 1, col);
-        }
+    /** Half-width of an upward arrowhead at a local row (tip at -s, base at +s). */
+    private static int triHalf(int row, int s) {
+        if (row < -s || row > s) return 0;
+        return (row + s + 1) / 2; // 0 at the tip, widening to the base
     }
 
     /** Current room name overlaid along the top of the map. */
