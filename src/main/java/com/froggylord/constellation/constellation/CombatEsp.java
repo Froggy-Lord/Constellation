@@ -27,14 +27,26 @@ public final class CombatEsp {
 
     private CombatEsp() {}
 
+    private static final int TEAM_COLOUR = 0xFF55FF55; // green
+
     public static void draw(WorldRenderer.Ctx ctx) {
         OrionConfig cfg = ConstellationClient.cfg().orion;
-        if (cfg == null || (!cfg.starredMobs && !cfg.secretBats)) return;
+        if (cfg == null || (!cfg.starredMobs && !cfg.secretBats && !cfg.teammateBoxes)) return;
         if (!ConstellationClient.loc().inDungeons()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
         Vec3 me = mc.player.position();
         double r2 = RANGE * RANGE;
+
+        // teammates — box the other (real) players in the run
+        if (cfg.teammateBoxes) {
+            for (var p : mc.level.players()) {
+                if (p == mc.player) continue;
+                if (p.isSpectator() || p.getName().getString().isBlank()) continue;
+                ctx.outline(p.getBoundingBox(), TEAM_COLOUR, false);
+                ctx.label(p.position().add(0, p.getBbHeight() + 0.3, 0), p.getName().getString(), TEAM_COLOUR, false);
+            }
+        }
 
         for (Entity e : mc.level.entitiesForRendering()) {
             if (e == mc.player) continue;
