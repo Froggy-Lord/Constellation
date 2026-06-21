@@ -177,7 +177,67 @@ public class ConfigScreen extends Screen {
                     .b("Enabled", () -> c.partyTriggers, v -> c.partyTriggers = v)
                     .b("Safe mode", () -> c.triggerSafeMode, v -> { c.triggerSafeMode = v; ConstellationClient.saveConfig(); }));
             }
+            case "orion" -> {
+                cats = new String[]{"HUD", "Map", "Secrets", "Party"};
+                OrionConfig c = cfg.orion;
+                modules.add(new Module("scoreHud", "Live 0-300 score", "HUD",
+                    () -> c.scoreHud, v -> { c.scoreHud = v; ConstellationClient.saveConfig(); })
+                    .b("Show letter grade", () -> c.scoreHud, v -> c.scoreHud = v)
+                    .b("Milestone pings", () -> true, v -> {}));
+                modules.add(new Module("secretsHud", "Secrets found / total", "HUD",
+                    () -> c.secretsHud, v -> { c.secretsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Per-room count", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); })
+                    .b("Percentage", () -> c.secretsHud, v -> c.secretsHud = v));
+                modules.add(new Module("cryptsHud", "Crypt count", "HUD",
+                    () -> c.cryptsHud, v -> { c.cryptsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Warn under 5", () -> true, v -> {})
+                    .b("Show in chat", () -> false, v -> {}));
+                modules.add(new Module("deathsHud", "Death counter", "HUD",
+                    () -> c.deathsHud, v -> { c.deathsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Score impact", () -> true, v -> {})
+                    .b("Per-player", () -> false, v -> {}));
+                modules.add(new Module("timerHud", "Run timer", "HUD",
+                    () -> c.timerHud, v -> { c.timerHud = v; ConstellationClient.saveConfig(); })
+                    .b("Show splits", () -> c.splitsHud, v -> { c.splitsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Milliseconds", () -> false, v -> {}));
+                modules.add(new Module("roomNameHud", "Current room name", "HUD",
+                    () -> c.roomNameHud, v -> { c.roomNameHud = v; ConstellationClient.saveConfig(); })
+                    .b("Cleared indicator", () -> true, v -> {})
+                    .b("Show secrets in room", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("mimicIndicator", "Mimic killed marker", "HUD",
+                    () -> c.mimicIndicator, v -> { c.mimicIndicator = v; ConstellationClient.saveConfig(); })
+                    .b("Ping party", () -> true, v -> {})
+                    .b("Sound", () -> true, v -> {}));
+                modules.add(new Module("dungeonMap", "Hypixel map overlay", "Map",
+                    () -> c.dungeonMap, v -> { c.dungeonMap = v; ConstellationClient.saveConfig(); })
+                    .b("Room names", () -> true, v -> {})
+                    .b("Player heads", () -> true, v -> {})
+                    .b("Auto-hide in boss", () -> true, v -> {}));
+                modules.add(new Module("secretWaypoints", "In-world secret boxes", "Secrets",
+                    () -> c.secretWaypoints, v -> { c.secretWaypoints = v; ConstellationClient.saveConfig(); })
+                    .b("Progressive reveal", () -> c.progressiveReveal, v -> { c.progressiveReveal = v; ConstellationClient.saveConfig(); })
+                    .b("One at a time", () -> c.oneSecretAtATime, v -> { c.oneSecretAtATime = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("routes", "Secret routes", "Secrets",
+                    () -> c.routes, v -> { c.routes = v; ConstellationClient.saveConfig(); })
+                    .b("Route lines", () -> c.routeLines, v -> { c.routeLines = v; ConstellationClient.saveConfig(); })
+                    .b("Prefer pearl-clips", () -> c.pearlRoutes, v -> { c.pearlRoutes = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("echoOnCollect", "Chime on secret", "Secrets",
+                    () -> c.echoOnCollect, v -> { c.echoOnCollect = v; ConstellationClient.saveConfig(); })
+                    .b("Sound", () -> c.echoOnCollect, v -> c.echoOnCollect = v)
+                    .b("Custom waypoints", () -> c.customWaypoints, v -> { c.customWaypoints = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("partyFinderGui", "Fancy party finder", "Party",
+                    () -> c.partyFinderGui, v -> { c.partyFinderGui = v; ConstellationClient.saveConfig(); })
+                    .b("Class filter", () -> c.partyFinderGui, v -> c.partyFinderGui = v)
+                    .b("Secret filter", () -> c.partyFinderGui, v -> c.partyFinderGui = v));
+                modules.add(new Module("autoRequeue", "Auto-requeue after run", "Party",
+                    () -> c.autoRequeue, v -> { c.autoRequeue = v; ConstellationClient.saveConfig(); })
+                    .b("Safe mode", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); })
+                    .b("Confirm first", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); }));
+            }
         }
+        // guard: a constellation with no modules gets a placeholder category so the screen never crashes
+        if (cats.length == 0) cats = new String[]{"General"};
+        selectedCat = Math.clamp(selectedCat, 0, cats.length - 1);
         for (Module m : modules) m.knob = m.get.getAsBoolean() ? 1 : 0;
     }
 
