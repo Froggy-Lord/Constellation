@@ -1,7 +1,9 @@
 package com.froggylord.constellation.data;
 
 import com.froggylord.constellation.ConstellationClient;
+import com.froggylord.constellation.core.ActionBar;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 /**
@@ -38,18 +40,31 @@ public final class DefensiveTracker {
         dinged[a.ordinal()] = false;
     }
 
-    /** Called each tick — dings any ability that just came off cooldown. */
+    private static long lastLowAlert = 0;
+
+    /** Called each tick — dings cooled-down abilities and fires the low-health alert. */
     public static void tick() {
         var cfg = ConstellationClient.cfg().orion;
-        if (cfg == null || !cfg.abilityReadyDing) return;
+        if (cfg == null) return;
         long now = System.currentTimeMillis();
-        for (Ability a : Ability.values()) {
-            int i = a.ordinal();
-            if (readyAt[i] == 0 || dinged[i]) continue;
-            if (now >= readyAt[i]) {
-                dinged[i] = true;
-                Minecraft mc = Minecraft.getInstance();
-                if (mc.player != null) mc.player.playSound(SoundEvents.NOTE_BLOCK_BELL.value(), 0.7f, 1.4f);
+        if (cfg.abilityReadyDing) {
+            for (Ability a : Ability.values()) {
+                int i = a.ordinal();
+                if (readyAt[i] == 0 || dinged[i]) continue;
+                if (now >= readyAt[i]) {
+                    dinged[i] = true;
+                    Minecraft mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.playSound(SoundEvents.NOTE_BLOCK_BELL.value(), 0.7f, 1.4f);
+                }
+            }
+        }
+        if (cfg.lowHealthAlert && ActionBar.hasData() && ActionBar.healthFraction() < 0.35 && now - lastLowAlert > 4000) {
+            lastLowAlert = now;
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player != null) {
+                mc.gui.hud.resetTitleTimes();
+                mc.gui.hud.setTitle(Component.literal("§c❤ LOW HEALTH"));
+                mc.player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.5f);
             }
         }
     }
