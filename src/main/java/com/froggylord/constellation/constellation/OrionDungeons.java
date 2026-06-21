@@ -72,6 +72,19 @@ public class OrionDungeons extends BaseConstellation {
                         mc.gui.hud.setTitle(Component.literal("§5🚪 " + s.trim()));
                     }
                 }
+                // rare drop alerts from dungeon chests
+                if (s.contains("Recombobulator 3000") || s.contains("Giant's Sword")
+                    || s.contains("Necron's Handle") || s.contains("Shadow Fury")
+                    || s.contains("Wither Chestplate") || s.contains("Precursor Eye")
+                    || s.contains("Dark Claymore") || s.contains("Shadow Assassin Chestplate")
+                    || s.contains("Master Star") || s.contains("Diamond Head")) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(Component.literal("§6✨ RARE DROP: " + s.trim()));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.8f);
+                    }
+                }
                 // rare room alerts — Trinity, Tomioka, Duncan
                 if (s.contains("Trinity") || s.contains("Tomioka") || s.contains("Duncan")) {
                     var mc = Minecraft.getInstance();
@@ -196,14 +209,17 @@ public class OrionDungeons extends BaseConstellation {
                     int c = com.froggylord.constellation.data.DungeonScore.crypts();
                     int pct = com.froggylord.constellation.data.DungeonScore.secretPercent();
                     int s = com.froggylord.constellation.data.DungeonScore.score();
+                    int d = com.froggylord.constellation.data.DungeonScore.deaths();
+                    if (d > 0) return "§c" + d + " death" + (d > 1 ? "s" : "") + " – careful!";
                     if (c < 5 && pct < 100) return "§eFind " + (5 - c) + " crypts & secrets";
                     if (pct < 70) return "§cNeed secrets: " + pct + "%";
                     if (s >= 300) return "§aS+ secured!";
                     if (s >= 270) return "§6S — " + (300 - s) + " more for S+";
                     if (c < 4) return "§e" + (5 - c) + " crypts missing";
-                    return null;
+                    return "§aOn track for S+";
                 },
                 HudPosition.of(6, 162), cfg.dungeonCopilot));
+        }
         }
         // dungeon map — lives in the same registry/editor as everything else
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
