@@ -199,6 +199,14 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("bz"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ah")
             .executes(ctx -> { sendCmd("ah"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("pets")
+            .executes(ctx -> { sendCmd("pets"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("wardrobe")
+            .executes(ctx -> { sendCmd("wardrobe"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("talisman")
+            .executes(ctx -> { sendCmd("accessorybag"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sack")
+            .executes(ctx -> { sendCmd("sacks"); return 1; }));
 
         // warp shortcuts
         if (cfg.warpShortcuts) {

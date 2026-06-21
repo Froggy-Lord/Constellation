@@ -103,6 +103,13 @@ public class PhoenixQol extends BaseConstellation {
             Minecraft mc = Minecraft.getInstance();
             mc.options.fovEffectScale().set(0.0);
         }
+        if (cfg.noDeathAnimation) {
+            ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null && mc.player.isDeadOrDying())
+                    mc.player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+            });
+        }
         if (cfg.signCalculator) {
             // evaluate simple math on signs — on Hypixel this is mostly bazaar/auction
             // pricing, so having the answer in chat saves a mental calculation
