@@ -37,8 +37,21 @@ public class PhoenixQol extends BaseConstellation {
             Minecraft mc = Minecraft.getInstance();
             mc.options.vignette().set(false);
         }
+        if (cfg.fullbright) {
+            Minecraft mc = Minecraft.getInstance();
+            mc.options.gamma().set(15.0);
+        }
+        if (cfg.instantSneak) {
+            ConstellationClient.tick().every(1, "phoenix-sneak", () -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.player == null) return;
+                if (mc.options.keyShift.isDown())
+                    mc.player.setPose(net.minecraft.world.entity.Pose.CROUCHING);
+                else if (mc.player.getPose() == net.minecraft.world.entity.Pose.CROUCHING)
+                    mc.player.setPose(net.minecraft.world.entity.Pose.STANDING);
+            });
+        }
         if (cfg.disableFog) {
-            // fog is toggled via the client option
             Minecraft mc = Minecraft.getInstance();
             mc.options.fovEffectScale().set(0.0);
         }
