@@ -185,27 +185,43 @@ public class MapSegments {
         return null;
     }
 
-    /** BFS connected same-colour room cells on the map (sampling each cell's centre). */
+    /** BFS connected same-colour room cells on the map. Checks a border pixel between cells
+     *  to prevent crossing the 4-pixel gap into a different room of the same colour. */
     private static List<int[]> floodMapCells(MapItemSavedData map, int[] start, int step, byte color, int roomSize) {
         List<int[]> cells = new ArrayList<>();
         Deque<int[]> q = new ArrayDeque<>();
         Set<Long> seen = new HashSet<>();
         q.add(start); seen.add(key(start[0], start[1]));
         int half = roomSize / 2;
+        int border = roomSize + 2; // midpoint of the 4-pixel gap between rooms
         while (!q.isEmpty() && cells.size() < 12) {
             int[] c = q.poll();
             cells.add(c);
-            for (int[] d : new int[][]{{-step,0},{step,0},{0,-step},{0,step}}) {
-                int nx = c[0] + d[0], nz = c[1] + d[1];
-                long k = key(nx, nz);
-                if (seen.contains(k)) continue;
-                if (colorAt(map, nx + half, nz + half) == color) {
-                    seen.add(k);
-                    q.add(new int[]{nx, nz});
-                }
-            }
+            // right
+            tryFlood(map, c, new int[]{c[0] + step, c[1]},
+                new int[]{c[0] + border, c[1] + half}, color, half, q, seen);
+            // left
+            tryFlood(map, c, new int[]{c[0] - step, c[1]},
+                new int[]{c[0] - (step - border), c[1] + half}, color, half, q, seen);
+            // down
+            tryFlood(map, c, new int[]{c[0], c[1] + step},
+                new int[]{c[0] + half, c[1] + border}, color, half, q, seen);
+            // up
+            tryFlood(map, c, new int[]{c[0], c[1] - step},
+                new int[]{c[0] + half, c[1] - (step - border)}, color, half, q, seen);
         }
         return cells;
+    }
+
+    private static void tryFlood(MapItemSavedData map, int[] from, int[] to,
+                                  int[] seam, byte color, int half, Deque<int[]> q, Set<Long> seen) {
+        long k = key(to[0], to[1]);
+        if (seen.contains(k)) return;
+        if (colorAt(map, seam[0], seam[1]) == color
+            && colorAt(map, to[0] + half, to[1] + half) == color) {
+            seen.add(k);
+            q.add(to);
+        }
     }
 
     private static long key(int x, int z) { return ((long) x << 32) | (z & 0xFFFF_FFFFL); }
