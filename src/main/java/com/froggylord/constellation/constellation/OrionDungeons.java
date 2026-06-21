@@ -114,6 +114,16 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.DungeonScore.reset();
                 com.froggylord.constellation.data.DefensiveTracker.reset();
                 wasInDungeon = false;
+                // auto-requeue after a delay (configurable)
+                if (cfg.autoRequeue && !cfg.requeueSafeMode) {
+                    ConstellationClient.tick().once(cfg.requeueDelaySec * 20, "orion-requeue", () -> {
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null && !ConstellationClient.loc().inDungeons()) {
+                            String floor = com.froggylord.constellation.data.DungeonScore.lastFloor();
+                            mc.player.connection.sendCommand("joindungeon catacombs " + (floor != null ? floor : "F7"));
+                        }
+                    });
+                }
             }
         });
 

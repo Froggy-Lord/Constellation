@@ -193,6 +193,12 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("craft"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("skills")
             .executes(ctx -> { sendCmd("skills"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roll")
+            .executes(ctx -> {
+                int r = new java.util.Random().nextInt(6) + 1;
+                sendCmd("pc rolled a " + r);
+                return 1;
+            }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ec")
             .executes(ctx -> { sendCmd("enderchest"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")

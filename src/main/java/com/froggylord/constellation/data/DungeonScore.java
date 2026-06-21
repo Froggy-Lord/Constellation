@@ -263,6 +263,7 @@ public final class DungeonScore {
     public static boolean mimicKilled() { return mimicKilled; }
     public static boolean hadRun() { return timeSecs > 10; } // a real run produced an elapsed time
     public static boolean inBoss() { return inBoss; }
+    public static String lastFloor() { return floorName.isEmpty() ? null : floorName; }
     public static long bloodSplitMs() { return bloodAt > 0 ? bloodAt - runStartedAt() : 0; }
     public static long bossSplitMs() { return bossAt > 0 ? bossAt - runStartedAt() : 0; }
     private static long runStartedAt() { return bloodAt > 0 ? bloodAt - timeSecs * 1000L : System.currentTimeMillis() - timeSecs * 1000L; }
