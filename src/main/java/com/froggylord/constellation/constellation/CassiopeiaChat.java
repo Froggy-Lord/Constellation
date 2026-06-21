@@ -82,6 +82,16 @@ public class CassiopeiaChat extends BaseConstellation {
             if (cfg.cleanSacrifice && s.contains("sacrifice")) return false;
             if (cfg.cleanParkour && (s.contains("parkour") || s.contains("checkpoint"))) return false;
             if (cfg.cleanTeleportPads && s.contains("teleport pad")) return false;
+            if (cfg.cleanAds && (s.contains("buy") || s.contains("sell") || s.contains("check my ah"))) return false;
+            if (cfg.cleanShowOff && (s.contains("holding") || s.contains("wearing"))) return false;
+            if (cfg.cleanAutopet && s.contains("autopet")) return false;
+            if (cfg.cleanCombo && s.contains("kill combo")) return false;
+            if (cfg.cleanMimic && s.contains("mimic")) return false;
+            if (cfg.cleanDeath && s.contains("☠")) return false;
+            if (cfg.cleanHeal && (s.contains("healed") || s.contains("healed you"))) return false;
+            if (cfg.cleanAOTE && s.contains("blocks in the way")) return false;
+            if (cfg.cleanImplosion && s.contains("implosion")) return false;
+            if (cfg.cleanAbilityCooldown && (s.contains("cooldown") || s.contains("no more charges"))) return false;
 
             // custom spam filter list
             for (String filter : cfg.spamFilters) {

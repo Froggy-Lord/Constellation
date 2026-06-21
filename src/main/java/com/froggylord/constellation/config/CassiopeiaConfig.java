@@ -41,6 +41,16 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean cleanSacrifice = true;
     public boolean cleanParkour = true;
     public boolean cleanTeleportPads = true;
+    public boolean cleanAds = true;
+    public boolean cleanShowOff = true;
+    public boolean cleanAutopet = true;
+    public boolean cleanCombo = true;
+    public boolean cleanMimic = true;
+    public boolean cleanDeath = true;
+    public boolean cleanHeal = true;
+    public boolean cleanAOTE = true;
+    public boolean cleanImplosion = true;
+    public boolean cleanAbilityCooldown = true;
 
     // chat enhancements
     public boolean timestamps = true;
