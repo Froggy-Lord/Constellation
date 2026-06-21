@@ -302,21 +302,18 @@ public class RoomMatch {
         return present * 5 >= samples * 2;
     }
 
-    /** Is there walkable floor here (any solid block with air directly above)? Block type
-     *  doesn't matter — many dungeon floors use blocks outside our tracked 21, and requiring
-     *  a tracked block made multi-cell rooms read their seams as disconnected. */
+    /** Is this seam column passable (not a wall)? A wall between two different rooms is
+     *  solid at head height across its whole length. Open floor, doorways, and floor
+     *  decorations (slabs/chests/pillars) are all passable — so we detect the WALL, not the
+     *  floor. Old "floor with air directly above" failed on decorated same-room seams. */
     private static boolean openColumn(Level level, int x, int z, int floorY) {
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-        // widened Y window: floor height varies across multi-level / sunken rooms, so look
-        // a few up and well down to find the walkable surface at this seam column
-        for (int y = floorY + 5; y >= floorY - 10; y--) {
+        int solidHead = 0;
+        for (int y = floorY + 2; y <= floorY + 5; y++) {
             m.set(x, y, z);
-            if (level.getBlockState(m).isAir()) continue; // skip air, keep scanning down
-            m.set(x, y + 1, z);
-            if (level.getBlockState(m).isAir()) return true; // solid with air above = floor
-            return false; // solid with solid above = wall, stop
+            if (!level.getBlockState(m).isAir()) solidHead++;
         }
-        return false;
+        return solidHead < 3; // <3 solid at head height = passable (room interior or doorway)
     }
 
     private static byte blockId(Level level, int x, int y, int z) {
