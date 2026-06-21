@@ -19,6 +19,8 @@ public class ApolloConfig extends BaseConfigGroup {
     public HudEntry mana      = new HudEntry("MN", 62, 90, true);
     public HudEntry defense   = new HudEntry("DEF", 74, 90, true);
     public HudEntry speed     = new HudEntry("SPD", 86, 90, true);
+    public HudEntry area      = new HudEntry("Area", 2, 42, false);
+    public HudEntry facing    = new HudEntry("Facing", 2, 50, false);
 
     // feature toggles
     public boolean customScoreboard = true;
