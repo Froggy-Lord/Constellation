@@ -26,6 +26,8 @@ public class FeatureManager {
         register(new DracoCrimson());
         register(new HydraFishing());
         register(new AndromedaRift());
+        register(new PegasusParty());
+        register(new AurigaMisc());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {

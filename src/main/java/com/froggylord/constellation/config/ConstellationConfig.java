@@ -25,6 +25,8 @@ public class ConstellationConfig {
     @SerializedName("hydra")      public HydraConfig hydra = new HydraConfig();
     @SerializedName("perseus")    public PerseusConfig perseus = new PerseusConfig();
     @SerializedName("andromeda")  public AndromedaConfig andromeda = new AndromedaConfig();
+    @SerializedName("pegasus")    public PegasusConfig pegasus = new PegasusConfig();
+    @SerializedName("auriga")     public AurigaConfig auriga = new AurigaConfig();
 
     /**
      * Migrate from older config versions. Called after deserialization.
@@ -57,6 +59,8 @@ public class ConstellationConfig {
             case "hydra"      -> hydra;
             case "perseus"    -> perseus;
             case "andromeda"  -> andromeda;
+            case "pegasus"    -> pegasus;
+            case "auriga"     -> auriga;
             default -> null;
         };
     }
