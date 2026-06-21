@@ -18,6 +18,7 @@ public class FeatureManager {
         register(new CassiopeiaChat());
         register(new OrionDungeons());
         register(new PhoenixQol());
+        register(new AquilaMining());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {
