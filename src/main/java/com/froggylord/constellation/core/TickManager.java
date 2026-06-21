@@ -16,6 +16,11 @@ public class TickManager {
         tasks.add(new Task(id, intervalTicks, runnable));
     }
 
+    /** Run once on the next client tick, then auto-remove. */
+    public void once(int delayTicks, String id, Runnable runnable) {
+        tasks.add(new Task(id, delayTicks, () -> { runnable.run(); remove(id); }));
+    }
+
     public void remove(String id) {
         tasks.removeIf(t -> t.id().equals(id));
     }

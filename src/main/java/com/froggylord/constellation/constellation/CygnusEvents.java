@@ -24,6 +24,7 @@ public class CygnusEvents extends BaseConstellation {
 
     private static final Pattern DATE = Pattern.compile("((?:Early|Late) )?(Spring|Summer|Autumn|Winter) (\\d+)(?:st|nd|rd|th)");
     private static final Pattern TIME = Pattern.compile("(\\d{1,2}:\\d{2})(am|pm)");
+    private static final Pattern MAYOR = Pattern.compile("Mayor:?\\s*(\\w+)");
 
     private CygnusConfig cfg;
 
@@ -41,6 +42,9 @@ public class CygnusEvents extends BaseConstellation {
             hud.register(new HudWidget("cygnus-calendar", "Date",
                 () -> ConstellationClient.loc().onHypixel() ? calendarLine() : null,
                 HudPosition.of(2, 100), cfg.calendarHud));
+            hud.register(new HudWidget("cygnus-mayor", "Mayor",
+                () -> ConstellationClient.loc().onHypixel() ? mayorLine() : null,
+                HudPosition.of(2, 110), cfg.calendarHud));
         }
     }
 
@@ -61,5 +65,13 @@ public class CygnusEvents extends BaseConstellation {
         if (date != null) sb.append("§f").append(date);
         if (time != null) sb.append(sb.length() > 0 ? " §7" : "§7").append(time);
         return sb.toString();
+    }
+
+    private static String mayorLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = MAYOR.matcher(line);
+            if (m.find()) return "§6Mayor §f" + m.group(1);
+        }
+        return null;
     }
 }

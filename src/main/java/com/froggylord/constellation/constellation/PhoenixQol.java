@@ -37,13 +37,17 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.disableVignette) {
-            // vignette is a client option — set once per init and leave it off
-            Minecraft mc = Minecraft.getInstance();
-            mc.options.vignette().set(false);
+            ConstellationClient.tick().once(1, "phoenix-vignette", () -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.options != null) mc.options.vignette().set(false);
+            });
         }
         if (cfg.fullbright) {
-            Minecraft mc = Minecraft.getInstance();
-            mc.options.gamma().set(15.0);
+            // defer to first tick — Minecraft.options is null during mod init
+            ConstellationClient.tick().once(1, "phoenix-fullbright", () -> {
+                Minecraft mc = Minecraft.getInstance();
+                if (mc.options != null) mc.options.gamma().set(15.0);
+            });
         }
         if (cfg.etherwarpOverlay) {
             ConstellationClient.world().register(wctx -> {
@@ -100,13 +104,16 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.disableFog) {
-            Minecraft mc = Minecraft.getInstance();
-            mc.options.fovEffectScale().set(0.0);
+            ConstellationClient.tick().once(1, "phoenix-fog", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.options != null) mc.options.fovEffectScale().set(0.0);
+            });
         }
         if (cfg.hideUnderwaterBlur) {
-            var mc = Minecraft.getInstance();
-            // screen effect scale at 0 disables the underwater blur overlay
-            mc.options.screenEffectScale().set(0.0);
+            ConstellationClient.tick().once(1, "phoenix-uwater", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.options != null) mc.options.screenEffectScale().set(0.0);
+            });
         }
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
