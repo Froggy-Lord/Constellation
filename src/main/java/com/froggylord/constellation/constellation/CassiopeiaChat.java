@@ -157,17 +157,21 @@ public class CassiopeiaChat extends BaseConstellation {
 
         // floor shortcuts: /f1-/f7, /m1-/m7, /e, /r
         if (cfg.floorShortcuts) {
-            for (int i = 1; i <= 7; i++) {
-                final int floor = i;
-                dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("f" + i)
-                    .executes(ctx -> { sendCmd("joindungeon catacombs_floor_" + floor); return 1; }));
-                dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("m" + i)
-                    .executes(ctx -> { sendCmd("joindungeon master_mode_floor_" + floor); return 1; }));
+            // hypixel's dungeon-join instance ids use word floor numbers
+            for (int i = 0; i < 7; i++) {
+                final int idx = i;
+                dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("f" + (i + 1))
+                    .executes(ctx -> { joinFloor(NORMAL_FLOORS[idx]); return 1; }));
+                dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("m" + (i + 1))
+                    .executes(ctx -> { joinFloor(MASTER_FLOORS[idx]); return 1; }));
             }
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("e")
-                .executes(ctx -> { sendCmd("joindungeon catacombs_entrance"); return 1; }));
+                .executes(ctx -> { joinFloor("CATACOMBS_ENTRANCE"); return 1; }));
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("r")
-                .executes(ctx -> { sendCmd("joindungeon"); return 1; }));
+                .executes(ctx -> {
+                    if (lastFloorInstance != null) sendCmd("joininstance " + lastFloorInstance);
+                    return 1;
+                }));
         }
 
         // warp shortcuts
@@ -175,7 +179,7 @@ public class CassiopeiaChat extends BaseConstellation {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("h")
                 .executes(ctx -> { sendCmd("warp hub"); return 1; }));
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("i")
-                .executes(ctx -> { sendCmd("warp home"); return 1; }));
+                .executes(ctx -> { sendCmd("warp island"); return 1; }));
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dh")
                 .executes(ctx -> { sendCmd("warp dungeon_hub"); return 1; }));
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("l")
@@ -209,6 +213,23 @@ public class CassiopeiaChat extends BaseConstellation {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ps")
                 .executes(ctx -> { sendCmd("p settings"); return 1; }));
         }
+    }
+
+    // hypixel dungeon-join instance ids (word floor numbers)
+    private static final String[] NORMAL_FLOORS = {
+        "CATACOMBS_FLOOR_ONE","CATACOMBS_FLOOR_TWO","CATACOMBS_FLOOR_THREE","CATACOMBS_FLOOR_FOUR",
+        "CATACOMBS_FLOOR_FIVE","CATACOMBS_FLOOR_SIX","CATACOMBS_FLOOR_SEVEN"
+    };
+    private static final String[] MASTER_FLOORS = {
+        "MASTER_CATACOMBS_FLOOR_ONE","MASTER_CATACOMBS_FLOOR_TWO","MASTER_CATACOMBS_FLOOR_THREE",
+        "MASTER_CATACOMBS_FLOOR_FOUR","MASTER_CATACOMBS_FLOOR_FIVE","MASTER_CATACOMBS_FLOOR_SIX",
+        "MASTER_CATACOMBS_FLOOR_SEVEN"
+    };
+    private static String lastFloorInstance = null;
+
+    private static void joinFloor(String instance) {
+        lastFloorInstance = instance;
+        sendCmd("joininstance " + instance);
     }
 
     private static void sendCmd(String cmd) {
