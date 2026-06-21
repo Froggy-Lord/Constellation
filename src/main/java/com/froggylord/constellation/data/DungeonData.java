@@ -75,7 +75,11 @@ public class DungeonData {
                 try (InputStream sk = res("catacombs/" + line + ".skeleton")) {
                     if (sk == null) continue;
                     try (ObjectInputStream in = new ObjectInputStream(new InflaterInputStream(sk))) {
-                        int[] fp = normalizeY((int[]) in.readObject());
+                        // skeletons use ABSOLUTE world Y (dungeon floor sits at a fixed height),
+                        // so no normalization — match world blocks against absolute Y directly,
+                        // the way Skyblocker does. just sort for binary search.
+                        int[] fp = (int[]) in.readObject();
+                        java.util.Arrays.sort(fp);
                         ROOMS.computeIfAbsent(shape, k -> new HashMap<>()).put(name, fp);
                         // compute local footprint dims for fit-filtering
                         int mx = 0, mz = 0;
@@ -131,21 +135,6 @@ public class DungeonData {
     public static int idY(int v) { return (v >>> 16) & 0xFF; }
     public static int idZ(int v) { return (v >>> 8) & 0xFF; }
     public static int idBlock(int v) { return v & 0xFF; }
-
-    /** Shift every entry's Y down so the room floor sits at 0, then re-sort for binary search. */
-    private static int[] normalizeY(int[] fp) {
-        int minY = 255;
-        for (int v : fp) { int y = (v >>> 16) & 0xFF; if (y < minY) minY = y; }
-        if (minY == 0) { Arrays.sort(fp); return fp; }
-        int[] out = new int[fp.length];
-        for (int i = 0; i < fp.length; i++) {
-            int v = fp[i];
-            out[i] = (((v >>> 24) & 0xFF) << 24) | ((((v >>> 16) & 0xFF) - minY) << 16)
-                   | (((v >>> 8) & 0xFF) << 8) | (v & 0xFF);
-        }
-        Arrays.sort(out);
-        return out;
-    }
 
     public static List<Secret> secretsFor(String roomName) {
         return SECRETS.get(roomName.toLowerCase(Locale.ROOT));

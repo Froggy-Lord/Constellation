@@ -113,20 +113,9 @@ public class RoomMatch {
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
         for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 4. reference Y — skeletons are normalised so the lowest block = 0. find the
-        //    actual foundation bedrock within the room's footprint. bedrock (id=10) is the
-        //    universal dungeon floor and won't be contaminated by other rooms' blocks.
-        int minY = floorY;
-        for (int dy = -8; dy <= 2; dy++) {
-            int yc = floorY + dy;
-            for (int wx = wMinX + 4; wx <= wMaxX - 4; wx += 8)
-                for (int wz = wMinZ + 4; wz <= wMaxZ - 4; wz += 8) {
-                    if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    if (blockId(level, wx, yc, wz) == 10) { minY = yc; break; } // bedrock found
-                }
-        }
-
-        // 5. elimination loop — remove candidates that don't contain each observed block
+        // 5. elimination loop — remove candidates that don't contain each observed block.
+        //    skeletons store ABSOLUTE world Y, so encode with absolute Y (no normalisation),
+        //    exactly like Skyblocker. dungeon floor is at a fixed height so this is stable.
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         int maxDim = Math.max(width, length);
@@ -136,6 +125,7 @@ public class RoomMatch {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
+                    if (inDoorway(wx, y, wz)) continue;
                     byte id = blockId(level, wx, y, wz);
                     if (id == 0) continue;
                     mapped++;
@@ -146,7 +136,7 @@ public class RoomMatch {
                         long[] rel = RoomTransform.actualToRelative(dirs[di], corner[di][0], corner[di][1], wx, y, wz);
                         int rx = (int) rel[0], rz = (int) rel[2];
                         if (rx < 0 || rx > maxDim || rz < 0 || rz > maxDim) continue;
-                        int enc = RoomTransform.posId(rx, y - minY, rz, id);
+                        int enc = RoomTransform.posId(rx, y, rz, id); // absolute Y
                         list.removeIf(cd -> Arrays.binarySearch(cd.fp(), enc) < 0);
                     }
                     int remaining = cands.stream().mapToInt(List::size).sum();
@@ -160,7 +150,7 @@ public class RoomMatch {
         double bestScore = 0; int bestAX = 0, bestAZ = 0;
         for (int di = 0; di < dirs.length; di++) {
             for (var c : cands.get(di)) {
-                double score = verifyRatio(level, c.fp(), dirs[di], corner[di], minY);
+                double score = verifyRatio(level, c.fp(), dirs[di], corner[di]);
                 if (score > bestScore) {
                     bestScore = score; best = c.name(); bestDir = dirs[di];
                     bestAX = corner[di][0]; bestAZ = corner[di][1];
@@ -173,7 +163,7 @@ public class RoomMatch {
 
         if (debug) {
             lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + width + "x" + length
-                + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §aminY§r=" + minY
+                + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §afloorY§r=" + floorY
                 + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
                 + (mapped == 0 ? " §c[0 blocks mapped]§r" : "")
                 + " §7ids:[" + sample.toString().trim() + "]";
@@ -195,7 +185,7 @@ public class RoomMatch {
         }
     }
 
-    private static double verifyRatio(Level level, int[] fp, RoomTransform.Direction dir, int[] corner, int refY) {
+    private static double verifyRatio(Level level, int[] fp, RoomTransform.Direction dir, int[] corner) {
         if (fp.length == 0) return 0;
         int step = Math.max(1, fp.length / 120);
         int checked = 0, hit = 0;
@@ -203,11 +193,22 @@ public class RoomMatch {
             int v = fp[i];
             int rx = DungeonData.idX(v), wy = DungeonData.idY(v), rz = DungeonData.idZ(v);
             byte id = (byte) DungeonData.idBlock(v);
-            long[] wp = RoomTransform.relativeToActual(dir, corner[0], corner[1], rx, refY + wy, rz);
+            // wy is absolute world Y (skeletons aren't normalised)
+            long[] wp = RoomTransform.relativeToActual(dir, corner[0], corner[1], rx, wy, rz);
             checked++;
             if (blockId(level, (int) wp[0], (int) wp[1], (int) wp[2]) == id) hit++;
         }
         return checked == 0 ? 0 : (double) hit / checked;
+    }
+
+    /** Skyblocker's notInDoorway, inverted: true if this block is in a doorway gap. */
+    private static boolean inDoorway(int x, int y, int z) {
+        if (y < 66 || y > 73) return false;
+        int lx = Math.floorMod(x - 8, 32);
+        int lz = Math.floorMod(z - 8, 32);
+        // doorway = the 5-wide opening (13..17) on a wall edge
+        boolean notDoor = (lx < 13 || lx > 17 || lz > 2 && lz < 28) && (lz < 13 || lz > 17 || lx > 2 && lx < 28);
+        return !notDoor;
     }
 
     private static int floorVote(Level level, int cx, int cz) {
