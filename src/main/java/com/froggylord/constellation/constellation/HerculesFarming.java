@@ -28,8 +28,32 @@ public class HerculesFarming extends BaseConstellation {
 
     private HerculesConfig cfg;
 
+    private static long lastContestAlert = 0;
+
     @Override
-    public void init(InitContext ctx) { cfg = (HerculesConfig) getConfig(); }
+    public void init(InitContext ctx) {
+        cfg = (HerculesConfig) getConfig();
+        if (cfg == null) return;
+        // contest start notification — check sidebar for "Starts in: 1m" or similar
+        ConstellationClient.tick().every(20, "hercules-contest-alert", () -> {
+            if (!inGarden()) return;
+            for (String line : ConstellationClient.loc().getSidebarLines()) {
+                if (line.contains("Starts in") || line.contains("Soon")) {
+                    long now = System.currentTimeMillis();
+                    if (now - lastContestAlert > 60_000) {
+                        lastContestAlert = now;
+                        var mc = net.minecraft.client.Minecraft.getInstance();
+                        if (mc.player != null) {
+                            mc.gui.hud.resetTitleTimes();
+                            mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§a🌾 Contest starting!"));
+                            mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1.0f);
+                        }
+                    }
+                    break;
+                }
+            }
+        });
+    }
 
     @Override
     public void registerHud(HudManager hud) {
