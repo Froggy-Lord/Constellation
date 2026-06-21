@@ -39,6 +39,21 @@ public class RoomMatch {
     private static int retryTick = 0;
     private static int failTick = 0;
 
+    // per-run room memory: once a room is solved we remember it keyed by every grid cell
+    // it occupies, so walking back into it later is instant — no re-flood/re-verify. rooms
+    // don't move within a run, so this stays valid until you leave the dungeon (resetCache).
+    private record Solved(String name, RoomTransform.Direction dir, int anchorX, int anchorZ,
+                          int minX, int minZ, int maxX, int maxZ) {}
+    private static final Map<Long, Solved> solvedCells = new HashMap<>();
+
+    /** Drop the cached rooms — call on dungeon leave so the next run starts clean. */
+    public static void resetCache() {
+        solvedCells.clear();
+        currentRoom = ""; fpValid = false;
+        cellX = Integer.MIN_VALUE; cellZ = Integer.MIN_VALUE;
+        pendName = null; pendDir = null; pendCount = 0;
+    }
+
     public static String lastDebug = "no scan yet";
 
     /** Called every client tick while in a dungeon. Cheap when already identified. */
@@ -54,11 +69,22 @@ public class RoomMatch {
         if (!currentRoom.isEmpty() && fpValid && cx >= fpMinX && cx <= fpMaxX && cz >= fpMinZ && cz <= fpMaxZ) {
             cellX = cx; cellZ = cz; return;
         }
-        // moved into a new cell outside the known room — reset
+        // moved into a new cell outside the known room — reset, but first try the cache
         if (cx != cellX || cz != cellZ) {
             cellX = cx; cellZ = cz;
             currentRoom = ""; fpValid = false; retryTick = 0;
             pendName = null; pendDir = null; pendCount = 0;
+
+            // already solved this cell earlier in the run? restore it instantly.
+            Solved s = solvedCells.get(RoomGrid.cellKey(cx, cz));
+            if (s != null) {
+                currentRoom = s.name(); currentDir = s.dir();
+                anchorX = s.anchorX(); anchorZ = s.anchorZ();
+                fpMinX = s.minX(); fpMinZ = s.minZ(); fpMaxX = s.maxX(); fpMaxZ = s.maxZ();
+                fpValid = true;
+                ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
+                return;
+            }
         }
         if (!currentRoom.isEmpty()) return;
         // retry ~4x/sec until we get it (blocks may not be loaded the instant you walk in)
@@ -209,6 +235,9 @@ public class RoomMatch {
         if (pendCount >= 2) {
             currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
             fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
+            // remember this solve for every cell of the footprint → instant re-entry later
+            Solved solved = new Solved(currentRoom, currentDir, anchorX, anchorZ, fpMinX, fpMinZ, fpMaxX, fpMaxZ);
+            for (long cell : cells) solvedCells.put(cell, solved);
             ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
             ConstellationClient.LOGGER.info("[room] MATCHED {} ({}) src={} {}x{} mapped={} verify={}%",
                 best, bestDir, fromMap ? "MAP" : "flood", width, length, mapped, Math.round(bestScore * 100));

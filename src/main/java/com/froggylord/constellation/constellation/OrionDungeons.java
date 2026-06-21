@@ -39,8 +39,9 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.SkeletonScraper.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
-                // left the dungeon — reset map calibration so the next run re-anchors
+                // left the dungeon — reset map calibration + room cache so the next run re-anchors
                 com.froggylord.constellation.data.MapSegments.reset();
+                RoomMatch.resetCache();
                 wasInDungeon = false;
             }
         });
