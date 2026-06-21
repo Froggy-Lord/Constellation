@@ -126,7 +126,7 @@ public class PhoenixQol extends BaseConstellation {
             // intercept Q (drop) for valuable items — show a warning instead
             ConstellationClient.tick().every(2, "phoenix-itemprotect", () -> {
                 var mc = Minecraft.getInstance();
-                if (mc.player == null || mc.screen != null) return;
+                if (mc.player == null || mc.gui.screen() != null) return;
                 if (!mc.options.keyDrop.isDown()) return;
                 var stack = mc.player.getMainHandItem();
                 if (stack.isEmpty()) return;
