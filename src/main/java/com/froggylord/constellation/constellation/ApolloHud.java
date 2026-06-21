@@ -138,6 +138,21 @@ public class ApolloHud extends BaseConstellation {
                 return String.format("%.0f", spd);
             },
             toPos(cfg.speed), cfg.speed.visible));
+
+        hud.register(new HudWidget("apollo-purse", "Purse",
+            () -> {
+                for (String line : ConstellationClient.loc().getSidebarLines()) {
+                    var m = java.util.regex.Pattern.compile("(?:Purse|Piggy):\\s*([\\d,]+)").matcher(line);
+                    if (m.find()) {
+                        try {
+                            long n = Long.parseLong(m.group(1).replace(",", ""));
+                            return "§6" + compactLong(n);
+                        } catch (NumberFormatException e) { return m.group(1); }
+                    }
+                }
+                return null;
+            },
+            HudPosition.of(2, 58), true));
     }
 
     private static HudPosition toPos(ApolloConfig.HudEntry e) {
@@ -159,6 +174,13 @@ public class ApolloHud extends BaseConstellation {
         if (n < 1000) return Integer.toString(n);
         if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
         return String.format("%.1fM", n / 1_000_000.0);
+    }
+
+    private static String compactLong(long n) {
+        if (n < 1000) return Long.toString(n);
+        if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+        if (n < 1_000_000_000) return String.format("%.2fM", n / 1_000_000.0);
+        return String.format("%.2fB", n / 1_000_000_000.0);
     }
 
     private static String pretty(String enumName) {
