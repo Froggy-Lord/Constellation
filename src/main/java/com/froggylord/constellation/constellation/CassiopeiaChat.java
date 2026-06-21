@@ -185,10 +185,26 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
+        // ---- GAME: AutoGG (send "gg" on dungeon/kuudra end) ----
+        pipeline.onGame(msg -> {
+            String s = msg.getString();
+            if (s.contains("Dungeon") && s.contains("complete") || s.contains("Kuudra") && s.contains("defeated")) {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) mc.player.connection.sendCommand("pc gg");
+            }
+        });
+
         // ---- GAME: party triggers ----
         if (cfg.partyTriggers) {
             pipeline.onGame(msg -> handlePartyTrigger(msg));
         }
+
+        // AutoTip — send /tip all every 30 minutes on Hypixel
+        ConstellationClient.tick().every(20 * 60 * 30, "cassiopeia-autotip", () -> {
+            var mc = Minecraft.getInstance();
+            if (mc.player != null && ConstellationClient.loc().onHypixel())
+                mc.player.connection.sendCommand("tip all");
+        });
 
         // short commands handled in registerCommands
     }
