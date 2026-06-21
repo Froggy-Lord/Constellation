@@ -195,6 +195,10 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("enderchest"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
             .executes(ctx -> { sendCmd("storage"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("bz")
+            .executes(ctx -> { sendCmd("bz"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ah")
+            .executes(ctx -> { sendCmd("ah"); return 1; }));
 
         // warp shortcuts
         if (cfg.warpShortcuts) {
