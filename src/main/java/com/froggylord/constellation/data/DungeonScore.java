@@ -37,6 +37,8 @@ public final class DungeonScore {
     private static boolean princeKilled;
     private static boolean bloodDone;
     private static boolean inBoss;
+    private static long bloodAt; // when blood room completed
+    private static long bossAt;  // when boss fight started
     private static boolean mayorPaul; // EZPZ perk +10; not wired to a mayor source yet
     private static boolean sent270;
     private static boolean sent300;
@@ -164,8 +166,8 @@ public final class DungeonScore {
         if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!")) { mimicKilled = true; return; }
         if (msg.endsWith("Prince dead!") || msg.endsWith("Prince Killed!")
             || msg.equals("A Prince falls. +1 Bonus Score")) { princeKilled = true; return; }
-        if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodDone = true; return; }
-        if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) inBoss = true;
+        if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodDone = true; bloodAt = System.currentTimeMillis(); return; }
+        if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) { inBoss = true; bossAt = System.currentTimeMillis(); }
     }
 
     public static void reset() {
@@ -261,6 +263,9 @@ public final class DungeonScore {
     public static boolean mimicKilled() { return mimicKilled; }
     public static boolean hadRun() { return timeSecs > 10; } // a real run produced an elapsed time
     public static boolean inBoss() { return inBoss; }
+    public static long bloodSplitMs() { return bloodAt > 0 ? bloodAt - runStartedAt() : 0; }
+    public static long bossSplitMs() { return bossAt > 0 ? bossAt - runStartedAt() : 0; }
+    private static long runStartedAt() { return bloodAt > 0 ? bloodAt - timeSecs * 1000L : System.currentTimeMillis() - timeSecs * 1000L; }
 
     /** Floor pass requirement (min secret %, time limit seconds). */
     private enum FloorReq {

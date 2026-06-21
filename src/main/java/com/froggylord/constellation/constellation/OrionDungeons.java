@@ -120,6 +120,21 @@ public class OrionDungeons extends BaseConstellation {
                 () -> !scoreReady() ? null : formatTime(com.froggylord.constellation.data.DungeonScore.timeSeconds()),
                 HudPosition.of(6, 102), cfg.timerHud));
         }
+        if (cfg.splitsHud) {
+            hud.register(new HudWidget("orion-splits", "Splits",
+                () -> {
+                    if (!scoreReady()) return null;
+                    var ds = com.froggylord.constellation.data.DungeonScore.class;
+                    long blood = com.froggylord.constellation.data.DungeonScore.bloodSplitMs();
+                    long boss = com.froggylord.constellation.data.DungeonScore.bossSplitMs();
+                    if (blood == 0 && boss == 0) return null;
+                    StringBuilder sb = new StringBuilder("§7Splits");
+                    if (blood > 0) sb.append(" §cBlood ").append(formatTimeMs(blood));
+                    if (boss > 0) sb.append(sb.length() > 0 ? " §7|" : "").append(" §4Boss ").append(formatTimeMs(boss));
+                    return sb.toString();
+                },
+                HudPosition.of(6, 114), cfg.splitsHud));
+        }
         if (cfg.roomNameHud) {
             hud.register(new HudWidget("orion-room", "Room",
                 () -> {
@@ -238,5 +253,10 @@ public class OrionDungeons extends BaseConstellation {
 
     private static String formatTime(int secs) {
         return secs / 60 + ":" + String.format("%02d", secs % 60);
+    }
+
+    private static String formatTimeMs(long ms) {
+        int s = (int) (ms / 1000);
+        return s / 60 + ":" + String.format("%02d", s % 60);
     }
 }
