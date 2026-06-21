@@ -199,6 +199,15 @@ public class CassiopeiaChat extends BaseConstellation {
                 sendCmd("pc rolled a " + r);
                 return 1;
             }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ping")
+            .executes(ctx -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    var server = mc.getCurrentServer();
+                    mc.player.sendSystemMessage(Component.literal("§a⏱ " + (server != null ? server.ping + "ms" : "N/A")));
+                }
+                return 1;
+            }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ec")
             .executes(ctx -> { sendCmd("enderchest"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")

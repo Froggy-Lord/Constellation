@@ -25,6 +25,8 @@ public class CygnusEvents extends BaseConstellation {
     private static final Pattern DATE = Pattern.compile("((?:Early|Late) )?(Spring|Summer|Autumn|Winter) (\\d+)(?:st|nd|rd|th)");
     private static final Pattern TIME = Pattern.compile("(\\d{1,2}:\\d{2})(am|pm)");
     private static final Pattern MAYOR = Pattern.compile("Mayor:?\\s*(\\w+)");
+    private static final Pattern HOPPITY = Pattern.compile("Hoppity.*?(\\d+)");
+    private static final Pattern CHOCOLATE = Pattern.compile("Chocolate:?\\s*([\\d,]+)");
 
     private CygnusConfig cfg;
 
@@ -45,6 +47,12 @@ public class CygnusEvents extends BaseConstellation {
             hud.register(new HudWidget("cygnus-mayor", "Mayor",
                 () -> ConstellationClient.loc().onHypixel() ? mayorLine() : null,
                 HudPosition.of(2, 110), cfg.calendarHud));
+            hud.register(new HudWidget("cygnus-hoppity", "Hoppity",
+                () -> ConstellationClient.loc().onHypixel() ? hoppityLine() : null,
+                HudPosition.of(2, 120), cfg.calendarHud));
+            hud.register(new HudWidget("cygnus-choc", "Choc",
+                () -> ConstellationClient.loc().onHypixel() ? chocLine() : null,
+                HudPosition.of(2, 128), cfg.calendarHud));
         }
     }
 
@@ -73,5 +81,30 @@ public class CygnusEvents extends BaseConstellation {
             if (m.find()) return "§6Mayor §f" + m.group(1);
         }
         return null;
+    }
+
+    private static String hoppityLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = HOPPITY.matcher(line);
+            if (m.find()) return "§d🐰 " + m.group(1);
+        }
+        return null;
+    }
+
+    private static String chocLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = CHOCOLATE.matcher(line);
+            if (m.find()) return "§6🍫 " + compact(m.group(1));
+        }
+        return null;
+    }
+
+    private static String compact(String raw) {
+        try {
+            long n = Long.parseLong(raw.replace(",", ""));
+            if (n < 1000) return Long.toString(n);
+            if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+            return String.format("%.2fM", n / 1_000_000.0);
+        } catch (NumberFormatException e) { return raw; }
     }
 }
