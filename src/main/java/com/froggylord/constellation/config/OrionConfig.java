@@ -63,3 +63,4 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean mimicPartyPing = true;
     public boolean streamerMode = false;
 }
+public boolean rareDropAlerts = true;
