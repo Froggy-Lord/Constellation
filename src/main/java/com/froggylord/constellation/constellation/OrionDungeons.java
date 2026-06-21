@@ -106,6 +106,22 @@ public class OrionDungeons extends BaseConstellation {
                 },
                 HudPosition.of(6, 114), cfg.roomNameHud));
         }
+        if (cfg.mimicIndicator) {
+            hud.register(new HudWidget("orion-mimic", "Mimic",
+                () -> {
+                    if (!scoreReady() || !com.froggylord.constellation.data.DungeonScore.isMimicFloor()) return null;
+                    return com.froggylord.constellation.data.DungeonScore.mimicKilled() ? "§adead" : "§calive";
+                },
+                HudPosition.of(6, 126), cfg.mimicIndicator));
+        }
+        if (cfg.perRoomCount) {
+            hud.register(new HudWidget("orion-roomsecrets", "Room",
+                () -> {
+                    if (!inDungeon() || SecretWaypoints.totalCount() == 0) return null;
+                    return SecretWaypoints.collectedCount() + "/" + SecretWaypoints.totalCount();
+                },
+                HudPosition.of(6, 138), cfg.perRoomCount));
+        }
         // dungeon map — lives in the same registry/editor as everything else
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }

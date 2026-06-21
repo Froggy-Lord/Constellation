@@ -46,6 +46,8 @@ public final class DungeonScore {
     private static double secretPct;
     private static int crypts;
     private static int timeSecs;
+    private static String floorName = "";
+    private static boolean mimicFloor;
 
     /** Recompute from the current sidebar + tab. Call ~1/sec while in a dungeon. */
     public static void update() {
@@ -59,7 +61,9 @@ public final class DungeonScore {
         active = true;
         timeSecs = (tm.group("m") != null ? Integer.parseInt(tm.group("m")) * 60 : 0) + Integer.parseInt(tm.group("s"));
 
-        FloorReq floor = FloorReq.from(floorName(side));
+        floorName = floorName(side);
+        mimicFloor = floorName.matches("[FM][67]"); // mimics spawn on floors 6 and 7
+        FloorReq floor = FloorReq.from(floorName);
         boolean entrance = floor == FloorReq.E;
         double cleared = clearedFrac(side);
 
@@ -133,7 +137,7 @@ public final class DungeonScore {
         int paul = mayorPaul ? 10 : 0;
         int crypt = clamp(crypts, 0, 5);
         int mimic = mimicKilled ? 2 : 0;
-        if (secretPct >= 100 && inBoss) mimic = 2; // mimic must be dead if 100% secrets on a mimic floor
+        if (secretPct >= 100 && mimicFloor) mimic = 2; // mimic must be dead if 100% secrets on a mimic floor
         int prince = princeKilled ? 1 : 0;
         return paul + crypt + mimic + prince;
     }
@@ -165,7 +169,7 @@ public final class DungeonScore {
     public static void reset() {
         active = false; deaths = 0; mimicKilled = false; princeKilled = false;
         bloodDone = false; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0;
-        sent270 = false; sent300 = false;
+        sent270 = false; sent300 = false; floorName = ""; mimicFloor = false;
     }
 
     public static void setMayorPaul(boolean paul) { mayorPaul = paul; }
@@ -245,6 +249,9 @@ public final class DungeonScore {
     public static int crypts() { return crypts; }
     public static int deaths() { return deaths; }
     public static int timeSeconds() { return timeSecs; }
+    public static String floor() { return floorName; }
+    public static boolean isMimicFloor() { return mimicFloor; }
+    public static boolean mimicKilled() { return mimicKilled; }
 
     /** Floor pass requirement (min secret %, time limit seconds). */
     private enum FloorReq {
