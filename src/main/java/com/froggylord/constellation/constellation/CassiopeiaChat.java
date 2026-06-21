@@ -186,11 +186,38 @@ public class CassiopeiaChat extends BaseConstellation {
         }
 
         // ---- GAME: AutoGG (send "gg" on dungeon/kuudra end) ----
+        if (cfg.autoGG) {
+            pipeline.onGame(msg -> {
+                String s = msg.getString();
+                if (s.contains("Dungeon") && s.contains("complete") || s.contains("Kuudra") && s.contains("defeated")) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.connection.sendCommand("pc gg");
+                }
+            });
+        }
+
+        // ---- GAME: full inventory warning (SBA feature) ----
         pipeline.onGame(msg -> {
             String s = msg.getString();
-            if (s.contains("Dungeon") && s.contains("complete") || s.contains("Kuudra") && s.contains("defeated")) {
+            if (s.contains("Your inventory is full") || s.contains("cannot fit") || s.contains("inventory full")) {
                 var mc = Minecraft.getInstance();
-                if (mc.player != null) mc.player.connection.sendCommand("pc gg");
+                if (mc.player != null) {
+                    mc.player.sendSystemMessage(Component.literal("§c⚠ INVENTORY FULL!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASS.value(), 1f, 0.5f);
+                }
+            }
+        });
+
+        // ---- GAME: legendary sea creature alert (SBA feature) ----
+        pipeline.onGame(msg -> {
+            String s = msg.getString();
+            if (s.contains("A legendary Sea Creature has spawned")) {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(Component.literal("§b🐟 LEGENDARY SEA CREATURE!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.5f);
+                }
             }
         });
 
@@ -294,6 +321,21 @@ public class CassiopeiaChat extends BaseConstellation {
                 }
                 return 1;
             }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("calc")
+            .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                "expr", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                .executes(ctx -> {
+                    String expr = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "expr");
+                    try {
+                        double result = eval(expr);
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§a" + expr + " = §f" + result));
+                    } catch (Exception e) {
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§cCould not evaluate: " + expr));
+                    }
+                    return 1;
+                })));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ec")
             .executes(ctx -> { sendCmd("enderchest"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
@@ -380,5 +422,39 @@ public class CassiopeiaChat extends BaseConstellation {
         if (mc.player != null) {
             mc.player.connection.sendCommand(cmd);
         }
+    }
+
+    /** Crude expression evaluator for basic arithmetic. */
+    private static double eval(String expr) {
+        expr = expr.replaceAll("\\s+", "");
+        // find the rightmost + or - (lowest precedence)
+        int parens = 0;
+        for (int i = expr.length() - 1; i >= 1; i--) {
+            char c = expr.charAt(i);
+            if (c == ')') parens++;
+            else if (c == '(') parens--;
+            else if (parens == 0) {
+                if (c == '+') return eval(expr.substring(0, i)) + eval(expr.substring(i + 1));
+                if (c == '-') return eval(expr.substring(0, i)) - eval(expr.substring(i + 1));
+            }
+        }
+        // find rightmost * or /
+        parens = 0;
+        for (int i = expr.length() - 1; i >= 1; i--) {
+            char c = expr.charAt(i);
+            if (c == ')') parens++;
+            else if (c == '(') parens--;
+            else if (parens == 0) {
+                if (c == '*') return eval(expr.substring(0, i)) * eval(expr.substring(i + 1));
+                if (c == '/') return eval(expr.substring(0, i)) / eval(expr.substring(i + 1));
+            }
+        }
+        // strip parens
+        if (expr.startsWith("(") && expr.endsWith(")")) return eval(expr.substring(1, expr.length() - 1));
+        // number
+        if (expr.endsWith("k")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1000;
+        if (expr.endsWith("m")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1_000_000;
+        if (expr.endsWith("b")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1_000_000_000;
+        return Double.parseDouble(expr);
     }
 }

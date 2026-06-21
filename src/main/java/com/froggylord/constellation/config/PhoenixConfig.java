@@ -26,4 +26,7 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean instantSneak = false;
     public boolean signCalculator = true;
     public boolean hideAttachedArrows = true;
+    public boolean itemProtection = true;
+    public boolean preventDroppingValuable = true;
+    public boolean increasedChatHistory = true;
 }

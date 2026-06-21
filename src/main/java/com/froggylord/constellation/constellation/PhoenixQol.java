@@ -122,6 +122,22 @@ public class PhoenixQol extends BaseConstellation {
                     mc.player.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
             });
         }
+        if (cfg.preventDroppingValuable) {
+            // intercept Q (drop) for valuable items — show a warning instead
+            ConstellationClient.tick().every(2, "phoenix-itemprotect", () -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player == null || mc.screen != null) return;
+                if (!mc.options.keyDrop.isDown()) return;
+                var stack = mc.player.getMainHandItem();
+                if (stack.isEmpty()) return;
+                String name = stack.getHoverName().getString();
+                // prevent dropping items with rarity colors (valuable)
+                if (name.contains("§6") || name.contains("§5") || name.contains("§9") || name.contains("§d") || name.contains("§c")) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚠ Hold §nshift§r§c to drop §r" + name));
+                    mc.options.keyDrop.setDown(false);
+                }
+            });
+        }
         if (cfg.signCalculator) {
             // evaluate simple math on signs — on Hypixel this is mostly bazaar/auction
             // pricing, so having the answer in chat saves a mental calculation
