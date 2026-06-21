@@ -71,7 +71,7 @@ public class RoomMatch {
         if (mc.player == null || mc.level == null) return "not in world";
         int cx = RoomGrid.cornerX(mc.player.position());
         int cz = RoomGrid.cornerZ(mc.player.position());
-        currentRoom = ""; fpValid = false;
+        // a one-off diagnostic scan that doesn't disturb the live committed room
         match(mc.level, cx, cz, true);
         return lastDebug;
     }
@@ -168,6 +168,8 @@ public class RoomMatch {
 
         int survivors = cands.stream().mapToInt(List::size).sum();
         boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= 0.80;
+        // a scan where almost nothing mapped = blocks not loaded this tick, not a real "no match"
+        boolean transientFail = mapped < MIN_MAPPED;
 
         if (debug) {
             lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + (width + 1) + "x" + (length + 1)
@@ -177,12 +179,14 @@ public class RoomMatch {
                 + " §7ids:[" + sample.toString().trim() + "]";
         }
 
-        // 7. confirm streak
+        // 7. confirm streak — transient failures (blocks unloaded) don't reset it
         if (confident && best.equals(pendName) && bestDir == pendDir && bestAX == pendAnchorX && bestAZ == pendAnchorZ) {
             pendCount++;
         } else if (confident) {
             pendName = best; pendDir = bestDir; pendAnchorX = bestAX; pendAnchorZ = bestAZ; pendCount = 1;
-        } else {
+        } else if (!transientFail) {
+            // a real confident-but-different / no-survivor result clears the streak;
+            // a transient "nothing loaded" scan leaves it alone so we don't lose progress
             pendName = null; pendDir = null; pendCount = 0;
         }
 
