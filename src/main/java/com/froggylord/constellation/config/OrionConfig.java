@@ -57,4 +57,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean abilityTracker = true;
     public boolean abilityReadyDing = true;
     public boolean lowHealthAlert = true;
+    public boolean spiritLeapHelper = true;
 }
