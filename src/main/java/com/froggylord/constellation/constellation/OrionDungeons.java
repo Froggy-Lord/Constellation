@@ -220,7 +220,6 @@ public class OrionDungeons extends BaseConstellation {
                 },
                 HudPosition.of(6, 162), cfg.dungeonCopilot));
         }
-        }
         // dungeon map — lives in the same registry/editor as everything else
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }
