@@ -3,37 +3,31 @@ package com.froggylord.constellation.data;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Catacombs room grid math. Rooms sit on a 32-block grid.
- * Corner macros and cell-size constants.
+ * Catacombs room grid math. Hypixel lays rooms on a 32-block grid, but the grid is
+ * offset: each room's NW corner sits at (x,z) ≡ 24 (mod 32), because SkyBlock 0.12.3
+ * shifted dungeons by 8 blocks. So the corner is computed from a +8.5 shifted position,
+ * snapped to the 32-grid, then shifted back by 8.
  */
 public class RoomGrid {
 
-    public static final int CELL = 32;
+    public static final int ROOM = 31;   // a room is 31x31 blocks
+    public static final int GRID = 32;   // on a 32 grid (1-block wall between)
 
-    /** The grid corner X for a given world X */
-    public static int cornerX(double worldX) {
-        return cornerX((int) Math.floor(worldX));
+    /** NW-corner X of the room a world X sits in */
+    public static int cornerX(double x) {
+        int p = (int) (x + 8.5);
+        return p - Math.floorMod(p, GRID) - 8;
     }
 
-    public static int cornerZ(double worldZ) {
-        return cornerZ((int) Math.floor(worldZ));
+    public static int cornerZ(double z) {
+        int p = (int) (z + 8.5);
+        return p - Math.floorMod(p, GRID) - 8;
     }
 
-    public static int cornerX(int worldX) {
-        int mod = Math.floorMod(worldX, CELL);
-        return worldX - mod;
-    }
+    public static int cornerX(Vec3 pos) { return cornerX(pos.x); }
+    public static int cornerZ(Vec3 pos) { return cornerZ(pos.z); }
 
-    public static int cornerZ(int worldZ) {
-        int mod = Math.floorMod(worldZ, CELL);
-        return worldZ - mod;
-    }
-
-    /** local x within the cell (0..31) */
-    public static int localX(double worldX) { return Math.floorMod((int) Math.floor(worldX), CELL); }
-    public static int localZ(double worldZ) { return Math.floorMod((int) Math.floor(worldZ), CELL); }
-
-    /** the cell key (packed corner coords) for fast lookups */
+    /** pack a cell's corner coords into a long key */
     public static long cellKey(Vec3 pos) {
         return cellKey(cornerX(pos.x), cornerZ(pos.z));
     }
