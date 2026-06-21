@@ -9,7 +9,11 @@ import com.froggylord.constellation.data.RoomMatch;
 import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 
 public class OrionDungeons extends BaseConstellation {
 
@@ -74,6 +78,40 @@ public class OrionDungeons extends BaseConstellation {
                 },
                 HudPosition.of(6, 114), cfg.roomNameHud));
         }
+    }
+
+    @Override
+    public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        // /roomdebug — dump detection state so we can see what's happening live
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomdebug")
+            .executes(ctx -> {
+                var loc = ConstellationClient.loc();
+                int roomCount = DungeonData.ROOMS.values().stream().mapToInt(java.util.Map::size).sum();
+                String msg = "§e[Orion debug]§r\n"
+                    + "§7data loaded:§r " + DungeonData.isLoaded() + " (" + roomCount + " rooms)\n"
+                    + "§7onHypixel:§r " + loc.onHypixel() + "\n"
+                    + "§7inDungeons:§r " + loc.inDungeons() + "\n"
+                    + "§7area:§r " + loc.area() + "\n"
+                    + "§7sidebar lines:§r " + loc.getSidebarLines().size() + "\n"
+                    + "§7current room:§r '" + RoomMatch.currentRoom() + "'";
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) mc.player.sendSystemMessage(Component.literal(msg));
+                // also dump sidebar lines
+                for (String line : loc.getSidebarLines()) {
+                    if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§8| §7" + line));
+                }
+                return 1;
+            }));
+
+        // force a room scan right now (bypasses the inDungeons gate for testing)
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomscan")
+            .executes(ctx -> {
+                RoomMatch.update();
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) mc.player.sendSystemMessage(
+                    Component.literal("§e[Orion]§r forced scan → room: '" + RoomMatch.currentRoom() + "'"));
+                return 1;
+            }));
     }
 
     private static boolean inDungeon() {
