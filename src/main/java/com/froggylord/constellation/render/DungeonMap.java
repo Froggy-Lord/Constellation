@@ -86,12 +86,11 @@ public class DungeonMap {
         }
     }
 
-    /** Player markers: arrow for yourself, dots for others. */
+    /** Player markers: an arrow facing your direction for yourself, dots for others. */
     private static void drawMarkers(GuiGraphicsExtractor g, int ox, int oy, MapItemSavedData data) {
         var decos = ((MapDataAccessor) (Object) data).constellation$decorations();
         if (decos == null) return;
         Minecraft mc = Minecraft.getInstance();
-        var selfUUID = mc.player != null ? mc.player.getUUID() : null;
 
         for (var deco : decos.values()) {
             int mx = clamp((deco.x() / 2) + 64);
@@ -99,37 +98,62 @@ public class DungeonMap {
             int sx = ox + (mx * screenSize()) / MAP;
             int sy = oy + (my * screenSize()) / MAP;
 
-            // check if this decoration is the player themselves (name matches)
-            // hypixel puts the player's own head on the map
-            boolean isSelf = false;
-            if (selfUUID != null && deco.name().isPresent()) {
-                try {
-                    var name = deco.name().get().getString();
-                    if (name.equals(mc.player.getName().getString())) isSelf = true;
-                } catch (Exception ignored) {}
-            }
+            // the player's own marker is the PLAYER/FRAME decoration TYPE (usually unnamed)
+            var type = deco.type();
+            boolean isSelf = type.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.PLAYER)
+                          || type.equals(net.minecraft.world.level.saveddata.maps.MapDecorationTypes.FRAME);
 
-            if (isSelf) {
-                // arrow pointing in the player's facing direction
-                float yaw = mc.player.getYRot();
-                double rad = Math.toRadians(yaw + 180); // minecraft yaw: 0=south, 90=west
-                int sz = Math.max(3, screenSize() / 50);
-                int tipX = sx + (int)(Math.sin(rad) * sz * 1.8);
-                int tipY = sy + (int)(Math.cos(rad) * sz * 1.8);
-                int lx = sx + (int)(Math.sin(rad + 2.3) * sz);
-                int ly = sy + (int)(Math.cos(rad + 2.3) * sz);
-                int rx = sx + (int)(Math.sin(rad - 2.3) * sz);
-                int ry = sy + (int)(Math.cos(rad - 2.3) * sz);
-                g.fill(sx, sy, sx + 1, sy + 1, 0xFF000000);
-                for (int[] p : new int[][]{{tipX, tipY}, {lx, ly}, {rx, ry}}) {
-                    if (Math.abs(p[0] - sx) + Math.abs(p[1] - sy) < sz * 3)
-                        g.fill(p[0], p[1], p[0] + 1, p[1] + 1, NebulaTheme.ACCENT_GOLD);
-                }
+            if (isSelf && mc.player != null) {
+                drawArrow(g, sx, sy, mc.player.getYRot());
             } else {
-                // teammate marker — simple dot
+                // teammate marker — small dot
                 g.fill(sx - 1, sy - 1, sx + 2, sy + 2, 0xFF000000);
                 g.fill(sx, sy, sx + 1, sy + 1, 0xAAFFFFFF);
             }
+        }
+    }
+
+    /** A filled arrowhead pointing in the player's facing direction (yaw degrees). */
+    private static void drawArrow(GuiGraphicsExtractor g, int cx, int cy, float yaw) {
+        double rad = Math.toRadians(yaw + 180); // MC yaw: 0=south(+z); screen +y is south
+        double dirX = -Math.sin(rad), dirY = Math.cos(rad);   // facing vector
+        double perpX = -dirY, perpY = dirX;                   // perpendicular
+        int len = Math.max(4, screenSize() / 32);             // arrow length, scales with map
+        int wide = Math.max(2, len / 2);
+
+        // three points: tip, back-left, back-right
+        double tipX = cx + dirX * len,        tipY = cy + dirY * len;
+        double blX  = cx - dirX * len * 0.4 + perpX * wide, blY = cy - dirY * len * 0.4 + perpY * wide;
+        double brX  = cx - dirX * len * 0.4 - perpX * wide, brY = cy - dirY * len * 0.4 - perpY * wide;
+
+        // outline (black) then fill (gold) the triangle by scanning
+        fillTriangle(g, tipX, tipY, blX, blY, brX, brY, 0xFF000000, 1.0);
+        fillTriangle(g, tipX, tipY, blX, blY, brX, brY, NebulaTheme.ACCENT_GOLD, 0.0);
+    }
+
+    /** Scanline-fill a triangle (expand by `grow` px for a cheap outline pass). */
+    private static void fillTriangle(GuiGraphicsExtractor g, double ax, double ay,
+                                     double bx, double by, double ccx, double ccy, int col, double grow) {
+        double cx = (ax + bx + ccx) / 3, cy = (ay + by + ccy) / 3;
+        ax += Math.signum(ax - cx) * grow; ay += Math.signum(ay - cy) * grow;
+        bx += Math.signum(bx - cx) * grow; by += Math.signum(by - cy) * grow;
+        ccx += Math.signum(ccx - cx) * grow; ccy += Math.signum(ccy - cy) * grow;
+        int minY = (int) Math.floor(Math.min(ay, Math.min(by, ccy)));
+        int maxY = (int) Math.ceil(Math.max(ay, Math.max(by, ccy)));
+        for (int y = minY; y <= maxY; y++) {
+            Double xL = null, xR = null;
+            double[][] edges = {{ax, ay, bx, by}, {bx, by, ccx, ccy}, {ccx, ccy, ax, ay}};
+            for (double[] e : edges) {
+                double y1 = e[1], y2 = e[3];
+                if ((y >= y1 && y < y2) || (y >= y2 && y < y1)) {
+                    double t = (y - y1) / (y2 - y1);
+                    double x = e[0] + t * (e[2] - e[0]);
+                    if (xL == null || x < xL) xL = x;
+                    if (xR == null || x > xR) xR = x;
+                }
+            }
+            if (xL != null && xR != null)
+                g.fill((int) Math.floor(xL), y, (int) Math.ceil(xR) + 1, y + 1, col);
         }
     }
 
