@@ -47,4 +47,9 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean autoRequeue = false;
     public int requeueDelaySec = 3;
     public boolean requeueSafeMode = true;
+
+    // combat esp (depth-tested — moving entities must respect walls per Hypixel rules)
+    public boolean starredMobs = true;
+    public boolean secretBats = true;
+    public boolean teammateBoxes = false;
 }
