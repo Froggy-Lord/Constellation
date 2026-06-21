@@ -189,6 +189,12 @@ public class CassiopeiaChat extends BaseConstellation {
         // /sbmenu — SkyBlock menu
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sbmenu")
             .executes(ctx -> { sendCmd("sbmenu"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("craft")
+            .executes(ctx -> { sendCmd("craft"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ec")
+            .executes(ctx -> { sendCmd("enderchest"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
+            .executes(ctx -> { sendCmd("storage"); return 1; }));
 
         // warp shortcuts
         if (cfg.warpShortcuts) {
