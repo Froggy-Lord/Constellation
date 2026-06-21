@@ -113,11 +113,18 @@ public class RoomMatch {
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
         for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 4. reference Y — floorVote is the walkable floor. skeletons are normalised so
-        //    the lowest tracked block = 0. rooms sit 2-3 blocks above a bedrock foundation,
-        //    so the lower blocks of the scan start at floorY (the walkable surface) and
-        //    the foundation lies 0-2 blocks below. using floorY keeps the encode stable.
+        // 4. reference Y — skeletons are normalised so the lowest block = 0. find the
+        //    actual foundation bedrock within the room's footprint. bedrock (id=10) is the
+        //    universal dungeon floor and won't be contaminated by other rooms' blocks.
         int minY = floorY;
+        for (int dy = -8; dy <= 2; dy++) {
+            int yc = floorY + dy;
+            for (int wx = wMinX + 4; wx <= wMaxX - 4; wx += 8)
+                for (int wz = wMinZ + 4; wz <= wMaxZ - 4; wz += 8) {
+                    if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
+                    if (blockId(level, wx, yc, wz) == 10) { minY = yc; break; } // bedrock found
+                }
+        }
 
         // 5. elimination loop — remove candidates that don't contain each observed block
         int mapped = 0;
