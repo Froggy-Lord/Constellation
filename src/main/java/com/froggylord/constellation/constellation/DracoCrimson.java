@@ -23,6 +23,8 @@ public class DracoCrimson extends BaseConstellation {
     @Override public String description() { return "Crimson Isle — reputation, Kuudra, Dojo"; }
 
     private static final Pattern REP = Pattern.compile("(Barbarian|Mage) Reputation:?\\s*([\\d,]+)");
+    private static final Pattern DOJO = Pattern.compile("Dojo:.*?(\\d+).*");
+    private static final Pattern VANQ = Pattern.compile("Vanquisher:?\\s*(\\d+)");
 
     private DracoConfig cfg;
 
@@ -38,6 +40,9 @@ public class DracoCrimson extends BaseConstellation {
             hud.register(new HudWidget("draco-rep", "Rep",
                 () -> inCrimson() ? repLine() : null,
                 HudPosition.of(2, 130), cfg.activityHud));
+            hud.register(new HudWidget("draco-dojo", "Dojo",
+                () -> inCrimson() ? dojoLine() : null,
+                HudPosition.of(2, 140), cfg.activityHud));
         }
     }
 
@@ -48,8 +53,25 @@ public class DracoCrimson extends BaseConstellation {
     private static String repLine() {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = REP.matcher(line);
-            if (m.find()) return "§c" + m.group(1) + " §f" + m.group(2);
+            if (m.find()) return "§c" + m.group(1) + " §f" + m.group(2)
+                + " §7(" + vanqLine() + ")";
         }
         return null;
+    }
+
+    private static String dojoLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = DOJO.matcher(line);
+            if (m.find()) return "§eDojo §f" + m.group(1);
+        }
+        return null;
+    }
+
+    private static String vanqLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = VANQ.matcher(line);
+            if (m.find()) return m.group(1) + " kills";
+        }
+        return "? kills";
     }
 }
