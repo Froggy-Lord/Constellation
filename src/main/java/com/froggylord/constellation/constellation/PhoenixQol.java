@@ -42,5 +42,44 @@ public class PhoenixQol extends BaseConstellation {
             Minecraft mc = Minecraft.getInstance();
             mc.options.fovEffectScale().set(0.0);
         }
+        if (cfg.signCalculator) {
+            // evaluate simple math on signs — on Hypixel this is mostly bazaar/auction
+            // pricing, so having the answer in chat saves a mental calculation
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+                if (!cfg.signCalculator) return;
+                String s = message.getString();
+                // "Sign says: 143 * 64" or chat-edited sign text
+                if (!s.contains("Sign says:")) return;
+                int colon = s.indexOf(':');
+                if (colon < 0) return;
+                String expr = s.substring(colon + 1).trim();
+                try { evaluateSign(expr); } catch (Exception ignored) {}
+            });
+        }
+    }
+
+    private static void evaluateSign(String expr) {
+        // basic: number operator number (e.g. "143 * 64" or "1.45 * 850")
+        String[] parts = expr.split("\\s+");
+        if (parts.length < 3) return;
+        double a = Double.parseDouble(parts[0].replace(",", ""));
+        double b = Double.parseDouble(parts[2].replace(",", ""));
+        double result = switch (parts[1]) {
+            case "*", "x", "×" -> a * b;
+            case "+" -> a + b;
+            case "-" -> a - b;
+            case "/" -> b != 0 ? a / b : 0;
+            default -> throw new IllegalArgumentException();
+        };
+        var mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            String out = "§eSign calc: §f" + a + " " + parts[1] + " " + b + " = §a" + format(result);
+            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(out));
+        }
+    }
+
+    private static String format(double n) {
+        if (n == Math.floor(n) && n < Long.MAX_VALUE) return String.format("%,d", (long) n);
+        return String.format("%,.1f", n);
     }
 }
