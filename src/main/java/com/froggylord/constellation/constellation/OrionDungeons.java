@@ -32,6 +32,14 @@ public class OrionDungeons extends BaseConstellation {
         // load dungeon data (room skeletons, secrets, routes)
         DungeonData.load();
 
+        // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
+        // sees boss dialogue even if the chat cleaner would later hide it.
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (!overlay && ConstellationClient.loc().inDungeons())
+                com.froggylord.constellation.data.DungeonScore.onChat(message.getString());
+            return true;
+        });
+
         // room detection every 4 ticks — inside it self-throttles to ~4x/sec and caches
         ConstellationClient.tick().every(4, "orion-room-match", () -> {
             if (ConstellationClient.loc().inDungeons()) {
@@ -42,8 +50,14 @@ public class OrionDungeons extends BaseConstellation {
                 // left the dungeon — reset map calibration + room cache so the next run re-anchors
                 com.froggylord.constellation.data.MapSegments.reset();
                 RoomMatch.resetCache();
+                com.froggylord.constellation.data.DungeonScore.reset();
                 wasInDungeon = false;
             }
+        });
+
+        // recompute score ~1/sec from the sidebar + tab list
+        ConstellationClient.tick().every(20, "orion-score", () -> {
+            if (ConstellationClient.loc().inDungeons()) com.froggylord.constellation.data.DungeonScore.update();
         });
     }
 
@@ -55,27 +69,28 @@ public class OrionDungeons extends BaseConstellation {
         // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
         if (cfg.scoreHud) {
             hud.register(new HudWidget("orion-score", "Score",
-                () -> inDungeon() ? "300 S+" : null,
+                () -> !scoreReady() ? null
+                    : com.froggylord.constellation.data.DungeonScore.score() + " " + com.froggylord.constellation.data.DungeonScore.grade(),
                 HudPosition.of(6, 54), cfg.scoreHud));
         }
         if (cfg.secretsHud) {
             hud.register(new HudWidget("orion-secrets", "Secrets",
-                () -> inDungeon() ? "0/0" : null,
+                () -> !scoreReady() ? null : com.froggylord.constellation.data.DungeonScore.secretPercent() + "%",
                 HudPosition.of(6, 66), cfg.secretsHud));
         }
         if (cfg.cryptsHud) {
             hud.register(new HudWidget("orion-crypts", "Crypts",
-                () -> inDungeon() ? "0" : null,
+                () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.crypts()),
                 HudPosition.of(6, 78), cfg.cryptsHud));
         }
         if (cfg.deathsHud) {
             hud.register(new HudWidget("orion-deaths", "Deaths",
-                () -> inDungeon() ? "0" : null,
+                () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.deaths()),
                 HudPosition.of(6, 90), cfg.deathsHud));
         }
         if (cfg.timerHud) {
             hud.register(new HudWidget("orion-timer", "Timer",
-                () -> inDungeon() ? "0:00" : null,
+                () -> !scoreReady() ? null : formatTime(com.froggylord.constellation.data.DungeonScore.timeSeconds()),
                 HudPosition.of(6, 102), cfg.timerHud));
         }
         if (cfg.roomNameHud) {
@@ -162,5 +177,14 @@ public class OrionDungeons extends BaseConstellation {
 
     private static boolean inDungeon() {
         return ConstellationClient.loc().inDungeons();
+    }
+
+    // score values are only meaningful once the run has actually started (elapsed-time line up)
+    private static boolean scoreReady() {
+        return inDungeon() && com.froggylord.constellation.data.DungeonScore.isActive();
+    }
+
+    private static String formatTime(int secs) {
+        return secs / 60 + ":" + String.format("%02d", secs % 60);
     }
 }
