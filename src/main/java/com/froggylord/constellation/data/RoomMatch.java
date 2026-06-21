@@ -40,11 +40,13 @@ public class RoomMatch {
             return;
         }
 
-        Vec3 pos = mc.player.position();
-        int floorY = (int) Math.floor(pos.y);
-        int startCX = RoomGrid.cornerX(pos.x), startCZ = RoomGrid.cornerZ(pos.z);
+        int startCX = RoomGrid.cornerX(pos(mc).x), startCZ = RoomGrid.cornerZ(pos(mc).z);
 
-        // 1. flood the footprint
+        // 1. find the floor Y by voting on solid-with-air-above columns
+        int floorY = floorVote(mc.level, startCX, startCZ);
+        if (floorY == Integer.MIN_VALUE) floorY = (int) Math.floor(pos(mc).y);
+
+        // 2. flood the footprint using seam-connectivity (stops at walls/doorways)
         Set<Long> cells = flood(mc.level, startCX, startCZ, floorY);
         if (cells.isEmpty()) {
             lastDebug = "§cflood found 0 cells§r (floorY=" + floorY + " cell=" + startCX + "," + startCZ + ")";
@@ -55,11 +57,11 @@ public class RoomMatch {
         int wMinZ = Integer.MAX_VALUE, wMaxZ = Integer.MIN_VALUE;
         for (long c : cells) {
             int cx = (int) (c >> 32), cz = (int) c;
-            wMinX = Math.min(wMinX, cx); wMaxX = Math.max(wMaxX, cx + 31);
-            wMinZ = Math.min(wMinZ, cz); wMaxZ = Math.max(wMaxZ, cz + 31);
+            wMinX = Math.min(wMinX, cx); wMaxX = Math.max(wMaxX, cx + 30);
+            wMinZ = Math.min(wMinZ, cz); wMaxZ = Math.max(wMaxZ, cz + 30);
         }
-        int spanX = (wMaxX - wMinX + 1) / 32;
-        int spanZ = (wMaxZ - wMinZ + 1) / 32;
+        int spanX = (wMaxX - wMinX + 1 + 1) / 32;
+        int spanZ = (wMaxZ - wMinZ + 1 + 1) / 32;
         String shape = Math.min(spanX, spanZ) + "x" + Math.max(spanX, spanZ);
         int maxDim = Math.max(wMaxX - wMinX, wMaxZ - wMinZ);
 
@@ -170,37 +172,76 @@ public class RoomMatch {
         return checked == 0 ? 0 : (double) hit / checked;
     }
 
+    private static Vec3 pos(Minecraft mc) { return mc.player.position(); }
+
+    /** find the room floor Y by voting on "solid block with air above" columns */
+    private static int floorVote(Level level, int cx, int cz) {
+        Minecraft mc = Minecraft.getInstance();
+        int start = mc.player != null ? (int) Math.floor(mc.player.getY()) + 2 : 80;
+        Map<Integer, Integer> votes = new HashMap<>();
+        BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+        for (int lx = 6; lx <= 24; lx += 6)
+            for (int lz = 6; lz <= 24; lz += 6) {
+                int x = cx + lx, z = cz + lz;
+                for (int y = start; y > start - 30 && y > 0; y--) {
+                    m.set(x, y, z);
+                    if (level.getBlockState(m).isAir()) continue;
+                    if (blockId(level, x, y, z) == 0) continue;
+                    m.set(x, y + 1, z);
+                    if (level.getBlockState(m).isAir()) { votes.merge(y, 1, Integer::sum); break; }
+                }
+            }
+        int best = Integer.MIN_VALUE, bestN = 0;
+        for (var e : votes.entrySet()) if (e.getValue() > bestN) { bestN = e.getValue(); best = e.getKey(); }
+        return best;
+    }
+
+    /** flood the grid, hopping to a neighbour only when the seam between them is open floor */
     private static Set<Long> flood(Level level, int startCX, int startCZ, int floorY) {
         Set<Long> found = new LinkedHashSet<>();
-        Deque<long[]> q = new ArrayDeque<>();
-        q.add(new long[]{startCX, startCZ});
-        Set<Long> visited = new HashSet<>();
-        while (!q.isEmpty() && found.size() < 16) {
-            long[] c = q.poll();
-            int cx = (int) c[0], cz = (int) c[1];
-            long key = RoomGrid.cellKey(cx, cz);
-            if (!visited.add(key)) continue;
-            if (!hasFloor(level, cx, cz, floorY)) continue;
-            found.add(key);
-            q.add(new long[]{cx - 32, cz});
-            q.add(new long[]{cx + 32, cz});
-            q.add(new long[]{cx, cz - 32});
-            q.add(new long[]{cx, cz + 32});
+        Deque<int[]> q = new ArrayDeque<>();
+        Set<Long> seen = new HashSet<>();
+        q.add(new int[]{startCX, startCZ});
+        seen.add(RoomGrid.cellKey(startCX, startCZ));
+        int[][] dirs = {{32, 0}, {-32, 0}, {0, 32}, {0, -32}};
+        while (!q.isEmpty() && found.size() < 6) {
+            int[] c = q.poll();
+            found.add(RoomGrid.cellKey(c[0], c[1]));
+            for (int[] d : dirs) {
+                int nx = c[0] + d[0], nz = c[1] + d[1];
+                long nk = RoomGrid.cellKey(nx, nz);
+                if (seen.contains(nk)) continue;
+                if (connected(level, c[0], c[1], d[0], d[1], floorY)) {
+                    seen.add(nk);
+                    q.add(new int[]{nx, nz});
+                }
+            }
         }
         return found;
     }
 
-    private static boolean hasFloor(Level level, int cx, int cz, int floorY) {
-        // scan a wide Y window at the cell centre — dungeon floors sit around y=68-70
-        // but the player can be standing higher, so look from well below to a bit above
-        for (int probe : new int[]{cx + 15, cx + 16}) {
-            for (int probz : new int[]{cz + 15, cz + 16}) {
-                int solid = 0;
-                for (int y = floorY - 6; y <= floorY + 1; y++) {
-                    if (level.getBlockState(new BlockPos(probe, y, probz)).isSolid()) solid++;
-                }
-                if (solid >= 3) return true;
-            }
+    /** is the seam between this cell and its neighbour open room floor, or a wall/doorway? */
+    private static boolean connected(Level level, int cxA, int czA, int dx, int dz, int floorY) {
+        int present = 0, samples = 0;
+        if (dx != 0) {
+            int seamX = dx > 0 ? cxA + 31 : cxA - 1;
+            for (int lz = 2; lz <= 28; lz += 2) { samples++; if (openColumn(level, seamX, czA + lz, floorY)) present++; }
+        } else {
+            int seamZ = dz > 0 ? czA + 31 : czA - 1;
+            for (int lx = 2; lx <= 28; lx += 2) { samples++; if (openColumn(level, cxA + lx, seamZ, floorY)) present++; }
+        }
+        return present * 2 >= samples;
+    }
+
+    /** a walkable floor column = a tracked floor block with air above it */
+    private static boolean openColumn(Level level, int x, int z, int floorY) {
+        BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+        for (int y = floorY + 3; y >= floorY - 4; y--) {
+            m.set(x, y, z);
+            if (level.getBlockState(m).isAir()) continue;
+            if (blockId(level, x, y, z) == 0) continue;
+            m.set(x, y + 1, z);
+            if (level.getBlockState(m).isAir()) return true;
         }
         return false;
     }
