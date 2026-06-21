@@ -6,6 +6,7 @@
         "ClientPacketListenerMixin",
         "EffectsInInventoryMixin",
         "HudRenderMixin",
+        "MapDataAccessor",
         "WarpShortenerMixin"
     ],
     "injectors": {

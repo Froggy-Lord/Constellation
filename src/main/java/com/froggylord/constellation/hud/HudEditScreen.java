@@ -1,6 +1,7 @@
 package com.froggylord.constellation.hud;
 
 import com.froggylord.constellation.ConstellationClient;
+import com.froggylord.constellation.render.NebulaTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -8,6 +9,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
+/**
+ * One editor for every HUD element. Shows only elements that are visible now or were in
+ * the last 10s — so dungeon stats are draggable while you're in a dungeon, the map while
+ * it's showing, etc. Each element draws its real appearance; you drag to reposition.
+ */
 public class HudEditScreen extends Screen {
 
     private final Screen parent;
@@ -29,42 +35,41 @@ public class HudEditScreen extends Screen {
         g.fill(0, 0, width, height, 0x8812121F);
         Font font = Minecraft.getInstance().font;
 
-        for (HudElement el : ConstellationClient.hudManager().getAll()) {
-            HudPosition pos = el.position();
-            int px = pos.x() * width / 100;
-            int py = pos.y() * height / 100;
+        var editable = ConstellationClient.hudManager().getEditable();
+        for (HudElement el : editable) {
+            int px = el.position().x() * width / 100;
+            int py = el.position().y() * height / 100;
+            int w = Math.max(el.width(), 12), h = Math.max(el.height(), 8);
 
-            String val = el.getValue() != null ? el.getValue() : "...";
-            String text = el.label() + ": " + val;
-            int textW = font.width(text);
-            int textH = font.lineHeight;
+            // draw the element's real appearance where it would actually sit
+            try { el.render(g, px, py); } catch (Exception ignored) {}
 
-            g.fill(px - 2, py - 2, px + textW + 8, py + textH + 4, 0x8812121F);
-            g.text(font, text, px + 3, py + 1, 0xFFFFFFFF, true);
+            // drag handle border
+            int border = (dragging == el) ? NebulaTheme.ACCENT_GOLD : 0x55FFFFFF;
+            g.fill(px - 2, py - 2, px + w + 2, py - 1, border);
+            g.fill(px - 2, py + h + 1, px + w + 2, py + h + 2, border);
+            g.fill(px - 2, py - 2, px - 1, py + h + 2, border);
+            g.fill(px + w + 1, py - 2, px + w + 2, py + h + 2, border);
 
-            int borderCol = (dragging == el) ? 0xFFFFCC55 : 0x44FFFFFF;
-            g.fill(px - 2, py - 2, px + textW + 8, py - 1, borderCol);
-            g.fill(px - 2, py + textH + 3, px + textW + 8, py + textH + 4, borderCol);
-            g.fill(px - 2, py - 2, px - 1, py + textH + 4, borderCol);
-            g.fill(px + textW + 7, py - 2, px + textW + 8, py + textH + 4, borderCol);
+            // label tag above the element
+            String tag = el.editorLabel();
+            g.text(font, tag, px, py - 11, dragging == el ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_MUTED, true);
         }
 
-        String hint = "Drag elements to reposition  |  Esc to save & close";
-        g.text(font, hint, width / 2 - font.width(hint) / 2, height - 12, 0x88FFFFFF, true);
+        String hint = editable.isEmpty()
+            ? "No HUD elements visible right now — they appear here when on-screen (e.g. in a dungeon)"
+            : "Drag elements to reposition  |  Esc to save & close";
+        g.text(font, hint, width / 2 - font.width(hint) / 2, height - 12, 0xCCFFFFFF, true);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         double mx = event.x(), my = event.y();
-        for (HudElement el : ConstellationClient.hudManager().getAll()) {
-            HudPosition pos = el.position();
-            int px = pos.x() * width / 100;
-            int py = pos.y() * height / 100;
-            Font font = Minecraft.getInstance().font;
-            String val = el.getValue() != null ? el.getValue() : "...";
-            int textW = font.width(el.label() + ": " + val);
-
-            if (mx >= px && mx <= px + textW + 10 && my >= py && my <= py + font.lineHeight + 4) {
+        for (HudElement el : ConstellationClient.hudManager().getEditable()) {
+            int px = el.position().x() * width / 100;
+            int py = el.position().y() * height / 100;
+            int w = Math.max(el.width(), 12), h = Math.max(el.height(), 8);
+            if (mx >= px - 2 && mx <= px + w + 2 && my >= py - 2 && my <= py + h + 2) {
                 dragging = el;
                 dragOffX = mx - px;
                 dragOffY = my - py;
@@ -78,10 +83,10 @@ public class HudEditScreen extends Screen {
     public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
         if (dragging != null) {
             double mx = event.x(), my = event.y();
-            int nx = (int) ((mx - dragOffX) / width * 100);
-            int ny = (int) ((my - dragOffY) / height * 100);
-            nx = Math.clamp(nx, 0, 95);
-            ny = Math.clamp(ny, 0, 95);
+            int nx = (int) Math.round((mx - dragOffX) / width * 100);
+            int ny = (int) Math.round((my - dragOffY) / height * 100);
+            nx = Math.clamp(nx, 0, 98);
+            ny = Math.clamp(ny, 0, 98);
             dragging.setPosition(new HudPosition(nx, ny));
             return true;
         }

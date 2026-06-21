@@ -78,6 +78,8 @@ public class OrionDungeons extends BaseConstellation {
                 },
                 HudPosition.of(6, 114), cfg.roomNameHud));
         }
+        // dungeon map — lives in the same registry/editor as everything else
+        hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }
 
     @Override
@@ -114,6 +116,28 @@ public class OrionDungeons extends BaseConstellation {
                 }
                 return 1;
             }));
+
+        // /map scale <1-5> — adjust the dungeon map size
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("map")
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("scale")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument(
+                        "size", com.mojang.brigadier.arguments.IntegerArgumentType.integer(1, 5))
+                    .executes(ctx -> {
+                        int size = com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "size");
+                        cfg.mapScale = size;
+                        ConstellationClient.saveConfig();
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§e[Orion]§r map scale → " + size));
+                        return 1;
+                    })))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("toggle")
+                .executes(ctx -> {
+                    cfg.dungeonMap = !cfg.dungeonMap;
+                    ConstellationClient.saveConfig();
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§e[Orion]§r map " + (cfg.dungeonMap ? "on" : "off")));
+                    return 1;
+                })));
     }
 
     private static boolean inDungeon() {
