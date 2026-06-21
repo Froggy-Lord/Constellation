@@ -22,16 +22,27 @@ public class ConfigScreen extends Screen {
         final String name, desc, cat;
         final BooleanSupplier get; final Consumer<Boolean> set;
         final List<SubOpt> subs = new ArrayList<>();
+        com.froggylord.constellation.config.BaseConfigGroup backing;
         float knob = 0, hover = 0;
         Module(String n, String d, String c, BooleanSupplier g, Consumer<Boolean> s) {
             name = n; desc = d; cat = c; get = g; set = s; knob = g.getAsBoolean() ? 1 : 0;
         }
+        // sub-option backed by a real config field
         Module b(String l, BooleanSupplier g, Consumer<Boolean> s) { subs.add(new SubOpt(l, g, s)); return this; }
+        // independent sub-option backed by the constellation's generic subOptions map
+        Module sub(String l, boolean def) {
+            String key = name + "." + l;
+            subs.add(new SubOpt(l,
+                () -> backing != null && backing.getSub(key, def),
+                v -> { if (backing != null) { backing.setSub(key, v); ConstellationClient.saveConfig(); } }));
+            return this;
+        }
     }
 
     private final String constellationId;
     private final Screen parent;
     private final List<Module> modules = new ArrayList<>();
+    private com.froggylord.constellation.config.BaseConfigGroup activeConfig;
 
     private String[] cats = {};
     private int selectedCat = 0;
@@ -81,25 +92,25 @@ public class ConfigScreen extends Screen {
                         modules.add(new Module(n, label, "HUD",
                             () -> he.visible, v -> { he.visible = v; ConstellationClient.saveConfig(); })
                             .b("Show label", () -> he.visible, v -> he.visible = v)
-                            .b("Compact mode", () -> false, v -> {}));
+                            .sub("Compact mode", false));
                     } catch (Exception e) {}
                 }
                 modules.add(new Module("customScoreboard", "Replace vanilla sidebar", "Display",
                     () -> c.customScoreboard, v -> { c.customScoreboard = v; ConstellationClient.saveConfig(); })
                     .b("Clean design", () -> c.customScoreboard, v -> c.customScoreboard = v)
-                    .b("Hide red scores", () -> false, v -> {}));
+                    .sub("Hide red scores", false));
                 modules.add(new Module("customTabList", "Replace vanilla tab list", "Display",
                     () -> c.customTabList, v -> { c.customTabList = v; ConstellationClient.saveConfig(); })
                     .b("Compact mode", () -> c.customTabList, v -> c.customTabList = v)
-                    .b("Hide NPCs", () -> false, v -> {}));
+                    .sub("Hide NPCs", false));
                 modules.add(new Module("compactDamage", "Shorten damage numbers", "Display",
                     () -> c.compactDamage, v -> { c.compactDamage = v; ConstellationClient.saveConfig(); })
                     .b("Show full in boss", () -> c.compactDamage, v -> c.compactDamage = v)
-                    .b("1.2M format", () -> true, v -> {}));
+                    .sub("1.2M format", true));
                 modules.add(new Module("rainbowActionBar", "Rainbow action bar", "Display",
                     () -> c.rainbowActionBar, v -> { c.rainbowActionBar = v; ConstellationClient.saveConfig(); })
                     .b("Speed", () -> c.rainbowActionBar, v -> c.rainbowActionBar = v)
-                    .b("Pulsing", () -> false, v -> {}));
+                    .sub("Pulsing", false));
             }
             case "phoenix" -> {
                 cats = new String[]{"Visual", "Gameplay"};
@@ -118,7 +129,7 @@ public class ConfigScreen extends Screen {
                             v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
                             .b("Master", () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                                 v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
-                            .b("Also in dungeons", () -> false, v -> {}));
+                            .sub("Also in dungeons", false));
                     } catch (Exception e) {}
                 }
             }
@@ -138,25 +149,25 @@ public class ConfigScreen extends Screen {
                             v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
                             .b("In dungeons", () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                                 v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
-                            .b("On private island", () -> false, v -> {}));
+                            .sub("On private island", false));
                     } catch (Exception e) {}
                 }
                 modules.add(new Module("timestamps", "[HH:MM] on every line", "Chat",
                     () -> c.timestamps, v -> { c.timestamps = v; ConstellationClient.saveConfig(); })
-                    .b("Show seconds", () -> false, v -> {})
-                    .b("Colour", () -> true, v -> {}));
+                    .sub("Show seconds", false)
+                    .sub("Colour", true));
                 modules.add(new Module("clickableLinks", "URLs clickable", "Chat",
                     () -> c.clickableLinks, v -> { c.clickableLinks = v; ConstellationClient.saveConfig(); })
                     .b("Underline", () -> c.clickableLinks, v -> c.clickableLinks = v)
-                    .b("Auto-shorten", () -> false, v -> {}));
+                    .sub("Auto-shorten", false));
                 modules.add(new Module("copyOnRightClick", "Right-click to copy", "Chat",
                     () -> c.copyOnRightClick, v -> { c.copyOnRightClick = v; ConstellationClient.saveConfig(); })
                     .b("Copy timestamp", () -> c.copyOnRightClick, v -> c.copyOnRightClick = v)
-                    .b("Copy without colour", () -> false, v -> {}));
+                    .sub("Copy without colour", false));
                 modules.add(new Module("mentionAlert", "Ping when named", "Chat",
                     () -> c.mentionAlert, v -> { c.mentionAlert = v; ConstellationClient.saveConfig(); })
                     .b("Sound", () -> c.mentionAlert, v -> c.mentionAlert = v)
-                    .b("Title", () -> true, v -> {}));
+                    .sub("Title", true));
                 modules.add(new Module("floorShortcuts", "/f1-/f7 /m1-/m7", "Commands",
                     () -> c.floorShortcuts, v -> { c.floorShortcuts = v; ConstellationClient.saveConfig(); })
                     .b("Floors", () -> c.floorShortcuts, v -> c.floorShortcuts = v)
@@ -168,7 +179,7 @@ public class ConfigScreen extends Screen {
                 modules.add(new Module("warpShortener", "/drag → /warp drag", "Commands",
                     () -> c.warpShortener, v -> { c.warpShortener = v; ConstellationClient.saveConfig(); })
                     .b("Enabled", () -> c.warpShortener, v -> c.warpShortener = v)
-                    .b("Show in chat", () -> false, v -> {}));
+                    .sub("Show in chat", false));
                 modules.add(new Module("partyShortcuts", "/pi /pw /pl ...", "Party",
                     () -> c.partyShortcuts, v -> { c.partyShortcuts = v; ConstellationClient.saveConfig(); })
                     .b("Invite", () -> c.partyShortcuts, v -> c.partyShortcuts = v)
@@ -184,36 +195,36 @@ public class ConfigScreen extends Screen {
                 modules.add(new Module("scoreHud", "Live 0-300 score", "HUD",
                     () -> c.scoreHud, v -> { c.scoreHud = v; ConstellationClient.saveConfig(); })
                     .b("Show letter grade", () -> c.scoreHud, v -> c.scoreHud = v)
-                    .b("Milestone pings", () -> true, v -> {}));
+                    .sub("Milestone pings", true));
                 modules.add(new Module("secretsHud", "Secrets found / total", "HUD",
                     () -> c.secretsHud, v -> { c.secretsHud = v; ConstellationClient.saveConfig(); })
                     .b("Per-room count", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); })
                     .b("Percentage", () -> c.secretsHud, v -> c.secretsHud = v));
                 modules.add(new Module("cryptsHud", "Crypt count", "HUD",
                     () -> c.cryptsHud, v -> { c.cryptsHud = v; ConstellationClient.saveConfig(); })
-                    .b("Warn under 5", () -> true, v -> {})
-                    .b("Show in chat", () -> false, v -> {}));
+                    .sub("Warn under 5", true)
+                    .sub("Show in chat", false));
                 modules.add(new Module("deathsHud", "Death counter", "HUD",
                     () -> c.deathsHud, v -> { c.deathsHud = v; ConstellationClient.saveConfig(); })
-                    .b("Score impact", () -> true, v -> {})
-                    .b("Per-player", () -> false, v -> {}));
+                    .sub("Score impact", true)
+                    .sub("Per-player", false));
                 modules.add(new Module("timerHud", "Run timer", "HUD",
                     () -> c.timerHud, v -> { c.timerHud = v; ConstellationClient.saveConfig(); })
                     .b("Show splits", () -> c.splitsHud, v -> { c.splitsHud = v; ConstellationClient.saveConfig(); })
-                    .b("Milliseconds", () -> false, v -> {}));
+                    .sub("Milliseconds", false));
                 modules.add(new Module("roomNameHud", "Current room name", "HUD",
                     () -> c.roomNameHud, v -> { c.roomNameHud = v; ConstellationClient.saveConfig(); })
-                    .b("Cleared indicator", () -> true, v -> {})
+                    .sub("Cleared indicator", true)
                     .b("Show secrets in room", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("mimicIndicator", "Mimic killed marker", "HUD",
                     () -> c.mimicIndicator, v -> { c.mimicIndicator = v; ConstellationClient.saveConfig(); })
-                    .b("Ping party", () -> true, v -> {})
-                    .b("Sound", () -> true, v -> {}));
+                    .sub("Ping party", true)
+                    .sub("Sound", true));
                 modules.add(new Module("dungeonMap", "Hypixel map overlay", "Map",
                     () -> c.dungeonMap, v -> { c.dungeonMap = v; ConstellationClient.saveConfig(); })
-                    .b("Room names", () -> true, v -> {})
-                    .b("Player heads", () -> true, v -> {})
-                    .b("Auto-hide in boss", () -> true, v -> {}));
+                    .sub("Room names", true)
+                    .sub("Player heads", true)
+                    .sub("Auto-hide in boss", true));
                 modules.add(new Module("secretWaypoints", "In-world secret boxes", "Secrets",
                     () -> c.secretWaypoints, v -> { c.secretWaypoints = v; ConstellationClient.saveConfig(); })
                     .b("Progressive reveal", () -> c.progressiveReveal, v -> { c.progressiveReveal = v; ConstellationClient.saveConfig(); })
@@ -239,7 +250,13 @@ public class ConfigScreen extends Screen {
         // guard: a constellation with no modules gets a placeholder category so the screen never crashes
         if (cats.length == 0) cats = new String[]{"General"};
         selectedCat = Math.clamp(selectedCat, 0, cats.length - 1);
-        for (Module m : modules) m.knob = m.get.getAsBoolean() ? 1 : 0;
+
+        // give every module a backing config for its independent sub-options
+        activeConfig = ConstellationClient.instance().configManager().getGroup(constellationId);
+        for (Module m : modules) {
+            m.backing = activeConfig;
+            m.knob = m.get.getAsBoolean() ? 1 : 0;
+        }
     }
 
     @Override public boolean isPauseScreen() { return false; }
