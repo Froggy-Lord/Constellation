@@ -27,26 +27,32 @@ public class MapSegments {
 
     private static final int ENTRANCE_COLOR = 30; // MapColor.PLANT / HIGH
 
+    public static String lastDebug = "no map scan";
+
     /** Returns the set of physical NW-corner cell keys for the room the player is in, or empty. */
     public static Set<Long> footprint() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || mc.level == null) return Set.of();
+        if (mc.player == null || mc.level == null) { lastDebug = "no player"; return Set.of(); }
 
         MapItemSavedData map = findMap(mc);
-        if (map == null || map.colors.length < 128 * 128) return Set.of();
+        if (map == null || map.colors.length < 128 * 128) { lastDebug = "no map item"; return Set.of(); }
 
         int[] playerMap = mapPlayerPos(map);
-        if (playerMap == null) return Set.of();
+        if (playerMap == null) {
+            int decoCount = decoCount(map);
+            lastDebug = "no player marker (" + decoCount + " decos)";
+            return Set.of();
+        }
 
         // calibrate room pixel size from the entrance green block
         int roomSize = entranceRoomSize(map, playerMap);
-        if (roomSize <= 0) return Set.of();
+        if (roomSize <= 0) { lastDebug = "no entrance found (marker " + playerMap[0] + "," + playerMap[1] + ")"; return Set.of(); }
         int step = roomSize + 4; // room size + gap between rooms on the map
 
         // the player's map cell (top-left pixel of the room they're standing in)
         int[] playerCell = playerMapCell(map, playerMap, step);
         byte color = colorAt(map, playerCell[0] + 1, playerCell[1] + 1);
-        if (color <= 0) return Set.of();
+        if (color <= 0) { lastDebug = "no colour at player cell (roomSize=" + roomSize + ")"; return Set.of(); }
 
         // flood connected same-colour map cells
         List<int[]> mapCells = floodMapCells(map, playerCell, step, color);
@@ -63,7 +69,13 @@ public class MapSegments {
             int pz = physPlayerZ + dzCells * 32;
             physCells.add(RoomGrid.cellKey(px, pz));
         }
+        lastDebug = "ok roomSize=" + roomSize + " mapCells=" + mapCells.size() + " physCells=" + physCells.size();
         return physCells;
+    }
+
+    private static int decoCount(MapItemSavedData map) {
+        var decos = ((MapDataAccessor) (Object) map).constellation$decorations();
+        return decos == null ? -1 : decos.size();
     }
 
     private static byte colorAt(MapItemSavedData map, int x, int z) {

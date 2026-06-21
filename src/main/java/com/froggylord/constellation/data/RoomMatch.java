@@ -190,7 +190,7 @@ public class RoomMatch {
         boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= VERIFY_MIN;
 
         if (debug) {
-            lastDebug = "§a" + (fromMap ? "MAP" : "flood") + "§r cells=" + cells.size() + " §asize§r=" + width + "x" + length
+            lastDebug = "§a" + (fromMap ? "MAP" : "flood[" + MapSegments.lastDebug + "]") + "§r cells=" + cells.size() + " §asize§r=" + width + "x" + length
                 + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §afloorY§r=" + floorY
                 + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
                 + (mapped == 0 ? " §c[0 blocks mapped]§r" : "")
