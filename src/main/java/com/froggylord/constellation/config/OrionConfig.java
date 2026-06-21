@@ -61,4 +61,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean dungeonCopilot = true;
     public boolean doorTracker = true;
     public boolean mimicPartyPing = true;
+    public boolean streamerMode = false;
 }
