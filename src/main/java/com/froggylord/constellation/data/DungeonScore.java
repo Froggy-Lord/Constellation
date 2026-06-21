@@ -252,6 +252,7 @@ public final class DungeonScore {
     public static boolean isMimicFloor() { return mimicFloor; }
     public static boolean mimicKilled() { return mimicKilled; }
     public static boolean hadRun() { return timeSecs > 10; } // a real run produced an elapsed time
+    public static boolean inBoss() { return inBoss; }
 
     /** Floor pass requirement (min secret %, time limit seconds). */
     private enum FloorReq {

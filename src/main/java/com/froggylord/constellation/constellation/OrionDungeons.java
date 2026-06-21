@@ -46,6 +46,11 @@ public class OrionDungeons extends BaseConstellation {
                 String s = message.getString();
                 com.froggylord.constellation.data.DungeonScore.onChat(s);
                 com.froggylord.constellation.data.DefensiveTracker.onChat(s);
+                // mimic party ping
+                if (cfg.mimicIndicator && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!"))) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
+                }
             }
             return true;
         });
