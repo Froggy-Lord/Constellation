@@ -32,6 +32,9 @@ public class LyraEconomy extends BaseConstellation {
 
     private static long sessionStart = Long.MIN_VALUE;
     private static long currentPurse = 0;
+    private static long lastPurse = 0;
+    private static long changeAt = 0;
+    private static long changeAmount = 0;
 
     private LyraConfig cfg;
 
@@ -43,11 +46,17 @@ public class LyraEconomy extends BaseConstellation {
     }
 
     private static void readPurse() {
+        long prev = currentPurse;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = PURSE.matcher(line);
             if (!m.find()) continue;
             currentPurse = parse(m.group(1));
             if (sessionStart == Long.MIN_VALUE) sessionStart = currentPurse;
+            if (prev > 0 && currentPurse != prev) {
+                changeAmount = currentPurse - prev;
+                changeAt = System.currentTimeMillis();
+            }
+            lastPurse = prev;
             return;
         }
     }
@@ -70,6 +79,16 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 80), cfg.purseHud));
         }
+        // purse change flash — shows briefly when coins change by a meaningful amount
+        hud.register(new HudWidget("lyra-change", "ΔCoins",
+            () -> {
+                long ms = System.currentTimeMillis() - changeAt;
+                if (ms > 3000 || changeAmount == 0) return null;
+                String s = (changeAmount > 0 ? "§a+" : "§c") + compact(Math.abs(changeAmount));
+                return s;
+            },
+            HudPosition.of(50, 86), true));
+
         if (cfg.bitsHud) {
             hud.register(new HudWidget("lyra-bits", "Bits",
                 () -> {
