@@ -52,7 +52,8 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.SkeletonScraper.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
-                // left the dungeon — reset map calibration + room cache so the next run re-anchors
+                // left the dungeon — print the run summary, then reset detection + score state
+                com.froggylord.constellation.data.RunStats.finishRun();
                 com.froggylord.constellation.data.MapSegments.reset();
                 RoomMatch.resetCache();
                 com.froggylord.constellation.data.DungeonScore.reset();
@@ -148,6 +149,10 @@ public class OrionDungeons extends BaseConstellation {
                 }
                 return 1;
             }));
+
+        // /dungeonstats — session run history
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
+            .executes(ctx -> { com.froggylord.constellation.data.RunStats.printSession(); return 1; }));
 
         // force a room scan right now with full diagnostics
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomscan")

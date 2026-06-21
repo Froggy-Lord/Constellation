@@ -53,9 +53,8 @@ public final class DungeonScore {
     public static void update() {
         List<String> side = ConstellationClient.loc().getSidebarLines();
         Matcher tm = matchContains(side, TIME);
-        if (tm == null) { // no elapsed time line = not in an active run yet
-            if (active) reset();
-            active = false;
+        if (tm == null) { // no elapsed time line = run hasn't started, or it just ended
+            active = false; // keep the last values so the run summary can read them on leave
             return;
         }
         active = true;
@@ -252,6 +251,7 @@ public final class DungeonScore {
     public static String floor() { return floorName; }
     public static boolean isMimicFloor() { return mimicFloor; }
     public static boolean mimicKilled() { return mimicKilled; }
+    public static boolean hadRun() { return timeSecs > 10; } // a real run produced an elapsed time
 
     /** Floor pass requirement (min secret %, time limit seconds). */
     private enum FloorReq {
