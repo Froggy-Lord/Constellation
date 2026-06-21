@@ -15,9 +15,23 @@ public class ApolloHud extends BaseConstellation {
     @Override public String displayName() { return "Apollo"; }
     @Override public String description() { return "Core HUD — info overlays, scoreboard, tab list"; }
 
+    private static int tps = 20;
+    private static long lastReal = 0, lastGameTime = 0;
+
     @Override
     public void init(InitContext ctx) {
-        ConstellationClient.tick().every(5, "apollo-hud", () -> {});
+        // estimate server TPS: how fast world game-time advances against the wall clock
+        ConstellationClient.tick().every(20, "apollo-tps", () -> {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.level == null) { lastReal = 0; return; }
+            long now = System.currentTimeMillis();
+            long gt = mc.level.getGameTime();
+            if (lastReal > 0) {
+                double secs = (now - lastReal) / 1000.0;
+                if (secs > 0.4) tps = (int) Math.round(Math.max(0, Math.min(20, (gt - lastGameTime) / secs)));
+            }
+            lastReal = now; lastGameTime = gt;
+        });
     }
 
     @Override
@@ -38,6 +52,10 @@ public class ApolloHud extends BaseConstellation {
                 return server != null ? server.ping + "ms" : "-";
             },
             toPos(cfg.ping), cfg.ping.visible));
+
+        hud.register(new HudWidget("apollo-tps", "TPS",
+            () -> tps + "",
+            toPos(cfg.tps), cfg.tps.visible));
 
         hud.register(new HudWidget("apollo-clock", "Clock",
             () -> {
