@@ -54,12 +54,15 @@ public class ConstellationClient implements ClientModInitializer {
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(tickManager::onEndTick);
         locationManager.init();
 
+        // world renderer hooked before features init so they can register draw callbacks
+        worldRenderer = new WorldRenderer();
+        batchRenderer = new BatchRenderer();
+        worldRenderer.init();
+
         featureManager = new FeatureManager();
         featureManager.discoverAndInit();
 
         hudManager = new HudManager();
-        worldRenderer = new WorldRenderer();
-        batchRenderer = new BatchRenderer();
         HudRenderer.init();
         featureManager.registerHudElements();
 
@@ -122,5 +125,6 @@ public class ConstellationClient implements ClientModInitializer {
     public static LocationManager loc() { return instance.locationManager; }
     public static HudManager hudManager() { return instance.hudManager; }
     public static FeatureManager featureManager() { return instance.featureManager; }
+    public static WorldRenderer world() { return instance.worldRenderer; }
     public static void saveConfig() { instance.configManager.save(); }
 }

@@ -32,6 +32,9 @@ public class OrionDungeons extends BaseConstellation {
         // load dungeon data (room skeletons, secrets, routes)
         DungeonData.load();
 
+        // secret waypoints — colour-coded boxes for the current room's secrets
+        ConstellationClient.world().register(SecretWaypoints::draw);
+
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
