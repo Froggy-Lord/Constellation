@@ -22,10 +22,15 @@ public class DungeonData {
     public static final Map<String, Map<String, int[]>> ROOMS = new HashMap<>();
     // roomName -> secrets list
     public static final Map<String, List<Secret>> SECRETS = new HashMap<>();
+    // flat candidate list with precomputed local dims (max relX / relZ), for fit-filtering
+    public static final List<Candidate> CANDIDATES = new ArrayList<>();
 
     private static volatile boolean loaded = false;
 
     public record Secret(String category, String name, int x, int y, int z) {}
+
+    /** A room fingerprint with its local footprint dims (max relX, relZ). */
+    public record Candidate(String name, int[] fp, int rx, int rz) {}
 
     // ---- block id table (the on-disk format's fixed numeric ids; 0 = untracked) ----
     private static final Map<String, Byte> NUMERIC_ID = new HashMap<>();
@@ -72,6 +77,14 @@ public class DungeonData {
                     try (ObjectInputStream in = new ObjectInputStream(new InflaterInputStream(sk))) {
                         int[] fp = normalizeY((int[]) in.readObject());
                         ROOMS.computeIfAbsent(shape, k -> new HashMap<>()).put(name, fp);
+                        // compute local footprint dims for fit-filtering
+                        int mx = 0, mz = 0;
+                        for (int v : fp) {
+                            int x = idX(v), z = idZ(v);
+                            if (x > mx) mx = x;
+                            if (z > mz) mz = z;
+                        }
+                        CANDIDATES.add(new Candidate(name, fp, mx, mz));
                     }
                 } catch (Exception e) {
                     // skip unreadable rooms

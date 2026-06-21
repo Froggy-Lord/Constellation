@@ -31,8 +31,8 @@ public class OrionDungeons extends BaseConstellation {
         // load dungeon data (room skeletons, secrets, routes)
         DungeonData.load();
 
-        // room detection every 20 ticks while in dungeons
-        ConstellationClient.tick().every(20, "orion-room-match", () -> {
+        // room detection runs every tick — it self-throttles (retry cadence + footprint cache)
+        ConstellationClient.tick().every(1, "orion-room-match", () -> {
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
             }

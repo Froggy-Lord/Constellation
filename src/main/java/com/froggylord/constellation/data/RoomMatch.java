@@ -13,88 +13,120 @@ import java.util.*;
 /**
  * Identifies the catacombs room the player stands in by matching world blocks against
  * the bundled room skeleton database. Reads the shared on-disk format (DungeonData);
- * the detection algorithm — footprint flood, candidate elimination across the four
- * rotations, foundation-Y reference, reverse-verify — is a fresh implementation.
+ * the detection algorithm — seam-flood footprint, dimension-fit candidate filtering,
+ * four-rotation elimination, foundation-Y reference, reverse-verify, confirm-streak —
+ * is a fresh implementation.
  */
 public class RoomMatch {
 
-    private static final int MIN_MAPPED = 25;
+    private static final int MIN_MAPPED = 12;
+    private static final int CONFIRMS = 2;
 
+    // committed result
     private static String currentRoom = "";
     private static RoomTransform.Direction currentDir = RoomTransform.Direction.NW;
     private static int anchorX, anchorZ;
-    private static int confirmCount = 0;
-    private static String lastCandidate = "";
 
-    // diagnostics from the last scan
+    // footprint cache — while inside this box we keep the room without rescanning
+    private static int fpMinX, fpMinZ, fpMaxX, fpMaxZ;
+    private static boolean fpValid = false;
+    private static int cellX = Integer.MIN_VALUE, cellZ = Integer.MIN_VALUE;
+    private static int retryTick = 0;
+
+    // confirm streak
+    private static String pendName = null;
+    private static RoomTransform.Direction pendDir = null;
+    private static int pendAnchorX, pendAnchorZ, pendCount = 0;
+
     public static String lastDebug = "no scan yet";
 
-    public static void update() { scan(false); }
-
-    public static String debugScan() { scan(true); return lastDebug; }
-
-    private static void scan(boolean debug) {
+    /** Called every client tick while in a dungeon. Cheap when already identified. */
+    public static void update() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null || !DungeonData.isLoaded()) {
-            lastDebug = "no player/level/data";
-            return;
+            currentRoom = ""; fpValid = false; return;
         }
+        int cx = RoomGrid.cornerX(mc.player.position());
+        int cz = RoomGrid.cornerZ(mc.player.position());
 
-        int startCX = RoomGrid.cornerX(pos(mc).x), startCZ = RoomGrid.cornerZ(pos(mc).z);
-
-        // 1. find the floor Y by voting on solid-with-air-above columns
-        int floorY = floorVote(mc.level, startCX, startCZ);
-        if (floorY == Integer.MIN_VALUE) floorY = (int) Math.floor(pos(mc).y);
-
-        // 2. flood the footprint using seam-connectivity (stops at walls/doorways)
-        Set<Long> cells = flood(mc.level, startCX, startCZ, floorY);
-        if (cells.isEmpty()) {
-            lastDebug = "§cflood found 0 cells§r (floorY=" + floorY + " cell=" + startCX + "," + startCZ + ")";
-            return;
+        // still inside the room we already identified? keep it, don't rescan
+        if (!currentRoom.isEmpty() && fpValid && cx >= fpMinX && cx <= fpMaxX && cz >= fpMinZ && cz <= fpMaxZ) {
+            cellX = cx; cellZ = cz; return;
         }
+        // moved into a new cell outside the known room — reset
+        if (cx != cellX || cz != cellZ) {
+            cellX = cx; cellZ = cz;
+            currentRoom = ""; fpValid = false; retryTick = 0;
+            pendName = null; pendDir = null; pendCount = 0;
+        }
+        if (!currentRoom.isEmpty()) return;
+        // retry ~4x/sec until we get it (blocks may not be loaded the instant you walk in)
+        if (++retryTick % 5 != 0) return;
+        match(mc.level, cx, cz, false);
+    }
 
-        int wMinX = Integer.MAX_VALUE, wMaxX = Integer.MIN_VALUE;
-        int wMinZ = Integer.MAX_VALUE, wMaxZ = Integer.MIN_VALUE;
+    public static String debugScan() {
+        Minecraft mc = Minecraft.getInstance();
+        if (!DungeonData.isLoaded()) return "data not loaded";
+        if (mc.player == null || mc.level == null) return "not in world";
+        int cx = RoomGrid.cornerX(mc.player.position());
+        int cz = RoomGrid.cornerZ(mc.player.position());
+        currentRoom = ""; fpValid = false;
+        match(mc.level, cx, cz, true);
+        return lastDebug;
+    }
+
+    private static void match(Level level, int cx, int cz, boolean debug) {
+        if (DungeonData.CANDIDATES.isEmpty()) { lastDebug = "no room data"; return; }
+
+        // 1. floor Y
+        int scannedFloor = floorVote(level, cx, cz);
+        int floorY = scannedFloor == Integer.MIN_VALUE ? 68 : scannedFloor;
+
+        // 2. footprint (seam-connected cells)
+        Set<Long> cells = flood(level, cx, cz, floorY);
+        int wMinX = Integer.MAX_VALUE, wMinZ = Integer.MAX_VALUE, wMaxX = Integer.MIN_VALUE, wMaxZ = Integer.MIN_VALUE;
         for (long c : cells) {
-            int cx = (int) (c >> 32), cz = (int) c;
-            wMinX = Math.min(wMinX, cx); wMaxX = Math.max(wMaxX, cx + 30);
-            wMinZ = Math.min(wMinZ, cz); wMaxZ = Math.max(wMaxZ, cz + 30);
+            int ccx = (int) (c >> 32), ccz = (int) c;
+            wMinX = Math.min(wMinX, ccx); wMinZ = Math.min(wMinZ, ccz);
+            wMaxX = Math.max(wMaxX, ccx); wMaxZ = Math.max(wMaxZ, ccz);
         }
-        int spanX = (wMaxX - wMinX + 1 + 1) / 32;
-        int spanZ = (wMaxZ - wMinZ + 1 + 1) / 32;
-        String shape = Math.min(spanX, spanZ) + "x" + Math.max(spanX, spanZ);
-        int maxDim = Math.max(wMaxX - wMinX, wMaxZ - wMinZ);
+        wMaxX += 30; wMaxZ += 30;
+        int width = wMaxX - wMinX, length = wMaxZ - wMinZ;
+        int maxDim = Math.max(width, length);
 
-        Map<String, int[]> pool = DungeonData.ROOMS.get(shape);
-        if (pool == null || pool.isEmpty()) {
-            lastDebug = "§cno rooms for shape " + shape + "§r (cells=" + cells.size() + ")";
+        // 3. filter candidates by footprint fit (either rotation), ±2 tolerance
+        List<DungeonData.Candidate> pool = new ArrayList<>();
+        for (var c : DungeonData.CANDIDATES) {
+            boolean fit = (close(c.rx(), width) && close(c.rz(), length))
+                       || (close(c.rx(), length) && close(c.rz(), width));
+            if (fit) pool.add(c);
+        }
+        if (pool.isEmpty()) {
+            lastDebug = "§cno candidates fit§r " + (width + 1) + "x" + (length + 1) + " (cells=" + cells.size() + ")";
             return;
         }
 
-        // 2. candidate lists per rotation
         RoomTransform.Direction[] dirs = RoomTransform.Direction.values();
         int[][] corner = {
-            {wMinX, wMinZ}, // NW
-            {wMaxX, wMinZ}, // NE
-            {wMinX, wMaxZ}, // SW
-            {wMaxX, wMaxZ}  // SE
+            {wMinX, wMinZ}, {wMaxX, wMinZ}, {wMinX, wMaxZ}, {wMaxX, wMaxZ}
         };
-        List<List<String>> cands = new ArrayList<>();
-        for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool.keySet()));
+        List<List<DungeonData.Candidate>> cands = new ArrayList<>();
+        for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
 
-        // 3. foundation Y (lowest tracked block)
+        // 4. foundation Y
         int minY = Integer.MAX_VALUE;
         for (int dy = -8; dy <= 35; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    if (blockId(mc.level, wx, y, wz) != 0 && y < minY) minY = y;
+                    if (blockId(level, wx, y, wz) != 0 && y < minY) minY = y;
                 }
         }
         if (minY == Integer.MAX_VALUE) minY = floorY;
 
-        // 4. eliminate candidates by observed blocks
+        // 5. eliminate candidates per observed block
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         outer:
@@ -103,18 +135,18 @@ public class RoomMatch {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
-                    byte id = blockId(mc.level, wx, y, wz);
+                    byte id = blockId(level, wx, y, wz);
                     if (id == 0) continue;
                     mapped++;
                     if (debug && sample.length() < 40) sample.append(id).append(' ');
                     for (int di = 0; di < dirs.length; di++) {
-                        List<String> list = cands.get(di);
+                        List<DungeonData.Candidate> list = cands.get(di);
                         if (list.isEmpty()) continue;
                         long[] rel = RoomTransform.actualToRelative(dirs[di], corner[di][0], corner[di][1], wx, y, wz);
                         int rx = (int) rel[0], rz = (int) rel[2];
                         if (rx < 0 || rx > maxDim || rz < 0 || rz > maxDim) continue;
                         int enc = RoomTransform.posId(rx, y - minY, rz, id);
-                        list.removeIf(name -> Arrays.binarySearch(pool.get(name), enc) < 0);
+                        list.removeIf(cd -> Arrays.binarySearch(cd.fp(), enc) < 0);
                     }
                     int remaining = cands.stream().mapToInt(List::size).sum();
                     if (remaining == 0) break outer;
@@ -122,38 +154,42 @@ public class RoomMatch {
                 }
         }
 
-        // 5. reverse-verify survivors
-        String best = null; RoomTransform.Direction bestDir = null; double bestScore = 0;
+        // 6. reverse-verify survivors, pick best
+        String best = null; RoomTransform.Direction bestDir = null; double bestScore = 0; int bestAX = 0, bestAZ = 0;
         for (int di = 0; di < dirs.length; di++) {
-            for (String name : cands.get(di)) {
-                double score = verifyRatio(mc.level, pool.get(name), dirs[di], corner[di], minY);
-                if (score > bestScore) { bestScore = score; best = name; bestDir = dirs[di]; }
+            for (var c : cands.get(di)) {
+                double score = verifyRatio(level, c.fp(), dirs[di], corner[di], minY);
+                if (score > bestScore) {
+                    bestScore = score; best = c.name(); bestDir = dirs[di];
+                    bestAX = corner[di][0]; bestAZ = corner[di][1];
+                }
             }
         }
 
         int survivors = cands.stream().mapToInt(List::size).sum();
+        boolean confident = best != null && mapped >= MIN_MAPPED && bestScore >= 0.80;
+
         if (debug) {
-            lastDebug = "§acells§r=" + cells.size() + " §ashape§r=" + shape
-                + " §apool§r=" + pool.size() + " §amapped§r=" + mapped
-                + " §aminY§r=" + minY + " §asurvivors§r=" + survivors
-                + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
+            lastDebug = "§acells§r=" + cells.size() + " §asize§r=" + (width + 1) + "x" + (length + 1)
+                + " §apool§r=" + pool.size() + " §amapped§r=" + mapped + " §aminY§r=" + minY
+                + " §asurv§r=" + survivors + " §abest§r=" + (best == null ? "none" : best + " " + String.format("%.0f%%", bestScore * 100))
+                + (mapped == 0 ? " §c[0 blocks mapped - block ids dont match db]§r" : "")
                 + " §7ids:[" + sample.toString().trim() + "]";
         }
 
-        // 6. confirm-streak
-        if (best != null && bestScore >= 0.80) {
-            if (best.equals(lastCandidate)) confirmCount++;
-            else { confirmCount = 0; lastCandidate = best; }
-            if (confirmCount >= 1 && !best.equals(currentRoom)) {
-                currentRoom = best;
-                currentDir = bestDir;
-                anchorX = corner[bestDir.ordinal()][0];
-                anchorZ = corner[bestDir.ordinal()][1];
-                ConstellationClient.bus().post(new RoomEnteredEvent(best, bestDir, anchorX, anchorZ));
-            }
+        // 7. confirm streak
+        if (confident && best.equals(pendName) && bestDir == pendDir && bestAX == pendAnchorX && bestAZ == pendAnchorZ) {
+            pendCount++;
+        } else if (confident) {
+            pendName = best; pendDir = bestDir; pendAnchorX = bestAX; pendAnchorZ = bestAZ; pendCount = 1;
         } else {
-            confirmCount = 0;
-            lastCandidate = "";
+            pendName = null; pendDir = null; pendCount = 0;
+        }
+
+        if (pendCount >= CONFIRMS) {
+            currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
+            fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
+            ConstellationClient.bus().post(new RoomEnteredEvent(best, bestDir, anchorX, anchorZ));
         }
     }
 
@@ -172,9 +208,6 @@ public class RoomMatch {
         return checked == 0 ? 0 : (double) hit / checked;
     }
 
-    private static Vec3 pos(Minecraft mc) { return mc.player.position(); }
-
-    /** find the room floor Y by voting on "solid block with air above" columns */
     private static int floorVote(Level level, int cx, int cz) {
         Minecraft mc = Minecraft.getInstance();
         int start = mc.player != null ? (int) Math.floor(mc.player.getY()) + 2 : 80;
@@ -196,7 +229,6 @@ public class RoomMatch {
         return best;
     }
 
-    /** flood the grid, hopping to a neighbour only when the seam between them is open floor */
     private static Set<Long> flood(Level level, int startCX, int startCZ, int floorY) {
         Set<Long> found = new LinkedHashSet<>();
         Deque<int[]> q = new ArrayDeque<>();
@@ -220,7 +252,6 @@ public class RoomMatch {
         return found;
     }
 
-    /** is the seam between this cell and its neighbour open room floor, or a wall/doorway? */
     private static boolean connected(Level level, int cxA, int czA, int dx, int dz, int floorY) {
         int present = 0, samples = 0;
         if (dx != 0) {
@@ -233,7 +264,6 @@ public class RoomMatch {
         return present * 2 >= samples;
     }
 
-    /** a walkable floor column = a tracked floor block with air above it */
     private static boolean openColumn(Level level, int x, int z, int floorY) {
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
         for (int y = floorY + 3; y >= floorY - 4; y--) {
@@ -252,10 +282,13 @@ public class RoomMatch {
         return DungeonData.numericId(BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
     }
 
+    private static boolean close(int a, int b) { return Math.abs(a - b) <= 2; }
+
     public static String currentRoom() { return currentRoom; }
     public static RoomTransform.Direction currentDir() { return currentDir; }
     public static int anchorX() { return anchorX; }
     public static int anchorZ() { return anchorZ; }
+    public static boolean isMatched() { return fpValid && !currentRoom.isEmpty(); }
 
     public record RoomEnteredEvent(String name, RoomTransform.Direction dir, int cornerX, int cornerZ) {}
 }
