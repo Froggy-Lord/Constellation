@@ -16,6 +16,11 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean mimicIndicator = true;
     public boolean splitsHud = false;
 
+    // score milestone pings (270 = S, 300 = S+)
+    public boolean scorePings = true;
+    public boolean scorePingTitle = true;
+    public boolean scorePingSound = true;
+
     // map
     public boolean dungeonMap = true;
     public int mapScale = 2; // 1-5

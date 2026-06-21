@@ -37,6 +37,8 @@ public final class DungeonScore {
     private static boolean bloodDone;
     private static boolean inBoss;
     private static boolean mayorPaul; // EZPZ perk +10; not wired to a mayor source yet
+    private static boolean sent270;
+    private static boolean sent300;
 
     // last computed values (read by the HUD)
     private static int score;
@@ -80,6 +82,27 @@ public final class DungeonScore {
                           + Math.round(skillScore * 0.7f) + Math.round(bonusScore * 0.7f);
         score = raw;
         grade = grade(score);
+        checkMilestones();
+    }
+
+    // one-shot title + sound the moment the run crosses S (270) and S+ (300)
+    private static void checkMilestones() {
+        var cfg = ConstellationClient.cfg().orion;
+        if (cfg == null || !cfg.scorePings) return;
+        if (!sent270 && score >= 270 && score < 300) { ping(cfg, "§e270 §6S", 0.7f); sent270 = true; }
+        if (!sent300 && score >= 300) { ping(cfg, "§b300 §3S+", 1.0f); sent300 = true; }
+    }
+
+    private static void ping(com.froggylord.constellation.config.OrionConfig cfg, String text, float pitch) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+        if (cfg.scorePingTitle) {
+            mc.gui.hud.resetTitleTimes();
+            mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal(text));
+        }
+        if (cfg.scorePingSound) {
+            mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, pitch);
+        }
     }
 
     // ---- score categories (Hypixel formula) ----
@@ -142,6 +165,7 @@ public final class DungeonScore {
     public static void reset() {
         active = false; deaths = 0; mimicKilled = false; princeKilled = false;
         bloodDone = false; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0;
+        sent270 = false; sent300 = false;
     }
 
     public static void setMayorPaul(boolean paul) { mayorPaul = paul; }
