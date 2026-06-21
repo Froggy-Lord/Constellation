@@ -26,3 +26,4 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean instantSneak = false;
     public boolean signCalculator = true;
 }
+    public boolean hideAttachedArrows = true;
