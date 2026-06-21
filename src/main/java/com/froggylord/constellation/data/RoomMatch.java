@@ -282,14 +282,17 @@ public class RoomMatch {
         return present * 2 >= samples;
     }
 
+    /** Is there walkable floor here (any solid block with air directly above)? Block type
+     *  doesn't matter — many dungeon floors use blocks outside our tracked 21, and requiring
+     *  a tracked block made multi-cell rooms read their seams as disconnected. */
     private static boolean openColumn(Level level, int x, int z, int floorY) {
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
         for (int y = floorY + 3; y >= floorY - 4; y--) {
             m.set(x, y, z);
-            if (level.getBlockState(m).isAir()) continue;
-            if (blockId(level, x, y, z) == 0) continue;
+            if (level.getBlockState(m).isAir()) continue; // skip air, keep scanning down
             m.set(x, y + 1, z);
-            if (level.getBlockState(m).isAir()) return true;
+            if (level.getBlockState(m).isAir()) return true; // solid with air above = floor
+            return false; // solid with solid above = wall, stop
         }
         return false;
     }
