@@ -19,6 +19,7 @@ public class ConstellationConfig {
     @SerializedName("phoenix")    public PhoenixConfig phoenix = new PhoenixConfig();
     @SerializedName("aquila")     public AquilaConfig aquila = new AquilaConfig();
     @SerializedName("lyra")       public LyraConfig lyra = new LyraConfig();
+    @SerializedName("cygnus")     public CygnusConfig cygnus = new CygnusConfig();
 
     /**
      * Migrate from older config versions. Called after deserialization.
@@ -45,6 +46,7 @@ public class ConstellationConfig {
             case "phoenix"    -> phoenix;
             case "aquila"     -> aquila;
             case "lyra"       -> lyra;
+            case "cygnus"     -> cygnus;
             default -> null;
         };
     }

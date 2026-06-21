@@ -20,6 +20,7 @@ public class FeatureManager {
         register(new PhoenixQol());
         register(new AquilaMining());
         register(new LyraEconomy());
+        register(new CygnusEvents());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {
