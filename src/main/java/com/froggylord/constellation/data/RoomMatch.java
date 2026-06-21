@@ -296,9 +296,10 @@ public class RoomMatch {
             int seamZ = dz > 0 ? czA + 31 : czA - 1;
             for (int lx = 2; lx <= 28; lx += 2) { samples++; if (openColumn(level, cxA + lx, seamZ, floorY)) present++; }
         }
-        // at least 35% open = same room. doorway walls are ~3 wide, multi-tile
-        // passages 10+. this threshold catches both without merging different rooms.
-        return present * 2 >= samples;
+        // ≥40% open = same room. a doorway between DIFFERENT rooms is a ~5-wide gap
+        // (≈36% of the 14 samples), so 40% still rejects those while being lenient enough
+        // for same-room seams that have features/pillars near the boundary.
+        return present * 5 >= samples * 2;
     }
 
     /** Is there walkable floor here (any solid block with air directly above)? Block type
@@ -306,7 +307,9 @@ public class RoomMatch {
      *  a tracked block made multi-cell rooms read their seams as disconnected. */
     private static boolean openColumn(Level level, int x, int z, int floorY) {
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-        for (int y = floorY + 3; y >= floorY - 4; y--) {
+        // widened Y window: floor height varies across multi-level / sunken rooms, so look
+        // a few up and well down to find the walkable surface at this seam column
+        for (int y = floorY + 5; y >= floorY - 10; y--) {
             m.set(x, y, z);
             if (level.getBlockState(m).isAir()) continue; // skip air, keep scanning down
             m.set(x, y + 1, z);
