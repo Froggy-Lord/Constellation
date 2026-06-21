@@ -37,6 +37,7 @@ public class RoomMatch {
     private static boolean fpValid = false;
     private static int cellX = Integer.MIN_VALUE, cellZ = Integer.MIN_VALUE;
     private static int retryTick = 0;
+    private static int failTick = 0;
 
     public static String lastDebug = "no scan yet";
 
@@ -203,6 +204,16 @@ public class RoomMatch {
             currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
             fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
             ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
+            ConstellationClient.LOGGER.info("[room] MATCHED {} ({}) at {},{} | {}x{} mapped={} verify={}%",
+                best, bestDir, bestAX, bestAZ, width, length, mapped, Math.round(bestScore * 100));
+        } else if (!fpValid) {
+            // quiet diagnostic for auto-detect misses so they're traceable without /roomscan
+            failTick++;
+            if (failTick % 8 == 0) {
+                ConstellationClient.LOGGER.info("[room] no-match cell {},{} | {}x{} cells={} pool={} mapped={} surv={} best={} {}%",
+                    cx, cz, width, length, cells.size(), pool.size(), mapped, survivors,
+                    best == null ? "none" : best, Math.round(bestScore * 100));
+            }
         }
     }
 
