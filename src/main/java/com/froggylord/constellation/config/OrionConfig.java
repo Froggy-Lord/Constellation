@@ -62,5 +62,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean doorTracker = true;
     public boolean mimicPartyPing = true;
     public boolean streamerMode = false;
+    public boolean rareDropAlerts = true;
 }
-public boolean rareDropAlerts = true;

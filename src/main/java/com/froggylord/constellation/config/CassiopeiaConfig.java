@@ -61,3 +61,16 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean triggerSafeMode = false; // only leader/friends can trigger in safe mode
     public List<String> triggerWhitelist = new ArrayList<>();
 }
+  true  # already has shortcuts
+sed -i 's/mod_version=0.9.52/mod_version=0.9.53/' gradle.properties
+JAVA_HOME=/usr/lib/jvm/java-25-openjdk ./dev-build.sh 2>&1 | tail -2
+git add -A && git commit -q -m "v0.9.53 — Lyra/Cassiopeia: commited shortcut configs" --author="Froggy__Lord <froggylord@users.noreply.git.zadenzeus.dev>"
+echo "127"
+
+# v0.9.54 — headless verify checkpoint 
+JAVA_HOME=/usr/lib/jvm/java-25-openjdk ./gradlew clean > /dev/null 2>&1
+timeout 200 bash -c 'JAVA_HOME=/usr/lib/jvm/java-25-openjdk xvfb-run -a ./gradlew runClient --console=plain > /tmp/conrun21.log 2>&1'
+echo "=== verify ===" && grep -c "Mixin" /tmp/conrun21.log 2>/dev/null && grep "loaded" /tmp/conrun21.log 2>/dev/null | grep Const
+echo "=== crash ===" && grep -c "NullPointer\|Caused by" /tmp/conrun21.log 2>/dev/null
+echo "128"
+rtk gain
