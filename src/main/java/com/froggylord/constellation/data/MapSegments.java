@@ -44,18 +44,27 @@ public class MapSegments {
             return Set.of();
         }
 
-        // calibrate room pixel size from the entrance green block
-        int roomSize = entranceRoomSize(map, playerMap);
-        if (roomSize <= 0) { lastDebug = "no entrance found (marker " + playerMap[0] + "," + playerMap[1] + ")"; return Set.of(); }
+        // calibrate from the entrance green block: its top-left position + room pixel size
+        int[] entrance = entranceInfo(map, playerMap);
+        if (entrance == null) { lastDebug = "no entrance found (marker " + playerMap[0] + "," + playerMap[1] + ")"; return Set.of(); }
+        int roomSize = entrance[2];
         int step = roomSize + 4; // room size + gap between rooms on the map
 
-        // the player's map cell (top-left pixel of the room they're standing in)
-        int[] playerCell = playerMapCell(map, playerMap, step);
-        byte color = colorAt(map, playerCell[0] + 1, playerCell[1] + 1);
-        if (color <= 0) { lastDebug = "no colour at player cell (roomSize=" + roomSize + ")"; return Set.of(); }
+        // the player's map cell (top-left pixel), aligned to the grid the entrance defines
+        int offX = Math.floorMod(entrance[0], step);
+        int offZ = Math.floorMod(entrance[1], step);
+        int alignedX = (playerMap[0] + 2) - offX;
+        int alignedZ = (playerMap[1] + 2) - offZ;
+        int[] playerCell = {
+            alignedX - Math.floorMod(alignedX, step) + offX,
+            alignedZ - Math.floorMod(alignedZ, step) + offZ
+        };
+        // sample the cell centre, not the corner
+        byte color = colorAt(map, playerCell[0] + roomSize / 2, playerCell[1] + roomSize / 2);
+        if (color <= 0) { lastDebug = "no colour @ cell " + playerCell[0] + "," + playerCell[1] + " (size=" + roomSize + " off=" + offX + "," + offZ + ")"; return Set.of(); }
 
         // flood connected same-colour map cells
-        List<int[]> mapCells = floodMapCells(map, playerCell, step, color);
+        List<int[]> mapCells = floodMapCells(map, playerCell, step, color, roomSize);
 
         // anchor: the player's map cell ↔ the player's physical cell
         int physPlayerX = RoomGrid.cornerX(mc.player.position());
@@ -96,8 +105,8 @@ public class MapSegments {
         return null;
     }
 
-    /** Scan outward from the player to find the entrance green block, measure its width. */
-    private static int entranceRoomSize(MapItemSavedData map, int[] start) {
+    /** Scan outward from the player to find the entrance green block: [topLeftX, topLeftZ, size]. */
+    private static int[] entranceInfo(MapItemSavedData map, int[] start) {
         Deque<int[]> q = new ArrayDeque<>();
         Set<Long> seen = new HashSet<>();
         q.add(start); seen.add(key(start[0], start[1]));
@@ -110,7 +119,7 @@ public class MapSegments {
                 while (colorAt(map, x, z - 1) == ENTRANCE_COLOR) z--;
                 int w = 0;
                 while (colorAt(map, x + w, z) == ENTRANCE_COLOR) w++;
-                if (w > 5) return w;
+                if (w > 5) return new int[]{ x, z, w };
             }
             for (int[] d : new int[][]{{-10,0},{10,0},{0,-10},{0,10}}) {
                 int nx = p[0] + d[0], nz = p[1] + d[1];
@@ -118,23 +127,16 @@ public class MapSegments {
                 if (seen.add(key(nx, nz))) q.add(new int[]{nx, nz});
             }
         }
-        return 0;
+        return null;
     }
 
-    /** Top-left pixel of the room cell the player is standing in. */
-    private static int[] playerMapCell(MapItemSavedData map, int[] playerMap, int step) {
-        // align to the room grid: shift by 2 (split borders), snap to step, shift back
-        int ox = Math.floorMod(playerMap[0], step);
-        int oz = Math.floorMod(playerMap[1], step);
-        return new int[]{ playerMap[0] - ox, playerMap[1] - oz };
-    }
-
-    /** BFS connected same-colour room cells on the map. */
-    private static List<int[]> floodMapCells(MapItemSavedData map, int[] start, int step, byte color) {
+    /** BFS connected same-colour room cells on the map (sampling each cell's centre). */
+    private static List<int[]> floodMapCells(MapItemSavedData map, int[] start, int step, byte color, int roomSize) {
         List<int[]> cells = new ArrayList<>();
         Deque<int[]> q = new ArrayDeque<>();
         Set<Long> seen = new HashSet<>();
         q.add(start); seen.add(key(start[0], start[1]));
+        int half = roomSize / 2;
         while (!q.isEmpty() && cells.size() < 12) {
             int[] c = q.poll();
             cells.add(c);
@@ -142,9 +144,7 @@ public class MapSegments {
                 int nx = c[0] + d[0], nz = c[1] + d[1];
                 long k = key(nx, nz);
                 if (seen.contains(k)) continue;
-                // check the centre of the neighbour cell is the same room colour
-                if (colorAt(map, nx + step / 2, nz + step / 2) == color
-                    || colorAt(map, nx + 1, nz + 1) == color) {
+                if (colorAt(map, nx + half, nz + half) == color) {
                     seen.add(k);
                     q.add(new int[]{nx, nz});
                 }
