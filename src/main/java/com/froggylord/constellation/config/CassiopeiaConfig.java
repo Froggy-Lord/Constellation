@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Config for the Cassiopeia constellation (chat + commands).
+ * Expanded with SkyHanni/Odin research — 30+ filter toggles.
  */
 public class CassiopeiaConfig extends BaseConfigGroup {
 
@@ -26,6 +27,20 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean cleanTeleportFlavour = true;
     public boolean cleanDungeonBuff = true;
     public boolean cleanWitherDoor = true;
+    public boolean cleanEmpty = true;
+    public boolean cleanWarping = true;
+    public boolean cleanWelcome = true;
+    public boolean cleanGuildExp = true;
+    public boolean cleanFriendJoin = true;
+    public boolean cleanWinterGift = true;
+    public boolean cleanWatchdog = true;
+    public boolean cleanProfileJoin = true;
+    public boolean cleanFireSale = true;
+    public boolean cleanDiana = true;
+    public boolean cleanHoppity = true;
+    public boolean cleanSacrifice = true;
+    public boolean cleanParkour = true;
+    public boolean cleanTeleportPads = true;
 
     // chat enhancements
     public boolean timestamps = true;
@@ -34,6 +49,11 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean copyOnRightClick = true;
     public boolean mentionAlert = true;
     public boolean containerChat = false;
+    public boolean shortenCoins = true;
+    public boolean compactPotionMessages = true;
+    public boolean compactBestiary = true;
+    public boolean rareDropFormat = true;
+    public boolean compactJacobClaim = true;
 
     // spam filter — lines containing any of these are hidden
     public List<String> spamFilters = Arrays.asList(
@@ -58,6 +78,6 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     // party triggers
     public boolean partyTriggers = true;
     public int triggerCooldownSec = 3;
-    public boolean triggerSafeMode = false; // only leader/friends can trigger in safe mode
+    public boolean triggerSafeMode = false;
     public List<String> triggerWhitelist = new ArrayList<>();
 }

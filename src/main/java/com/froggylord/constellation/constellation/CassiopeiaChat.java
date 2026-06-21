@@ -45,6 +45,13 @@ public class CassiopeiaChat extends BaseConstellation {
             return true;
         }, ChatPipeline.Priority.EARLIEST);
 
+        // ---- ALLOW_GAME: kill the useless "Warps" message ----
+        pipeline.allow(msg -> {
+            String s = msg.getString();
+            if (s.contains("●") && (s.contains("/warp") || s.contains("/hub"))) return false;
+            return true;
+        }, ChatPipeline.Priority.LATEST);
+
         // ---- ALLOW_GAME: boss dialogue, blessings, milestones etc ----
         pipeline.allow(msg -> {
             String s = msg.getString().toLowerCase(Locale.ROOT);
@@ -61,6 +68,20 @@ public class CassiopeiaChat extends BaseConstellation {
             if (cfg.cleanTeleportFlavour && s.contains("teleport") && s.contains("room")) return false;
             if (cfg.cleanDungeonBuff && s.contains("dungeon buff")) return false;
             if (cfg.cleanWitherDoor && s.contains("wither door")) return false;
+            if (cfg.cleanEmpty && s.trim().isEmpty()) return false;
+            if (cfg.cleanWarping && (s.contains("warping") || s.contains("sending to"))) return false;
+            if (cfg.cleanWelcome && s.contains("welcome to hypixel")) return false;
+            if (cfg.cleanGuildExp && s.contains("guild") && s.contains("exp")) return false;
+            if (cfg.cleanFriendJoin && (s.contains("joined") || s.contains("left")) && !s.contains("party")) return false;
+            if (cfg.cleanWinterGift && s.contains("gift") && s.contains("ice")) return false;
+            if (cfg.cleanWatchdog && s.contains("watchdog")) return false;
+            if (cfg.cleanProfileJoin && s.contains("profile") && s.contains("loading")) return false;
+            if (cfg.cleanFireSale && s.contains("fire sale")) return false;
+            if (cfg.cleanDiana && s.contains("diana") && s.contains("burrow")) return false;
+            if (cfg.cleanHoppity && (s.contains("hoppity") || s.contains("chocolate egg"))) return false;
+            if (cfg.cleanSacrifice && s.contains("sacrifice")) return false;
+            if (cfg.cleanParkour && (s.contains("parkour") || s.contains("checkpoint"))) return false;
+            if (cfg.cleanTeleportPads && s.contains("teleport pad")) return false;
 
             // custom spam filter list
             for (String filter : cfg.spamFilters) {
@@ -68,6 +89,46 @@ public class CassiopeiaChat extends BaseConstellation {
             }
             return true;
         });
+
+        // ---- MODIFY_GAME: compact potion messages ----
+        if (cfg.compactPotionMessages) {
+            pipeline.modify(msg -> {
+                String s = msg.getString();
+                if (s.contains("Potion effects") || s.contains("Your active")) return null; // null = hide
+                return msg;
+            });
+        }
+
+        // ---- MODIFY_GAME: shorten coin amounts in chat ----
+        if (cfg.shortenCoins) {
+            pipeline.modify(msg -> {
+                String s = msg.getString();
+                // 1,234,567 -> 1.23M etc
+                if (s.length() < 10) return msg;
+                return net.minecraft.network.chat.Component.literal(
+                    s.replaceAll("([\\d,]{4,})", mr -> {
+                        try {
+                            long n = Long.parseLong(mr.group().replace(",", ""));
+                            if (n < 10000) return mr.group();
+                            if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+                            return String.format("%.2fM", n / 1_000_000.0);
+                        } catch (Exception e) { return mr.group(); }
+                    })
+                );
+            });
+        }
+
+        // ---- MODIFY_GAME: compact bestiary messages ----
+        if (cfg.compactBestiary) {
+            pipeline.modify(msg -> {
+                String s = msg.getString();
+                if (s.contains("Bestiary") || s.contains("Magic Find")) {
+                    return net.minecraft.network.chat.Component.literal(
+                        s.replaceAll("\\+\\d+(\\.\\d+)?[％%]", "✧"));
+                }
+                return msg;
+            });
+        }
 
         // ---- GAME: mention alerts ----
         if (cfg.mentionAlert) {
