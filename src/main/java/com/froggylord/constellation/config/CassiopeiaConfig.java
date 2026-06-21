@@ -51,6 +51,8 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean cleanAOTE = true;
     public boolean cleanImplosion = true;
     public boolean cleanAbilityCooldown = true;
+    public boolean autoGG = true;
+    public boolean autoTip = true;
 
     // chat enhancements
     public boolean timestamps = true;
