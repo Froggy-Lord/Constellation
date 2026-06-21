@@ -13,6 +13,7 @@ public abstract class BaseConstellation {
 
     protected BaseConfigGroup config;
     private boolean enabled = true;
+    private boolean initialized = false;
 
     /** Unique identifier, e.g. "apollo", "orion" */
     public abstract String id();
@@ -63,4 +64,6 @@ public abstract class BaseConstellation {
     protected void onDisable() {}
 
     public boolean isEnabled() { return enabled; }
+    public boolean isInitialized() { return initialized; }
+    public void markInitialized() { this.initialized = true; }
 }

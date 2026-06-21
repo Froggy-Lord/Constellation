@@ -15,13 +15,19 @@ public class FeatureManager {
 
     public void discoverAndInit() {
         register(new ApolloHud());
+        register(new CassiopeiaChat());
         register(new PhoenixQol());
 
         for (BaseConstellation c : constellations) {
-            InitContext ctx = new InitContext();
-            c.init(ctx);
-            loaded.add(c.id());
-            ConstellationClient.LOGGER.info("  [{}] loaded", c.id());
+            if (c.getConfig() != null && c.getConfig().enabled) {
+                InitContext ctx = new InitContext();
+                c.init(ctx);
+                c.markInitialized();
+                loaded.add(c.id());
+                ConstellationClient.LOGGER.info("  [{}] loaded", c.id());
+            } else {
+                ConstellationClient.LOGGER.info("  [{}] disabled by config", c.id());
+            }
         }
     }
 
@@ -36,13 +42,7 @@ public class FeatureManager {
             }
         }
         BaseConfigGroup cfg = ConstellationClient.instance().configManager().getGroup(c.id());
-        if (cfg != null) {
-            c.setConfig(cfg);
-            if (!cfg.enabled) {
-                ConstellationClient.LOGGER.info("  [{}] disabled by config", c.id());
-                return;
-            }
-        }
+        if (cfg != null) c.setConfig(cfg);
         constellations.add(c);
     }
 
@@ -64,6 +64,9 @@ public class FeatureManager {
 
     public int getLoadedCount() { return loaded.size(); }
     public Set<String> getLoadedIds() { return loaded; }
+    public List<String> getAllIds() {
+        return constellations.stream().map(BaseConstellation::id).toList();
+    }
 
     public Optional<BaseConstellation> get(String id) {
         return constellations.stream().filter(c -> c.id().equals(id)).findFirst();
@@ -72,12 +75,22 @@ public class FeatureManager {
     public void toggle(String id) {
         get(id).ifPresent(c -> {
             if (loaded.contains(id)) {
+                // disable: unregister HUD, mark config
                 c.disable();
                 loaded.remove(id);
+                ConstellationClient.hudManager().getAll().removeIf(el -> el.id().startsWith(id + "-"));
             } else {
+                // enable: init if not already done, register HUD
+                if (!c.isInitialized()) {
+                    c.init(new InitContext());
+                    c.markInitialized();
+                }
                 c.enable();
                 loaded.add(id);
+                c.registerHud(ConstellationClient.hudManager());
             }
+            c.getConfig().enabled = loaded.contains(id);
+            ConstellationClient.saveConfig();
         });
     }
 }

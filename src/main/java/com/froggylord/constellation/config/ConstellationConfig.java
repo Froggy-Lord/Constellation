@@ -13,9 +13,9 @@ public class ConstellationConfig {
     public int cfgVersion = CURRENT_VERSION;
 
     // sub-configs — one per constellation, named by their id
-    @SerializedName("apollo")    public ApolloConfig apollo = new ApolloConfig();
-    @SerializedName("phoenix")   public PhoenixConfig phoenix = new PhoenixConfig();
-    // more added as constellations are implemented
+    @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
+    @SerializedName("cassiopeia") public CassiopeiaConfig cassiopeia = new CassiopeiaConfig();
+    @SerializedName("phoenix")    public PhoenixConfig phoenix = new PhoenixConfig();
 
     /**
      * Migrate from older config versions. Called after deserialization.
@@ -36,8 +36,9 @@ public class ConstellationConfig {
      */
     public BaseConfigGroup getSubConfig(String id) {
         return switch (id) {
-            case "apollo"  -> apollo;
-            case "phoenix" -> phoenix;
+            case "apollo"     -> apollo;
+            case "cassiopeia" -> cassiopeia;
+            case "phoenix"    -> phoenix;
             default -> null;
         };
     }

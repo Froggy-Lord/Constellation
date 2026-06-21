@@ -5,7 +5,8 @@
     "client": [
         "ClientPacketListenerMixin",
         "EffectsInInventoryMixin",
-        "HudRenderMixin"
+        "HudRenderMixin",
+        "WarpShortenerMixin"
     ],
     "injectors": {
         "defaultRequire": 1

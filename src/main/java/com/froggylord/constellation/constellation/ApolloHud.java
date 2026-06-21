@@ -33,13 +33,9 @@ public class ApolloHud extends BaseConstellation {
 
         hud.register(new HudWidget("apollo-ping", "Ping",
             () -> {
-                if (mc.player == null) return "?";
-                // singleplayer or no connection — latency is meaningless
-                if (mc.hasSingleplayerServer() || mc.player.connection == null) return "SP";
-                var entry = mc.player.connection.getPlayerInfo(mc.player.getUUID());
-                if (entry == null) return "?";
-                int lat = entry.getLatency();
-                return lat <= 1 ? "..." : lat + "ms";
+                if (mc.player == null || mc.getConnection() == null) return "-";
+                var server = mc.getCurrentServer();
+                return server != null ? server.ping + "ms" : "-";
             },
             toPos(cfg.ping), cfg.ping.visible));
 

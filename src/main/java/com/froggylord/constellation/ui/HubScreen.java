@@ -13,10 +13,16 @@ import org.lwjgl.glfw.GLFW;
 public class HubScreen extends Screen {
 
     private final Screen parent;
+    private long openTime;
 
     public HubScreen(Screen parent) {
         super(Component.literal("Constellation"));
         this.parent = parent;
+    }
+
+    @Override
+    protected void init() {
+        this.openTime = System.currentTimeMillis();
     }
 
     @Override
@@ -39,19 +45,21 @@ public class HubScreen extends Screen {
         g.text(font, title, w / 2 - font.width(title) / 2, 6, NebulaTheme.ACCENT_GOLD, false);
 
         int cardY = 20;
-        var loadedIds = ConstellationClient.featureManager().getLoadedIds();
-        for (Object o : loadedIds) {
-            String id = (String) o;
+        var allIds = ConstellationClient.featureManager().getAllIds();
+        for (String id : allIds) {
             var c = ConstellationClient.featureManager().get(id);
             if (c.isEmpty()) continue;
 
-            String name = "✦ " + c.get().displayName();
+            boolean enabled = c.get().isEnabled();
+            String name = (enabled ? "✦ " : "✧ ") + c.get().displayName();
             int cardH = 22;
             boolean hover = mx >= 10 && mx <= 170 && my >= cardY && my < cardY + cardH;
 
             g.fill(10, cardY, 170, cardY + cardH, hover ? 0xFF2A2A3A : 0xFF1A1A28);
             if (hover) g.fill(10, cardY, 13, cardY + cardH, NebulaTheme.ACCENT_GOLD);
-            g.text(font, name, 18, cardY + 6, hover ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
+            g.text(font, name, 18, cardY + 6,
+                enabled ? (hover ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE)
+                        : NebulaTheme.STAR_MUTED, false);
             cardY += 26;
         }
 
@@ -88,14 +96,26 @@ public class HubScreen extends Screen {
 
         // settings button
         if (mx >= btnX && mx <= btnX + btnW && my >= setBtnY && my <= setBtnY + 22) {
-            mc.setScreenAndShow(new ConfigScreen(this));
+            var ids = ConstellationClient.featureManager().getLoadedIds();
+            String first = ids.isEmpty() ? "apollo" : ids.iterator().next();
+            mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(first, this)));
             return true;
         }
 
         // hud editor button
         if (mx >= btnX && mx <= btnX + btnW && my >= hudBtnY && my <= hudBtnY + 22) {
-            mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this));
+            mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this)));
             return true;
+        }
+
+        // constellation cards — toggle on click (deferred to next tick)
+        int cardY = 20;
+        for (String id : ConstellationClient.featureManager().getAllIds()) {
+            if (mx >= 10 && mx <= 170 && my >= cardY && my < cardY + 22) {
+                mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(id, parent)));
+                return true;
+            }
+            cardY += 26;
         }
 
         return super.mouseClicked(event, dbl);
@@ -103,7 +123,13 @@ public class HubScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT || event.key() == GLFW.GLFW_KEY_ESCAPE) {
+        // ignore escape for the first 400ms — prevents chat-close from insta-closing us
+        if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            if (System.currentTimeMillis() - openTime < 400) return true;
+            onClose();
+            return true;
+        }
+        if (event.key() == GLFW.GLFW_KEY_RIGHT_SHIFT) {
             onClose();
             return true;
         }
@@ -112,6 +138,7 @@ public class HubScreen extends Screen {
 
     @Override
     public void onClose() {
-        Minecraft.getInstance().setScreenAndShow(parent);
+        var p = parent;
+        Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(p));
     }
 }

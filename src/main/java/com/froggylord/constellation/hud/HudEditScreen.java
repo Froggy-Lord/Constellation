@@ -98,6 +98,7 @@ public class HudEditScreen extends Screen {
     public void onClose() {
         ConstellationClient.hudManager().setEditorOpen(false);
         ConstellationClient.saveConfig();
-        Minecraft.getInstance().setScreenAndShow(parent);
+        var p = parent;
+        Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(p));
     }
 }

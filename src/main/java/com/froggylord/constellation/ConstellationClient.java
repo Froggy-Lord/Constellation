@@ -64,6 +64,7 @@ public class ConstellationClient implements ClientModInitializer {
         featureManager.registerHudElements();
 
         // root commands via vanilla brigadier
+        // screen opens deferred to next tick so the chat-close doesn't race and insta-close us
         net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             var mc = Minecraft.getInstance();
 
@@ -71,23 +72,25 @@ public class ConstellationClient implements ClientModInitializer {
             dispatcher.register(
                 com.mojang.brigadier.builder.LiteralArgumentBuilder
                     .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("constellation")
-                    .executes(ctx -> { mc.setScreenAndShow(new HubScreen(null)); return 1; })
+                    .executes(ctx -> { mc.execute(() -> mc.setScreenAndShow(new HubScreen(null))); return 1; })
             );
-            // /cn → alias, with hud/config subcommands
+            // /cn → opens hub. subcommands: hud, config
             dispatcher.register(
                 com.mojang.brigadier.builder.LiteralArgumentBuilder
                     .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("cn")
-                    .executes(ctx -> { mc.setScreenAndShow(new HubScreen(null)); return 1; })
+                    .executes(ctx -> { mc.execute(() -> mc.setScreenAndShow(new HubScreen(null))); return 1; })
                     .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
                         .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("hud")
                         .executes(ctx -> {
-                            mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(null));
+                            mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(null)));
                             return 1;
                         }))
                     .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
                         .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("config")
                         .executes(ctx -> {
-                            mc.setScreenAndShow(new ConfigScreen(null));
+                            var ids = ConstellationClient.featureManager().getLoadedIds();
+                            String first = ids.isEmpty() ? "apollo" : ids.iterator().next();
+                            mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(first, null)));
                             return 1;
                         }))
             );
