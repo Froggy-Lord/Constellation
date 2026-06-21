@@ -121,6 +121,7 @@ public class RoomMatch {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
+                    if (inDoorway(wx, y, wz)) continue;
                     if (blockId(level, wx, y, wz) != 0 && y < minY) minY = y;
                 }
         }
@@ -135,6 +136,10 @@ public class RoomMatch {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
+                    // doorway exclusion: skip blocks in the 4-block gaps between rooms.
+                    // doorways are shared blocks that don't belong to either room's skeleton,
+                    // so feeding them into the matcher falsely eliminates candidates.
+                    if (inDoorway(wx, y, wz)) continue;
                     byte id = blockId(level, wx, y, wz);
                     if (id == 0) continue;
                     mapped++;
@@ -280,6 +285,14 @@ public class RoomMatch {
             if (level.getBlockState(m).isAir()) return true;
         }
         return false;
+    }
+
+    /** Doorway zones: the 4-block gap between rooms (shared blocks, not in any skeleton). */
+    private static boolean inDoorway(int x, int y, int z) {
+        if (y < 66 || y > 73) return false;
+        int lx = Math.floorMod(x, 32);
+        int lz = Math.floorMod(z, 32);
+        return (lx <= 3 || lx >= 28) || (lz <= 3 || lz >= 28);
     }
 
     private static byte blockId(Level level, int x, int y, int z) {
