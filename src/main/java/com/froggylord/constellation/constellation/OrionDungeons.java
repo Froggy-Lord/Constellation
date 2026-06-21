@@ -40,35 +40,43 @@ public class OrionDungeons extends BaseConstellation {
         if (cfg == null) return;
         Minecraft mc = Minecraft.getInstance();
 
+        // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
         if (cfg.scoreHud) {
             hud.register(new HudWidget("orion-score", "Score",
-                () -> "300 S+",
+                () -> inDungeon() ? "300 S+" : null,
                 HudPosition.of(6, 54), cfg.scoreHud));
         }
         if (cfg.secretsHud) {
             hud.register(new HudWidget("orion-secrets", "Secrets",
-                () -> "0/0",
+                () -> inDungeon() ? "0/0" : null,
                 HudPosition.of(6, 66), cfg.secretsHud));
         }
         if (cfg.cryptsHud) {
             hud.register(new HudWidget("orion-crypts", "Crypts",
-                () -> "0",
+                () -> inDungeon() ? "0" : null,
                 HudPosition.of(6, 78), cfg.cryptsHud));
         }
         if (cfg.deathsHud) {
             hud.register(new HudWidget("orion-deaths", "Deaths",
-                () -> "0",
+                () -> inDungeon() ? "0" : null,
                 HudPosition.of(6, 90), cfg.deathsHud));
         }
         if (cfg.timerHud) {
             hud.register(new HudWidget("orion-timer", "Timer",
-                () -> "0:00",
+                () -> inDungeon() ? "0:00" : null,
                 HudPosition.of(6, 102), cfg.timerHud));
         }
         if (cfg.roomNameHud) {
             hud.register(new HudWidget("orion-room", "Room",
-                () -> RoomMatch.currentRoom().isEmpty() ? "-" : RoomMatch.currentRoom(),
+                () -> {
+                    if (!inDungeon()) return null;
+                    return RoomMatch.currentRoom().isEmpty() ? "-" : RoomMatch.currentRoom();
+                },
                 HudPosition.of(6, 114), cfg.roomNameHud));
         }
+    }
+
+    private static boolean inDungeon() {
+        return ConstellationClient.loc().inDungeons();
     }
 }
