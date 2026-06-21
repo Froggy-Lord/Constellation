@@ -16,6 +16,7 @@ public class FeatureManager {
     public void discoverAndInit() {
         register(new ApolloHud());
         register(new CassiopeiaChat());
+        register(new OrionDungeons());
         register(new PhoenixQol());
 
         for (BaseConstellation c : constellations) {

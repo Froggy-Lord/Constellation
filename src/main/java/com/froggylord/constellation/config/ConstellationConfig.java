@@ -15,6 +15,7 @@ public class ConstellationConfig {
     // sub-configs — one per constellation, named by their id
     @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
     @SerializedName("cassiopeia") public CassiopeiaConfig cassiopeia = new CassiopeiaConfig();
+    @SerializedName("orion")      public OrionConfig orion = new OrionConfig();
     @SerializedName("phoenix")    public PhoenixConfig phoenix = new PhoenixConfig();
 
     /**
@@ -38,6 +39,7 @@ public class ConstellationConfig {
         return switch (id) {
             case "apollo"     -> apollo;
             case "cassiopeia" -> cassiopeia;
+            case "orion"      -> orion;
             case "phoenix"    -> phoenix;
             default -> null;
         };
