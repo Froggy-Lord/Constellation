@@ -15,7 +15,7 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean hideFallingBlocks = true;
     public boolean hideFireOverlay = true;
     public boolean hideUnderwaterBlur = false;
-    public boolean hideStatusEffects = false;
+    public boolean hideStatusEffects = true;
     public boolean hidePlayersInDungeon = false;
     public boolean etherwarpOverlay = true;
     public boolean scrollableTooltips = true;

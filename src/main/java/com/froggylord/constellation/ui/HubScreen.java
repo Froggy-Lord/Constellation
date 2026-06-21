@@ -19,15 +19,15 @@ public class HubScreen extends Screen {
         this.parent = parent;
     }
 
-    public static void setup() {}
-
     @Override
     public boolean isPauseScreen() { return false; }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        int w = width, h = height;
-        var font = Minecraft.getInstance().font;
+        Minecraft mc = Minecraft.getInstance();
+        int w = mc.getWindow().getGuiScaledWidth();
+        int h = mc.getWindow().getGuiScaledHeight();
+        var font = mc.font;
 
         g.fill(0, 0, w, h, NebulaTheme.BG_DEEP);
 
@@ -55,14 +55,23 @@ public class HubScreen extends Screen {
             cardY += 26;
         }
 
-        int btnW = 120, btnH = 22, btnX = w / 2 - btnW / 2, btnY = h - 32;
-        boolean hoverSettings = mx >= btnX && mx <= btnX + btnW && my >= btnY && my <= btnY + btnH;
-        g.fill(btnX, btnY, btnX + btnW, btnY + btnH, hoverSettings ? 0xFF3A3050 : 0xFF1A1428);
-        g.fill(btnX, btnY, btnX + btnW, btnY + 2, NebulaTheme.ACCENT_GOLD);
+        // hud editor button
+        int btnW = 120, btnH = 22, hudBtnX = w / 2 - btnW / 2, hudBtnY = h - 58;
+        boolean hoverHud = mx >= hudBtnX && mx <= hudBtnX + btnW && my >= hudBtnY && my <= hudBtnY + btnH;
+        g.fill(hudBtnX, hudBtnY, hudBtnX + btnW, hudBtnY + btnH, hoverHud ? 0xFF3A3050 : 0xFF1A1428);
+        g.fill(hudBtnX, hudBtnY, hudBtnX + btnW, hudBtnY + 2, NebulaTheme.ACCENT_GOLD);
+        String hudLabel = "HUD Editor";
+        g.text(font, hudLabel, w / 2 - font.width(hudLabel) / 2, hudBtnY + 6,
+            hoverHud ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
 
-        String settings = "Settings";
-        g.text(font, settings, w / 2 - font.width(settings) / 2, btnY + 6,
-            hoverSettings ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
+        // settings button
+        int setBtnY = h - 32;
+        boolean hoverSet = mx >= hudBtnX && mx <= hudBtnX + btnW && my >= setBtnY && my <= setBtnY + btnH;
+        g.fill(hudBtnX, setBtnY, hudBtnX + btnW, setBtnY + btnH, hoverSet ? 0xFF3A3050 : 0xFF1A1428);
+        g.fill(hudBtnX, setBtnY, hudBtnX + btnW, setBtnY + 2, NebulaTheme.ACCENT_GOLD);
+        String setLabel = "Settings";
+        g.text(font, setLabel, w / 2 - font.width(setLabel) / 2, setBtnY + 6,
+            hoverSet ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
 
         String esc = "Right Shift or ESC to close";
         g.text(font, esc, w / 2 - font.width(esc) / 2, h - 10, NebulaTheme.STAR_MUTED, false);
@@ -71,11 +80,24 @@ public class HubScreen extends Screen {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         int mx = (int) event.x(), my = (int) event.y();
-        int btnW = 120, btnH = 22, btnX = width / 2 - btnW / 2, btnY = height - 32;
-        if (mx >= btnX && mx <= btnX + btnW && my >= btnY && my <= btnY + btnH) {
-            Minecraft.getInstance().setScreenAndShow(new ConfigScreen(this));
+        Minecraft mc = Minecraft.getInstance();
+        int w = mc.getWindow().getGuiScaledWidth();
+        int h = mc.getWindow().getGuiScaledHeight();
+
+        int btnW = 120, hudBtnY = h - 58, setBtnY = h - 32, btnX = w / 2 - btnW / 2;
+
+        // settings button
+        if (mx >= btnX && mx <= btnX + btnW && my >= setBtnY && my <= setBtnY + 22) {
+            mc.setScreenAndShow(new ConfigScreen(this));
             return true;
         }
+
+        // hud editor button
+        if (mx >= btnX && mx <= btnX + btnW && my >= hudBtnY && my <= hudBtnY + 22) {
+            mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this));
+            return true;
+        }
+
         return super.mouseClicked(event, dbl);
     }
 

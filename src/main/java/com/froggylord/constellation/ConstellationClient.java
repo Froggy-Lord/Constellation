@@ -10,8 +10,11 @@ import com.froggylord.constellation.render.BatchRenderer;
 import com.froggylord.constellation.render.HudRenderer;
 import com.froggylord.constellation.render.NebulaTheme;
 import com.froggylord.constellation.render.WorldRenderer;
+import com.froggylord.constellation.ui.ConfigScreen;
 import com.froggylord.constellation.ui.HubScreen;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +63,34 @@ public class ConstellationClient implements ClientModInitializer {
         HudRenderer.init();
         featureManager.registerHudElements();
 
+        // root commands via vanilla brigadier
         net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            var mc = Minecraft.getInstance();
+
+            // /constellation → opens hub
+            dispatcher.register(
+                com.mojang.brigadier.builder.LiteralArgumentBuilder
+                    .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("constellation")
+                    .executes(ctx -> { mc.setScreenAndShow(new HubScreen(null)); return 1; })
+            );
+            // /cn → alias, with hud/config subcommands
+            dispatcher.register(
+                com.mojang.brigadier.builder.LiteralArgumentBuilder
+                    .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("cn")
+                    .executes(ctx -> { mc.setScreenAndShow(new HubScreen(null)); return 1; })
+                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
+                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("hud")
+                        .executes(ctx -> {
+                            mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(null));
+                            return 1;
+                        }))
+                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
+                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("config")
+                        .executes(ctx -> {
+                            mc.setScreenAndShow(new ConfigScreen(null));
+                            return 1;
+                        }))
+            );
             featureManager.registerCommands(dispatcher);
         });
 

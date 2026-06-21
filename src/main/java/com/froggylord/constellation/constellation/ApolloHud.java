@@ -28,18 +28,22 @@ public class ApolloHud extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         hud.register(new HudWidget("apollo-fps", "FPS",
-            () -> String.valueOf(mc.getFps()),
+            () -> mc.getFps() + "",
             toPos(cfg.fps), cfg.fps.visible));
 
         hud.register(new HudWidget("apollo-ping", "Ping",
             () -> {
                 if (mc.player == null) return "?";
+                // singleplayer or no connection — latency is meaningless
+                if (mc.hasSingleplayerServer() || mc.player.connection == null) return "SP";
                 var entry = mc.player.connection.getPlayerInfo(mc.player.getUUID());
-                return entry != null ? entry.getLatency() + "ms" : "?";
+                if (entry == null) return "?";
+                int lat = entry.getLatency();
+                return lat <= 1 ? "..." : lat + "ms";
             },
             toPos(cfg.ping), cfg.ping.visible));
 
-        hud.register(new HudWidget("apollo-clock", "Time",
+        hud.register(new HudWidget("apollo-clock", "Clock",
             () -> {
                 var t = java.time.LocalTime.now();
                 return String.format("%02d:%02d", t.getHour(), t.getMinute());
@@ -57,18 +61,18 @@ public class ApolloHud extends BaseConstellation {
         hud.register(new HudWidget("apollo-health", "HP",
             () -> {
                 if (mc.player == null) return "?";
-                return String.format("%.0f/%.0f", mc.player.getHealth(), mc.player.getMaxHealth());
+                return String.format("%.0f", mc.player.getHealth());
             },
             toPos(cfg.health), cfg.health.visible));
 
         hud.register(new HudWidget("apollo-mana", "MN",
-            () -> "?",
+            () -> "?", // SB action bar parsing — Phase 2
             toPos(cfg.mana), cfg.mana.visible));
 
         hud.register(new HudWidget("apollo-defense", "DEF",
             () -> {
                 if (mc.player == null) return "?";
-                return String.valueOf(mc.player.getArmorValue());
+                return mc.player.getArmorValue() + "";
             },
             toPos(cfg.defense), cfg.defense.visible));
 
