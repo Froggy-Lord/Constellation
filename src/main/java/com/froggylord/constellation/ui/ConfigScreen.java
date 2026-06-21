@@ -54,9 +54,10 @@ public class ConfigScreen extends Screen {
     }
 
     // ---- layout ----
-    private int panelW(int w) { return Math.max(500, w * 72 / 100); }
-    private int panelH(int h) { return Math.max(350, h * 82 / 100); }
-    private int sideW(int w) { return Math.max(80, Math.min(110, panelW(w) * 18 / 100)); }
+    // never exceed the actual scaled screen — clamp the minimum to what fits
+    private int panelW(int w) { return Math.min(w - 20, Math.max(Math.min(460, w - 20), w * 68 / 100)); }
+    private int panelH(int h) { return Math.min(h - 20, Math.max(Math.min(300, h - 20), h * 78 / 100)); }
+    private int sideW(int w) { return Math.max(70, Math.min(100, panelW(w) * 18 / 100)); }
     private int gridTop() { return TB + 24; }
     private int gridX(int w) { return sideW(w) + 12; }
     private int gridRight(int w) { return panelW(w) - 10; }
