@@ -104,6 +104,9 @@ public class RoomMatch {
         }
         if (pool.isEmpty()) {
             lastDebug = "§cno candidates fit§r " + width + "x" + length + " (cells=" + cells.size() + ")";
+            if (++failTick % 8 == 0)
+                ConstellationClient.LOGGER.info("[room] no-fit cell {},{} | {}x{} cells={} (over-merge?)",
+                    cx, cz, width, length, cells.size());
             return;
         }
 
@@ -296,24 +299,24 @@ public class RoomMatch {
             int seamZ = dz > 0 ? czA + 31 : czA - 1;
             for (int lx = 2; lx <= 28; lx += 2) { samples++; if (openColumn(level, cxA + lx, seamZ, floorY)) present++; }
         }
-        // ≥40% open = same room. a doorway between DIFFERENT rooms is a ~5-wide gap
-        // (≈36% of the 14 samples), so 40% still rejects those while being lenient enough
-        // for same-room seams that have features/pillars near the boundary.
-        return present * 5 >= samples * 2;
+        // ≥50% open = same room (v0.5.3 value, best results). a doorway between DIFFERENT
+        // rooms is a ~5-wide gap (≈36%), so 50% cleanly rejects those.
+        return present * 2 >= samples;
     }
 
-    /** Is this seam column passable (not a wall)? A wall between two different rooms is
-     *  solid at head height across its whole length. Open floor, doorways, and floor
-     *  decorations (slabs/chests/pillars) are all passable — so we detect the WALL, not the
-     *  floor. Old "floor with air directly above" failed on decorated same-room seams. */
+    /** Is there walkable floor at this seam column (solid block with air directly above)?
+     *  This is the v0.5.3 logic that gave the best results — wall-detection (v0.5.5)
+     *  over-merged rooms across walls with head-height gaps. */
     private static boolean openColumn(Level level, int x, int z, int floorY) {
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-        int solidHead = 0;
-        for (int y = floorY + 2; y <= floorY + 5; y++) {
+        for (int y = floorY + 3; y >= floorY - 4; y--) {
             m.set(x, y, z);
-            if (!level.getBlockState(m).isAir()) solidHead++;
+            if (level.getBlockState(m).isAir()) continue;
+            m.set(x, y + 1, z);
+            if (level.getBlockState(m).isAir()) return true; // solid with air above = floor
+            return false; // solid with solid above = wall
         }
-        return solidHead < 3; // <3 solid at head height = passable (room interior or doorway)
+        return false;
     }
 
     private static byte blockId(Level level, int x, int y, int z) {
