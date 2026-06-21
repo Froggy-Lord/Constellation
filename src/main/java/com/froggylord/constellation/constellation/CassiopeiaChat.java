@@ -35,6 +35,17 @@ public class CassiopeiaChat extends BaseConstellation {
 
         pipeline.init();
 
+        // ---- ALLOW_GAME: action bar cleaner (SkyblockTweaks-style) ----
+        if (cfg.actionBarCleaner) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
+                if (!overlay || !cfg.actionBarCleaner) return true;
+                String s = msg.getString();
+                // strip the verbose action bar spam
+                if (s.contains("❤") && s.length() > 30) return false; // strip health/defense display
+                return true;
+            });
+        }
+
         // ---- ALLOW_GAME: cleaner (runs EARLIEST so it sees messages before anything else) ----
         pipeline.allow(msg -> {
             if (!cfg.cleanBlocksInWay && !cfg.cleanNotEnoughMana && !cfg.cleanCantTeleport) return true;
