@@ -28,6 +28,7 @@ public class AquilaMining extends BaseConstellation {
 
     private static final Pattern POWDER = Pattern.compile("(Mithril|Gemstone|Glacite) Powder:?\\s*([\\d,]+)");
     private static final Pattern COMMISSION = Pattern.compile("(?<name>[A-Za-z ]+?): (?<val>\\d+(?:\\.\\d+)?%|DONE)");
+    private static final Pattern FORGE = Pattern.compile("(?<slot>\\d+)\\. (?<item>.+): (?<time>\\d+h|\\d+m|\\d+s|Ready!)");
 
     private AquilaConfig cfg;
 
@@ -50,6 +51,9 @@ public class AquilaMining extends BaseConstellation {
             hud.register(new HudWidget("aquila-commissions", "Commissions",
                 () -> inMining() ? commissionLine() : null,
                 HudPosition.of(2, 70), cfg.commissionHud));
+            hud.register(new HudWidget("aquila-forge", "Forge",
+                () -> inMining() ? forgeLine() : null,
+                HudPosition.of(2, 80), cfg.commissionHud));
         }
     }
 
@@ -97,5 +101,22 @@ public class AquilaMining extends BaseConstellation {
             if (shown >= 2) break;
         }
         return sb.length() == 0 ? null : sb.toString();
+    }
+
+    /** Forge slots with remaining time. */
+    private static String forgeLine() {
+        var tab = TabList.lines();
+        boolean section = false;
+        StringBuilder sb = new StringBuilder();
+        for (String line : tab) {
+            if (line.contains("Forge")) { section = true; continue; }
+            if (!section) continue;
+            Matcher m = FORGE.matcher(line);
+            if (!m.find()) break;
+            if (sb.length() > 0) sb.append(" §7|");
+            String time = m.group("time");
+            sb.append("§f").append(m.group("item").trim()).append(" §7").append(time);
+        }
+        return sb.length() == 0 ? null : "§6" + sb.toString();
     }
 }
