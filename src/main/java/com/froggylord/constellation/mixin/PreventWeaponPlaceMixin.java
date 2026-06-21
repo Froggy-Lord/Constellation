@@ -6,8 +6,7 @@ import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -27,8 +26,16 @@ public class PreventWeaponPlaceMixin {
 
         var stack = player.getItemInHand(hand);
         if (stack.isEmpty()) return;
-        if (stack.getItem() instanceof SwordItem || stack.getItem() instanceof BowItem) {
+        // 26.2 removed SwordItem — detect via bow superclass + description patterns
+        var item = stack.getItem();
+        if (item instanceof ProjectileWeaponItem) {
             cir.setReturnValue(InteractionResult.PASS);
+        } else {
+            String id = item.getDescriptionId();
+            if (id.contains("sword") || id.contains("wand") || id.contains("staff")
+                || id.contains("blade") || id.contains("scythe") || id.contains("dagger")
+                || id.contains("axe"))
+                cir.setReturnValue(InteractionResult.PASS);
         }
     }
 

@@ -26,6 +26,7 @@ public final class DungeonScore {
     private static final Pattern SECRETS = Pattern.compile("Secrets Found: (?<p>\\d+\\.?\\d*)%");
     private static final Pattern COMPLETED = Pattern.compile(" *Completed Rooms: (?<r>\\d+)");
     private static final Pattern CRYPTS = Pattern.compile("Crypts: (?<c>\\d+)");
+    private static final Pattern DEATHS_SIDEBAR = Pattern.compile("Deaths: (?<d>\\d+)");
     private static final Pattern PUZZLE_COUNT = Pattern.compile("Puzzles: \\((?<n>\\d+)\\)");
     private static final Pattern PUZZLE = Pattern.compile(".+?: \\[(?<state>.)](?: \\(\\w*\\))?");
 
@@ -70,6 +71,8 @@ public final class DungeonScore {
         secretPct = secretsPct(tab);
         int completed = completedRooms(tab);
         crypts = crypts(tab);
+        int sidebarDeaths = sidebarDeaths(side);
+        if (sidebarDeaths > deaths) deaths = sidebarDeaths; // sidebar is authoritative
         int incompletePuzzles = incompletePuzzles(tab);
 
         int total = cleared > 0 ? (int) Math.round(completed / cleared) : 0;
@@ -202,6 +205,11 @@ public final class DungeonScore {
     private static int crypts(List<String> tab) {
         Matcher m = TabList.find(tab, CRYPTS);
         return m != null ? Integer.parseInt(m.group("c")) : 0;
+    }
+
+    private static int sidebarDeaths(List<String> side) {
+        Matcher m = matchContains(side, DEATHS_SIDEBAR);
+        return m != null ? Integer.parseInt(m.group("d")) : 0;
     }
 
     private static int incompletePuzzles(List<String> tab) {
