@@ -45,6 +45,8 @@ public final class SecretWaypoints {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.secretWaypoints) return;
         if (!ConstellationClient.loc().inDungeons() || !RoomMatch.isMatched()) { room = ""; wps.clear(); return; }
+        // a route already covers this room — let it own the overlay
+        if (cfg.routes && Routes.hasRouteFor(RoomMatch.currentRoom())) return;
 
         sync();
         if (wps.isEmpty()) return;

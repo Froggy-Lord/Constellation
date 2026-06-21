@@ -34,6 +34,8 @@ public class OrionDungeons extends BaseConstellation {
 
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
+        // secret routes — walk path + typed action markers (takes over waypoints in routed rooms)
+        ConstellationClient.world().register(Routes::draw);
 
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.

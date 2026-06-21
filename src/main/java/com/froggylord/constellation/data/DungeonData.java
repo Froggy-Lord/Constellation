@@ -22,12 +22,20 @@ public class DungeonData {
     public static final Map<String, Map<String, int[]>> ROOMS = new HashMap<>();
     // roomName -> secrets list
     public static final Map<String, List<Secret>> SECRETS = new HashMap<>();
+    // roomName -> route variants (standard walk routes, and pearl-clip routes)
+    public static final Map<String, List<Route>> ROUTES = new HashMap<>();
+    public static final Map<String, List<Route>> PEARL_ROUTES = new HashMap<>();
     // flat candidate list with precomputed local dims (max relX / relZ), for fit-filtering
     public static final List<Candidate> CANDIDATES = new ArrayList<>();
 
     private static volatile boolean loaded = false;
 
     public record Secret(String category, String name, int x, int y, int z) {}
+
+    /** One secret route: the walk path plus typed action points, all room-relative coords. */
+    public record Route(List<int[]> locations, List<int[]> etherwarps, List<int[]> interacts,
+                        List<int[]> mines, List<int[]> tnts, List<int[]> pearls,
+                        String secretType, int[] secret) {}
 
     /** A room fingerprint with its local footprint dims (max relX, relZ). */
     public record Candidate(String name, int[] fp, int rx, int rz) {}
@@ -54,10 +62,53 @@ public class DungeonData {
         long start = System.currentTimeMillis();
         loadSkeletons();
         loadSecrets();
+        loadRoutes("routes.json", ROUTES);
+        loadRoutes("pearlroutes.json", PEARL_ROUTES);
         loaded = true;
         int total = ROOMS.values().stream().mapToInt(Map::size).sum();
-        ConstellationClient.LOGGER.info("Dungeon data: {} rooms ({} with secrets) in {}ms",
-            total, SECRETS.size(), System.currentTimeMillis() - start);
+        ConstellationClient.LOGGER.info("Dungeon data: {} rooms ({} with secrets, {} routed) in {}ms",
+            total, SECRETS.size(), ROUTES.size(), System.currentTimeMillis() - start);
+    }
+
+    private static void loadRoutes(String file, Map<String, List<Route>> into) {
+        try (InputStream in = res(file)) {
+            if (in == null) return;
+            JsonObject root = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), JsonObject.class);
+            for (var entry : root.entrySet()) {
+                if (entry.getKey().startsWith("#") || !entry.getValue().isJsonArray()) continue; // skip #origin etc.
+                List<Route> variants = new ArrayList<>();
+                for (var el : entry.getValue().getAsJsonArray()) {
+                    JsonObject o = el.getAsJsonObject();
+                    String secType = "secret";
+                    int[] secLoc = null;
+                    if (o.has("secret") && o.get("secret").isJsonObject()) {
+                        JsonObject s = o.getAsJsonObject("secret");
+                        if (s.has("type")) secType = s.get("type").getAsString();
+                        if (s.has("location")) secLoc = triple(s.getAsJsonArray("location"));
+                    }
+                    variants.add(new Route(
+                        coords(o, "locations"), coords(o, "etherwarps"), coords(o, "interacts"),
+                        coords(o, "mines"), coords(o, "tnts"), coords(o, "enderpearls"),
+                        secType, secLoc));
+                }
+                into.put(entry.getKey().toLowerCase(Locale.ROOT), variants);
+            }
+        } catch (Exception e) {
+            ConstellationClient.LOGGER.error("failed loading {}", file, e);
+        }
+    }
+
+    private static List<int[]> coords(JsonObject o, String key) {
+        List<int[]> out = new ArrayList<>();
+        if (!o.has(key) || !o.get(key).isJsonArray()) return out;
+        for (var el : o.getAsJsonArray(key)) {
+            if (el.isJsonArray() && el.getAsJsonArray().size() >= 3) out.add(triple(el.getAsJsonArray()));
+        }
+        return out;
+    }
+
+    private static int[] triple(JsonArray a) {
+        return new int[]{ a.get(0).getAsInt(), a.get(1).getAsInt(), a.get(2).getAsInt() };
     }
 
     private static void loadSkeletons() {
