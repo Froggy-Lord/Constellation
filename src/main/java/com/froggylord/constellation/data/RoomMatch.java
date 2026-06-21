@@ -106,12 +106,25 @@ public class RoomMatch {
             return;
         }
 
+        // count distinct cell columns/rows to limit rotations by shape (Skyblocker-style):
+        // a 1xN room only has 2 valid rotations, not 4 — trying impossible ones picks a
+        // wrong anchor corner that fails verify.
+        java.util.Set<Integer> segX = new java.util.HashSet<>(), segZ = new java.util.HashSet<>();
+        for (long c : cells) { segX.add((int)(c >> 32)); segZ.add((int) c); }
+        boolean horizontal = segX.size() > 1 && segZ.size() == 1;
+        boolean vertical   = segX.size() == 1 && segZ.size() > 1;
+
+        // dirs order: 0=NW 1=NE 2=SW 3=SE
         RoomTransform.Direction[] dirs = RoomTransform.Direction.values();
         int[][] corner = {
             {wMinX, wMinZ}, {wMaxX, wMinZ}, {wMinX, wMaxZ}, {wMaxX, wMaxZ}
         };
+        boolean[] active = {true, true, true, true};
+        if (horizontal) { active[1] = active[2] = false; }      // NE, SW out → NW, SE
+        else if (vertical) { active[0] = active[3] = false; }   // NW, SE out → NE, SW
+
         List<List<DungeonData.Candidate>> cands = new ArrayList<>();
-        for (int d = 0; d < dirs.length; d++) cands.add(new ArrayList<>(pool));
+        for (int d = 0; d < dirs.length; d++) cands.add(active[d] ? new ArrayList<>(pool) : new ArrayList<>());
 
         // 5. elimination loop — remove candidates that don't contain each observed block.
         //    skeletons store ABSOLUTE world Y, so encode with absolute Y (no normalisation),
