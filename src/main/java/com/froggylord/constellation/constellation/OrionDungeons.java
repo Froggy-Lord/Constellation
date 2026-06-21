@@ -23,6 +23,7 @@ public class OrionDungeons extends BaseConstellation {
 
     private OrionConfig cfg;
     private boolean wasInDungeon = false;
+    private int doorsOpened = 0;
 
     @Override
     public void init(InitContext ctx) {
@@ -61,6 +62,7 @@ public class OrionDungeons extends BaseConstellation {
                 }
                 // wither door open — notify party
                 if (s.contains("opened a Wither door") || s.contains("opened a Blood door")) {
+                    doorsOpened++;
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
                         mc.gui.hud.resetTitleTimes();
@@ -89,6 +91,7 @@ public class OrionDungeons extends BaseConstellation {
                 wasInDungeon = true;
             } else if (wasInDungeon) {
                 // left the dungeon — print the run summary, then reset detection + score state
+                doorsOpened = 0;
                 com.froggylord.constellation.data.RunStats.finishRun();
                 com.froggylord.constellation.data.MapSegments.reset();
                 RoomMatch.resetCache();
@@ -166,6 +169,9 @@ public class OrionDungeons extends BaseConstellation {
                     return com.froggylord.constellation.data.DungeonScore.mimicKilled() ? "§adead" : "§calive";
                 },
                 HudPosition.of(6, 126), cfg.mimicIndicator));
+            hud.register(new HudWidget("orion-doors", "Doors",
+                () -> scoreReady() ? "§5Doors " + doorsOpened : null,
+                HudPosition.of(6, 138), cfg.mimicIndicator));
         }
         if (cfg.perRoomCount) {
             hud.register(new HudWidget("orion-roomsecrets", "Room",
