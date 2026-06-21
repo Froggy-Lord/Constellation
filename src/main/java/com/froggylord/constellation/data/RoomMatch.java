@@ -270,6 +270,12 @@ public class RoomMatch {
         return best;
     }
 
+    /** Exposed for the skeleton scraper: footprint via world-flood at the player's floor. */
+    public static Set<Long> floodPublic(Level level, int startCX, int startCZ) {
+        int fy = floorVote(level, startCX, startCZ);
+        return flood(level, startCX, startCZ, fy == Integer.MIN_VALUE ? 68 : fy);
+    }
+
     private static Set<Long> flood(Level level, int startCX, int startCZ, int floorY) {
         Set<Long> found = new LinkedHashSet<>();
         Deque<int[]> q = new ArrayDeque<>();

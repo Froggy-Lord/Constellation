@@ -36,6 +36,7 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.tick().every(4, "orion-room-match", () -> {
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
+                com.froggylord.constellation.data.SkeletonScraper.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
                 // left the dungeon — reset map calibration so the next run re-anchors
@@ -122,6 +123,18 @@ public class OrionDungeons extends BaseConstellation {
                 }
                 return 1;
             }));
+
+        // /roomcapture <name> — record the current room's skeleton (for rooms missing from the DB)
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomcapture")
+            .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                    "name", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                .executes(ctx -> {
+                    String name = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "name");
+                    String msg = com.froggylord.constellation.data.SkeletonScraper.capture(name);
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§e[scraper]§r " + msg));
+                    return 1;
+                })));
 
         // /map scale <1-5> — adjust the dungeon map size
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("map")
