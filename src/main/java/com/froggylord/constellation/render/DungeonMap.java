@@ -33,11 +33,12 @@ public class DungeonMap {
 
     public static int screenSize() { return (MAP / STEP) * cellPx(); }
 
-    /** Is the map showing right now (in a dungeon, enabled, map item present)? */
+    /** Is the map showing right now (in a dungeon, enabled, map item present, not in boss)? */
     public static boolean visibleNow() {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.dungeonMap) return false;
         if (!ConstellationClient.loc().inDungeons()) return false;
+        if (com.froggylord.constellation.data.DungeonScore.inBoss()) return false;
         MapItemSavedData data = findMap();
         return data != null && data.colors.length >= MAP * MAP;
     }
