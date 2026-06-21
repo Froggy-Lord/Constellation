@@ -101,12 +101,13 @@ public class CassiopeiaChat extends BaseConstellation {
 
         // ---- MODIFY_GAME: shorten coin amounts in chat ----
         if (cfg.shortenCoins) {
+            // compact 1,234,567 → 1.2M in chat using Matcher.replaceAll
+            var COIN = java.util.regex.Pattern.compile("[\\d,]{4,}");
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                // 1,234,567 -> 1.23M etc
                 if (s.length() < 10) return msg;
                 return net.minecraft.network.chat.Component.literal(
-                    s.replaceAll("([\\d,]{4,})", mr -> {
+                    COIN.matcher(s).replaceAll(mr -> {
                         try {
                             long n = Long.parseLong(mr.group().replace(",", ""));
                             if (n < 10000) return mr.group();
@@ -122,10 +123,8 @@ public class CassiopeiaChat extends BaseConstellation {
         if (cfg.compactBestiary) {
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                if (s.contains("Bestiary") || s.contains("Magic Find")) {
-                    return net.minecraft.network.chat.Component.literal(
-                        s.replaceAll("\\+\\d+(\\.\\d+)?[％%]", "✧"));
-                }
+                // just hide the verbose bestiary/magic-find lines entirely
+                if (s.contains("Bestiary") && (s.contains("+") || s.contains("%"))) return null;
                 return msg;
             });
         }
