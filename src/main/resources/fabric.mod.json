@@ -1,0 +1,36 @@
+{
+    "schemaVersion": 1,
+    "id": "constellation",
+    "version": "${version}",
+    "name": "Constellation",
+    "description": "A unified Hypixel SkyBlock mod — one install, everything you need. Dungeons, mining, farming, fishing, slayers, events, rift, kuudra, inventory, chat, party, and more. All modular, all constellation-themed.",
+    "authors": ["Froggy__Lord"],
+    "contact": {
+        "homepage": "https://github.com/Froggy-Lord/Constellation",
+        "sources": "https://github.com/Froggy-Lord/Constellation"
+    },
+    "license": "MIT",
+    "icon": "assets/constellation/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "com.froggylord.constellation.ConstellationClient"
+        ],
+        "modmenu": [
+            "com.froggylord.constellation.ui.ModMenuIntegration"
+        ]
+    },
+    "mixins": [
+        "constellation.mixins.json"
+    ],
+    "accessWidener": "constellation.accesswidener",
+    "depends": {
+        "fabricloader": ">=0.19.3",
+        "minecraft": "~26.2",
+        "java": ">=25",
+        "fabric-api": "*"
+    },
+    "suggests": {
+        "modmenu": "*"
+    }
+}

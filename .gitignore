@@ -1,0 +1,43 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.project
+.classpath
+
+# Minecraft
+run/
+logs/
+*.log
+
+# Build outputs
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dev scripts (gitignored on 4090, same as cryptkit)
+dev-build.sh
+dev-publish-modrinth.sh
+dev-push-gitea.sh
+edittest.sh
+ingametest.sh
+uitest.sh
+notify.env
+
+# Build archives
+*.zip
+*.tar.gz
