@@ -59,4 +59,6 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean lowHealthAlert = true;
     public boolean spiritLeapHelper = true;
     public boolean dungeonCopilot = true;
+    public boolean doorTracker = true;
+    public boolean mimicPartyPing = true;
 }
