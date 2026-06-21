@@ -26,8 +26,33 @@ public class PerseusSlayers extends BaseConstellation {
 
     private PerseusConfig cfg;
 
+    private static String lastBoss = "";
+    private static long lastBossAt = 0;
+
     @Override
-    public void init(InitContext ctx) { cfg = (PerseusConfig) getConfig(); }
+    public void init(InitContext ctx) {
+        cfg = (PerseusConfig) getConfig();
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (!ConstellationClient.loc().onHypixel()) return;
+            String s = msg.getString();
+            // Slayer boss spawn: "SLAYER BOSS SPAWNED!" or "A {boss} has spawned!"
+            if (s.contains("SLAYER") && s.contains("SPAWN")) {
+                lastBoss = s.trim();
+                lastBossAt = System.currentTimeMillis();
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§c⚔ " + lastBoss));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.0f);
+                }
+            }
+            // Mini-boss spawn
+            if (s.contains(" spawned") && (s.contains("Revenant") || s.contains("Tarantula") || s.contains("Sven") || s.contains("Voidgloom") || s.contains("Inferno"))) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss! " + s.trim()));
+            }
+        });
+    }
 
     @Override
     public void registerHud(HudManager hud) {
