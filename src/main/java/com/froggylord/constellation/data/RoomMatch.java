@@ -129,12 +129,16 @@ public class RoomMatch {
         // 5. elimination loop — remove candidates that don't contain each observed block.
         //    skeletons store ABSOLUTE world Y, so encode with absolute Y (no normalisation),
         //    exactly like Skyblocker. dungeon floor is at a fixed height so this is stable.
+        //    scan bottom is anchored low (≤50) so multi-level rooms still match when you
+        //    stand on an upper floor (floorVote returns the upper Y; without this the scan
+        //    window started above the room's defining base blocks).
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         int maxDim = Math.max(width, length);
+        int scanBottom = Math.min(floorY - 8, 50);
+        int scanTop = floorY + 35;
         outer:
-        for (int dy = -8; dy <= 35; dy++) {
-            int y = floorY + dy;
+        for (int y = scanBottom; y <= scanTop; y++) {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
                     if (!cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) wx), RoomGrid.cornerZ((double) wz)))) continue;
