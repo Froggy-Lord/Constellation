@@ -1,5 +1,6 @@
 package com.froggylord.constellation.data;
 
+import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.mixin.MapDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
@@ -28,6 +29,15 @@ public class MapSegments {
     private static final int ENTRANCE_COLOR = 30; // MapColor.PLANT / HIGH
 
     public static String lastDebug = "no map scan";
+
+    // cached entrance anchor (calibrated once from Mort's armor stand + the map's green block).
+    // gives a fixed map↔world transform that doesn't depend on the player marker each scan.
+    private static boolean calibrated = false;
+    private static int mapEntranceX, mapEntranceZ;        // map pixel of entrance top-left
+    private static int physEntranceX, physEntranceZ;      // world NW corner of entrance room
+
+    /** Reset on dungeon enter/leave so a new run re-calibrates. */
+    public static void reset() { calibrated = false; }
 
     /** Returns the set of physical NW-corner cell keys for the room the player is in, or empty. */
     public static Set<Long> footprint() {
@@ -66,20 +76,53 @@ public class MapSegments {
         // flood connected same-colour map cells
         List<int[]> mapCells = floodMapCells(map, playerCell, step, color, roomSize);
 
-        // anchor: the player's map cell ↔ the player's physical cell
-        int physPlayerX = RoomGrid.cornerX(mc.player.position());
-        int physPlayerZ = RoomGrid.cornerZ(mc.player.position());
+        // anchor the map↔world transform. prefer Mort (fixed entrance, calibrated once);
+        // otherwise anchor on the player's own map cell ↔ physical cell this scan.
+        int anchorMapX, anchorMapZ, anchorPhysX, anchorPhysZ;
+        String anchorSrc;
+        tryCalibrateMort(mc, entrance[0], entrance[1]);
+        if (calibrated) {
+            anchorMapX = mapEntranceX; anchorMapZ = mapEntranceZ;
+            anchorPhysX = physEntranceX; anchorPhysZ = physEntranceZ;
+            anchorSrc = "mort";
+        } else {
+            anchorMapX = playerCell[0]; anchorMapZ = playerCell[1];
+            anchorPhysX = RoomGrid.cornerX(mc.player.position());
+            anchorPhysZ = RoomGrid.cornerZ(mc.player.position());
+            anchorSrc = "player";
+        }
 
         Set<Long> physCells = new LinkedHashSet<>();
-        for (int[] mc2 : mapCells) {
-            int dxCells = (mc2[0] - playerCell[0]) / step;
-            int dzCells = (mc2[1] - playerCell[1]) / step;
-            int px = physPlayerX + dxCells * 32;
-            int pz = physPlayerZ + dzCells * 32;
+        for (int[] mcell : mapCells) {
+            int dxCells = Math.round((mcell[0] - anchorMapX) / (float) step);
+            int dzCells = Math.round((mcell[1] - anchorMapZ) / (float) step);
+            int px = anchorPhysX + dxCells * 32;
+            int pz = anchorPhysZ + dzCells * 32;
             physCells.add(RoomGrid.cellKey(px, pz));
         }
-        lastDebug = "ok roomSize=" + roomSize + " mapCells=" + mapCells.size() + " physCells=" + physCells.size();
+        lastDebug = "ok " + anchorSrc + " roomSize=" + roomSize + " mapCells=" + mapCells.size() + " physCells=" + physCells.size();
         return physCells;
+    }
+
+    /** Find Mort's armor stand once and cache the entrance map↔world anchor. */
+    private static void tryCalibrateMort(Minecraft mc, int mapEntX, int mapEntZ) {
+        if (calibrated) return;
+        var area = mc.player.getBoundingBox().inflate(120);
+        for (var stand : mc.level.getEntitiesOfClass(
+                net.minecraft.world.entity.decoration.ArmorStand.class, area)) {
+            var name = stand.getCustomName();
+            if (name == null) continue;
+            if (!name.getString().contains("Mort")) continue;
+            // Mort stands in the entrance room — snap his pos to the room grid
+            physEntranceX = RoomGrid.cornerX(stand.position());
+            physEntranceZ = RoomGrid.cornerZ(stand.position());
+            mapEntranceX = mapEntX;
+            mapEntranceZ = mapEntZ;
+            calibrated = true;
+            ConstellationClient.LOGGER.info("[room] calibrated entrance from Mort: map {},{} -> world {},{}",
+                mapEntranceX, mapEntranceZ, physEntranceX, physEntranceZ);
+            return;
+        }
     }
 
     private static int decoCount(MapItemSavedData map) {

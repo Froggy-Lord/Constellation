@@ -22,6 +22,7 @@ public class OrionDungeons extends BaseConstellation {
     @Override public String description() { return "Dungeons — room detection, HUD, secrets, map, routes"; }
 
     private OrionConfig cfg;
+    private boolean wasInDungeon = false;
 
     @Override
     public void init(InitContext ctx) {
@@ -35,6 +36,11 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.tick().every(4, "orion-room-match", () -> {
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
+                wasInDungeon = true;
+            } else if (wasInDungeon) {
+                // left the dungeon — reset map calibration so the next run re-anchors
+                com.froggylord.constellation.data.MapSegments.reset();
+                wasInDungeon = false;
             }
         });
     }
