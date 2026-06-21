@@ -210,15 +210,15 @@ public class RoomMatch {
             currentRoom = best; currentDir = bestDir; anchorX = bestAX; anchorZ = bestAZ;
             fpMinX = wMinX; fpMinZ = wMinZ; fpMaxX = wMaxX - 30; fpMaxZ = wMaxZ - 30; fpValid = true;
             ConstellationClient.bus().post(new RoomEnteredEvent(currentRoom, currentDir, anchorX, anchorZ));
-            ConstellationClient.LOGGER.info("[room] MATCHED {} ({}) at {},{} | {}x{} mapped={} verify={}%",
-                best, bestDir, bestAX, bestAZ, width, length, mapped, Math.round(bestScore * 100));
+            ConstellationClient.LOGGER.info("[room] MATCHED {} ({}) src={} {}x{} mapped={} verify={}%",
+                best, bestDir, fromMap ? "MAP" : "flood", width, length, mapped, Math.round(bestScore * 100));
         } else if (!fpValid) {
             // quiet diagnostic for auto-detect misses so they're traceable without /roomscan
             failTick++;
             if (failTick % 8 == 0) {
-                ConstellationClient.LOGGER.info("[room] no-match cell {},{} | {}x{} cells={} pool={} mapped={} surv={} best={} {}%",
-                    cx, cz, width, length, cells.size(), pool.size(), mapped, survivors,
-                    best == null ? "none" : best, Math.round(bestScore * 100));
+                ConstellationClient.LOGGER.info("[room] no-match cell {},{} | src={} {}x{} cells={} pool={} mapped={} surv={} best={} {}% | map[{}]",
+                    cx, cz, fromMap ? "MAP" : "flood", width, length, cells.size(), pool.size(), mapped, survivors,
+                    best == null ? "none" : best, Math.round(bestScore * 100), MapSegments.lastDebug);
             }
         }
     }
