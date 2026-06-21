@@ -135,8 +135,12 @@ public class RoomMatch {
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         int maxDim = Math.max(width, length);
-        int scanBottom = Math.min(floorY - 8, 50);
-        int scanTop = floorY + 35;
+        // scan a fixed absolute Y band that covers the whole dungeon vertical extent.
+        // floorVote returns whichever floor you're standing on, so anchoring the window to
+        // it misses multi-level rooms (sewer/stair/blaze rooms whose base sits down at Y~40,
+        // or tall rooms reaching up). a wide fixed band matches from any standing position.
+        int scanBottom = 35;
+        int scanTop = Math.max(floorY + 40, 120);
         outer:
         for (int y = scanBottom; y <= scanTop; y++) {
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
