@@ -5,6 +5,7 @@
     "client": [
         "ClientPacketListenerMixin",
         "EffectsInInventoryMixin",
+        "GameRendererMixin",
         "HudRenderMixin",
         "MapDataAccessor",
         "PlayerTabOverlayAccessor",
