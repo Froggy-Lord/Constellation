@@ -116,7 +116,7 @@ public class RoomMatch {
 
         // 4. foundation Y — go deep enough for sunken rooms (double-stair, etc.)
         int minY = Integer.MAX_VALUE;
-        for (int dy = -25; dy <= 35; dy++) {
+        for (int dy = -50; dy <= 60; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
@@ -130,7 +130,7 @@ public class RoomMatch {
         int mapped = 0;
         StringBuilder sample = new StringBuilder();
         outer:
-        for (int dy = -25; dy <= 35; dy++) {
+        for (int dy = -50; dy <= 60; dy++) {
             int y = floorY + dy;
             for (int wx = wMinX + 2; wx <= wMaxX - 2; wx += 2)
                 for (int wz = wMinZ + 2; wz <= wMaxZ - 2; wz += 2) {
