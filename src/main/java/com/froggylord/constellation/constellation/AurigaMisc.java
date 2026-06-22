@@ -120,5 +120,16 @@ public class AurigaMisc extends BaseConstellation {
                 },
                 HudPosition.of(50, 118), cfg.chocolateFactoryHelper));
         }
+        if (cfg.godPotDisplay) {
+            hud.register(new HudWidget("auriga-godpot", "GodPot",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("God Pot") || line.contains("Active Effects")) return "§d🧪 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 126), cfg.godPotDisplay));
+        }
     }
 }

@@ -20,4 +20,7 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean evolvingItemTimer = true;       // show evolving item time remaining (cmp. Skyblocker)
     public boolean attributeShardHelper = true;    // show attribute shard combine costs (cmp. Skyblocker)
     public boolean enchantTableHelper = true;       // show cheapest enchant path (cmp. Skyblocker)
+    public boolean brewHelper = true;              // show potion recipes + best upgrades (cmp. Skyblocker)
+    public boolean godPotDisplay = true;            // show active god pot + remaining time (cmp. Skyblocker)
+    public boolean teleportPadHelper = true;        // highlight teleport pad destinations (cmp. Skyblocker)
 }

@@ -20,4 +20,7 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean minibossFlash = true;            // flash screen on miniboss spawn (cmp. SBA)
     public boolean bestiaryMilestoneAlert = true;   // ping on bestiary milestone reached (cmp. Skyblocker)
     public boolean slayerBossSpawnCustomSound = true; // custom dragon growl on boss spawn (cmp. Skyblocker)
+    public boolean sosFlareDisplay = true;       // show SOS flare from other players (cmp. Skyblocker)
+    public boolean slayerProfitTracker = true;   // track coins gained per slayer session (cmp. Skyblocker)
+    public boolean tarantulaInvincMark = true;   // mark invincible tarantulas in spider slayer (cmp. Skyblocker)
 }
