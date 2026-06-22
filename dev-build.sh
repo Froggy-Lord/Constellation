@@ -42,40 +42,23 @@ notify() {
       --data-urlencode "chat_id=${TG_CHAT_ID}" --data-urlencode "text=$subject - $commit" >/dev/null 2>&1 || true
   fi
 
-  # email via Gmail SMTP (was Resend, quota reached)
+  # email via Gmail SMTP — text only (jar attachment times out on Gmail's SMTP;
+  # the share URL is already in the body, so the jar is one click away anyway)
   if [ -n "${NOTIFY_EMAIL:-}" ]; then
-    python3 - "$subject" "$body" "$jar" "$NOTIFY_EMAIL" <<'PYEOF' >/dev/null 2>&1
-import smtplib, sys, os, zipfile
-from email.mime.multipart import MIMEMultipart
+    python3 - "$subject" "$body" "$NOTIFY_EMAIL" <<'PYEOF'
+import smtplib, sys
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 
-subject, body, jar_path, to = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+subject, body, to = sys.argv[1], sys.argv[2], sys.argv[3]
 user = "javapro91@gmail.com"
 pwd = "cotpuifrppbobwyk"
 
-msg = MIMEMultipart()
+msg = MIMEText(body, 'plain')
 msg['From'] = user
 msg['To'] = to
 msg['Subject'] = subject
-msg.attach(MIMEText(body, 'plain'))
 
-if jar_path and os.path.exists(jar_path) and os.path.getsize(jar_path) > 0:
-    base = os.path.splitext(os.path.basename(jar_path))[0]
-    zip_path = f"/tmp/{base}.zip"
-    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
-        zf.write(jar_path, os.path.basename(jar_path))
-    with open(zip_path, 'rb') as f:
-        part = MIMEBase('application', 'zip')
-        part.set_payload(f.read())
-    encoders.encode_base64(part)
-    part.add_header('Content-Disposition', f'attachment; filename="{base}.zip"')
-    msg.attach(part)
-    try: os.remove(zip_path)
-    except: pass
-
-with smtplib.SMTP('smtp.gmail.com', 587) as s:
+with smtplib.SMTP('smtp.gmail.com', 587, timeout=30) as s:
     s.starttls()
     s.login(user, pwd)
     s.send_message(msg)
