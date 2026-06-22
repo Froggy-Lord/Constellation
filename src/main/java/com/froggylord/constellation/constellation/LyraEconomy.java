@@ -94,8 +94,10 @@ public class LyraEconomy extends BaseConstellation {
                 () -> {
                     var mc = net.minecraft.client.Minecraft.getInstance();
                     if (mc.player == null) return null;
-                    // check for arrows in the quiver (offhand or arrow slot)
-                    for (var stack : mc.player.getInventory().items) {
+                    // check for arrows in the quiver
+                    var inv = mc.player.getInventory();
+                    for (int i = 0; i < inv.getContainerSize(); i++) {
+                        var stack = inv.getItem(i);
                         if (stack.isEmpty()) continue;
                         String id = stack.getItem().getDescriptionId();
                         if (id.contains("arrow") || id.contains("arrow")) {
