@@ -4,6 +4,7 @@ import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.LyraConfig;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.component.CustomData;
@@ -81,6 +82,25 @@ public class LyraTooltips {
                 String id = extra.getStringOr("id", "");
                 if (!id.isEmpty()) lines.add(Component.literal("§8" + id));
             }
+            if (cfg.backpackPreview && Minecraft.getInstance().options.keyShift.isDown()) {
+                String id = extra.getStringOr("id", "");
+                if (id.toUpperCase().contains("BACKPACK") || id.toUpperCase().contains("STORAGE_BACKPACK") || id.toUpperCase().contains("GREATER_BACKPACK") || id.toUpperCase().contains("JUMBO_BACKPACK")) {
+                    CompoundTag items = extra.getCompoundOrEmpty("containsItems");
+                    if (items.isEmpty()) items = extra.getCompoundOrEmpty("items");
+                    if (!items.isEmpty()) {
+                        int count = 0;
+                        for (String k : items.keySet()) {
+                            CompoundTag item = items.getCompoundOrEmpty(k);
+                            if (item.isEmpty()) continue;
+                            String iname = item.getStringOr("id", "?");
+                            int icount = item.getIntOr("count", 1);
+                            lines.add(Component.literal("§7" + iname + " §8x" + icount));
+                            if (++count >= 8) { lines.add(Component.literal("§8... and more")); break; }
+                        }
+                    }
+                }
+            }
+
             if (cfg.tooltipMissingEnchants) {
                 String id = extra.getStringOr("id", "");
                 CompoundTag ench = extra.getCompoundOrEmpty("enchantments");

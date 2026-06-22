@@ -303,6 +303,23 @@ public class OrionDungeons extends BaseConstellation {
             }));
 
         // /dungeonstats — session run history
+        // /cn debug — dump dungeon state (room, score, sidebar, tab)
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dndebug")
+            .executes(ctx -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player == null) return 0;
+                mc.player.sendSystemMessage(Component.literal("§e=== Constellation Debug ==="));
+                mc.player.sendSystemMessage(Component.literal("§7area: §f" + ConstellationClient.loc().area() + " §7inDungeon: §f" + ConstellationClient.loc().inDungeons()));
+                mc.player.sendSystemMessage(Component.literal("§7room: §f" + com.froggylord.constellation.data.RoomMatch.currentRoom() + " §7matched: §f" + com.froggylord.constellation.data.RoomMatch.isMatched()));
+                mc.player.sendSystemMessage(Component.literal("§7score: §f" + com.froggylord.constellation.data.DungeonScore.score() + " §7grade: §f" + com.froggylord.constellation.data.DungeonScore.grade()));
+                mc.player.sendSystemMessage(Component.literal("§7HP: §f" + com.froggylord.constellation.core.ActionBar.health() + "/" + com.froggylord.constellation.core.ActionBar.maxHealth()));
+                mc.player.sendSystemMessage(Component.literal("§7sidebar lines:"));
+                for (String l : ConstellationClient.loc().getSidebarLines()) {
+                    mc.player.sendSystemMessage(Component.literal("§8  " + l));
+                }
+                return 1;
+            }));
+
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
             .executes(ctx -> { com.froggylord.constellation.data.RunStats.printSession(); return 1; }));
         // /key — check held item for dungeon key

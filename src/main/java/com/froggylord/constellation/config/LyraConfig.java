@@ -27,4 +27,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipEnchantCount = true;
     public boolean tooltipRecomb = true;
     public boolean tooltipMissingEnchants = true;
+    public boolean backpackPreview = true; // shift-hover shows contents
 }
