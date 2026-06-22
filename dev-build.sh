@@ -45,7 +45,8 @@ notify() {
   # email via Gmail SMTP — text only (jar attachment times out on Gmail's SMTP;
   # the share URL is already in the body, so the jar is one click away anyway)
   if [ -n "${NOTIFY_EMAIL:-}" ]; then
-    python3 - "$subject" "$body" "$NOTIFY_EMAIL" <<'PYEOF'
+    local email_out
+    email_out=$(python3 - "$subject" "$body" "$NOTIFY_EMAIL" 2>&1 <<'PYEOF'
 import smtplib, sys
 from email.mime.text import MIMEText
 
@@ -62,7 +63,10 @@ with smtplib.SMTP('smtp.gmail.com', 587, timeout=30) as s:
     s.starttls()
     s.login(user, pwd)
     s.send_message(msg)
+print(">> emailed " + to)
 PYEOF
+)
+    echo "$email_out"
   fi
 }
 
