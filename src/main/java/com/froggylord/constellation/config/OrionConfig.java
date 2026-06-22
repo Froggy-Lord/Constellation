@@ -75,4 +75,7 @@ public class OrionConfig extends BaseConfigGroup {
     // dungeon blessings picked up this run
     public boolean blessingDisplay = true;
     public boolean spiritLeapHelperMenu = true;
+
+    // box useful dropped items on the floor (spirit leap, decoy, training weights...)
+    public boolean dropEsp = true;
 }

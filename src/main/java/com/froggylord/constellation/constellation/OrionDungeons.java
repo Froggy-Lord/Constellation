@@ -46,6 +46,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(CombatEsp::draw);
         // F3/M3 blaze puzzle — mark lowest + highest health blaze
         ConstellationClient.world().register(BlazeSolver::draw);
+        // drop esp — box useful items dropped on the floor
+        ConstellationClient.world().register(DropEsp::draw);
 
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
