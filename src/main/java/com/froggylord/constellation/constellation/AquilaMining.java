@@ -182,7 +182,8 @@ public class AquilaMining extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.8f, 1.2f);
                 }
             }
-            if (cfg.mineshaftAlert && (s.contains("You have entered a Glacite Mineshaft") || s.contains("found a Glacite Mineshaft"))) {
+            // Verified pattern from SkyHanni: "Entered a {type} mineshaft!" or "Found a mineshaft!"
+            if (cfg.mineshaftAlert && (s.contains("mineshaft") && (s.contains("Entered") || s.contains("Found") || s.contains("entered")))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();

@@ -109,4 +109,6 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
     public boolean m7DragonMarkers = true;    // highlight M7 dragon priority (cmp. Skyblocker M7Dragons)
     public boolean secretChimeCustom = true;  // custom sound on secret collection (cmp. Skyblocker)
+    public boolean waterboardSolver = true;    // highlight water puzzle gates (cmp. Odin waterSolutions)
+    public boolean iceFillSolver = true;       // show ice fill path (cmp. Odin iceFillFloors)
 }

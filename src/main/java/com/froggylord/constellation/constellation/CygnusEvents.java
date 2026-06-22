@@ -50,8 +50,9 @@ public class CygnusEvents extends BaseConstellation {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
 
-            // Minos Inquisitor — the burrow everyone wants. shout it loud.
-            if (cfg.dianaInquisitorAlert && s.contains("You dug out a Minos Inquisitor")) {
+            // Minos Inquisitor — parse exact coordinates from the verified chat format:
+            // "A MINOS INQUISITOR has spawned near [area] at Coords X Y Z"
+            if (cfg.dianaInquisitorAlert && s.contains("MINOS INQUISITOR")) {
                 inquisitors++;
                 com.froggylord.constellation.core.StatStore.add("cygnus.diana.inquisitors", 1);
                 var mc = net.minecraft.client.Minecraft.getInstance();
@@ -59,10 +60,23 @@ public class CygnusEvents extends BaseConstellation {
                     mc.gui.hud.resetTitleTimes();
                     mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5⚔ INQUISITOR!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.2f);
-                    if (cfg.dianaInquisitorShare) {
+                    // parse exact coordinates from the message
+                    var cm = java.util.regex.Pattern.compile("(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)").matcher(s);
+                    if (cm.find() && cfg.dianaInquisitorShare) {
+                        mc.player.connection.sendCommand("pc Inquisitor @ " + cm.group(1) + " " + cm.group(2) + " " + cm.group(3));
+                    } else if (cfg.dianaInquisitorShare) {
                         var p = mc.player.blockPosition();
                         mc.player.connection.sendCommand("pc Inquisitor @ " + p.getX() + " " + p.getY() + " " + p.getZ());
                     }
+                }
+            } else if (cfg.dianaInquisitorAlert && s.contains("You dug out a Minos Inquisitor")) {
+                inquisitors++;
+                com.froggylord.constellation.core.StatStore.add("cygnus.diana.inquisitors", 1);
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5⚔ INQUISITOR!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.2f);
                 }
             }
             // mythos drop tally — the dig loot lines

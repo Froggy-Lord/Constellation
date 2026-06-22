@@ -42,7 +42,8 @@ public class DracoCrimson extends BaseConstellation {
             String s = msg.getString();
 
             // Vanquisher — spawns for everyone nearby, easy to miss in the lava glow
-            if (cfg.vanquisherAlert && s.contains("A Vanquisher is spawning nearby")) {
+            // Verified pattern from SkyHanni: "A Vanquisher is spawning nearby!"
+            if (cfg.vanquisherAlert && s.contains("Vanquisher is spawning")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
