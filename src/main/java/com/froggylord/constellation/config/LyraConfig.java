@@ -40,4 +40,6 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean accessoryDisplay = true;   // show accessory bag slots from sidebar (cmp. Skyblocker)
     public boolean bazaarPriceHistory = true; // track bazaar price trends (cmp. Skyblocker BazaarTracker)
     public boolean auctionPriceCompare = true; // compare AH prices against bazaar (cmp. Skyblocker)
+    public boolean inventoryValueHud = true;   // total inventory/bag value from bazaar (cmp. Skyblocker)
+    public boolean essenceShopHelper = true;    // show essence costs in upgrade menus (cmp. Skyblocker)
 }
