@@ -41,5 +41,7 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean auctionPriceCompare = true; // compare ah prices against baza...
     public boolean inventoryValueHud = true;   
     public boolean essenceShopHelper = true;
-    public boolean salvageHelper = true;       // highlight items safe to salvage
+    public boolean salvageHelper = true;
+    public boolean exoticArmorIdentifier = true;
+    public boolean trueHexDisplay = true;
 }
