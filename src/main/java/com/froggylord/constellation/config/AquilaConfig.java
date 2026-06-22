@@ -24,4 +24,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean scathaCounter = true;      // track scatha worm kills (cmp. Skyblocker ScathaTracker)
     public boolean yolkarSpeedup = true;       // skip King Yolkar dialogue (cmp. Skyblocker)
     public boolean goldenGoblinAlert = true;   // Golden Goblin spawn alert (cmp. Skyblocker)
+    public boolean gemstoneDesyncFix = true;   // reload chunks to fix gemstone desync (cmp. Skyblocker)
+    public boolean jadeCrystalTracker = true;  // track Jade Crystal location hint (cmp. Skyblocker)
 }

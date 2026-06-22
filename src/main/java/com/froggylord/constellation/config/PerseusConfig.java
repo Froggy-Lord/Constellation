@@ -13,4 +13,7 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean bestiaryTracker = true;     // bestiary kill counter per family (cmp. Skyblocker)
     public boolean rngMeterDetail = true;       // show RNG meter progress + drops (cmp. Skyblocker)
     public boolean rareDropEffect = true;        // special effect when rare drop appears (cmp. Skyblocker)
+    public boolean vampireHelper = true;          // Vampire Slayer boss hints (cmp. Skyblocker)
+    public boolean endermanHelper = true;          // Enderman Slayer beacon/laser hints (cmp. Skyblocker)
+    public boolean blazeHelper = true;             // Blaze Slayer attunement hints (cmp. Skyblocker)
 }
