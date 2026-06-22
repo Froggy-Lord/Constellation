@@ -52,6 +52,8 @@ public class OrionDungeons extends BaseConstellation {
         DoorHighlighter.init();
         // puzzle solvers — Simon Says, Three Weirdos, Trivia (chat + screen) + Creeper Beams
         OrionPuzzles.init(cfg);
+        // dungeon chest profit calculator — shows total value of reward chest items
+        ChestProfitCalc.init(cfg);
         // F5/M5 Livid finder — hide wrong clones, box real one by HP
         LividFinder.init();
 

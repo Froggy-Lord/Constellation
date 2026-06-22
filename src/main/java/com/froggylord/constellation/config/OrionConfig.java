@@ -106,4 +106,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean melodyTerminalHelper = true; // highlight next note in Melody terminal (cmp. Skyblocker)
     public boolean saVanishTimer = true;    // SA vanish countdown (cmp. Skyblocker BossManager)
     public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
+    public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
 }
