@@ -135,6 +135,17 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 134), cfg.brewHelper));
+        if (cfg.enchantTableHelper) {
+            hud.register(new HudWidget("auriga-enchant", "Enchant",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Enchant") || line.contains("Level")) return "§b📚 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 142), cfg.enchantTableHelper));
+        }
         }
         }
     }
