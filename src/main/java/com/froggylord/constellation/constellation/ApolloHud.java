@@ -218,6 +218,23 @@ public class ApolloHud extends BaseConstellation {
             },
             toPos(cfg.skill), cfg.skill.visible));
 
+        hud.register(new HudWidget("apollo-cooldowns", "CDs",
+            () -> {
+                if (mc.player == null) return null;
+                var cds = mc.player.getCooldowns();
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < 9; i++) {
+                    var stack = mc.player.getInventory().getItem(i);
+                    if (stack.isEmpty() || !cds.isOnCooldown(stack)) continue;
+                    float pct = cds.getCooldownPercent(stack, 0);
+                    int rem = Math.round(pct * 10); // 10 = rough max; shows "4" = 40% remaining
+                    if (sb.length() > 0) sb.append(" ");
+                    sb.append("§7").append(i + 1).append(":§c").append(rem > 0 ? rem : 1);
+                }
+                return sb.length() > 0 ? "§7CD " + sb.toString() : null;
+            },
+            toPos(cfg.cooldowns), cfg.cooldowns.visible));
+
         hud.register(new HudWidget("apollo-orb", "Orb",
             () -> {
                 if (!ConstellationClient.loc().onHypixel()) return null;

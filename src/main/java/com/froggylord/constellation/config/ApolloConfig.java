@@ -26,6 +26,7 @@ public class ApolloConfig extends BaseConfigGroup {
     public HudEntry ehp       = new HudEntry("EHP", 38, 90, false);
     public HudEntry overflow  = new HudEntry("Overflow", 56, 86, false);
     public HudEntry skill     = new HudEntry("Skill", 38, 82, false);
+    public HudEntry cooldowns = new HudEntry("CDs", 38, 74, false);
 
     // feature toggles
     public boolean customScoreboard = true;
