@@ -17,7 +17,7 @@ public class AurigaMisc extends BaseConstellation {
     @Override
     public void registerCommands(com.mojang.brigadier.CommandDispatcher<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource> dispatcher) {
         cfg = (AurigaConfig) getConfig();
-        if (cfg == null || !cfg.shCalcCommand) return;
+        if (cfg != null && cfg.shCalcCommand) {
         dispatcher.register(com.mojang.brigadier.builder.LiteralArgumentBuilder.<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("shcalc")
             .executes(ctx -> {
                 var mc = net.minecraft.client.Minecraft.getInstance();
@@ -38,6 +38,18 @@ public class AurigaMisc extends BaseConstellation {
                     "§6⚔ Damage §f" + compact(dmg) + " §7(weapon §f" + wd + " §7str §f" + str + " §7cd §f" + cd + "%)"));
                 return 1;
             }));
+        }
+        if (cfg != null && cfg.pathfindUtil) {
+            dispatcher.register(com.mojang.brigadier.builder.LiteralArgumentBuilder.<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("cnpath")
+                .executes(ctx -> {
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player == null) return 0;
+                    var p = mc.player.blockPosition();
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                        "§e📍 You are at " + p.getX() + " " + p.getY() + " " + p.getZ()));
+                    return 1;
+                }));
+        }
     }
 
     private static String compact(int n) {
