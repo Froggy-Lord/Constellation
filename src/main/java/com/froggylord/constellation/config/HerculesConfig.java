@@ -11,4 +11,5 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean pestAlert = true;
     public boolean cropMilestones = true;
     public boolean visitorRequirements = true; // show what each visitor is offering
+    public boolean composterHud = true; // organic matter + fuel display
 }
