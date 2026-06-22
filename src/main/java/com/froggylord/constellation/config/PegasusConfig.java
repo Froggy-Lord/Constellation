@@ -24,4 +24,6 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean offlineMemberIndicator = true;
     public boolean partyTransferHelper = true;
     public boolean partyKickConfirm = true;
+    public boolean partyInviteCooldown = true;
+    public boolean partyChatFilter = true;
 }
