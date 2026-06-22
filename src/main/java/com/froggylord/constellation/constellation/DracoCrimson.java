@@ -245,6 +245,17 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, -10), cfg.freshToolsPing));
+        if (cfg.trophyDetailHud) {
+            hud.register(new HudWidget("draco-trophy-detail", "TrophyDetail",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Trophy") && (line.contains("Bronze") || line.contains("Silver") || line.contains("Gold") || line.contains("Diamond")))
+                            return "§6🏆 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, -16), cfg.trophyDetailHud));
+        }
         }
         }
         }
