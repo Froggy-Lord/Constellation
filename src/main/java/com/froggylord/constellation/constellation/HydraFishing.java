@@ -292,6 +292,17 @@ public class HydraFishing extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 150), cfg.baitWarningsHud));
+        if (cfg.hotspotRadarGuesser) {
+            hud.register(new HudWidget("hydra-hotspot", "Hotspot",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Hotspot") || line.contains("Lava Spot")) return "§c🔥 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 158), cfg.hotspotRadarGuesser));
+        }
         }
         }
     }
