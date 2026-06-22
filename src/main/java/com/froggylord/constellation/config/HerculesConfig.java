@@ -20,4 +20,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean moongladeBeacon = true; // show Moonglade Beacon level (cmp. SkyHanni)
     public boolean greenhouseHelper = true; // greenhouse paste preview
     public boolean stereoHarmonyHelper = true; // harp note guide (cmp. SkyHanni)
+    public boolean veridianHelper = true; // Veridian area farming hints (cmp. SkyHanni)
+    public boolean yawPitchLock = true;   // lock yaw/pitch for perfect farming rows (cmp. SkyHanni)
 }
