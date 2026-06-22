@@ -2,9 +2,7 @@ package com.froggylord.constellation.config;
 
 public class PhoenixConfig extends BaseConfigGroup {
 
-    @Override public int currentVersion() { return 0;     public boolean nameTagShadows = true;
-    public boolean disableNpcDialogue = true;
-}
+    @Override public int currentVersion() { return 0; }
 
     public boolean fullbright = true;
     public boolean noHurtCam = true;
@@ -28,11 +26,11 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean itemProtection = true;
     public boolean preventDroppingValuable = true;
     public boolean hotbarScrollLock = false;
-    public boolean wardrobeKeybinds = false; 
-    public boolean autoSaveReminder = true;   // ping every 5 min to /is the lobby
-    public boolean hotbarLock = false;         
-    public boolean hotbarSwapHelper = false;   
-    public boolean viewmodelCustomize = false; 
+    public boolean wardrobeKeybinds = false;
+    public boolean autoSaveReminder = true;
+    public boolean hotbarLock = false;
+    public boolean hotbarSwapHelper = false;
+    public boolean viewmodelCustomize = false;
     public boolean nameTagShadows = true;
     public boolean disableNpcDialogue = true;
 }
