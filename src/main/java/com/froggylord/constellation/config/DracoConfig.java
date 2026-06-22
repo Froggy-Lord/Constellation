@@ -10,4 +10,5 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean vanquisherShare = false; // shout coords to party
     public boolean kuudraPhaseHud = true;
     public boolean ashfangFreezeTimer = true;
+    public boolean dojoScoreHud = true;  // live Dojo minigame score
 }

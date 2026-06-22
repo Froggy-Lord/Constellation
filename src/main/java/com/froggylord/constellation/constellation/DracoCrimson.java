@@ -106,6 +106,18 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, 72), cfg.ashfangFreezeTimer));
         }
+        if (cfg.dojoScoreHud) {
+            hud.register(new HudWidget("draco-dojo-score", "DojoScore",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        var m = java.util.regex.Pattern.compile("Score:?\\s*(\\d+)").matcher(line);
+                        if (m.find()) return "§e🥋 " + m.group(1) + " pts";
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 64), cfg.dojoScoreHud));
+        }
     }
 
     private static boolean inCrimson() {
