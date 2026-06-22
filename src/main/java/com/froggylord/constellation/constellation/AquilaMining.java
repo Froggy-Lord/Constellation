@@ -33,6 +33,8 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern FUEL = Pattern.compile("Fuel:?\\s*(\\d+\\.?\\d*)/(\\d+\\.?\\d*)k?");
     private static final Pattern COLD = Pattern.compile("Cold:?\\s*-?(\\d+)");
     private static final Pattern HOTM = Pattern.compile("HOTM:?\\s*(\\d+)");
+    private static final Pattern DRILL_FUEL = Pattern.compile("(?:⛏\\s*)?(?:Drill\\s*)?Fuel:?\\s*([\\d,\\.]+[kKmM]?)\\s*/?\\s*([\\d,\\.]+[kKmM]?)?");
+    private static final Pattern PICKONIMBUS = Pattern.compile("Pickonimbus:?\\s*([\\d,]+)\\s*/?\\s*([\\d,]+)");
     private static final int[] COLD_STEPS = {25, 50, 75, 90, 95, 99};
 
     private AquilaConfig cfg;
@@ -127,6 +129,33 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 114), cfg.hotmHud));
+        }
+        if (cfg.drillFuelHud) {
+            hud.register(new HudWidget("aquila-drillfuel", "DrillFuel",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = DRILL_FUEL.matcher(line);
+                        if (m.find()) {
+                            String cur = m.group(1), max = m.group(2);
+                            return "§2⛏ Fuel §f" + cur + (max != null ? "/" + max : "");
+                        }
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 122), cfg.drillFuelHud));
+        }
+        if (cfg.pickonimbusHud) {
+            hud.register(new HudWidget("aquila-pickonimbus", "Pickonimbus",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = PICKONIMBUS.matcher(line);
+                        if (m.find()) return "§6⛏ Pickonimbus §f" + m.group(1);
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 130), cfg.pickonimbusHud));
         }
     }
 

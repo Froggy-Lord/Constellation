@@ -11,4 +11,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean coldHud = true;
     public boolean mineshaftAlert = true;
     public boolean hotmHud = true;
+    public boolean drillFuelHud = true;      // drill fuel remaining (Skyblocker: MiningHud)
+    public boolean pickonimbusHud = true;    // Pickonimbus durability (Skyblocker: MiningHud)
 }
