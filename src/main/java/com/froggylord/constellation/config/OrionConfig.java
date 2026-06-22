@@ -113,4 +113,7 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean iceFillSolver = true;       // show ice fill path (cmp. Odin iceFillFloors)
     public boolean teleportMazeSolver = true;  // highlight correct teleport pad (cmp. Skyblocker)
     public boolean silverfishSolver = true;    // highlight silverfish BFS path (cmp. Skyblocker)
+    public boolean lightsOnSolver = true;     // Lights On puzzle highlight (cmp. Skyblocker)
+    public boolean arrowAlignSolver = true;    // Arrow Align direction hint (cmp. Skyblocker)
+    public boolean targetPracticeSolver = true; // Target Practice shot guide (cmp. Skyblocker)
 }
