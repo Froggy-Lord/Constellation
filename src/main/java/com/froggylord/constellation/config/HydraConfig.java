@@ -8,4 +8,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean rareSeaCreaturePartyPing = false;
     public boolean hideOtherHooks = false;
     public boolean trophyFishTracker = true;
+    public boolean goldenFishTimer = true;  // timer since last golden fish (cmp. Skyblocker)
+    public boolean barnTimer = true;         // barn fishing timer (cmp. Skyblocker)
 }

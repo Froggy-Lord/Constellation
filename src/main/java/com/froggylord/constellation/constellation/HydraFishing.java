@@ -25,6 +25,8 @@ public class HydraFishing extends BaseConstellation {
     private static int seaCreatureCap = 20;
     private static long lastRareAt = 0;
     private static int tBronze = 0, tSilver = 0, tGold = 0, tDiamond = 0;
+    private static long goldenFishAt = 0;
+    private static long barnOpenAt = 0, barnCloseAt = 0;
 
     // the catches worth stopping for — their names are distinct enough to spot in a chat line
     private static final String[] RARE = {
@@ -61,6 +63,21 @@ public class HydraFishing extends BaseConstellation {
             String s = msg.getString();
             if (s.contains("Sea Creature") || s.contains("sea creature")) seaCreatures++;
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
+            // golden fish spawn — start a 60s timer
+            if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish")) {
+                if (s.contains("appeared") || s.contains("spawned")) goldenFishAt = System.currentTimeMillis();
+                else if (s.contains("caught") || s.contains("despawned")) goldenFishAt = 0;
+            }
+            // barn timer — track open/close from chat
+            if (cfg != null && cfg.barnTimer) {
+                if (s.contains("barn") && (s.contains("open") || s.contains("doors"))) {
+                    barnOpenAt = System.currentTimeMillis();
+                    // try to parse the duration: "for X minutes" or "closes in Xm"
+                    var bm = java.util.regex.Pattern.compile("(\\d+)\\s*(?:minute|min|m)").matcher(s.toLowerCase(java.util.Locale.ROOT));
+                    if (bm.find()) barnCloseAt = barnOpenAt + Long.parseLong(bm.group(1)) * 60_000L;
+                }
+                if (s.contains("barn") && (s.contains("close") || s.contains("shut"))) barnOpenAt = 0;
+            }
             // trophy fish — the catch line names the tier
             if (cfg != null && cfg.trophyFishTracker && (s.contains("TROPHY FISH") || s.contains("You caught"))) {
                 if (s.contains("Diamond")) { tDiamond++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.diamond", 1); }
@@ -120,6 +137,27 @@ public class HydraFishing extends BaseConstellation {
                     return "§c⬤" + b + " §7⬤" + si + " §6⬤" + g + " §b⬤" + di;
                 },
                 HudPosition.of(50, 94), cfg.trophyFishTracker));
+        }
+        if (cfg.goldenFishTimer) {
+            hud.register(new HudWidget("hydra-golden", "Golden",
+                () -> {
+                    if (goldenFishAt == 0) return null;
+                    long elapsed = System.currentTimeMillis() - goldenFishAt;
+                    if (elapsed > 90_000) return null;
+                    return "§6🐟 Golden " + (elapsed / 1000) + "s ago";
+                },
+                HudPosition.of(50, 102), cfg.goldenFishTimer));
+        }
+        if (cfg.barnTimer) {
+            hud.register(new HudWidget("hydra-barn", "Barn",
+                () -> {
+                    if (barnOpenAt == 0) return null;
+                    long left = barnCloseAt - System.currentTimeMillis();
+                    if (left <= 0) return null;
+                    long min = left / 60000, sec = (left % 60000) / 1000;
+                    return "§c🏚 Barn " + min + ":" + String.format("%02d", sec);
+                },
+                HudPosition.of(50, 110), cfg.barnTimer));
         }
     }
 }
