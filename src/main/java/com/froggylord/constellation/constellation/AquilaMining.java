@@ -516,7 +516,7 @@ public class AquilaMining extends BaseConstellation {
             if (line.contains("Forge")) { section = true; continue; }
             if (!section) continue;
             Matcher m = FORGE.matcher(line);
-            if (!m.find()) break;
+            if (!m.find()) continue; // skip EMPTY slots, don't exit section
             if (sb.length() > 0) sb.append(" §7|");
             String time = m.group("time");
             sb.append("§f").append(m.group("item").trim()).append(" §7").append(time);
