@@ -26,6 +26,7 @@ public class OrionDungeons extends BaseConstellation {
     private int doorsOpened = 0;
     private static long fireFreezeMs = 0;
     private static long spiritBowUntil = 0;
+    private static long saVanishUntil = 0;
 
     private static void rareRoomAlert(String room, String colour) {
         var mc = Minecraft.getInstance();
@@ -111,6 +112,8 @@ public class OrionDungeons extends BaseConstellation {
                         mc.gui.hud.setTitle(Component.literal("§5🗡 Shadow Assassin!"));
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.8f);
                     }
+                    // SA vanishes ~20s after spawning; start a countdown
+                    if (cfg.saVanishTimer) saVanishUntil = System.currentTimeMillis() + 20_000;
                 }
 
                 // key pickup alerts — also count them
@@ -201,6 +204,15 @@ public class OrionDungeons extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
+        if (cfg.saVanishTimer) {
+            hud.register(new HudWidget("orion-sa", "SA",
+                () -> {
+                    long left = saVanishUntil - System.currentTimeMillis();
+                    if (left <= 0) return null;
+                    return "§5🗡 Vanish " + (left / 1000) + "s";
+                },
+                HudPosition.of(6, 36), cfg.saVanishTimer));
+        }
         if (cfg.spiritBowTimer) {
             hud.register(new HudWidget("orion-spiritbow", "SpiritBow",
                 () -> {
@@ -218,6 +230,27 @@ public class OrionDungeons extends BaseConstellation {
                     return "§b❄ " + String.format("%.1fs", left / 1000.0);
                 },
                 HudPosition.of(6, 40), cfg.fireFreezeTimer));
+        }
+        if (cfg.dungeonPotionsHud) {
+            hud.register(new HudWidget("orion-dpotions", "DungeonPotions",
+                () -> {
+                    if (!ConstellationClient.loc().inDungeons()) return null;
+                    var mc = Minecraft.getInstance();
+                    if (mc.player == null) return null;
+                    var effects = mc.player.getActiveEffects();
+                    if (effects.isEmpty()) return null;
+                    StringBuilder sb = new StringBuilder("§5⚗ ");
+                    int shown = 0;
+                    for (var e : effects) {
+                        if (shown++ > 0) sb.append(" ");
+                        int lvl = e.getAmplifier() + 1;
+                        int dur = e.getDuration() / 20;
+                        sb.append("§d").append(e.getEffect().value().getDisplayName().getString()).append(" §f").append(lvl).append(" §7").append(dur).append("s");
+                        if (shown >= 2) break;
+                    }
+                    return sb.toString();
+                },
+                HudPosition.of(6, 32), cfg.dungeonPotionsHud));
         }
         if (cfg.blessingDisplay) {
             hud.register(new HudWidget("orion-blessings", "Blessings",

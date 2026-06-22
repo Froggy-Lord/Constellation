@@ -104,4 +104,6 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean mageBeamCleaner = true; // clean line instead of firework particles (cmp. Skyblocker MageBeamRenderer)
     public boolean spiritBowTimer = true;  // show cooldown when spirit bow is picked up (cmp. Skyblocker)
     public boolean melodyTerminalHelper = true; // highlight next note in Melody terminal (cmp. Skyblocker)
+    public boolean saVanishTimer = true;    // SA vanish countdown (cmp. Skyblocker BossManager)
+    public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
 }
