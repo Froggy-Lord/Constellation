@@ -83,5 +83,16 @@ public class AurigaMisc extends BaseConstellation {
                 },
                 HudPosition.of(50, 102), cfg.bingoHelper));
         }
+        if (cfg.powerStoneDisplay) {
+            hud.register(new HudWidget("auriga-power", "PowerStone",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Power Stone") || line.contains("Gemstone")) return "§d💎 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 110), cfg.powerStoneDisplay));
+        }
     }
 }

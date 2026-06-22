@@ -172,6 +172,17 @@ public class CygnusEvents extends BaseConstellation {
                 },
                 HudPosition.of(2, 138), cfg.dianaDropTracker));
         }
+        if (cfg.newYearCakeTracker) {
+            hud.register(new HudWidget("cygnus-cake", "NewYear",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("New Year") || line.contains("Cake")) return "§6🎂 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 146), cfg.newYearCakeTracker));
+        }
     }
 
     private static String calendarLine() {
