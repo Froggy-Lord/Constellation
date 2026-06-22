@@ -19,4 +19,5 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean dicerFilter = true;  // suppress verbose dicer messages (cmp. SkyHanni)
     public boolean moongladeBeacon = true; // show Moonglade Beacon level (cmp. SkyHanni)
     public boolean greenhouseHelper = true; // greenhouse paste preview
+    public boolean stereoHarmonyHelper = true; // harp note guide (cmp. SkyHanni)
 }
