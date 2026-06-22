@@ -61,6 +61,15 @@ public final class CombatEsp {
             if (cfg.starredMobs && isStarred(e)) {
                 ctx.outline(e.getBoundingBox().inflate(0.05), STAR_COLOUR, false);
             }
+            // F3/M3 Guardians — box them and show their health from the nameplate
+            if (cfg.guardianHealth && e instanceof net.minecraft.world.entity.monster.Guardian g) {
+                Component name = g.getCustomName();
+                if (name != null && name.getString().contains("❤")) {
+                    ctx.outline(g.getBoundingBox().inflate(0.2), 0xFF55FFFF, false);
+                    ctx.label(g.position().add(0, g.getBbHeight() + 0.5, 0),
+                        name.getString(), 0xFF55FFFF, false);
+                }
+            }
         }
     }
 

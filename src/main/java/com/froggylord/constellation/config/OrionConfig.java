@@ -93,4 +93,8 @@ public class OrionConfig extends BaseConfigGroup {
 
     // Fire Freeze staff cooldown timer (shows 5.7s countdown)
     public boolean fireFreezeTimer = true;
+
+    // F3/M3 Guardian health display and Shadow Assassin warning
+    public boolean guardianHealth = true;
+    public boolean shadowAssassinAlert = true;
 }

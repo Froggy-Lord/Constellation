@@ -82,6 +82,16 @@ public class OrionDungeons extends BaseConstellation {
                     else fireFreezeMs = System.currentTimeMillis() + 5700;
                 }
 
+                // Shadow Assassin targeting you — title warning
+                if (cfg.shadowAssassinAlert && s.contains("Shadow Assassin") && (s.contains("targeted") || s.contains("targeting"))) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(Component.literal("§5🗡 Shadow Assassin!"));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.8f);
+                    }
+                }
+
                 // key pickup alerts — also count them
                 if (s.contains("Wither Key") || s.contains("Blood Key")) {
                     if (s.contains("picked up")) {
