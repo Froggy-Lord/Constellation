@@ -125,6 +125,17 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 126), cfg.godPotDisplay));
+        if (cfg.brewHelper) {
+            hud.register(new HudWidget("auriga-brew", "Brew",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Brew") || line.contains("Potion")) return "§5🧪 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 134), cfg.brewHelper));
+        }
         }
     }
 }
