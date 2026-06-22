@@ -270,7 +270,8 @@ public class HerculesFarming extends BaseConstellation {
                 () -> {
                     if (!inGarden()) return null;
                     for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Coins") || line.contains("Profit")) return "§6💰 " + line.trim();
+                        // real garden sidebar: "Copper: 1,131" and "Sowdust: 101,687,009"
+                        if (line.contains("Copper:") || line.contains("Sowdust:")) return "§6💰 " + line.trim();
                     }
                     return null;
                 },
