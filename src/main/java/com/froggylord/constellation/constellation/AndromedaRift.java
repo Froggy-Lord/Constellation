@@ -257,6 +257,26 @@ public class AndromedaRift extends BaseConstellation {
                     return "§4🧛 Vampire Slayer";
                 },
                 HudPosition.of(2, 278), cfg.vampireSlayerRiftHelper));
+        if (cfg.wyldWoodsSoulHelper) {
+            hud.register(new HudWidget("andromeda-soulswyld", "WyldSouls",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Soul") && line.contains("Wyld")) return "§a🌳 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 286), cfg.wyldWoodsSoulHelper));
+        }
+        if (cfg.dreadfarmEnigmaHelper) {
+            hud.register(new HudWidget("andromeda-dreadenigma", "DreadEnigma",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Enigma") && line.contains("Dread")) return "§4☠ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 294), cfg.dreadfarmEnigmaHelper));
+        }
         }
         }
     }
