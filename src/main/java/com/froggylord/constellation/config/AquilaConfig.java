@@ -26,4 +26,5 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean goldenGoblinAlert = true;   // Golden Goblin spawn alert (cmp. Skyblocker)
     public boolean gemstoneDesyncFix = true;   // reload chunks to fix gemstone desync (cmp. Skyblocker)
     public boolean jadeCrystalTracker = true;  // track Jade Crystal location hint (cmp. Skyblocker)
+    public boolean coleweightHud = true;         // show Coleweight/mining event status (cmp. Skyblocker)
 }

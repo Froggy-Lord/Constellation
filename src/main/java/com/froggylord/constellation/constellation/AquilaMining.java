@@ -312,6 +312,17 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 146), cfg.scathaCounter));
         }
+        if (cfg.coleweightHud) {
+            hud.register(new HudWidget("aquila-coleweight", "Coleweight",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Cole") || line.contains("Event")) return "§6⛏ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 154), cfg.coleweightHud));
+        }
     }
 
     private static boolean inMining() {
