@@ -68,6 +68,9 @@ public class AndromedaRift extends BaseConstellation {
             }
         });
 
+        // Rift waypoints — Mirrorverse paths + Enigma soul beams
+        ConstellationClient.world().register(RiftWaypoints::draw);
+
         // warn when the rift clock is about to run out
         ConstellationClient.tick().every(20, "andromeda-lowtime", () -> {
             if (cfg == null || !cfg.riftLowTimeAlert || !inRift()) return;

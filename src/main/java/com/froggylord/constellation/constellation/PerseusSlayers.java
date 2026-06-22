@@ -52,9 +52,34 @@ public class PerseusSlayers extends BaseConstellation {
 
     private static int bestiaryKills = 0;
 
+    // Spider's Den relic positions from Skyblocker's relics.json (28 relics)
+    private static final int[][] RELICS = {
+        {-342,122,-253},{-384,89,-225},{-274,100,-178},{-178,136,-297},{-147,83,-335},
+        {-188,80,-346},{-183,68,-283},{-342,89,-221},{-355,86,-213},{-372,89,-242},
+        {-354,73,-285},{-317,69,-273},{-296,37,-270},{-275,64,-272},{-303,71,-318},
+        {-311,69,-251},{-348,65,-202},{-328,50,-238},{-313,58,-250},{-300,51,-254},
+        {-284,49,-234},{-300,50,-218},{-236,51,-239},{-183,51,-252},{-217,58,-304},
+        {-272,48,-291},{-225,70,-316},{-254,57,-279},
+    };
+
     @Override
     public void init(InitContext ctx) {
         cfg = (PerseusConfig) getConfig();
+        // Spider's Den relic waypoints
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.xpBar) return;
+            if (ConstellationClient.loc().area() != com.froggylord.constellation.core.LocationManager.SkyblockArea.SPIDER_DEN) return;
+            var mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.level == null || mc.player == null) return;
+            for (int[] p : RELICS) {
+                double x = p[0], y = p[1], z = p[2];
+                double dist = mc.player.position().distanceToSqr(x, y, z);
+                if (dist > 3600) continue;
+                wctx.beam(x, y+1, z, 0xFFFF6600, 5, true);
+                wctx.label(new net.minecraft.world.phys.Vec3(x, y+2, z), "Relic", 0xFFFF6600, true);
+            }
+        });
+
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
