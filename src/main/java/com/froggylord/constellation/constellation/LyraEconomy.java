@@ -74,7 +74,8 @@ public class LyraEconomy extends BaseConstellation {
                 String s = msg.getString();
                 var mc = Minecraft.getInstance();
                 if (mc.player == null) return;
-                if (cfg.auctionOutbidAlert && s.contains("outbid") && s.contains("auction")) {
+                // real lines: "You have been outbid!" and "[Auction] X outbid you by Y" — neither needs the word "auction"
+                if (cfg.auctionOutbidAlert && s.contains("outbid")) {
                     mc.player.sendSystemMessage(Component.literal("§6⚠ Outbid! §7" + s));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.7f);
                 }
