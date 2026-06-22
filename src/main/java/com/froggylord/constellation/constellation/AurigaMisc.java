@@ -22,7 +22,11 @@ public class AurigaMisc extends BaseConstellation {
     private AurigaConfig cfg;
 
     @Override
-    public void init(InitContext ctx) { cfg = (AurigaConfig) getConfig(); }
+    public void init(InitContext ctx) {
+        cfg = (AurigaConfig) getConfig();
+        // experiment-table slot solvers (Ultrasequencer / Superpairs)
+        AurigaExperiments.init(cfg);
+    }
 
     @Override
     public void registerHud(HudManager hud) {
