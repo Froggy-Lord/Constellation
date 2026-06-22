@@ -27,5 +27,7 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean lobbySeasonalDecorations = true; 
     public boolean spookyCandyHelper = true;      
     public boolean winterGiftTracker = true;       // track winter gifts opened (cmp...
-    public boolean harvestFestivalHelper = true;   
+    public boolean harvestFestivalHelper = true;
+    public boolean anniversaryEventHelper = true;
+    public boolean yearOfThePigHelper = true;
 }
