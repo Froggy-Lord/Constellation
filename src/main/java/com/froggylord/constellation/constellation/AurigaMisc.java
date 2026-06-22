@@ -165,6 +165,17 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 158), cfg.minionHopperTracker));
+        if (cfg.evolvingItemTimer) {
+            hud.register(new HudWidget("auriga-evolve", "Evolving",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Evolving") || line.contains("Diamond")) return "§b💠 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 166), cfg.evolvingItemTimer));
+        }
         }
         }
         }
