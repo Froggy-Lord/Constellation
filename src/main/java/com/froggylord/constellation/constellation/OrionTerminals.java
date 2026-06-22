@@ -53,7 +53,7 @@ public class OrionTerminals {
         int top = ((ContainerScreenAccessor) cs).constellation$top();
         var font = Minecraft.getInstance().font;
 
-        if (title.startsWith("Click in order")) {
+        if (title.startsWith("Click in order") || title.contains("Melody")) {
             // sequential: the next click is the lowest-numbered red pane left
             int best = -1, bestCount = Integer.MAX_VALUE;
             for (int i = 0; i < chest; i++) {
