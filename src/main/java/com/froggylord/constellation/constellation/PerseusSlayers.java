@@ -50,6 +50,8 @@ public class PerseusSlayers extends BaseConstellation {
         return slayerBestMs;
     }
 
+    private static int bestiaryKills = 0;
+
     @Override
     public void init(InitContext ctx) {
         cfg = (PerseusConfig) getConfig();
@@ -113,6 +115,15 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.4f);
                 }
             }
+            // Rare drop effect — title ping for RNG drops
+            if (cfg.rareDropEffect && (s.contains("RARE DROP") || s.contains("CRAZY RARE") || s.contains("PRAY RNGESUS"))) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§d§k!!!§r §6" + s.trim() + " §d§k!!!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                }
+            }
             // Brood Mother spawn alert (SBA feature)
             if (s.contains("Brood Mother") && s.contains("hatched")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
@@ -143,6 +154,15 @@ public class PerseusSlayers extends BaseConstellation {
                 },
                 HudPosition.of(50, 70), cfg.slayerTimer));
         }
+        if (cfg.bestiaryTracker) {
+            hud.register(new HudWidget("perseus-bestiary", "Bestiary",
+                () -> bestiaryKills > 0 ? "§a📖 Bestiary: " + bestiaryKills + " kills" : null,
+                HudPosition.of(50, 62), cfg.bestiaryTracker));
+        }
+        if (cfg.rngMeterDetail) {
+            hud.register(new HudWidget("perseus-rng-detail", "RNGDetail",
+                () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,
+                HudPosition.of(50, 54), cfg.rngMeterDetail));
         if (cfg.xpBar) {
             hud.register(new HudWidget("perseus-xp", "SlayerXP",
                 () -> ConstellationClient.loc().onHypixel() ? xpLine() : null,

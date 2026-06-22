@@ -10,4 +10,7 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean slayerTimer = true; // live kill timer + session best
     public boolean brokenHyperionAlert = true; // warn when wither blade runs out of charges (cmp. Skyblocker)
     public boolean skillLevelUpAlert = true;   // title ping on skill level-up (cmp. Skyblocker)
+    public boolean bestiaryTracker = true;     // bestiary kill counter per family (cmp. Skyblocker)
+    public boolean rngMeterDetail = true;       // show RNG meter progress + drops (cmp. Skyblocker)
+    public boolean rareDropEffect = true;        // special effect when rare drop appears (cmp. Skyblocker)
 }
