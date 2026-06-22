@@ -400,6 +400,26 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 218), cfg.amberCrystalTracker));
+        if (cfg.jadeCrystalTracker) {
+            hud.register(new HudWidget("aquila-jade", "Jade",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Jade") && (line.contains("Crystal") || line.contains("Found"))) return "§a♦ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 226), cfg.jadeCrystalTracker));
+        }
+        if (cfg.crystalHollowsMapHelper) {
+            hud.register(new HudWidget("aquila-chmap", "CHMap",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Hollow") || line.contains("Crystal")) return "§3🗺 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 234), cfg.crystalHollowsMapHelper));
+        }
         }
         }
         }
