@@ -9,4 +9,5 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean visitorsHud = false;
     public boolean pestHud = true;
     public boolean pestAlert = true;
+    public boolean cropMilestones = true;
 }

@@ -26,6 +26,7 @@ public class HerculesFarming extends BaseConstellation {
     private static final Pattern CONTEST = Pattern.compile("(?<crop>[A-Za-z ]+):?\\s*(?<pct>\\d+(?:\\.\\d+)?%|DONE)");
     private static final Pattern VISITORS = Pattern.compile("Visitors:?\\s*(\\d+)");
     private static final Pattern PESTS = Pattern.compile("Pests:?\\s*(\\d+)");
+    private static final Pattern MILESTONE = Pattern.compile("(\\w+) (?:Crop )?Milestone:?\\s*(\\d+)");
 
     private HerculesConfig cfg;
 
@@ -104,6 +105,18 @@ public class HerculesFarming extends BaseConstellation {
                     return p > 0 ? "§c🐛 " + p : null;
                 },
                 HudPosition.of(2, 130), cfg.pestHud));
+        }
+        if (cfg.cropMilestones) {
+            hud.register(new HudWidget("hercules-milestone", "Milestone",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = MILESTONE.matcher(line);
+                        if (m.find()) return "§e" + m.group(1) + " §f" + m.group(2);
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 140), cfg.cropMilestones));
         }
     }
 
