@@ -126,6 +126,21 @@ public class AndromedaRift extends BaseConstellation {
                 () -> inRift() ? "§a🕷 Living Cave — spooders" : null,
                 HudPosition.of(2, 190), cfg.livingCaveHelper));
         }
+        if (cfg.mountainTopHelper) {
+            hud.register(new HudWidget("andromeda-mountain", "MountainTop",
+                () -> inRift() ? "§f🏔 Mountain Top" : null,
+                HudPosition.of(2, 198), cfg.mountainTopHelper));
+        }
+        if (cfg.stillgoreHelper) {
+            hud.register(new HudWidget("andromeda-stillgore", "Stillgore",
+                () -> inRift() ? "§8🏰 Stillgore Chateau" : null,
+                HudPosition.of(2, 206), cfg.stillgoreHelper));
+        }
+        if (cfg.colosseumHelper) {
+            hud.register(new HudWidget("andromeda-colosseum", "Colosseum",
+                () -> inRift() ? "§c🏟 Colosseum" : null,
+                HudPosition.of(2, 214), cfg.colosseumHelper));
+        }
     }
 
     private static boolean inRift() {

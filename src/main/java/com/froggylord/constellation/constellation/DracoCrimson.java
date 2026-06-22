@@ -144,6 +144,17 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, 50), cfg.factionQuestHud));
         }
+        if (cfg.dojoChallengeHelper) {
+            hud.register(new HudWidget("draco-dojo-challenge", "DojoChal",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Challenge") || line.contains("Discipline")) return "§e🥋 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 44), cfg.dojoChallengeHelper));
+        }
     }
 
     private static boolean inCrimson() {

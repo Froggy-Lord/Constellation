@@ -10,4 +10,7 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean dreadfarmHelper = true; // Dreadfarm area hints
     public boolean livingCaveHelper = true; // Living Cave area hints
     public boolean blobbercystGlow = true; // highlight Blobbercysts in world (cmp. Skyblocker)
+    public boolean mountainTopHelper = true;  // Mountain Top area hints
+    public boolean stillgoreHelper = true;    // Stillgore Chateau area hints
+    public boolean colosseumHelper = true;     // Colosseum area hints
 }
