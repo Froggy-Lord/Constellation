@@ -139,15 +139,27 @@ public class PerseusSlayers extends BaseConstellation {
             if (cfg.skillLevelUpAlert) {
                 String stripped2 = net.minecraft.ChatFormatting.stripFormatting(s);
                 if (stripped2.contains("LEVEL UP") || stripped2.contains("SKYBLOCK LEVEL UP") || stripped2.contains("SKILL LEVEL UP")) {
-                var mc = net.minecraft.client.Minecraft.getInstance();
-                if (mc.player != null) {
-                    mc.gui.hud.resetTitleTimes();
-                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§e⬆ LEVEL UP!"));
-                    mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§e⬆ LEVEL UP!"));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                    }
                 }
+                // real: "BESTIARY MILESTONE 25"
+                var bm = java.util.regex.Pattern.compile("BESTIARY MILESTONE (\\d+)").matcher(stripped2);
+                if (bm.find()) {
+                    int tier = Integer.parseInt(bm.group(1));
+                    com.froggylord.constellation.core.StatStore.add("perseus.bestiary.tier", tier);
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§d📖 Bestiary §f" + tier + "§d!"));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.2f);
+                    }
                 }
             }
-            
+
             if (cfg.brokenHyperionAlert && (s.contains("out of charges") || s.contains("no more charges") || s.contains("ran out of"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
