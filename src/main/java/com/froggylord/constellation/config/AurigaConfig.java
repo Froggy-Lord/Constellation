@@ -23,5 +23,7 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean godPotDisplay = true;            
     public boolean teleportPadHelper = true;        
     public boolean pathfindUtil = true;             
-    public boolean cosmeticHelper = true;            
+    public boolean cosmeticHelper = true;
+    public boolean hexHelper = true;
+    public boolean ultimateEnchantDisplay = true;
 }
