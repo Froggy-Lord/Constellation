@@ -89,20 +89,34 @@ public class ApolloHud extends BaseConstellation {
 
         hud.register(new HudWidget("apollo-health", "HP",
             () -> {
-                if (com.froggylord.constellation.core.ActionBar.hasData())
-                    return "§c" + compact(com.froggylord.constellation.core.ActionBar.health())
-                        + "§7/" + compact(com.froggylord.constellation.core.ActionBar.maxHealth());
+                if (com.froggylord.constellation.core.ActionBar.hasData()) {
+                    double pct = com.froggylord.constellation.core.ActionBar.healthFraction();
+                    String col = pct < 0.2 ? "§4" : pct < 0.5 ? "§c" : pct < 0.75 ? "§e" : "§a";
+                    // visual bar: ████████░░ style, 10-wide (like skyblocker)
+                    int filled = (int) (pct * 10);
+                    String bar = "§8[" + col + "█".repeat(Math.max(0, filled)) + "§7░".repeat(10 - filled) + "§8]";
+                    return col + compact(com.froggylord.constellation.core.ActionBar.health())
+                        + "§7/" + compact(com.froggylord.constellation.core.ActionBar.maxHealth())
+                        + " " + bar + " §7" + (int)(pct * 100) + "%";
+                }
                 if (mc.player == null) return "?";
-                return String.format("%.0f", mc.player.getHealth()); 
+                return String.format("%.0f", mc.player.getHealth());
             },
             toPos(cfg.health), cfg.health.visible));
 
         hud.register(new HudWidget("apollo-mana", "MN",
             () -> {
-                if (com.froggylord.constellation.core.ActionBar.hasData())
-                    return "§b" + compact(com.froggylord.constellation.core.ActionBar.mana())
-                        + "§7/" + compact(com.froggylord.constellation.core.ActionBar.maxMana());
+                if (com.froggylord.constellation.core.ActionBar.hasData()) {
+                    double mpct = com.froggylord.constellation.core.ActionBar.manaFraction();
+                    String mcol = mpct < 0.2 ? "§9" : mpct < 0.5 ? "§3" : "§b";
+                    int mfilled = (int) (mpct * 10);
+                    String mbar = "§8[" + mcol + "█".repeat(Math.max(0, mfilled)) + "§7░".repeat(10 - mfilled) + "§8]";
+                    return mcol + compact(com.froggylord.constellation.core.ActionBar.mana())
+                        + "§7/" + compact(com.froggylord.constellation.core.ActionBar.maxMana())
+                        + " " + mbar + " §7" + (int)(mpct * 100) + "%";
+                }
                 return "?";
+            },
             },
             toPos(cfg.mana), cfg.mana.visible));
 

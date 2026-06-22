@@ -65,6 +65,10 @@ public final class ActionBar {
         return maxHealth <= 0 ? 1.0 : (double) health / maxHealth;
     }
 
+    public static double manaFraction() {
+        return maxMana <= 0 ? 1.0 : (double) mana / maxMana;
+    }
+
     public static boolean hasData() { return maxHealth > 0 && System.currentTimeMillis() - lastUpdate < 5000; }
 
     public static int health() { return health; }
