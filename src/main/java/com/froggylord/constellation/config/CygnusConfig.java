@@ -11,4 +11,5 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean dianaInquisitorAlert = true;
     public boolean dianaInquisitorShare = false; // shout coords to party chat
     public boolean dianaDropTracker = true;
+    public boolean dianaBurrowWaypoints = true; // triangulate burrow from spade directions
 }

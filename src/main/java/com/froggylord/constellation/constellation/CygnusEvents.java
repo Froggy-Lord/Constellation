@@ -32,6 +32,10 @@ public class CygnusEvents extends BaseConstellation {
 
     private static int inquisitors = 0;
     private static int mythosDrops = 0;
+    // diana burrow triangulation — spade direction samples
+    private static final double[][] spadeSamples = new double[4][3]; // {x, z, angle}
+    private static int spadeIdx = 0;
+    private static double burrowX = Double.NaN, burrowZ = Double.NaN;
     // the mythological-ritual loot lines worth counting
     private static final String[] MYTHOS = {
         "Griffin Feather", "Crown of Greed", "Washed-up Souvenir", "Daedalus Stick",
@@ -65,7 +69,60 @@ public class CygnusEvents extends BaseConstellation {
             if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
                 for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; com.froggylord.constellation.core.StatStore.add("cygnus.diana.drops", 1); break; } }
             }
+            // spade direction — triangulate burrow position
+            if (cfg.dianaBurrowWaypoints && s.contains("The Spade points")) {
+                String low = s.toLowerCase(java.util.Locale.ROOT);
+                double angle = -1;
+                if (low.contains("north") && low.contains("west")) angle = -135;
+                else if (low.contains("north") && low.contains("east")) angle = 135;
+                else if (low.contains("south") && low.contains("west")) angle = -45;
+                else if (low.contains("south") && low.contains("east")) angle = 45;
+                else if (low.contains("north")) angle = 180;
+                else if (low.contains("south")) angle = 0;
+                else if (low.contains("west")) angle = -90;
+                else if (low.contains("east")) angle = 90;
+                if (angle != -1) {
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) {
+                        spadeSamples[spadeIdx % 4][0] = mc.player.getX();
+                        spadeSamples[spadeIdx % 4][1] = mc.player.getZ();
+                        spadeSamples[spadeIdx % 4][2] = Math.toRadians(angle);
+                        spadeIdx++;
+                        triangulate();
+                    }
+                }
+            }
         });
+
+        // world render — burrow waypoint
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.dianaBurrowWaypoints) return;
+            if (!ConstellationClient.loc().onHypixel()) return;
+            if (Double.isNaN(burrowX)) return;
+            var box = new net.minecraft.world.phys.AABB(burrowX - 0.5, 60, burrowZ - 0.5, burrowX + 0.5, 128, burrowZ + 0.5);
+            wctx.highlight(box, 0x80FFAA00, true);
+            wctx.beam(burrowX, 65, burrowZ, 0xFFFFAA00, 30, true);
+        });
+    }
+
+    private static void triangulate() {
+        if (spadeIdx < 2) return;
+        // take the 2 most recent samples and intersect their rays
+        double x1 = spadeSamples[(spadeIdx - 2) % 4][0];
+        double z1 = spadeSamples[(spadeIdx - 2) % 4][1];
+        double a1 = spadeSamples[(spadeIdx - 2) % 4][2];
+        double x2 = spadeSamples[(spadeIdx - 1) % 4][0];
+        double z2 = spadeSamples[(spadeIdx - 1) % 4][1];
+        double a2 = spadeSamples[(spadeIdx - 1) % 4][2];
+
+        double dx1 = Math.sin(a1), dz1 = -Math.cos(a1);
+        double dx2 = Math.sin(a2), dz2 = -Math.cos(a2);
+        double det = dx1 * dz2 - dz1 * dx2;
+        if (Math.abs(det) < 0.001) return; // parallel rays
+
+        double t = ((x2 - x1) * dz2 - (z2 - z1) * dx2) / det;
+        burrowX = x1 + t * dx1;
+        burrowZ = z1 + t * dz1;
     }
 
     @Override
