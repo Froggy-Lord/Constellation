@@ -254,6 +254,17 @@ public class HerculesFarming extends BaseConstellation {
                 },
                 HudPosition.of(2, 200), cfg.farmingContestTimer));
         }
+        if (cfg.farmingXpDisplay) {
+            hud.register(new HudWidget("hercules-farmxp", "FarmingXP",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Farming") && (line.contains("XP") || line.contains("Level"))) return "§e🌾 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 208), cfg.farmingXpDisplay));
+        }
     }
 
     private static boolean inGarden() {
