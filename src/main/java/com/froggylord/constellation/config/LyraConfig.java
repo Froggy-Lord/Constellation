@@ -9,4 +9,12 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean coinSession = true;
     public boolean bitsHud = false;
     public boolean quiverHud = false;
+
+    // item tooltips (read straight off the item's hidden SkyBlock data, no API needed)
+    public boolean tooltipSkyblockId = true;
+    public boolean tooltipReforge = true;
+    public boolean tooltipHotPotato = true;
+    public boolean tooltipStars = true;
+    public boolean tooltipEnchantCount = true;
+    public boolean tooltipRecomb = true;
 }

@@ -43,6 +43,8 @@ public class LyraEconomy extends BaseConstellation {
         cfg = (LyraConfig) getConfig();
         // refresh the parsed purse each second
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
+        // extra item tooltip lines (reforge, stars, hpb, recomb, sb id)
+        LyraTooltips.init(cfg);
     }
 
     private static void readPurse() {
