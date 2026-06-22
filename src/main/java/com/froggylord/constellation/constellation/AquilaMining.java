@@ -362,6 +362,26 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 186), cfg.metalDetectorHelper));
+        if (cfg.rubyCrystalTracker) {
+            hud.register(new HudWidget("aquila-ruby", "Ruby",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Ruby") && (line.contains("Crystal") || line.contains("Found"))) return "§c♦ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 194), cfg.rubyCrystalTracker));
+        }
+        if (cfg.sapphireCrystalTracker) {
+            hud.register(new HudWidget("aquila-sapphire", "Sapphire",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Sapphire") && (line.contains("Crystal") || line.contains("Found"))) return "§b♦ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 202), cfg.sapphireCrystalTracker));
+        }
         }
         if (cfg.crystalNucleusWaypoints) {
             
