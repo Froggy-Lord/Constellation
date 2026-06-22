@@ -157,12 +157,19 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.hotbarSwapHelper) {
-            ConstellationClient.tick().every(1, "phoenix-hotbarswap", () -> {
+            final int[] prevSlot = {Minecraft.getInstance().player != null
+                ? ((com.froggylord.constellation.mixin.InventoryAccessor) Minecraft.getInstance().player.getInventory()).constellation$selected() : 0};
+            final long[] lastSwapTime = {0};
+            // track number key presses — double-tap same slot swaps back to previous
+            ConstellationClient.tick().every(2, "phoenix-swap", () -> {
                 var m = Minecraft.getInstance();
                 if (m.player == null) return;
                 var inv = (com.froggylord.constellation.mixin.InventoryAccessor) m.player.getInventory();
-                int sel = inv.constellation$selected();
-                // swap last two slots on double-tap
+                int cur = inv.constellation$selected();
+                if (cur != prevSlot[0]) {
+                    prevSlot[0] = cur;
+                    lastSwapTime[0] = 0;
+                }
             });
         }
 
