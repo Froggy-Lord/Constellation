@@ -15,4 +15,5 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean crimsonFogBoost = true; // increase fog radius on Crimson Isle (cmp. Skyblocker)
     public boolean factionQuestHud = true; // show active faction quests (cmp. Skyblocker)
     public boolean dojoChallengeHelper = true; // show Dojo challenge type + tips (cmp. Skyblocker)
+    public boolean trophyFishingHud = true;    // crimson isle trophy fishing stats (cmp. Skyblocker)
 }

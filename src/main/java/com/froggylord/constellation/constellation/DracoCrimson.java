@@ -156,6 +156,17 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, 44), cfg.dojoChallengeHelper));
         }
+        if (cfg.trophyFishingHud) {
+            hud.register(new HudWidget("draco-trophy", "CrimsonTrophy",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Trophy") || line.contains("Fishing")) return "§6🏆 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 38), cfg.trophyFishingHud));
+        }
     }
 
     private static boolean inCrimson() {
