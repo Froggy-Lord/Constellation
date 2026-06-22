@@ -87,4 +87,7 @@ public class OrionConfig extends BaseConfigGroup {
 
     // F5/M5 Livid fight — show only the real clone, hide the 8 fakes
     public boolean lividFinder = true;
+
+    // TicTacToe solver (F7/M7) — minimax best move
+    public boolean ticTacToeSolver = true;
 }

@@ -87,6 +87,11 @@ public final class OrionPuzzles {
                     if (ok(cfg.triviaSolver)) triviaOverlay(cs, g);
                 });
             }
+            if (title.contains("Tic Tac Toe") || title.contains("tic tac toe")) {
+                ScreenEvents.afterExtract(screen).register((scr, g, mx, my, d) -> {
+                    if (ok(cfg.ticTacToeSolver)) ticTacToeOverlay(cs, g);
+                });
+            }
         });
     }
 
@@ -213,6 +218,92 @@ public final class OrionPuzzles {
                     a.x + 0.5, a.y + 0.5, a.z + 0.5), 0x40AAFF00, true);
             }
         }
+    }
+
+    // --- TicTacToe overlay + minimax solver ---
+    private static void ticTacToeOverlay(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
+        int chest = cs.getMenu().slots.size() - 36;
+        if (chest < 9) return;
+        // the board is in slots 0-8 (top 3 rows of the chest)
+        int[] board = new int[9]; // 0=empty, 1=your piece, -1=opponent
+        for (int i = 0; i < 9; i++) {
+            var s = cs.getMenu().slots.get(i).getItem();
+            if (s.isEmpty()) { board[i] = 0; continue; }
+            String id = s.getItem().getDescriptionId().toLowerCase(Locale.ROOT);
+            // X pieces: red, pink, orange stained glass
+            if (id.contains("red_") || id.contains("pink_") || id.contains("orange_"))
+                board[i] = 1; // your piece
+            else if (id.contains("green_") || id.contains("lime_") || id.contains("cyan_"))
+                board[i] = -1; // opponent
+            else
+                board[i] = 0; // unknown/empty mark
+        }
+
+        // minimal: ensure at least one piece is present before doing the math
+        boolean any = false;
+        for (int v : board) { if (v != 0) { any = true; break; } }
+        if (!any) return;
+
+        int best = minimaxBest(board, true);
+        if (best >= 0) box(cs, g, cs.getMenu().slots.get(best), 0xA020FF20);
+    }
+
+    private static int minimaxBest(int[] board, boolean myTurn) {
+        // score each possible move; return the one that yields the highest score
+        int bestScore = Integer.MIN_VALUE, bestMove = -1;
+        for (int i = 0; i < 9; i++) {
+            if (board[i] != 0) continue;
+            board[i] = myTurn ? 1 : -1;
+            int score = minimax(board, 0, !myTurn, Integer.MIN_VALUE, Integer.MAX_VALUE);
+            board[i] = 0;
+            if (score > bestScore) { bestScore = score; bestMove = i; }
+        }
+        return bestMove;
+    }
+
+    private static int minimax(int[] board, int depth, boolean maximizing, int alpha, int beta) {
+        int winner = checkWin(board);
+        if (winner != 0) return winner * (10 - depth); // win early
+        if (isFull(board)) return 0; // draw
+
+        if (maximizing) {
+            int maxEval = Integer.MIN_VALUE;
+            for (int i = 0; i < 9; i++) {
+                if (board[i] != 0) continue;
+                board[i] = 1;
+                int eval = minimax(board, depth + 1, false, alpha, beta);
+                board[i] = 0;
+                maxEval = Math.max(maxEval, eval);
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) break;
+            }
+            return maxEval;
+        } else {
+            int minEval = Integer.MAX_VALUE;
+            for (int i = 0; i < 9; i++) {
+                if (board[i] != 0) continue;
+                board[i] = -1;
+                int eval = minimax(board, depth + 1, true, alpha, beta);
+                board[i] = 0;
+                minEval = Math.min(minEval, eval);
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) break;
+            }
+            return minEval;
+        }
+    }
+
+    private static int checkWin(int[] b) {
+        int[][] wins = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+        for (int[] w : wins) {
+            if (b[w[0]] != 0 && b[w[0]] == b[w[1]] && b[w[1]] == b[w[2]]) return b[w[0]];
+        }
+        return 0;
+    }
+
+    private static boolean isFull(int[] b) {
+        for (int v : b) if (v == 0) return false;
+        return true;
     }
 
     // --- utilities ---
