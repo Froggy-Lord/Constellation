@@ -17,4 +17,7 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean jerryTimer = true; // show time until next Jerry event
     public boolean seasonDisplay = true; // show current SkyBlock season + upcoming
     public boolean spookyEventTracker = true; // Spooky Festival candy counter
+    public boolean raffleHelper = true;        // raffle event task highlighter (cmp. Skyblocker)
+    public boolean mayorPerksDisplay = true;    // show active mayor + perks (cmp. Skyblocker)
+    public boolean dianaBurrowGuesser = true;   // estimate burrow location from spade (cmp. Skyblocker)
 }

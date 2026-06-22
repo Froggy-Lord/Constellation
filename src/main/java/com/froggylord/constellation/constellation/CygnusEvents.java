@@ -219,6 +219,28 @@ public class CygnusEvents extends BaseConstellation {
                 },
                 HudPosition.of(2, 170), cfg.spookyEventTracker));
         }
+        if (cfg.mayorPerksDisplay) {
+            hud.register(new HudWidget("cygnus-mayor-perks", "MayorPerks",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Perk") || line.contains("Mayor")) return "§6🏛 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 178), cfg.mayorPerksDisplay));
+        }
+        if (cfg.raffleHelper) {
+            hud.register(new HudWidget("cygnus-raffle", "Raffle",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Raffle") || line.contains("Ticket")) return "§c🎟 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 186), cfg.raffleHelper));
+        }
     }
 
     private static String calendarLine() {

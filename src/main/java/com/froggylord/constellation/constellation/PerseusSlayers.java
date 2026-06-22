@@ -163,6 +163,7 @@ public class PerseusSlayers extends BaseConstellation {
             hud.register(new HudWidget("perseus-rng-detail", "RNGDetail",
                 () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,
                 HudPosition.of(50, 54), cfg.rngMeterDetail));
+        }
         if (cfg.xpBar) {
             hud.register(new HudWidget("perseus-xp", "SlayerXP",
                 () -> ConstellationClient.loc().onHypixel() ? xpLine() : null,
