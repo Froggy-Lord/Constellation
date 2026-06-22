@@ -23,4 +23,7 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean chimeraAlert = true;          // alert when Chimera book drops (cmp. Skyblocker)
     public boolean daedalusAlert = true;         // alert when Daedalus Stick drops (cmp. Skyblocker)
     public boolean mayorElectionHud = true;      // upcoming election info (cmp. Skyblocker)
+    public boolean eventNotificationHud = true;   // upcoming event countdown (cmp. Skyblocker)
+    public boolean carnivalScoreTracker = true;   // track carnival minigame scores (cmp. Skyblocker)
+    public boolean lobbySeasonalDecorations = true; // lobby event waypoints (cmp. Skyblocker)
 }

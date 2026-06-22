@@ -18,4 +18,7 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean readyCheckPing = true;        // sound when all party members ready (cmp. Skyblocker)
     public boolean friendListHud = true;          // show online friends count (cmp. Skyblocker)
     public boolean partyMute = false;             // mute party chat temporarily (cmp. Skyblocker)
+    public boolean partyChatCommands = true;       // !warp !join !ptme !rules shortcuts (cmp. Skyblocker)
+    public boolean dungeonReadyOverlay = true;     // overlay when party is ready for dungeon (cmp. Skyblocker)
+    public boolean friendJoinLeaveAlert = true;    // notify when friends join/leave SkyBlock (cmp. Skyblocker)
 }
