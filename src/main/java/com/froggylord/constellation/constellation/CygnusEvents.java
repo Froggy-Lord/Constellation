@@ -216,7 +216,12 @@ public class CygnusEvents extends BaseConstellation {
                     long inq = life ? com.froggylord.constellation.core.StatStore.getLong("cygnus.diana.inquisitors", inquisitors) : inquisitors;
                     long drops = life ? com.froggylord.constellation.core.StatStore.getLong("cygnus.diana.drops", mythosDrops) : mythosDrops;
                     if (inq == 0 && drops == 0) return null;
-                    return "§5⚔ " + inq + " §7| §6drops §f" + drops + (life ? " §8(all-time)" : "");
+                    String ln = "§5⚔ " + inq + " §7| §6drops §f" + drops + (life ? " §8(all-time)" : "");
+                    if (inqSetAt > 0) {
+                        long since = (System.currentTimeMillis() - inqSetAt) / 60000;
+                        ln += " §8(last " + since + "m ago)";
+                    }
+                    return ln;
                 },
                 HudPosition.of(2, 138), cfg.dianaDropTracker));
         }
