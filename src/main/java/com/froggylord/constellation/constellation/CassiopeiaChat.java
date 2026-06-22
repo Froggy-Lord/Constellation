@@ -143,8 +143,25 @@ public class CassiopeiaChat extends BaseConstellation {
         if (cfg.compactBestiary) {
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                
                 if (s.contains("Bestiary") && (s.contains("+") || s.contains("%"))) return null;
+                return msg;
+            });
+        }
+        if (cfg.compactJacobClaim) {
+            pipeline.modify(msg -> {
+                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
+                // "You claimed your rewards from the Jacob's Contest!" → compact
+                if (s.contains("Jacob") && s.contains("Contest") && (s.contains("claimed") || s.contains("reward")))
+                    return Component.literal("§e🏆 Jacob's Contest rewards claimed!");
+                return msg;
+            });
+        }
+        if (cfg.rareDropFormat) {
+            pipeline.modify(msg -> {
+                String s = msg.getString();
+                // give rare drops a cleaner prefix
+                if (s.contains("RARE DROP") || s.contains("CRAZY RARE DROP") || s.contains("PET DROP"))
+                    return Component.literal("§5§l★ §r" + s);
                 return msg;
             });
         }
