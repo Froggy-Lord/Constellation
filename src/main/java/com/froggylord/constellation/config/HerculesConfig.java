@@ -28,4 +28,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean farmingContestTimer = true;
     public boolean cropProfitTracker = true;
     public boolean farmingXpDisplay = true;
+    public boolean farmingCapsDisplay = true;
+    public boolean visitorProfitTracker = true;
 }
