@@ -9,4 +9,5 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean ultrasequencerSolver = true;
     public boolean superpairsSolver = true;
     public boolean bingoHelper = true;
+    public boolean shCalcCommand = true; // /shcalc damage estimator
 }
