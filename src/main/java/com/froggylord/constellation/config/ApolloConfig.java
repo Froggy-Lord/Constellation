@@ -21,6 +21,8 @@ public class ApolloConfig extends BaseConfigGroup {
     public HudEntry speed     = new HudEntry("SPD", 86, 90, true);
     public HudEntry area      = new HudEntry("Area", 2, 42, false);
     public HudEntry facing    = new HudEntry("Facing", 2, 50, false);
+    public HudEntry potions   = new HudEntry("Potions", 2, 82, false);
+    public HudEntry powerOrb  = new HudEntry("Orb", 2, 90, false);
 
     // feature toggles
     public boolean customScoreboard = true;

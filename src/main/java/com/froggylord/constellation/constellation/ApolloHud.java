@@ -176,6 +176,36 @@ public class ApolloHud extends BaseConstellation {
                 return null;
             },
             HudPosition.of(2, 74), true));
+
+        hud.register(new HudWidget("apollo-potions", "Potions",
+            () -> {
+                if (mc.player == null) return null;
+                var effects = mc.player.getActiveEffects();
+                if (effects.isEmpty()) return null;
+                StringBuilder sb = new StringBuilder("§d🧪 ");
+                int shown = 0;
+                for (var entry : effects) {
+                    if (shown++ > 0) sb.append(" ");
+                    int dur = entry.getDuration() / 20;
+                    int min = dur / 60, sec = dur % 60;
+                    sb.append("§7").append(entry.getEffect().value().getDisplayName().getString()).append(" §f").append(min).append(":").append(String.format("%02d", sec));
+                    if (shown >= 2) break;
+                }
+                return sb.toString();
+            },
+            toPos(cfg.potions), cfg.potions.visible));
+
+        hud.register(new HudWidget("apollo-orb", "Orb",
+            () -> {
+                if (!ConstellationClient.loc().onHypixel()) return null;
+                for (String line : ConstellationClient.loc().getSidebarLines()) {
+                    if (line.contains("Orb:") || line.contains("Power Orb:")) {
+                        return "§b" + line.substring(line.indexOf(":") + 1).trim();
+                    }
+                }
+                return null;
+            },
+            toPos(cfg.powerOrb), cfg.powerOrb.visible));
     }
 
     private static HudPosition toPos(ApolloConfig.HudEntry e) {
