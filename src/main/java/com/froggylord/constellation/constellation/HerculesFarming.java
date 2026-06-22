@@ -264,6 +264,17 @@ public class HerculesFarming extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 208), cfg.farmingXpDisplay));
+        if (cfg.cropProfitTracker) {
+            hud.register(new HudWidget("hercules-profit", "CropProfit",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Coins") || line.contains("Profit")) return "§6💰 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 216), cfg.cropProfitTracker));
+        }
         }
     }
 
