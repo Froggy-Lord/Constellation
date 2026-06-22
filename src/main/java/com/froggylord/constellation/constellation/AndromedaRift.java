@@ -28,8 +28,44 @@ public class AndromedaRift extends BaseConstellation {
 
     private AndromedaConfig cfg;
 
+    private static int enigmaSouls = 0;
+    private static long lowTimeAt = 0;
+
     @Override
-    public void init(InitContext ctx) { cfg = (AndromedaConfig) getConfig(); }
+    public void init(InitContext ctx) {
+        cfg = (AndromedaConfig) getConfig();
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            String s = msg.getString();
+            if (cfg.enigmaSoulTracker && s.contains("SOUL!") && s.contains("Enigma Soul")) {
+                enigmaSouls++;
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5✦ Enigma Soul!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.8f, 1.0f);
+                }
+            }
+        });
+        // warn when the rift clock is about to run out
+        ConstellationClient.tick().every(20, "andromeda-lowtime", () -> {
+            if (cfg == null || !cfg.riftLowTimeAlert || !inRift()) return;
+            for (String line : ConstellationClient.loc().getSidebarLines()) {
+                Matcher m = RIFT_TIME.matcher(line);
+                if (!m.find()) continue;
+                int secs = Integer.parseInt(m.group(1)) * 60 + Integer.parseInt(m.group(2));
+                if (secs > 0 && secs <= 60 && System.currentTimeMillis() - lowTimeAt > 30_000) {
+                    lowTimeAt = System.currentTimeMillis();
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⏰ Rift time low: " + m.group(1) + ":" + m.group(2)));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1.0f, 0.6f);
+                    }
+                }
+                return;
+            }
+        });
+    }
 
     @Override
     public void registerHud(HudManager hud) {
@@ -43,6 +79,11 @@ public class AndromedaRift extends BaseConstellation {
             hud.register(new HudWidget("andromeda-motes", "Motes",
                 () -> inRift() ? motesLine() : null,
                 HudPosition.of(2, 150), cfg.timeHud));
+        }
+        if (cfg.enigmaSoulTracker) {
+            hud.register(new HudWidget("andromeda-souls", "Souls",
+                () -> (inRift() && enigmaSouls > 0) ? "§5✦ " + enigmaSouls + " souls" : null,
+                HudPosition.of(2, 160), cfg.enigmaSoulTracker));
         }
     }
 
