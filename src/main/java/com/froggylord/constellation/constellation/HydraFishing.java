@@ -63,10 +63,10 @@ public class HydraFishing extends BaseConstellation {
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
             // trophy fish — the catch line names the tier
             if (cfg != null && cfg.trophyFishTracker && (s.contains("TROPHY FISH") || s.contains("You caught"))) {
-                if (s.contains("Diamond")) tDiamond++;
-                else if (s.contains("Gold")) tGold++;
-                else if (s.contains("Silver")) tSilver++;
-                else if (s.contains("Bronze")) tBronze++;
+                if (s.contains("Diamond")) { tDiamond++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.diamond", 1); }
+                else if (s.contains("Gold")) { tGold++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.gold", 1); }
+                else if (s.contains("Silver")) { tSilver++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.silver", 1); }
+                else if (s.contains("Bronze")) { tBronze++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.bronze", 1); }
             }
         });
     }
@@ -111,8 +111,13 @@ public class HydraFishing extends BaseConstellation {
         if (cfg.trophyFishTracker) {
             hud.register(new HudWidget("hydra-trophy", "Trophy",
                 () -> {
-                    if (tBronze + tSilver + tGold + tDiamond == 0) return null;
-                    return "§c⬤" + tBronze + " §7⬤" + tSilver + " §6⬤" + tGold + " §b⬤" + tDiamond;
+                    boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+                    long b = life ? com.froggylord.constellation.core.StatStore.getLong("hydra.trophy.bronze", tBronze) : tBronze;
+                    long si = life ? com.froggylord.constellation.core.StatStore.getLong("hydra.trophy.silver", tSilver) : tSilver;
+                    long g = life ? com.froggylord.constellation.core.StatStore.getLong("hydra.trophy.gold", tGold) : tGold;
+                    long di = life ? com.froggylord.constellation.core.StatStore.getLong("hydra.trophy.diamond", tDiamond) : tDiamond;
+                    if (b + si + g + di == 0) return null;
+                    return "§c⬤" + b + " §7⬤" + si + " §6⬤" + g + " §b⬤" + di;
                 },
                 HudPosition.of(50, 94), cfg.trophyFishTracker));
         }

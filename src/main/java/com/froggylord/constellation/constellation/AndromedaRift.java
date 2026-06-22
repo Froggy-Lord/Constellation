@@ -39,6 +39,7 @@ public class AndromedaRift extends BaseConstellation {
             String s = msg.getString();
             if (cfg.enigmaSoulTracker && s.contains("SOUL!") && s.contains("Enigma Soul")) {
                 enigmaSouls++;
+                com.froggylord.constellation.core.StatStore.add("andromeda.enigmaSouls", 1);
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
@@ -82,7 +83,12 @@ public class AndromedaRift extends BaseConstellation {
         }
         if (cfg.enigmaSoulTracker) {
             hud.register(new HudWidget("andromeda-souls", "Souls",
-                () -> (inRift() && enigmaSouls > 0) ? "§5✦ " + enigmaSouls + " souls" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+                    long n = life ? com.froggylord.constellation.core.StatStore.getLong("andromeda.enigmaSouls", enigmaSouls) : enigmaSouls;
+                    return n > 0 ? "§5✦ " + n + " souls" + (life ? " §8(all-time)" : "") : null;
+                },
                 HudPosition.of(2, 160), cfg.enigmaSoulTracker));
         }
     }

@@ -12,6 +12,11 @@ public class ConstellationConfig {
 
     public int cfgVersion = CURRENT_VERSION;
 
+    // when true, stat HUDs (slayer PB, trackers, profit) show the all-time figure from the
+    // persistent stats file; when false they show this session only. counters are always
+    // saved regardless — this just picks which number the HUD shows.
+    public boolean lifetimeStats = true;
+
     // sub-configs — one per constellation, named by their id
     @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
     @SerializedName("cassiopeia") public CassiopeiaConfig cassiopeia = new CassiopeiaConfig();

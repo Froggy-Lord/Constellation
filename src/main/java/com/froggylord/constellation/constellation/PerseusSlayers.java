@@ -43,6 +43,13 @@ public class PerseusSlayers extends BaseConstellation {
         return String.format("%d:%02d", s / 60, s % 60);
     }
 
+    /** which personal best to show — all-time from disk, or just this session. */
+    private static long pbMs() {
+        boolean lifetime = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+        if (lifetime) return com.froggylord.constellation.core.StatStore.getLong("perseus.slayer.bestMs", slayerBestMs);
+        return slayerBestMs;
+    }
+
     @Override
     public void init(InitContext ctx) {
         cfg = (PerseusConfig) getConfig();
@@ -71,15 +78,17 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.0f);
                 }
             }
-            // Slayer quest complete — stop the timer, keep the session best
+            // Slayer quest complete — stop the timer, keep session + lifetime bests
             if (slayerStartAt > 0 && (s.contains("SLAYER QUEST COMPLETE") || s.contains("NICE! SLAYER BOSS SLAIN"))) {
                 slayerLastMs = System.currentTimeMillis() - slayerStartAt;
                 if (slayerBestMs == 0 || slayerLastMs < slayerBestMs) slayerBestMs = slayerLastMs;
                 slayerStartAt = 0;
+                long lifeBest = com.froggylord.constellation.core.StatStore.recordBest("perseus.slayer.bestMs", slayerLastMs);
+                long lifeKills = com.froggylord.constellation.core.StatStore.add("perseus.slayer.kills", 1);
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null)
                     mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                        "§a✔ Slayer §f" + fmt(slayerLastMs) + " §7(best " + fmt(slayerBestMs) + ")"));
+                        "§a✔ Slayer §f" + fmt(slayerLastMs) + " §7(pb " + fmt(lifeBest) + ", #" + lifeKills + " all-time)"));
             }
             // Mini-boss spawn
             if (s.contains(" spawned") && (s.contains("Revenant") || s.contains("Tarantula") || s.contains("Sven") || s.contains("Voidgloom") || s.contains("Inferno"))) {
@@ -106,11 +115,12 @@ public class PerseusSlayers extends BaseConstellation {
         if (cfg.slayerTimer) {
             hud.register(new HudWidget("perseus-timer", "Slayer",
                 () -> {
+                    long pb = pbMs();
                     if (slayerStartAt > 0)
                         return "§c⏱ " + fmt(System.currentTimeMillis() - slayerStartAt)
-                            + (slayerBestMs > 0 ? " §7(pb " + fmt(slayerBestMs) + ")" : "");
+                            + (pb > 0 ? " §7(pb " + fmt(pb) + ")" : "");
                     if (slayerLastMs > 0)
-                        return "§7last " + fmt(slayerLastMs) + " §8| pb " + fmt(slayerBestMs);
+                        return "§7last " + fmt(slayerLastMs) + " §8| pb " + fmt(pb);
                     return null;
                 },
                 HudPosition.of(50, 70), cfg.slayerTimer));

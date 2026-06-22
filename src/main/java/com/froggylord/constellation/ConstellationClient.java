@@ -54,6 +54,7 @@ public class ConstellationClient implements ClientModInitializer {
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(tickManager::onEndTick);
         locationManager.init();
         com.froggylord.constellation.core.ActionBar.init();
+        com.froggylord.constellation.core.StatStore.init();
 
         // world renderer hooked before features init so they can register draw callbacks
         worldRenderer = new WorldRenderer();

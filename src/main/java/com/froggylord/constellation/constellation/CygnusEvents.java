@@ -49,6 +49,7 @@ public class CygnusEvents extends BaseConstellation {
             // Minos Inquisitor — the burrow everyone wants. shout it loud.
             if (cfg.dianaInquisitorAlert && s.contains("You dug out a Minos Inquisitor")) {
                 inquisitors++;
+                com.froggylord.constellation.core.StatStore.add("cygnus.diana.inquisitors", 1);
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
@@ -62,7 +63,7 @@ public class CygnusEvents extends BaseConstellation {
             }
             // mythos drop tally — the dig loot lines
             if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
-                for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; break; } }
+                for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; com.froggylord.constellation.core.StatStore.add("cygnus.diana.drops", 1); break; } }
             }
         });
     }
@@ -89,8 +90,11 @@ public class CygnusEvents extends BaseConstellation {
         if (cfg.dianaDropTracker) {
             hud.register(new HudWidget("cygnus-diana", "Diana",
                 () -> {
-                    if (inquisitors == 0 && mythosDrops == 0) return null;
-                    return "§5⚔ " + inquisitors + " §7| §6drops §f" + mythosDrops;
+                    boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+                    long inq = life ? com.froggylord.constellation.core.StatStore.getLong("cygnus.diana.inquisitors", inquisitors) : inquisitors;
+                    long drops = life ? com.froggylord.constellation.core.StatStore.getLong("cygnus.diana.drops", mythosDrops) : mythosDrops;
+                    if (inq == 0 && drops == 0) return null;
+                    return "§5⚔ " + inq + " §7| §6drops §f" + drops + (life ? " §8(all-time)" : "");
                 },
                 HudPosition.of(2, 138), cfg.dianaDropTracker));
         }
