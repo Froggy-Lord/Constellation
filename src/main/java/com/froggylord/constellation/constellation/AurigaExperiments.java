@@ -7,18 +7,17 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class AurigaExperiments {
 
     private static AurigaConfig cfg;
+    // remember pairs as you click — highlight matches. no auto-click (like skyblocker).
+    private static final Set<Integer> revealed = new HashSet<>();
+    private static final Map<Integer, String> names = new HashMap<>();
 
     public static void init(AurigaConfig config) {
         cfg = config;
@@ -26,67 +25,85 @@ public class AurigaExperiments {
             if (!(screen instanceof AbstractContainerScreen<?> cs)) return;
             String title = cs.getTitle().getString();
             if (title.startsWith("Ultrasequencer")) {
+                revealed.clear(); names.clear();
                 ScreenEvents.afterExtract(screen).register((scr, g, mx, my, d) -> {
-                    if (ok(cfg != null && cfg.ultrasequencerSolver)) ultrasequencer(cs, g);
+                    if (ok(cfg.ultrasequencerSolver)) ultrasequencer(cs, g);
                 });
             } else if (title.startsWith("Superpairs")) {
-                Map<Integer, String> seen = new HashMap<>();
-                Set<Integer> locked = new HashSet<>();
+                revealed.clear(); names.clear();
                 ScreenEvents.afterExtract(screen).register((scr, g, mx, my, d) -> {
-                    if (ok(cfg != null && cfg.superpairsSolver)) superpairs(cs, g, seen, locked);
+                    if (ok(cfg.superpairsSolver)) superpairs(cs, g);
                 });
             }
         });
     }
 
-    private static boolean ok(boolean toggle) {
-        return toggle && ConstellationClient.loc().onHypixel();
-    }
-
+    // show the next click in the sequence
     private static void ultrasequencer(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
-        var menu = cs.getMenu();
-        int chest = menu.slots.size() - 36;
-        int best = -1, low = Integer.MAX_VALUE;
-        for (int i = 0; i < chest; i++) {
-            ItemStack s = menu.slots.get(i).getItem();
-            if (s.isEmpty() || !s.getItem().getDescriptionId().contains("clock")) continue;
-            int c = s.getCount();
-            if (c > 0 && c < low) { low = c; best = i; }
-        }
-        if (best >= 0) box(cs, g, menu.slots.get(best), 0xA020FF20);
-    }
-
-    private static void superpairs(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g, Map<Integer, String> seen, Set<Integer> locked) {
-        var menu = cs.getMenu();
-        int chest = menu.slots.size() - 36;
-        
-        for (int i = 0; i < chest; i++) {
-            ItemStack s = menu.slots.get(i).getItem();
-            if (s.isEmpty()) continue;
-            String id = s.getItem().getDescriptionId();
-            
-            if (id.contains("stained_glass") || id.contains("clay") || id.contains("glass_pane") || id.contains("terracotta")) continue;
-            seen.put(i, s.getHoverName().getString());
-            
-            if (!locked.contains(i)) {
-                locked.add(i);
-                try {
-                    var mc = Minecraft.getInstance();
-                    if (mc.gameMode != null && mc.player != null)
-                        mc.gameMode.handleContainerInput(cs.getMenu().containerId, i, 0, ContainerInput.PICKUP, mc.player);
-                } catch (Exception ignored) {}
-            }
-        }
-        
-        for (var a : seen.entrySet()) {
-            for (var b : seen.entrySet()) {
-                if (a.getKey() < b.getKey() && a.getValue().equals(b.getValue())) {
-                    box(cs, g, menu.slots.get(a.getKey()), 0x80FFD020);
-                    box(cs, g, menu.slots.get(b.getKey()), 0x80FFD020);
+        int chest = cs.getMenu().slots.size() - 36;
+        int last = -1;
+        for (int i = 1; i < chest; i++) {
+            ItemStack s = cs.getMenu().slots.get(i).getItem();
+            if (s.isEmpty() || s.getDescriptionId().contains("stained_glass")) continue;
+            if (last >= 0) {
+                int prevVal = itemVal(cs.getMenu().slots.get(last).getItem());
+                int curVal = itemVal(s.getItem());
+                if (curVal < prevVal && curVal >= 0 && prevVal >= 0) {
+                    box(cs, g, cs.getMenu().slots.get(last), 0xA0FF2020);
+                    box(cs, g, cs.getMenu().slots.get(i), 0xA020FF20);
                 }
             }
+            last = i;
         }
     }
+
+    private static int itemVal(ItemStack s) {
+        String id = s.getDescriptionId();
+        if (id.contains("0")) return 0;
+        if (id.contains("1")) return 1;
+        if (id.contains("2")) return 2;
+        if (id.contains("3")) return 3;
+        if (id.contains("4")) return 4;
+        if (id.contains("5")) return 5;
+        if (id.contains("6")) return 6;
+        if (id.contains("7")) return 7;
+        if (id.contains("8")) return 8;
+        if (id.contains("9")) return 9;
+        if (id.contains("10")) return 10;
+        if (id.contains("11")) return 11;
+        if (id.contains("12")) return 12;
+        if (id.contains("13")) return 13;
+        if (id.contains("14")) return 14;
+        return -1;
+    }
+
+    // highlight matching pairs from memory — you click to reveal, we box matches. no auto-click.
+    private static void superpairs(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
+        int chest = cs.getMenu().slots.size() - 36;
+        // record what each slot currently shows
+        for (int i = 0; i < chest; i++) {
+            ItemStack s = cs.getMenu().slots.get(i).getItem();
+            if (s.isEmpty()) { names.remove(i); revealed.remove(i); continue; }
+            String id = s.getDescriptionId();
+            // skip glass/clay spacers — hypixel fills empty slots with these
+            if (id.contains("stained_glass") || id.contains("clay") || id.contains("glass_pane") || id.contains("terracotta")) { names.remove(i); continue; }
+            String nm = net.minecraft.ChatFormatting.stripFormatting(s.getHoverName().getString());
+            if (!nm.isEmpty()) { names.put(i, nm); revealed.add(i); }
+        }
+        // highlight pairs
+        List<Integer> slots = new ArrayList<>(names.keySet());
+        for (int a = 0; a < slots.size(); a++)
+            for (int b = a + 1; b < slots.size(); b++) {
+                String na = names.get(slots.get(a));
+                String nb = names.get(slots.get(b));
+                if (na != null && na.equals(nb)) {
+                    box(cs, g, cs.getMenu().slots.get(slots.get(a)), 0x6020FF20);
+                    box(cs, g, cs.getMenu().slots.get(slots.get(b)), 0x6020FF20);
+                }
+            }
+    }
+
+    private static boolean ok(boolean on) { return on && ConstellationClient.loc().onHypixel(); }
 
     private static void box(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g, Slot slot, int argb) {
         int left = ((ContainerScreenAccessor) cs).constellation$left();
