@@ -260,6 +260,17 @@ public class OrionDungeons extends BaseConstellation {
         // /dungeonstats — session run history
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
             .executes(ctx -> { com.froggylord.constellation.data.RunStats.printSession(); return 1; }));
+        // /key — check held item for dungeon key
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("key")
+            .executes(ctx -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    var stack = mc.player.getMainHandItem();
+                    String name = stack.getHoverName().getString();
+                    mc.player.sendSystemMessage(Component.literal("§eKey: " + name));
+                }
+                return 1;
+            }));
 
         // force a room scan right now with full diagnostics
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomscan")
