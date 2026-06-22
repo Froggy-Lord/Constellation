@@ -115,5 +115,7 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean silverfishSolver = true;    // highlight silverfish bfs path ...
     public boolean lightsOnSolver = true;     
     public boolean arrowAlignSolver = true;    
-    public boolean targetPracticeSolver = true; 
+    public boolean targetPracticeSolver = true;
+    public boolean terminalSimulator = true;
+    public boolean melodyTerminalHelper = true;
 }
