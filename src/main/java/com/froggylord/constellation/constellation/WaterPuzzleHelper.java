@@ -5,19 +5,17 @@ import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
+import java.util.*;
+
+// waterboard. the lever->gate wiring isnt in the block geometry so i cant auto-solve it
+// blind — but the live water IS in the world, so trace it: flood the actual water blocks
+// from the source and show which coloured goal it currently reaches. plus label the goals.
 public final class WaterPuzzleHelper {
 
     private WaterPuzzleHelper() {}
-
-    
-    private static final String[] GATE_TYPES = {
-        "terracotta", "gold", "diamond", "emerald", "quartz", "coal", "water"
-    };
 
     public static void draw(WorldRenderer.Ctx ctx) {
         OrionConfig cfg = ConstellationClient.cfg().orion;
@@ -26,43 +24,65 @@ public final class WaterPuzzleHelper {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        
         var pp = mc.player.blockPosition();
-        java.util.List<BlockPos> gates = new java.util.ArrayList<>();
+
+        // label every coloured goal so you know which lever you're aiming for
+        Map<Long, Integer> goals = new HashMap<>();
         for (int dx = -20; dx <= 20; dx++)
             for (int dz = -20; dz <= 20; dz++)
-                for (int dy = -5; dy <= 5; dy++) {
+                for (int dy = -6; dy <= 6; dy++) {
                     var bp = pp.offset(dx, dy, dz);
-                    var bs = mc.level.getBlockState(bp);
-                    Block b = bs.getBlock();
-                    String id = b.getDescriptionId();
-                    
-                    if (id.contains("terracotta") || id.contains("concrete") || id.contains("wool")) {
-                        if (!id.contains("light_gray") && !id.contains("gray_")) {
-                            gates.add(bp);
-                        }
+                    String id = mc.level.getBlockState(bp).getBlock().getDescriptionId();
+                    int col = goalColour(id);
+                    if (col != 0) {
+                        goals.put(k(bp), col);
+                        ctx.highlight(new AABB(bp), (col & 0xFFFFFF) | 0x50000000, true);
                     }
                 }
 
-        
-        
-        java.util.Set<String> seen = new java.util.HashSet<>();
-        for (var bp : gates) {
-            String key = bp.getX() + "," + bp.getZ();
-            if (!seen.add(key)) continue;
-            var bs = mc.level.getBlockState(bp);
-            int colour = 0x40FFFF00;
-            String id = bs.getBlock().getDescriptionId();
-            if (id.contains("red")) colour = 0x40FF3333;
-            else if (id.contains("gold") || id.contains("yellow")) colour = 0x40FFAA00;
-            else if (id.contains("diamond") || id.contains("light_blue")) colour = 0x4055FFFF;
-            else if (id.contains("emerald") || id.contains("lime")) colour = 0x4055FF55;
-            else if (id.contains("quartz") || id.contains("white")) colour = 0x40FFFFFF;
-            else if (id.contains("coal") || id.contains("black")) colour = 0x40333333;
+        // trace the live water — flood from any water block near the top, mark where it lands
+        BlockPos src = null;
+        for (int dx = -20; dx <= 20 && src == null; dx++)
+            for (int dz = -20; dz <= 20 && src == null; dz++)
+                for (int dy = 6; dy >= 0; dy--) {
+                    var bp = pp.offset(dx, dy, dz);
+                    if (!mc.level.getFluidState(bp).getType().isSame(Fluids.EMPTY) && mc.level.getFluidState(bp).getType().isSame(Fluids.WATER)) { src = bp.immutable(); break; }
+                }
+        if (src == null) return;
 
-            ctx.highlight(new AABB(bp), colour, true);
-            ctx.beam(bp.getX() + 0.5, bp.getY() + 1, bp.getZ() + 0.5,
-                colour | 0xFF000000, 3, true);
+        Set<Long> water = new HashSet<>();
+        Deque<BlockPos> q = new ArrayDeque<>();
+        q.add(src); water.add(k(src));
+        int budget = 3000;
+        int[][] flow = {{1,0,0},{-1,0,0},{0,0,1},{0,0,-1},{0,-1,0}}; // water spreads sideways + down
+        while (!q.isEmpty() && budget-- > 0) {
+            BlockPos c = q.poll();
+            // did the stream hit a goal? light it bright
+            for (int[] d : new int[][]{{0,-1,0},{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}}) {
+                Long gk = k(c.offset(d[0], d[1], d[2]));
+                if (goals.containsKey(gk)) {
+                    ctx.beam(c.getX()+0.5, c.getY()+2, c.getZ()+0.5, goals.get(gk) | 0xFF000000, 12, true);
+                }
+            }
+            for (int[] d : flow) {
+                BlockPos n = c.offset(d[0], d[1], d[2]);
+                if (water.contains(k(n)) || n.distSqr(src) > 600) continue;
+                if (mc.level.getFluidState(n).getType().isSame(Fluids.WATER)) { water.add(k(n)); q.add(n); }
+            }
         }
+        // faint trace of where the water actually is right now
+        for (long wk : water) ctx.highlight(box(wk, src.getY()), 0x3055AAFF, true);
     }
+
+    private static int goalColour(String id) {
+        if (id.contains("red_terracotta") || id.contains("red_wool") || id.contains("red_concrete")) return 0xFF3333;
+        if (id.contains("orange") || id.contains("gold")) return 0xFFAA00;
+        if (id.contains("green") || id.contains("emerald")) return 0x55FF55;
+        if (id.contains("blue") || id.contains("diamond")) return 0x55FFFF;
+        if (id.contains("white") || id.contains("quartz")) return 0xFFFFFF;
+        return 0;
+    }
+
+    private static long k(BlockPos p) { return p.asLong(); }
+    private static AABB box(long packed, int approxY) { BlockPos p = BlockPos.of(packed); return new AABB(p); }
 }
