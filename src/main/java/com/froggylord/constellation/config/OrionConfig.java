@@ -111,4 +111,6 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean secretChimeCustom = true;  // custom sound on secret collection (cmp. Skyblocker)
     public boolean waterboardSolver = true;    // highlight water puzzle gates (cmp. Odin waterSolutions)
     public boolean iceFillSolver = true;       // show ice fill path (cmp. Odin iceFillFloors)
+    public boolean teleportMazeSolver = true;  // highlight correct teleport pad (cmp. Skyblocker)
+    public boolean silverfishSolver = true;    // highlight silverfish BFS path (cmp. Skyblocker)
 }
