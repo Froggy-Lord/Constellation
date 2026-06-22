@@ -160,6 +160,24 @@ public class LyraEconomy extends BaseConstellation {
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        // /buy <item> — opens bazaar search
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("buy")
+            .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("item", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                .executes(ctx -> {
+                    String item = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "item");
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.connection.sendCommand("bz " + item);
+                    return 1;
+                })));
+        // /sell <item> — opens bazaar to sell
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sell")
+            .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("item", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                .executes(ctx -> {
+                    String item = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "item");
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) mc.player.connection.sendCommand("bz " + item);
+                    return 1;
+                })));
         if (cfg != null && cfg.profileCommand) {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("profile")
                 .executes(ctx -> {
