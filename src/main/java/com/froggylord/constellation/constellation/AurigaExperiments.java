@@ -44,10 +44,10 @@ public class AurigaExperiments {
         int last = -1;
         for (int i = 1; i < chest; i++) {
             ItemStack s = cs.getMenu().slots.get(i).getItem();
-            if (s.isEmpty() || s.getDescriptionId().contains("stained_glass")) continue;
+            if (s.isEmpty() || s.getItem().getDescriptionId().contains("stained_glass")) continue;
             if (last >= 0) {
                 int prevVal = itemVal(cs.getMenu().slots.get(last).getItem());
-                int curVal = itemVal(s.getItem());
+                int curVal = itemVal(s);
                 if (curVal < prevVal && curVal >= 0 && prevVal >= 0) {
                     box(cs, g, cs.getMenu().slots.get(last), 0xA0FF2020);
                     box(cs, g, cs.getMenu().slots.get(i), 0xA020FF20);
@@ -58,7 +58,8 @@ public class AurigaExperiments {
     }
 
     private static int itemVal(ItemStack s) {
-        String id = s.getDescriptionId();
+        if (s == null || s.isEmpty()) return -1;
+        String id = s.getItem().getDescriptionId();
         if (id.contains("0")) return 0;
         if (id.contains("1")) return 1;
         if (id.contains("2")) return 2;
@@ -84,7 +85,7 @@ public class AurigaExperiments {
         for (int i = 0; i < chest; i++) {
             ItemStack s = cs.getMenu().slots.get(i).getItem();
             if (s.isEmpty()) { names.remove(i); revealed.remove(i); continue; }
-            String id = s.getDescriptionId();
+            String id = s.getItem().getDescriptionId();
             // skip glass/clay spacers — hypixel fills empty slots with these
             if (id.contains("stained_glass") || id.contains("clay") || id.contains("glass_pane") || id.contains("terracotta")) { names.remove(i); continue; }
             String nm = net.minecraft.ChatFormatting.stripFormatting(s.getHoverName().getString());
