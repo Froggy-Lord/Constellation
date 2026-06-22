@@ -200,7 +200,7 @@ public class ConfigScreen extends Screen {
                     .b("Safe mode", () -> c.triggerSafeMode, v -> { c.triggerSafeMode = v; ConstellationClient.saveConfig(); }));
             }
             case "orion" -> {
-                cats = new String[]{"HUD", "Map", "Secrets", "Party"};
+                cats = new String[]{"HUD", "Map", "Secrets", "Party", "Solvers", "Combat"};
                 OrionConfig c = cfg.orion;
                 modules.add(new Module("scoreHud", "Live 0-300 score", "HUD",
                     () -> c.scoreHud, v -> { c.scoreHud = v; ConstellationClient.saveConfig(); })
@@ -255,6 +255,54 @@ public class ConfigScreen extends Screen {
                     () -> c.autoRequeue, v -> { c.autoRequeue = v; ConstellationClient.saveConfig(); })
                     .b("Safe mode", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); })
                     .b("Confirm first", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); }));
+                // solvers
+                modules.add(new Module("terminalSolvers", "F7 phase-3 terminals", "Solvers",
+                    () -> c.terminalSolvers, v -> { c.terminalSolvers = v; ConstellationClient.saveConfig(); })
+                    .b("Show numbers", () -> c.terminalNumbers, v -> { c.terminalNumbers = v; ConstellationClient.saveConfig(); })
+                    .b("Block wrong clicks", () -> c.blockWrongTerminalClicks, v -> { c.blockWrongTerminalClicks = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("blazeSolver", "F3/M3 blaze puzzle", "Solvers",
+                    () -> c.blazeSolver, v -> { c.blazeSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Show labels", true));
+                modules.add(new Module("simonSaysSolver", "Simon Says — highlight button", "Solvers",
+                    () -> c.simonSaysSolver, v -> { c.simonSaysSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Sound", true));
+                modules.add(new Module("threeWeirdosSolver", "Three Weirdos — correct chest", "Solvers",
+                    () -> c.threeWeirdosSolver, v -> { c.threeWeirdosSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Highlight all", false));
+                modules.add(new Module("triviaSolver", "Trivia — highlight answer", "Solvers",
+                    () -> c.triviaSolver, v -> { c.triviaSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Show question", false));
+                modules.add(new Module("creeperBeamsSolver", "Creeper Beams — lantern links", "Solvers",
+                    () -> c.creeperBeamsSolver, v -> { c.creeperBeamsSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Beam colour", true));
+                // combat
+                modules.add(new Module("starredMobs", "Starred / objective mobs", "Combat",
+                    () -> c.starredMobs, v -> { c.starredMobs = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> false, v -> {}) // always depth-tested
+                    .sub("Show ✯", true));
+                modules.add(new Module("secretBats", "Secret bat highlights", "Combat",
+                    () -> c.secretBats, v -> { c.secretBats = v; ConstellationClient.saveConfig(); })
+                    .b("Filter doors", () -> true, v -> {}) // always filtered
+                    .sub("Glow", false));
+                modules.add(new Module("lividFinder", "F5/M5 — hide fake clones", "Combat",
+                    () -> c.lividFinder, v -> { c.lividFinder = v; ConstellationClient.saveConfig(); })
+                    .b("Show HP bar", () -> true, v -> {})
+                    .sub("Box colour", true));
+                modules.add(new Module("teammateBoxes", "Teammate highlights", "Combat",
+                    () -> c.teammateBoxes, v -> { c.teammateBoxes = v; ConstellationClient.saveConfig(); })
+                    .b("Names", () -> true, v -> {})
+                    .sub("Colour by class", false));
+                modules.add(new Module("dropEsp", "Dropped items ESP", "Combat",
+                    () -> c.dropEsp, v -> { c.dropEsp = v; ConstellationClient.saveConfig(); })
+                    .sub("Show labels", true)
+                    .sub("Distance", true));
+                modules.add(new Module("blessingDisplay", "Blessing levels HUD", "Combat",
+                    () -> c.blessingDisplay, v -> { c.blessingDisplay = v; ConstellationClient.saveConfig(); })
+                    .sub("Compact", true));
+                modules.add(new Module("doorTracker", "Wither/blood key + door ESP", "Combat",
+                    () -> c.doorTracker, v -> { c.doorTracker = v; ConstellationClient.saveConfig(); })
+                    .b("Key beam", () -> c.doorTracker, v -> c.doorTracker = v)
+                    .sub("Door colours", true));
             }
             // generic auto-builder for every other constellation — scans the config fields and
             // builds modules from every boolean toggle, grouped loosely by name
