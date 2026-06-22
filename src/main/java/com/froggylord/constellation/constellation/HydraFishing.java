@@ -282,6 +282,17 @@ public class HydraFishing extends BaseConstellation {
                     return col + "🎣 " + secs + "s";
                 },
                 HudPosition.of(50, 142), cfg.fishingRodTimerHud));
+        if (cfg.baitWarningsHud) {
+            hud.register(new HudWidget("hydra-baitwarn", "BaitWarn",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Bait") && (line.contains("low") || line.contains("0"))) return "§c⚠ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 150), cfg.baitWarningsHud));
+        }
         }
     }
 }
