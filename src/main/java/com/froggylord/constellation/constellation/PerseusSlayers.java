@@ -92,7 +92,16 @@ public class PerseusSlayers extends BaseConstellation {
             String s = msg.getString();
             // endstone protector spawn
             if (s.contains("The Endstone Protector") || s.contains("Protector") && s.contains("spawn"))
-                zealotKills = 0; 
+                zealotKills = 0;
+            // broodmother in spider's den — real lines: "Broodmother spawned!" / "Broodmother§7: §eAlive!"
+            if (s.contains("Broodmother") && (s.contains("spawned") || s.contains("Alive"))) {
+                var mc2 = net.minecraft.client.Minecraft.getInstance();
+                if (mc2.player != null) {
+                    mc2.gui.hud.resetTitleTimes();
+                    mc2.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§4🕷 Broodmother!"));
+                    mc2.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 0.8f);
+                }
+            }
             
             if (s.contains("SUMMONING EYE") || s.contains("Summoning Eye")) {
                 summoningEyes++;
