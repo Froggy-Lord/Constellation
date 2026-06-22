@@ -110,8 +110,9 @@ public class AurigaMisc extends BaseConstellation {
 
 
     private static String chocPerSec = null;
+    // real gui: "26,326.3 per second" and "26,326.3 Chocolate per second" — Chocolate optional, § codes stripped
     private static final java.util.regex.Pattern CPS =
-        java.util.regex.Pattern.compile("([\\d,.]+) Chocolate per second");
+        java.util.regex.Pattern.compile("([\\d,.]+)\\s*(?:Chocolate\\s*)?per second");
 
     private static void readChocolate() {
         var mc = net.minecraft.client.Minecraft.getInstance();
