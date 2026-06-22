@@ -106,6 +106,32 @@ public class AquilaMining extends BaseConstellation {
             }
         });
 
+        // Pickobulus prediction — highlight the break zone of the targeted block
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.pickobulusPreview || !inMining()) return;
+            var mc = net.minecraft.client.Minecraft.getInstance();
+            if (mc.player == null || mc.hitResult == null) return;
+            if (mc.hitResult.getType() != net.minecraft.world.phys.HitResult.Type.BLOCK) return;
+            var stack = mc.player.getMainHandItem();
+            if (stack.isEmpty()) return;
+            String name = stack.getItem().getDescriptionId();
+            if (!name.contains("pickaxe") && !name.contains("drill") && !name.contains("gauntlet")) return;
+            var hit = (net.minecraft.world.phys.BlockHitResult) mc.hitResult;
+            var center = hit.getBlockPos();
+            // Skyblocker uses a radius based on Pickobulus level (2-4 blocks).
+            // we default to 2 for visibility; the user can spot-check from the highlight.
+            int r = 2;
+            for (int dx = -r; dx <= r; dx++)
+                for (int dy = -r; dy <= r; dy++)
+                    for (int dz = -r; dz <= r; dz++) {
+                        if (dx*dx + dy*dy + dz*dz > r*r) continue;
+                        var bp = center.offset(dx, dy, dz);
+                        var bs = mc.level.getBlockState(bp);
+                        if (bs.isAir()) continue;
+                        wctx.highlight(new net.minecraft.world.phys.AABB(bp), 0x40AAFF00, false);
+                    }
+        });
+
         // mineshaft entry + scatha — rare events worth a title ping
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
