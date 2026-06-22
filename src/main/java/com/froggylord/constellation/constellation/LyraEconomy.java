@@ -56,13 +56,14 @@ public class LyraEconomy extends BaseConstellation {
         if (cfg.bazaarUndercutAlert) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
-                String s = msg.getString();
-                if ((s.contains("undercut") || s.contains("undercut")) && (s.contains("Bazaar") || s.contains("order"))) {
-                    var mc = Minecraft.getInstance();
-                    if (mc.player != null) {
-                        mc.player.sendSystemMessage(Component.literal("§6⚠ Bazaar undercut! §7" + s));
-                        mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.6f);
-                    }
+                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
+                // real bazaar line: "[Bazaar] (Bought|Sold|Order Flipped!) Nx <item> for <coins> coins"
+                var bm = BAZAAR.matcher(s);
+                if (bm.find()) {
+                    long coins = (long) Double.parseDouble(bm.group(2).replace(",", ""));
+                    if (bm.group(1).startsWith("Sold")) bazaarSold += coins;
+                    else if (bm.group(1).startsWith("Bought")) bazaarSpent += coins;
+                    bazaarAt = System.currentTimeMillis();
                 }
             });
         }
@@ -93,6 +94,8 @@ public class LyraEconomy extends BaseConstellation {
     }
 
     private static final Pattern ESSENCE = Pattern.compile("([A-Za-z]+) Essence(?: x(\\d+))?");
+    private static final Pattern BAZAAR = Pattern.compile("\\[Bazaar] (Bought|Sold|Order Flipped!)[^f]*for ([\\d,.]+) coins");
+    private static long bazaarSold = 0, bazaarSpent = 0, bazaarAt = 0;
     private static String essenceType = "";
     private static int essenceSession = 0;
     private static long essenceAt = 0;
@@ -226,6 +229,14 @@ public class LyraEconomy extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 122), cfg.salvageHelper));
+        }
+        if (cfg.bazaarUndercutAlert) {
+            hud.register(new HudWidget("lyra-bazaar", "Bazaar",
+                () -> {
+                    if ((bazaarSold == 0 && bazaarSpent == 0) || System.currentTimeMillis() - bazaarAt > 600_000) return null;
+                    return "§a+" + compact(bazaarSold) + " §c-" + compact(bazaarSpent);
+                },
+                HudPosition.of(2, 130), cfg.bazaarUndercutAlert));
         }
     }
 
