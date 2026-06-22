@@ -84,4 +84,7 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean threeWeirdosSolver = true;
     public boolean triviaSolver = true;
     public boolean creeperBeamsSolver = true;
+
+    // F5/M5 Livid fight — show only the real clone, hide the 8 fakes
+    public boolean lividFinder = true;
 }

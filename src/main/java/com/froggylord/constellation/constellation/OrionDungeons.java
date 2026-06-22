@@ -41,6 +41,8 @@ public class OrionDungeons extends BaseConstellation {
         DoorHighlighter.init();
         // puzzle solvers — Simon Says, Three Weirdos, Trivia (chat + screen) + Creeper Beams
         OrionPuzzles.init(cfg);
+        // F5/M5 Livid finder — hide wrong clones, box real one by HP
+        LividFinder.init();
 
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
@@ -56,6 +58,9 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(DoorHighlighter::draw);
         // creeper beams — draw links between sea lanterns
         ConstellationClient.world().register(OrionPuzzles::drawBeams);
+        // F5/M5 Livid finder — hide wrong clones, box the real one
+        LividFinder.init();
+        ConstellationClient.world().register(LividFinder::draw);
 
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
