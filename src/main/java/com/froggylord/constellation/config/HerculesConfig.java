@@ -30,4 +30,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean farmingXpDisplay = true;
     public boolean farmingCapsDisplay = true;
     public boolean visitorProfitTracker = true;
+    public boolean pestRepellentTimer = true;
+    public boolean cropUpgradeHelper = true;
 }
