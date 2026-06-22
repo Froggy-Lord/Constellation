@@ -128,13 +128,16 @@ public class PerseusSlayers extends BaseConstellation {
                     }
                 }
             }
-            // Skill level-up — title ping
-            if (cfg.skillLevelUpAlert && (s.contains("LEVEL UP") || s.contains("level up") || s.contains("Skill Level Up"))) {
+            // Skill level-up — strip formatting before check (Hypixel uses § codes)
+            if (cfg.skillLevelUpAlert) {
+                String stripped2 = net.minecraft.ChatFormatting.stripFormatting(s);
+                if (stripped2.contains("LEVEL UP") || stripped2.contains("SKYBLOCK LEVEL UP") || stripped2.contains("SKILL LEVEL UP")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
                     mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§e⬆ LEVEL UP!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                }
                 }
             }
             // Broken Hyperion / wither blade alert — title ping
@@ -146,13 +149,16 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.4f);
                 }
             }
-            // Rare drop effect — title ping for RNG drops
-            if (cfg.rareDropEffect && (s.contains("RARE DROP") || s.contains("CRAZY RARE") || s.contains("PRAY RNGESUS"))) {
+            // Rare drop effect — strip formatting before checking (Hypixel uses § codes)
+            if (cfg.rareDropEffect) {
+                String stripped = net.minecraft.ChatFormatting.stripFormatting(s);
+                if (stripped.contains("RARE DROP") || stripped.contains("CRAZY RARE DROP") || stripped.contains("PRAY RNGESUS")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
-                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§d§k!!!§r §6" + s.trim() + " §d§k!!!"));
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§d§k!!!§r §6" + stripped + " §d§k!!!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                }
                 }
             }
             // Brood Mother spawn alert (SBA feature)
