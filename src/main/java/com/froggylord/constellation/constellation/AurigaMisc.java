@@ -221,6 +221,16 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 166), cfg.evolvingItemTimer));
+        if (cfg.teleportPadHelper) {
+            hud.register(new HudWidget("auriga-telepad", "TelePad",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Pad") || line.contains("Teleport")) return "§d🌀 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, 174), cfg.teleportPadHelper));
+        }
         }
         }
         }
