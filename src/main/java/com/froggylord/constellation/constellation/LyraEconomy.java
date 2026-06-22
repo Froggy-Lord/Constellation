@@ -43,6 +43,24 @@ public class LyraEconomy extends BaseConstellation {
         cfg = (LyraConfig) getConfig();
         // refresh the parsed purse each second
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
+        // auction alerts — outbid, sold, expired
+        if (cfg.auctionOutbidAlert || cfg.auctionSoldAlert) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                var mc = Minecraft.getInstance();
+                if (mc.player == null) return;
+                if (cfg.auctionOutbidAlert && s.contains("outbid") && s.contains("auction")) {
+                    mc.player.sendSystemMessage(Component.literal("§6⚠ Outbid! §7" + s));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.7f);
+                }
+                if (cfg.auctionSoldAlert && (s.contains("sold") || s.contains("expired") || s.contains("ended")) && s.contains("auction")) {
+                    mc.player.sendSystemMessage(Component.literal(s.contains("sold") ? "§a💰 Sold! §7" + s : "§c⏰ Expired! §7" + s));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 0.8f, 1.2f);
+                }
+            });
+        }
+
         // extra item tooltip lines (reforge, stars, hpb, recomb, sb id)
         LyraTooltips.init(cfg);
         // compact slot markers (pet level, stars, cake year)

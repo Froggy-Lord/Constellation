@@ -31,4 +31,6 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipAttributes = true; // show item attributes (Mana Pool, Breeze, etc.)
     public boolean tooltipSalvageable = true; // mark museum-donated items safe to salvage
     public boolean profileCommand = true; // /profile shows quick stats summary
+    public boolean auctionOutbidAlert = true; // highlight outbid messages (cmp. Skyblocker)
+    public boolean auctionSoldAlert = true;   // highlight sold/expired messages (cmp. Skyblocker)
 }
