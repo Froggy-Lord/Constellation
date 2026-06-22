@@ -30,4 +30,6 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean harvestFestivalHelper = true;
     public boolean anniversaryEventHelper = true;
     public boolean yearOfThePigHelper = true;
+    public boolean yearOfTheSealHelper = true;
+    public boolean greatSpookHelper = true;
 }
