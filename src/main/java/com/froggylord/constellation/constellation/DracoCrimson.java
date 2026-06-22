@@ -97,7 +97,9 @@ public class DracoCrimson extends BaseConstellation {
             hud.register(new HudWidget("draco-kuudra", "Kuudra",
                 () -> {
                     if (kuudraPhase.isEmpty() || System.currentTimeMillis() - kuudraPhaseAt > 120_000) return null;
-                    return "§6Kuudra: §f" + kuudraPhase;
+                    long elapsed = (System.currentTimeMillis() - kuudraPhaseAt) / 1000;
+                    String timer = kuudraPhase.equals("Done") ? "" : " §7(" + elapsed + "s)";
+                    return "§6Kuudra: §f" + kuudraPhase + timer;
                 },
                 HudPosition.of(50, 80), cfg.kuudraPhaseHud));
         }
