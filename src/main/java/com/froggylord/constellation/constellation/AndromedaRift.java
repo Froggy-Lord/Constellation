@@ -27,7 +27,7 @@ public class AndromedaRift extends BaseConstellation {
     private static int enigmaSouls = 0;
     private static int effigies = 0;
     private static long motesSession = 0;
-    private static final java.util.regex.Pattern MOTES = java.util.regex.Pattern.compile("([\\d,.]+) Motes");
+    private static final Pattern MOTES_GAIN = Pattern.compile("([\\d,.]+) Motes");
     private static long lowTimeAt = 0;
 
     @Override
@@ -52,7 +52,7 @@ public class AndromedaRift extends BaseConstellation {
             }
             // motes — rift currency, real line is "+<n> Motes" on pickup/sell
             if (cfg.moteProfitTracker) {
-                var mm = MOTES.matcher(net.minecraft.ChatFormatting.stripFormatting(s));
+                var mm = MOTES_GAIN.matcher(net.minecraft.ChatFormatting.stripFormatting(s));
                 if (mm.find() && s.contains("+")) {
                     long got = (long) Double.parseDouble(mm.group(1).replace(",", ""));
                     motesSession += got;
