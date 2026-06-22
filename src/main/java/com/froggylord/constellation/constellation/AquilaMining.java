@@ -32,6 +32,7 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern COMPASS = Pattern.compile("Wishing Compass:?\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)");
     private static final Pattern FUEL = Pattern.compile("Fuel:?\\s*(\\d+\\.?\\d*)/(\\d+\\.?\\d*)k?");
     private static final Pattern COLD = Pattern.compile("Cold:?\\s*-?(\\d+)");
+    private static final Pattern HOTM = Pattern.compile("HOTM:?\\s*(\\d+)");
     private static final int[] COLD_STEPS = {25, 50, 75, 90, 95, 99};
 
     private AquilaConfig cfg;
@@ -114,6 +115,18 @@ public class AquilaMining extends BaseConstellation {
                     return col + "❄ " + c + "/100";
                 },
                 HudPosition.of(2, 106), cfg.coldHud));
+        }
+        if (cfg.hotmHud) {
+            hud.register(new HudWidget("aquila-hotm", "HOTM",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = HOTM.matcher(line);
+                        if (m.find()) return "§6HOTM " + m.group(1);
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 114), cfg.hotmHud));
         }
     }
 
