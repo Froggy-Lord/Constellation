@@ -350,6 +350,17 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 178), cfg.gemstoneMixtureHelper));
         }
+        if (cfg.metalDetectorHelper) {
+            hud.register(new HudWidget("aquila-metaldetector", "Detector",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Metal Detector") || line.contains("Treasure")) return "§6🔍 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 186), cfg.metalDetectorHelper));
+        }
         if (cfg.crystalNucleusWaypoints) {
             
             ConstellationClient.world().register(wctx -> {
