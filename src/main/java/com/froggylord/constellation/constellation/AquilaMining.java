@@ -35,6 +35,8 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern HOTM = Pattern.compile("HOTM:?\\s*(\\d+)");
     private static final Pattern DRILL_FUEL = Pattern.compile("(?:⛏\\s*)?(?:Drill\\s*)?Fuel:?\\s*([\\d,\\.]+[kKmM]?)\\s*/?\\s*([\\d,\\.]+[kKmM]?)?");
     private static final Pattern PICKONIMBUS = Pattern.compile("Pickonimbus:?\\s*([\\d,]+)\\s*/?\\s*([\\d,]+)");
+    private static double compassX = Double.NaN, compassZ = Double.NaN;
+    private static long compassSetAt = 0;
 
     // Fetchur item hints → correct item name (Skyblocker FetchurSolver mapping)
     private static final java.util.Map<String, String> FETCHUR = new java.util.HashMap<>();
@@ -94,6 +96,11 @@ public class AquilaMining extends BaseConstellation {
                     }
                 }
             }
+            // Wishing Compass: parses coordinates from chat
+            if (cfg.wishingCompassHelper && s.contains("Compass") && s.contains("points")) {
+                var cmat = java.util.regex.Pattern.compile("(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)").matcher(s);
+                if (cmat.find()) { compassX = Integer.parseInt(cmat.group(1)); compassZ = Integer.parseInt(cmat.group(3)); compassSetAt = System.currentTimeMillis(); }
+            }
             // Puzzler: "[NPC] Puzzler: <question>" → known answers
             if (cfg.puzzlerSolver && s.contains("Puzzler")) {
                 String low = s.toLowerCase(java.util.Locale.ROOT);
@@ -104,6 +111,17 @@ public class AquilaMining extends BaseConstellation {
                         mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[Puzzler] §fAnswer: §6" + block));
                 }
             }
+        });
+
+        // Wishing Compass waypoint — track the coordinates it gives
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.wishingCompassHelper || !inMining()) return;
+            if (Double.isNaN(compassX)) return;
+            var box = new net.minecraft.world.phys.AABB(compassX - 1, 60, compassZ - 1, compassX + 1, 200, compassZ + 1);
+            wctx.highlight(box, 0x40FF55FF, true);
+            wctx.beam(compassX, 80, compassZ, 0xFFFF55FF, 40, true);
+            // auto-clear after 60s so stale waypoints don't clutter
+            if (System.currentTimeMillis() - compassSetAt > 60_000) { compassX = Double.NaN; compassZ = Double.NaN; }
         });
 
         // Treasure chest ESP — highlight chests in Crystal Hollows
