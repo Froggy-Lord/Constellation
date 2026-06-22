@@ -54,6 +54,7 @@ public class OrionDungeons extends BaseConstellation {
                 String s = message.getString();
                 com.froggylord.constellation.data.DungeonScore.onChat(s);
                 com.froggylord.constellation.data.DefensiveTracker.onChat(s);
+                if (cfg.blessingDisplay) OrionBlessings.onChat(s);
                 // mimic party ping (respects streamer mode)
                 if (cfg.mimicPartyPing && !cfg.streamerMode && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!"))) {
                     var mc = Minecraft.getInstance();
@@ -120,6 +121,7 @@ public class OrionDungeons extends BaseConstellation {
                 RoomMatch.resetCache();
                 com.froggylord.constellation.data.DungeonScore.reset();
                 com.froggylord.constellation.data.DefensiveTracker.reset();
+                OrionBlessings.reset();
                 wasInDungeon = false;
                 // auto-requeue after a delay (configurable)
                 if (cfg.autoRequeue && !cfg.requeueSafeMode) {
@@ -146,6 +148,11 @@ public class OrionDungeons extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
+        if (cfg.blessingDisplay) {
+            hud.register(new HudWidget("orion-blessings", "Blessings",
+                () -> ConstellationClient.loc().inDungeons() ? OrionBlessings.display() : null,
+                HudPosition.of(6, 46), cfg.blessingDisplay));
+        }
         if (cfg.scoreHud) {
             hud.register(new HudWidget("orion-score", "Score",
                 () -> !scoreReady() ? null

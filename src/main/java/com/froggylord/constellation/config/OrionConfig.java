@@ -71,4 +71,8 @@ public class OrionConfig extends BaseConfigGroup {
 
     // F3/M3 blaze puzzle — box lowest + highest HP blaze, number the rest
     public boolean blazeSolver = true;
+
+    // dungeon blessings picked up this run
+    public boolean blessingDisplay = true;
+    public boolean spiritLeapHelperMenu = true;
 }
