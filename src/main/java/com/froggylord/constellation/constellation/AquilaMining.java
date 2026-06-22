@@ -37,6 +37,7 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern PICKONIMBUS = Pattern.compile("Pickonimbus:?\\s*([\\d,]+)\\s*/?\\s*([\\d,]+)");
     private static double compassX = Double.NaN, compassZ = Double.NaN;
     private static long compassSetAt = 0;
+    private static int scathaKills = 0;
 
     // Fetchur item hints → correct item name (Skyblocker FetchurSolver mapping)
     private static final java.util.Map<String, String> FETCHUR = new java.util.HashMap<>();
@@ -181,12 +182,15 @@ public class AquilaMining extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.9f, 1.0f);
                 }
             }
-            if (cfg.scathaAlert && s.contains("Scatha") && (s.contains("spawned") || s.contains("found") || s.contains("worm"))) {
-                var mc = net.minecraft.client.Minecraft.getInstance();
-                if (mc.player != null) {
-                    mc.gui.hud.resetTitleTimes();
-                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§6🐛 SCATHA!"));
-                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.9f, 1.1f);
+            if (s.contains("Scatha")) {
+                if (s.contains("killed") || s.contains("slain") || s.contains("defeated")) scathaKills++;
+                else if (cfg.scathaAlert && (s.contains("spawned") || s.contains("found") || s.contains("worm"))) {
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§6🐛 SCATHA!"));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.9f, 1.1f);
+                    }
                 }
             }
         });
@@ -285,6 +289,11 @@ public class AquilaMining extends BaseConstellation {
                     return found > 0 ? "§d💎 Nucleus: " + found + "/5" : null;
                 },
                 HudPosition.of(2, 138), cfg.nucleusHelper));
+        }
+        if (cfg.scathaCounter) {
+            hud.register(new HudWidget("aquila-scatha", "Scatha",
+                () -> scathaKills > 0 ? "§6🐛 Scatha: " + scathaKills + " kills" : null,
+                HudPosition.of(2, 146), cfg.scathaCounter));
         }
     }
 

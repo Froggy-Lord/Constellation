@@ -21,4 +21,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean wishingCompassHelper = true; // track compass readings for triangulation (cmp. Skyblocker NucleusHelper)
     public boolean nucleusHelper = true;  // show which crystals you have/need (cmp. Skyblocker NucleusHelper)
     public boolean templePearlHelper = true; // pearl clip waypoint for temple skip
+    public boolean scathaCounter = true;      // track scatha worm kills (cmp. Skyblocker ScathaTracker)
+    public boolean yolkarSpeedup = true;       // skip King Yolkar dialogue (cmp. Skyblocker)
 }
