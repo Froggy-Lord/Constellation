@@ -25,4 +25,6 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean bladeVolcanoTimer = true;
     public boolean trophyDetailHud = true;
     public boolean kuudraStunHelper = true;
+    public boolean kuudraSupplyCounter = true;
+    public boolean freshToolsPing = true;
 }
