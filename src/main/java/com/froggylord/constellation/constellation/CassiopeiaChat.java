@@ -430,9 +430,15 @@ public class CassiopeiaChat extends BaseConstellation {
 
     private static void sendCmd(String cmd) {
         var mc = Minecraft.getInstance();
-        if (mc.player != null) {
-            mc.player.connection.sendCommand(cmd);
-        }
+        if (mc.player == null) return;
+        // expand CommandKeys-style placeholders
+        String expanded = cmd
+            .replace("%myname%", mc.player.getName().getString())
+            .replace("%x%", String.valueOf((int)mc.player.getX()))
+            .replace("%y%", String.valueOf((int)mc.player.getY()))
+            .replace("%z%", String.valueOf((int)mc.player.getZ()))
+            .replace("%pos%", (int)mc.player.getX() + " " + (int)mc.player.getY() + " " + (int)mc.player.getZ());
+        mc.player.connection.sendCommand(expanded);
     }
 
     /** Crude expression evaluator for basic arithmetic. */
