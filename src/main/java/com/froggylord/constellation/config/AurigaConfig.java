@@ -16,4 +16,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean essenceShopHelper = true; // show essence costs + upgrades (cmp. Skyblocker)
     public boolean reforgeHelper = true;     // show reforge stats comparison (cmp. Skyblocker)
     public boolean chocolateFactoryHelper = true; // Chocolate Factory event tracker (cmp. Skyblocker)
+    public boolean minionHopperTracker = true;   // show minion hopper contents (cmp. Skyblocker)
+    public boolean evolvingItemTimer = true;       // show evolving item time remaining (cmp. Skyblocker)
 }

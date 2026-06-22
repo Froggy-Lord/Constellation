@@ -13,4 +13,6 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean markedPlayers = true;   // notify when marked friends join (cmp. Skyblocker)
     public boolean deathHighlightFrames = true; // red frame on dead party members (cmp. Skyblocker)
     public boolean customNameReplacer = false;  // replace player names with nicknames (cmp. Skyblocker)
+    public boolean partyTriggerSystem = true;   // !warp !join !ptme bot commands (cmp. Skyblocker)
+    public boolean streamerModeParty = false;    // hide party members' names in screenshots
 }

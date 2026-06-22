@@ -13,4 +13,7 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean mountainTopHelper = true;  // Mountain Top area hints
     public boolean stillgoreHelper = true;    // Stillgore Chateau area hints
     public boolean colosseumHelper = true;     // Colosseum area hints
+    public boolean danceRoomHelper = true;     // Dance Room area hints
+    public boolean westVillageHelper = true;   // West Village area hints
+    public boolean wyldWoodsHelper = true;     // Wyld Woods area hints
 }

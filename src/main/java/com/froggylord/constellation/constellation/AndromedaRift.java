@@ -144,6 +144,21 @@ public class AndromedaRift extends BaseConstellation {
                 () -> inRift() ? "§c🏟 Colosseum" : null,
                 HudPosition.of(2, 214), cfg.colosseumHelper));
         }
+        if (cfg.danceRoomHelper) {
+            hud.register(new HudWidget("andromeda-dance", "DanceRoom",
+                () -> inRift() ? "§d💃 Dance Room" : null,
+                HudPosition.of(2, 222), cfg.danceRoomHelper));
+        }
+        if (cfg.westVillageHelper) {
+            hud.register(new HudWidget("andromeda-westvillage", "WestVillage",
+                () -> inRift() ? "§e🏘 West Village" : null,
+                HudPosition.of(2, 230), cfg.westVillageHelper));
+        }
+        if (cfg.wyldWoodsHelper) {
+            hud.register(new HudWidget("andromeda-wyld", "WyldWoods",
+                () -> inRift() ? "§2🌳 Wyld Woods" : null,
+                HudPosition.of(2, 238), cfg.wyldWoodsHelper));
+        }
     }
 
     private static boolean inRift() {
