@@ -28,8 +28,46 @@ public class DracoCrimson extends BaseConstellation {
 
     private DracoConfig cfg;
 
+    private static String kuudraPhase = "";
+    private static long kuudraPhaseAt = 0;
+
     @Override
-    public void init(InitContext ctx) { cfg = (DracoConfig) getConfig(); }
+    public void init(InitContext ctx) {
+        cfg = (DracoConfig) getConfig();
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            String s = msg.getString();
+
+            // Vanquisher — spawns for everyone nearby, easy to miss in the lava glow
+            if (cfg.vanquisherAlert && s.contains("A Vanquisher is spawning nearby")) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§c☠ VANQUISHER!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.3f);
+                    if (cfg.vanquisherShare) {
+                        var p = mc.player.blockPosition();
+                        mc.player.connection.sendCommand("pc Vanquisher @ " + p.getX() + " " + p.getY() + " " + p.getZ());
+                    }
+                }
+            }
+            // Kuudra phase cues from the fight chatter
+            if (cfg.kuudraPhaseHud) {
+                String ph = kuudraPhaseOf(s);
+                if (ph != null) { kuudraPhase = ph; kuudraPhaseAt = System.currentTimeMillis(); }
+            }
+        });
+    }
+
+    private static String kuudraPhaseOf(String s) {
+        if (s.contains("Bring the Fuel Cell")) return "Supplies";
+        if (s.contains("Build the Ballista")) return "Build Ballista";
+        if (s.contains("Kuudra has surfaced") || s.contains("STUN")) return "Stun";
+        if (s.contains("Kuudra is breaking through")) return "Defend";
+        if (s.contains("DPS") || s.contains("Burn the Supply")) return "DPS";
+        if (s.contains("KUUDRA DOWN") || s.contains("defeated Kuudra")) return "Done";
+        return null;
+    }
 
     @Override
     public void registerHud(HudManager hud) {
@@ -43,6 +81,14 @@ public class DracoCrimson extends BaseConstellation {
             hud.register(new HudWidget("draco-dojo", "Dojo",
                 () -> inCrimson() ? dojoLine() : null,
                 HudPosition.of(2, 140), cfg.activityHud));
+        }
+        if (cfg.kuudraPhaseHud) {
+            hud.register(new HudWidget("draco-kuudra", "Kuudra",
+                () -> {
+                    if (kuudraPhase.isEmpty() || System.currentTimeMillis() - kuudraPhaseAt > 120_000) return null;
+                    return "§6Kuudra: §f" + kuudraPhase;
+                },
+                HudPosition.of(50, 80), cfg.kuudraPhaseHud));
         }
     }
 
