@@ -97,4 +97,8 @@ public class OrionConfig extends BaseConfigGroup {
     // F3/M3 Guardian health display and Shadow Assassin warning
     public boolean guardianHealth = true;
     public boolean shadowAssassinAlert = true;
+
+    // miniboss highlights + rare room alerts
+    public boolean minibossHighlights = true;
+    public boolean rareRoomAlerts = true;
 }

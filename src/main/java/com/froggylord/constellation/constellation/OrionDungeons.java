@@ -26,6 +26,14 @@ public class OrionDungeons extends BaseConstellation {
     private int doorsOpened = 0;
     private static long fireFreezeMs = 0;
 
+    private static void rareRoomAlert(String room, String colour) {
+        var mc = Minecraft.getInstance();
+        if (mc.player != null) {
+            mc.player.sendSystemMessage(Component.literal(colour + "✦ Rare room: " + room));
+            mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.7f, 1.3f);
+        }
+    }
+
     @Override
     public void init(InitContext ctx) {
         cfg = (OrionConfig) getConfig();
@@ -71,6 +79,14 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.DungeonScore.onChat(s);
                 com.froggylord.constellation.data.DefensiveTracker.onChat(s);
                 if (cfg.blessingDisplay) OrionBlessings.onChat(s);
+                // rare room alerts
+                if (cfg.rareRoomAlerts) {
+                    String low = s.toLowerCase(java.util.Locale.ROOT);
+                    if (low.contains("trinity")) rareRoomAlert("Trinity", "§d");
+                    else if (low.contains("tomioka")) rareRoomAlert("Tomioka", "§b");
+                    else if (low.contains("duncan")) rareRoomAlert("Duncan", "§6");
+                    else if (low.contains("this room seems") && low.contains("empty")) rareRoomAlert("Empty Room", "§8");
+                }
                 // mimic party ping (respects streamer mode)
                 if (cfg.mimicPartyPing && !cfg.streamerMode && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!"))) {
                     var mc = Minecraft.getInstance();

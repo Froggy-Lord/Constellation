@@ -70,6 +70,25 @@ public final class CombatEsp {
                         name.getString(), 0xFF55FFFF, false);
                 }
             }
+            // miniboss highlights — LA, SA, Diamond Guy, King Midas, Spirit Bear
+            if (cfg.minibossHighlights) {
+                Component cn = e.getCustomName();
+                if (cn != null) {
+                    String nm = cn.getString().toLowerCase(java.util.Locale.ROOT);
+                    int col = 0xFFFF5555; // red default
+                    if (nm.contains("lost adventurer") || nm.contains("diamond guy") || nm.contains("angry archaeologist"))
+                        col = 0xFFFF5555; // red
+                    else if (nm.contains("shadow assassin"))
+                        col = 0xFFAA00FF; // purple
+                    else if (nm.contains("king midas"))
+                        col = 0xFFFFAA00; // gold
+                    else if (nm.contains("spirit bear"))
+                        col = 0xFFFFFFFF; // white
+                    else continue;
+                    ctx.outline(e.getBoundingBox().inflate(0.15), col, false);
+                    ctx.label(e.position().add(0, e.getBbHeight() + 0.3, 0), nm, col, false);
+                }
+            }
         }
     }
 
