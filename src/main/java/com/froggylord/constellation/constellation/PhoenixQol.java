@@ -124,6 +124,18 @@ public class PhoenixQol extends BaseConstellation {
                 if (mc.options != null) mc.options.screenEffectScale().set(0.0);
             });
         }
+        // auto-save reminder — ping every 5 min on Hypixel (cmp. Skyblocker SaveReminder)
+        if (cfg.autoSaveReminder) {
+            ConstellationClient.tick().every(6000, "phoenix-autosave", () -> {
+                if (!ConstellationClient.loc().onHypixel()) return;
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a⏰ Auto-save reminder — type /is or /hub to save!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 0.5f, 1.0f);
+                }
+            });
+        }
+
         // hideStatusEffects — needs particle-rendering mixin; deferred to avoid stripping actual effects
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
