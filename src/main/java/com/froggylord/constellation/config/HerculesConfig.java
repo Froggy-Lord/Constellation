@@ -12,4 +12,5 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean cropMilestones = true;
     public boolean visitorRequirements = true; // show what each visitor is offering
     public boolean composterHud = true; // organic matter + fuel display
+    public boolean speedHud = true; // Rancher's Boots speed cap
 }

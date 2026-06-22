@@ -28,6 +28,7 @@ public class HerculesFarming extends BaseConstellation {
     private static final Pattern PESTS = Pattern.compile("Pests:?\\s*(\\d+)");
     private static final Pattern MILESTONE = Pattern.compile("(\\w+) (?:Crop )?Milestone:?\\s*(\\d+)");
     private static final Pattern COMPOST = Pattern.compile("(?:Organic Matter|Compost):?\\s*([\\d,]+)");
+    private static final Pattern SPEED = Pattern.compile("(?:Speed|✦):?\\s*(\\d+)");
 
     private HerculesConfig cfg;
 
@@ -148,6 +149,18 @@ public class HerculesFarming extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 160), cfg.composterHud));
+        }
+        if (cfg.speedHud) {
+            hud.register(new HudWidget("hercules-speed", "Speed",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = SPEED.matcher(line);
+                        if (m.find()) return "§f✦ " + m.group(1) + " speed";
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 168), cfg.speedHud));
         }
     }
 
