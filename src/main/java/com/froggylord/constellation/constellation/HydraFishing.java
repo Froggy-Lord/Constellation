@@ -276,5 +276,16 @@ public class HydraFishing extends BaseConstellation {
                 },
                 HudPosition.of(50, 134), cfg.baitDisplay));
         }
+        if (cfg.fishingRodTimerHud) {
+            hud.register(new HudWidget("hydra-rodtimer", "RodTimer",
+                () -> {
+                    if (castAt == 0 || !ConstellationClient.loc().onHypixel()) return null;
+                    long secs = (System.currentTimeMillis() - castAt) / 1000;
+                    if (secs > 60) return null;
+                    String col = secs >= 20 ? "§6" : "§7";
+                    return col + "🎣 " + secs + "s";
+                },
+                HudPosition.of(50, 142), cfg.fishingRodTimerHud));
+        }
     }
 }

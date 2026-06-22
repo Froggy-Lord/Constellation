@@ -206,6 +206,7 @@ public class PerseusSlayers extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 46), cfg.bestiaryTracker));
+        }
         if (cfg.rngMeterDetail) {
             hud.register(new HudWidget("perseus-rng-detail", "RNGDetail",
                 () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,

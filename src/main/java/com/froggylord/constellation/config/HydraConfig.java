@@ -19,4 +19,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean baitDisplay = true;         // current bait + remaining uses (cmp. Skyblocker)
     public boolean lavaFishingHelper = true;   // highlight lava fishing spots (cmp. Skyblocker)
     public boolean chumHider = true;           // hide chum buckets in water (cmp. Skyblocker)
+    public boolean seaCreatureHealthHud = true; // show last SC health / kill time (cmp. Skyblocker)
+    public boolean fishingRodTimerHud = true;   // colour-change at 20s mark (cmp. Skyblocker)
 }
