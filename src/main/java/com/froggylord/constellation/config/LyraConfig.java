@@ -36,4 +36,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipAttributeShards = true; // show attribute shard details (cmp. Skyblocker)
     public boolean bazaarUndercutAlert = true; // alert when your bazaar offer gets undercut (cmp. Skyblocker)
     public boolean bazaarBookmarks = true; // save + recall favourite bazaar items
+    public boolean tooltipItemQuality = true; // show item quality (50/50, etc.) — cmp. Firmament
 }

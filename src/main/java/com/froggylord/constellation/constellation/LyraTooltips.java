@@ -95,6 +95,15 @@ public class LyraTooltips {
                 }
             }
 
+            if (cfg.tooltipItemQuality) {
+                int quality = extra.getIntOr("item_quality", extra.getIntOr("quality", extra.getIntOr("base_quality", -1)));
+                if (quality >= 0) {
+                    boolean maxed = quality >= 50;
+                    String col = maxed ? "§6" : "§7";
+                    lines.add(Component.literal(col + "Quality: " + quality + "/50" + (maxed ? " §6✦ MAX" : "")));
+                }
+            }
+
             if (cfg.tooltipSkyblockId) {
                 String id = extra.getStringOr("id", "");
                 if (!id.isEmpty()) lines.add(Component.literal("§8" + id));
