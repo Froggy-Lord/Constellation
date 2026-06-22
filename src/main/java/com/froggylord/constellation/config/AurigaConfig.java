@@ -28,4 +28,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean ultimateEnchantDisplay = true;
     public boolean dungeonJournalHelper = true;
     public boolean carnivalUpgradeHelper = true;
+    public boolean nucleusBundleHelper = true;
+    public boolean crystalHollowsShortcut = true;
 }
