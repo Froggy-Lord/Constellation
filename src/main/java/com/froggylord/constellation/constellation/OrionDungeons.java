@@ -25,6 +25,7 @@ public class OrionDungeons extends BaseConstellation {
     private boolean wasInDungeon = false;
     private int doorsOpened = 0;
     private static long fireFreezeMs = 0;
+    private static long spiritBowUntil = 0;
 
     private static void rareRoomAlert(String room, String colour) {
         var mc = Minecraft.getInstance();
@@ -92,6 +93,10 @@ public class OrionDungeons extends BaseConstellation {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
                 }
+                // Spirit Bow — pickup starts a 30s respawn timer
+                if (cfg.spiritBowTimer && s.contains("Spirit Bow") && s.contains("picked up"))
+                    spiritBowUntil = System.currentTimeMillis() + 30_000;
+
                 // Fire Freeze staff cooldown — chat says "Fire Freeze Staff is now ready!"
                 if (cfg.fireFreezeTimer && s.contains("Fire Freeze")) {
                     if (s.contains("ready")) fireFreezeMs = 0;
@@ -196,6 +201,15 @@ public class OrionDungeons extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
+        if (cfg.spiritBowTimer) {
+            hud.register(new HudWidget("orion-spiritbow", "SpiritBow",
+                () -> {
+                    long left = spiritBowUntil - System.currentTimeMillis();
+                    if (left <= 0) return null;
+                    return "§b🏹 Bow " + (left / 1000) + "s";
+                },
+                HudPosition.of(6, 38), cfg.spiritBowTimer));
+        }
         if (cfg.fireFreezeTimer) {
             hud.register(new HudWidget("orion-freeze", "Freeze",
                 () -> {

@@ -102,4 +102,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean minibossHighlights = true;
     public boolean rareRoomAlerts = true;
     public boolean mageBeamCleaner = true; // clean line instead of firework particles (cmp. Skyblocker MageBeamRenderer)
+    public boolean spiritBowTimer = true;  // show cooldown when spirit bow is picked up (cmp. Skyblocker)
 }
