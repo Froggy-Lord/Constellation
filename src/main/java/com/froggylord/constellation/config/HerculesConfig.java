@@ -22,4 +22,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean stereoHarmonyHelper = true; // harp note guide (cmp. SkyHanni)
     public boolean veridianHelper = true; // Veridian area farming hints (cmp. SkyHanni)
     public boolean yawPitchLock = true;   // lock yaw/pitch for perfect farming rows (cmp. SkyHanni)
+    public boolean vacuumSolver = true;   // show pest vacuum target positions (cmp. SkyHanni)
+    public boolean glowingMushrooms = true; // highlight glowing mushrooms in garden (cmp. SkyHanni)
 }
