@@ -27,6 +27,14 @@ public class LyraTooltips {
             CompoundTag extra = cd.copyTag().getCompoundOrEmpty("ExtraAttributes");
             if (extra.isEmpty()) return;
 
+            String sbId = extra.getStringOr("id", "");
+            if (cfg.tooltipBazaar && !sbId.isEmpty()) {
+                com.froggylord.constellation.api.BazaarApi.ensureFresh();
+                double[] bz = com.froggylord.constellation.api.BazaarApi.get(sbId);
+                if (bz != null && (bz[0] > 0 || bz[1] > 0))
+                    lines.add(Component.literal("§7Bazaar: §6" + money(bz[0]) + " §7buy §8| §6" + money(bz[1]) + " §7sell"));
+            }
+
             if (cfg.tooltipReforge) {
                 String mod = extra.getStringOr("modifier", "");
                 if (!mod.isEmpty()) lines.add(Component.literal("§7Reforge: §9" + cap(mod)));
@@ -56,6 +64,13 @@ public class LyraTooltips {
                 if (!id.isEmpty()) lines.add(Component.literal("§8" + id));
             }
         });
+    }
+
+    private static String money(double n) {
+        if (n < 1000) return String.format("%.1f", n);
+        if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+        if (n < 1_000_000_000) return String.format("%.2fM", n / 1_000_000.0);
+        return String.format("%.2fB", n / 1_000_000_000.0);
     }
 
     private static String cap(String s) {

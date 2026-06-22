@@ -16,6 +16,9 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean slotTextStars = true;
     public boolean slotTextCakeYear = true;
 
+    // live bazaar buy/sell in tooltips (public Hypixel feed, no key)
+    public boolean tooltipBazaar = true;
+
     // item tooltips (read straight off the item's hidden SkyBlock data, no API needed)
     public boolean tooltipSkyblockId = true;
     public boolean tooltipReforge = true;
