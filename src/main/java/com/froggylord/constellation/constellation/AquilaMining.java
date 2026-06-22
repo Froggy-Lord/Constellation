@@ -419,6 +419,16 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 234), cfg.crystalHollowsMapHelper));
+        if (cfg.templePearlHelper) {
+            hud.register(new HudWidget("aquila-templepearl", "TemplePearl",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Heavy Pearl") || line.contains("Temple")) return "§b🫧 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 242), cfg.templePearlHelper));
+        }
         }
         }
         }
