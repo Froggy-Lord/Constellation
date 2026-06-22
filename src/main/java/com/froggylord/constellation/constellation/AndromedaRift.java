@@ -238,6 +238,26 @@ public class AndromedaRift extends BaseConstellation {
             hud.register(new HudWidget("andromeda-crux", "Crux",
                 () -> inRift() ? "§d✦ Crux tracker" : null,
                 HudPosition.of(2, 262), cfg.cruxCounter));
+        if (cfg.bluetoothRingHelper) {
+            hud.register(new HudWidget("andromeda-bluetooth", "Bluetooth",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Bluetooth") || line.contains("Ring")) return "§9💍 " + line.trim();
+                    return "§9💍 Bluetooth Ring";
+                },
+                HudPosition.of(2, 270), cfg.bluetoothRingHelper));
+        }
+        if (cfg.vampireSlayerRiftHelper) {
+            hud.register(new HudWidget("andromeda-vampslayer", "VampSlayer",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Vampire") || line.contains("Slayer")) return "§4🧛 " + line.trim();
+                    return "§4🧛 Vampire Slayer";
+                },
+                HudPosition.of(2, 278), cfg.vampireSlayerRiftHelper));
+        }
         }
     }
 
