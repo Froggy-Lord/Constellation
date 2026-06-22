@@ -31,8 +31,12 @@ public class LyraTooltips {
             if (cfg.tooltipBazaar && !sbId.isEmpty()) {
                 com.froggylord.constellation.api.BazaarApi.ensureFresh();
                 double[] bz = com.froggylord.constellation.api.BazaarApi.get(sbId);
-                if (bz != null && (bz[0] > 0 || bz[1] > 0))
+                if (bz != null && (bz[0] > 0 || bz[1] > 0)) {
                     lines.add(Component.literal("§7Bazaar: §6" + money(bz[0]) + " §7buy §8| §6" + money(bz[1]) + " §7sell"));
+                    int count = stack.getCount();
+                    if (count > 1 && bz[1] > 0)
+                        lines.add(Component.literal("§7Stack (" + count + "): §6" + money(bz[1] * count)));
+                }
             }
 
             if (cfg.tooltipReforge) {
