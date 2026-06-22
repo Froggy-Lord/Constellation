@@ -195,6 +195,29 @@ public class ApolloHud extends BaseConstellation {
             },
             toPos(cfg.potions), cfg.potions.visible));
 
+        hud.register(new HudWidget("apollo-ehp", "EHP",
+            () -> {
+                if (!com.froggylord.constellation.core.ActionBar.hasData()) return null;
+                return "§c❤ " + compact(com.froggylord.constellation.core.ActionBar.effectiveHealth());
+            },
+            toPos(cfg.ehp), cfg.ehp.visible));
+
+        hud.register(new HudWidget("apollo-overflow", "Overflow",
+            () -> {
+                int o = com.froggylord.constellation.core.ActionBar.overflowMana();
+                if (!com.froggylord.constellation.core.ActionBar.hasData() || o <= 0) return null;
+                return "§3ʬ " + compact(o);
+            },
+            toPos(cfg.overflow), cfg.overflow.visible));
+
+        hud.register(new HudWidget("apollo-skill", "Skill",
+            () -> {
+                if (!com.froggylord.constellation.core.ActionBar.hasSkill()) return null;
+                return "§e" + com.froggylord.constellation.core.ActionBar.skillName()
+                    + " §f" + String.format("%.1f", com.froggylord.constellation.core.ActionBar.skillPercent()) + "%";
+            },
+            toPos(cfg.skill), cfg.skill.visible));
+
         hud.register(new HudWidget("apollo-orb", "Orb",
             () -> {
                 if (!ConstellationClient.loc().onHypixel()) return null;

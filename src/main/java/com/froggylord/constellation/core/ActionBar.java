@@ -18,10 +18,14 @@ public final class ActionBar {
 
     private static final Pattern HEALTH = Pattern.compile("(\\d[\\d,]*)/(\\d[\\d,]*)❤");
     private static final Pattern MANA = Pattern.compile("(\\d[\\d,]*)/(\\d[\\d,]*)✎");
+    private static final Pattern OVERFLOW = Pattern.compile("(\\d[\\d,]*)ʬ");
     private static final Pattern DEFENSE = Pattern.compile("(\\d[\\d,]*)❈");
+    private static final Pattern SKILL = Pattern.compile("\\+([\\d,.]+) (\\w+) \\(([\\d.]+)%\\)");
 
-    private static int health, maxHealth, mana, maxMana, defense;
-    private static long lastUpdate;
+    private static int health, maxHealth, mana, maxMana, defense, overflowMana;
+    private static String skillName = "";
+    private static double skillPercent;
+    private static long lastUpdate, lastSkillAt;
 
     public static void init() {
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
@@ -36,8 +40,16 @@ public final class ActionBar {
         if (h.find()) { health = num(h.group(1)); maxHealth = num(h.group(2)); }
         Matcher m = MANA.matcher(s);
         if (m.find()) { mana = num(m.group(1)); maxMana = num(m.group(2)); }
+        Matcher o = OVERFLOW.matcher(s);
+        if (o.find()) overflowMana = num(o.group(1));
         Matcher d = DEFENSE.matcher(s);
         if (d.find()) defense = num(d.group(1));
+        Matcher sk = SKILL.matcher(s);
+        if (sk.find()) {
+            skillName = sk.group(2);
+            try { skillPercent = Double.parseDouble(sk.group(3)); } catch (NumberFormatException ignored) {}
+            lastSkillAt = System.currentTimeMillis();
+        }
         lastUpdate = System.currentTimeMillis();
     }
 
@@ -57,4 +69,12 @@ public final class ActionBar {
     public static int mana() { return mana; }
     public static int maxMana() { return maxMana; }
     public static int defense() { return defense; }
+    public static int overflowMana() { return overflowMana; }
+
+    /** health scaled by defense — the hits you can actually eat. */
+    public static int effectiveHealth() { return (int) Math.round(health * (1.0 + defense / 100.0)); }
+
+    public static boolean hasSkill() { return !skillName.isEmpty() && System.currentTimeMillis() - lastSkillAt < 4000; }
+    public static String skillName() { return skillName; }
+    public static double skillPercent() { return skillPercent; }
 }
