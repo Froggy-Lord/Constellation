@@ -37,6 +37,8 @@ public class OrionDungeons extends BaseConstellation {
         OrionTerminals.init(cfg);
         // spirit-leap menu — class tags on teammate heads
         OrionSpiritLeap.init(cfg);
+        // door/key highlighter — beam over dropped keys + door status
+        DoorHighlighter.init();
 
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
@@ -48,6 +50,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(BlazeSolver::draw);
         // drop esp — box useful items dropped on the floor
         ConstellationClient.world().register(DropEsp::draw);
+        // door/key highlighter — beam over keys + door status (red/green)
+        ConstellationClient.world().register(DoorHighlighter::draw);
 
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
