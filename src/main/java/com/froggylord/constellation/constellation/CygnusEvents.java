@@ -31,6 +31,11 @@ public class CygnusEvents extends BaseConstellation {
     private static final double[][] spadeSamples = new double[4][3]; 
     private static int spadeIdx = 0;
     private static double burrowX = Double.NaN, burrowZ = Double.NaN;
+    // grabs the exact spawn coords hypixel shouts to everyone nearby
+    private static final java.util.regex.Pattern INQUIS_COORDS =
+        java.util.regex.Pattern.compile("at Coords (-?\\d+) (-?\\d+) (-?\\d+)");
+    private static double inqX = Double.NaN, inqY, inqZ;
+    private static long inqSetAt = 0;
     
     private static final String[] MYTHOS = {
         "Griffin Feather", "Crown of Greed", "Washed-up Souvenir", "Daedalus Stick",
@@ -55,10 +60,15 @@ public class CygnusEvents extends BaseConstellation {
                     mc.gui.hud.resetTitleTimes();
                     mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5⚔ INQUISITOR!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.2f);
-                    // parse exact coordinates from the message
-                    var cm = java.util.regex.Pattern.compile("(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)").matcher(s);
-                    if (cm.find() && cfg.dianaInquisitorShare) {
-                        mc.player.connection.sendCommand("pc Inquisitor @ " + cm.group(1) + " " + cm.group(2) + " " + cm.group(3));
+                    // real hypixel format: "...at Coords X Y Z"
+                    var cm = INQUIS_COORDS.matcher(s);
+                    if (cm.find()) {
+                        inqX = Double.parseDouble(cm.group(1));
+                        inqY = Double.parseDouble(cm.group(2));
+                        inqZ = Double.parseDouble(cm.group(3));
+                        inqSetAt = System.currentTimeMillis();
+                        if (cfg.dianaInquisitorShare)
+                            mc.player.connection.sendCommand("pc Inquisitor @ " + cm.group(1) + " " + cm.group(2) + " " + cm.group(3));
                     } else if (cfg.dianaInquisitorShare) {
                         var p = mc.player.blockPosition();
                         mc.player.connection.sendCommand("pc Inquisitor @ " + p.getX() + " " + p.getY() + " " + p.getZ());
@@ -128,6 +138,15 @@ public class CygnusEvents extends BaseConstellation {
             var box = new net.minecraft.world.phys.AABB(burrowX - 0.5, 60, burrowZ - 0.5, burrowX + 0.5, 128, burrowZ + 0.5);
             wctx.highlight(box, 0x80FFAA00, true);
             wctx.beam(burrowX, 65, burrowZ, 0xFFFFAA00, 30, true);
+        });
+
+        // inquisitor waypoint — purple box at the shouted coords, dies after 90s
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.dianaInquisitorAlert || Double.isNaN(inqX)) return;
+            if (System.currentTimeMillis() - inqSetAt > 90_000) { inqX = Double.NaN; return; }
+            var box = new net.minecraft.world.phys.AABB(inqX - 0.5, inqY - 0.5, inqZ - 0.5, inqX + 1.5, inqY + 2.5, inqZ + 1.5);
+            wctx.highlight(box, 0x80AA00FF, true);
+            wctx.beam(inqX + 0.5, inqY + 3, inqZ + 0.5, 0xFFAA00FF, 40, true);
         });
     }
 
