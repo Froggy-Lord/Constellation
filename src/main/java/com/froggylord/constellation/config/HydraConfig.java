@@ -27,4 +27,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean hotspotRadarGuesser = true;
     public boolean chumBucketTimer = true;
     public boolean seaCreatureRarityDisplay = true;
+    public boolean fishingProgressionHud = true;
+    public boolean seaCreatureKillTimeHud = true;
 }
