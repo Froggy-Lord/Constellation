@@ -155,8 +155,8 @@ public class HydraFishing extends BaseConstellation {
                     mc3.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.8f, 1.0f);
                 }
             }
-            // golden fish spawn — start a 60s timer
-            if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish")) {
+            // golden fish spawn — verified pattern: "A Golden Fish has appeared"
+            if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish") && (s.contains("appeared") || s.contains("spawned"))) {
                 if (s.contains("appeared") || s.contains("spawned")) goldenFishAt = System.currentTimeMillis();
                 else if (s.contains("caught") || s.contains("despawned")) goldenFishAt = 0;
             }
