@@ -89,6 +89,35 @@ public class HydraFishing extends BaseConstellation {
             });
         }
 
+        // Lava fishing spot highlighter — find lava source blocks nearby
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.lavaFishingHelper || !ConstellationClient.loc().onHypixel()) return;
+            var mc4 = Minecraft.getInstance();
+            if (mc4.level == null || mc4.player == null) return;
+            var pp3 = mc4.player.blockPosition();
+            for (int dx = -15; dx <= 15; dx++)
+                for (int dz = -15; dz <= 15; dz++)
+                    for (int dy = -3; dy <= 3; dy++) {
+                        var bp = pp3.offset(dx, dy, dz);
+                        var bs = mc4.level.getBlockState(bp);
+                        if (bs.getBlock().getDescriptionId().contains("lava")) {
+                            wctx.highlight(new net.minecraft.world.phys.AABB(bp), 0x20FF6600, true);
+                        }
+                    }
+        });
+
+        // Chum hider — hide chum bucket entities in the water
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.chumHider || !ConstellationClient.loc().onHypixel()) return;
+            var mc5 = Minecraft.getInstance();
+            if (mc5.level == null) return;
+            for (var e : mc5.level.entitiesForRendering()) {
+                var name = e.getCustomName();
+                if (name != null && (name.getString().contains("Chum") || name.getString().contains("chum")))
+                    e.setInvisible(true);
+            }
+        });
+
         // Thunder entity highlight — rare SC, box it in the water
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.thunderHighlight || !ConstellationClient.loc().onHypixel()) return;

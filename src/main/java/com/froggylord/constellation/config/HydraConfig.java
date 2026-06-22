@@ -17,4 +17,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean totemTimer = true;          // show time since totem placed (cmp. Skyblocker)
     public boolean cocoonAlert = true;         // cocoon spawn warning (cmp. Skyblocker)
     public boolean baitDisplay = true;         // current bait + remaining uses (cmp. Skyblocker)
+    public boolean lavaFishingHelper = true;   // highlight lava fishing spots (cmp. Skyblocker)
+    public boolean chumHider = true;           // hide chum buckets in water (cmp. Skyblocker)
 }
