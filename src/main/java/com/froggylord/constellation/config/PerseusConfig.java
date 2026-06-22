@@ -7,4 +7,5 @@ public class PerseusConfig extends BaseConfigGroup {
 
     public boolean bossTimer = true;
     public boolean xpBar = true;
+    public boolean slayerTimer = true; // live kill timer + session best
 }
