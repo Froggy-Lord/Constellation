@@ -13,4 +13,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean visitorRequirements = true; // show what each visitor is offering
     public boolean composterHud = true; // organic matter + fuel display
     public boolean speedHud = true; // Rancher's Boots speed cap
+    public boolean spaceFarmer = false; // hold space to auto-farm (cmp. SkyHanni)
+    public boolean plotBorders = true; // render garden plot borders (cmp. SkyHanni)
 }

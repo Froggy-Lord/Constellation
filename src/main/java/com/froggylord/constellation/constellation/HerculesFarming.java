@@ -59,6 +59,16 @@ public class HerculesFarming extends BaseConstellation {
                 }
             }
         });
+        // space farmer — auto-hold space for farming rows
+        if (cfg.spaceFarmer) {
+            ConstellationClient.tick().every(2, "hercules-space", () -> {
+                if (!inGarden()) return;
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null && mc.options.keyJump != null)
+                    mc.options.keyJump.setDown(true);
+            });
+        }
+
         // pest watch — the scoreboard shows a live "Pests: N" while any are loose in your plots
         ConstellationClient.tick().every(20, "hercules-pests", () -> {
             if (cfg == null || !cfg.pestAlert || !inGarden()) return;
