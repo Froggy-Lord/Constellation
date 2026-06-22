@@ -4,4 +4,6 @@ package com.froggylord.constellation.config;
 public class PegasusConfig extends BaseConfigGroup {
     @Override public int currentVersion() { return 0; }
     public boolean autoRejoin = true;
+    public boolean trackParty = true;
+    public boolean partyMembersHud = false;
 }

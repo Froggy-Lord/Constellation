@@ -27,6 +27,7 @@ public class PegasusParty extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (PegasusConfig) getConfig();
+        if (cfg != null && cfg.trackParty) PartyTracker.init();
     }
 
     @Override
@@ -41,6 +42,15 @@ public class PegasusParty extends BaseConstellation {
                 return "§dParty: " + n;
             },
             HudPosition.of(2, 110), true));
+        if (cfg.partyMembersHud) {
+            hud.register(new HudWidget("pegasus-members", "Members",
+                () -> {
+                    var m = PartyTracker.members();
+                    if (m.isEmpty()) return null;
+                    return "§d⛨ " + String.join(", ", m);
+                },
+                HudPosition.of(2, 118), cfg.partyMembersHud));
+        }
     }
 
     @Override
@@ -49,8 +59,8 @@ public class PegasusParty extends BaseConstellation {
         dispatcher.register(
             LiteralArgumentBuilder.<FabricClientCommandSource>literal("rp")
                 .executes(ctx -> {
-                    var mc = Minecraft.getInstance();
-                    if (mc.player != null) mc.player.connection.sendCommand("p rejoin");
+                    // real reparty: rebuild from the tracked member list
+                    PartyTracker.reparty();
                     return 1;
                 }));
         dispatcher.register(
