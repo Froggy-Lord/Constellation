@@ -24,4 +24,7 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean yawPitchLock = true;   // lock yaw/pitch for perfect farming rows (cmp. SkyHanni)
     public boolean vacuumSolver = true;   // show pest vacuum target positions (cmp. SkyHanni)
     public boolean glowingMushrooms = true; // highlight glowing mushrooms in garden (cmp. SkyHanni)
+    public boolean cropGrowthDisplay = true;   // show crop growth stage % (cmp. SkyHanni)
+    public boolean plotEfficiencyHud = true;  // show yaw/pitch accuracy for farming (cmp. SkyHanni)
+    public boolean farmingContestTimer = true; // countdown to next Jacob contest (cmp. SkyHanni)
 }

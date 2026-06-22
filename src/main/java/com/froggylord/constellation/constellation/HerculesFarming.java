@@ -59,6 +59,23 @@ public class HerculesFarming extends BaseConstellation {
                 }
             }
         });
+        // Glowing mushrooms — highlight mushroom blocks in the garden
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.glowingMushrooms || !inGarden()) return;
+            var mc3 = net.minecraft.client.Minecraft.getInstance();
+            if (mc3.level == null || mc3.player == null) return;
+            var pp = mc3.player.blockPosition();
+            for (int dx = -15; dx <= 15; dx++)
+                for (int dz = -15; dz <= 15; dz++)
+                    for (int dy = -3; dy <= 5; dy++) {
+                        var bp = pp.offset(dx, dy, dz);
+                        var bs = mc3.level.getBlockState(bp);
+                        if (bs.getBlock().getDescriptionId().contains("mushroom") && !bs.getBlock().getDescriptionId().contains("stem")) {
+                            wctx.highlight(new net.minecraft.world.phys.AABB(bp), 0x40FF66FF, true);
+                        }
+                    }
+        });
+
         // sweep overlay — highlight the harvest area when holding a farming tool
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.sweepOverlay || !inGarden()) return;
