@@ -30,9 +30,41 @@ public class CygnusEvents extends BaseConstellation {
 
     private CygnusConfig cfg;
 
+    private static int inquisitors = 0;
+    private static int mythosDrops = 0;
+    // the mythological-ritual loot lines worth counting
+    private static final String[] MYTHOS = {
+        "Griffin Feather", "Crown of Greed", "Washed-up Souvenir", "Daedalus Stick",
+        "Minos Relic", "Enchanted Egg", "Dwarf Turtle Shelmet", "Antique Remedies",
+        "Chimera", "Minos Champion", "Minotaur", "Minos Inquisitor"
+    };
+
     @Override
     public void init(InitContext ctx) {
         cfg = (CygnusConfig) getConfig();
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            String s = msg.getString();
+
+            // Minos Inquisitor — the burrow everyone wants. shout it loud.
+            if (cfg.dianaInquisitorAlert && s.contains("You dug out a Minos Inquisitor")) {
+                inquisitors++;
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5⚔ INQUISITOR!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.2f);
+                    if (cfg.dianaInquisitorShare) {
+                        var p = mc.player.blockPosition();
+                        mc.player.connection.sendCommand("pc Inquisitor @ " + p.getX() + " " + p.getY() + " " + p.getZ());
+                    }
+                }
+            }
+            // mythos drop tally — the dig loot lines
+            if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
+                for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; break; } }
+            }
+        });
     }
 
     @Override
@@ -53,6 +85,14 @@ public class CygnusEvents extends BaseConstellation {
             hud.register(new HudWidget("cygnus-choc", "Choc",
                 () -> ConstellationClient.loc().onHypixel() ? chocLine() : null,
                 HudPosition.of(2, 128), cfg.calendarHud));
+        }
+        if (cfg.dianaDropTracker) {
+            hud.register(new HudWidget("cygnus-diana", "Diana",
+                () -> {
+                    if (inquisitors == 0 && mythosDrops == 0) return null;
+                    return "§5⚔ " + inquisitors + " §7| §6drops §f" + mythosDrops;
+                },
+                HudPosition.of(2, 138), cfg.dianaDropTracker));
         }
     }
 
