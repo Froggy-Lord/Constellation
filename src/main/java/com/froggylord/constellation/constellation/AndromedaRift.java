@@ -276,6 +276,26 @@ public class AndromedaRift extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 294), cfg.dreadfarmEnigmaHelper));
+        if (cfg.colosseumScoreHud) {
+            hud.register(new HudWidget("andromeda-colscore", "ColoScore",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Score") && (line.contains("Colosseum") || line.contains("Round"))) return "§c🏟 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 302), cfg.colosseumScoreHud));
+        }
+        if (cfg.stillgoreChateauTimer) {
+            hud.register(new HudWidget("andromeda-stillgore-time", "StillgoreTime",
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Chateau") && (line.contains("Time") || line.contains("⏣"))) return "§8🏰 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 310), cfg.stillgoreChateauTimer));
+        }
         }
         }
         }
