@@ -14,12 +14,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Aquila — mining. For now: powder totals off the sidebar and commission progress off the tab
- * list, shown only in the mining worlds. Patterns are best-effort English literals; a live line
- * may need a tweak, but the structure (sidebar for powder, tab for commissions) matches how the
- * other mods read them.
- */
 public class AquilaMining extends BaseConstellation {
 
     @Override public String id() { return "aquila"; }
@@ -39,7 +33,7 @@ public class AquilaMining extends BaseConstellation {
     private static long compassSetAt = 0;
     private static int scathaKills = 0;
 
-    // Fetchur item hints → correct item name (Skyblocker FetchurSolver mapping)
+    
     private static final java.util.Map<String, String> FETCHUR = new java.util.HashMap<>();
     static {
         FETCHUR.put("hot stuff", "Lava Bucket");
@@ -64,7 +58,7 @@ public class AquilaMining extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (AquilaConfig) getConfig();
-        // cold thresholds — a clean title ping instead of the screen-filling vignette
+        
         ConstellationClient.tick().every(10, "aquila-cold", () -> {
             if (cfg == null || !cfg.coldWarning || !inMining()) return;
             int cold = readCold();
@@ -80,11 +74,11 @@ public class AquilaMining extends BaseConstellation {
             }
             lastColdStep = step;
         });
-        // Fetchur / Puzzler chat hints
+        
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
-            // Fetchur: "[NPC] Fetchur: hot stuff" → match to item
+            
             if (cfg.fetchurSolver && s.contains("Fetchur")) {
                 String low = s.toLowerCase(java.util.Locale.ROOT);
                 String hint = low.substring(low.indexOf("fetchur") + 7).trim().replace(":", "").trim();
@@ -97,12 +91,12 @@ public class AquilaMining extends BaseConstellation {
                     }
                 }
             }
-            // Wishing Compass: parses coordinates from chat
+            
             if (cfg.wishingCompassHelper && s.contains("Compass") && s.contains("points")) {
                 var cmat = java.util.regex.Pattern.compile("(-?\\d+)\\s+(-?\\d+)\\s+(-?\\d+)").matcher(s);
                 if (cmat.find()) { compassX = Integer.parseInt(cmat.group(1)); compassZ = Integer.parseInt(cmat.group(3)); compassSetAt = System.currentTimeMillis(); }
             }
-            // Puzzler: "[NPC] Puzzler: <question>" → known answers
+            
             if (cfg.puzzlerSolver && s.contains("Puzzler")) {
                 String low = s.toLowerCase(java.util.Locale.ROOT);
                 String block = puzzlerAnswer(low);
@@ -114,25 +108,25 @@ public class AquilaMining extends BaseConstellation {
             }
         });
 
-        // Wishing Compass waypoint — track the coordinates it gives
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.wishingCompassHelper || !inMining()) return;
             if (Double.isNaN(compassX)) return;
             var box = new net.minecraft.world.phys.AABB(compassX - 1, 60, compassZ - 1, compassX + 1, 200, compassZ + 1);
             wctx.highlight(box, 0x40FF55FF, true);
             wctx.beam(compassX, 80, compassZ, 0xFFFF55FF, 40, true);
-            // auto-clear after 60s so stale waypoints don't clutter
+            
             if (System.currentTimeMillis() - compassSetAt > 60_000) { compassX = Double.NaN; compassZ = Double.NaN; }
         });
 
-        // Treasure chest ESP — highlight chests in Crystal Hollows
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.treasureChestEsp || !inMining()) return;
             var mc2 = net.minecraft.client.Minecraft.getInstance();
             if (mc2.level == null || mc2.player == null) return;
             var pp = mc2.player.position();
             for (var e : mc2.level.entitiesForRendering()) {
-                if (e.distanceToSqr(pp) > 1600) continue; // 40-block range
+                if (e.distanceToSqr(pp) > 1600) continue; 
                 var name = e.getCustomName();
                 if (name == null) continue;
                 String nm = name.getString().toLowerCase(java.util.Locale.ROOT);
@@ -143,7 +137,7 @@ public class AquilaMining extends BaseConstellation {
             }
         });
 
-        // Pickobulus prediction — highlight the break zone of the targeted block
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.pickobulusPreview || !inMining()) return;
             var mc = net.minecraft.client.Minecraft.getInstance();
@@ -155,8 +149,8 @@ public class AquilaMining extends BaseConstellation {
             if (!name.contains("pickaxe") && !name.contains("drill") && !name.contains("gauntlet")) return;
             var hit = (net.minecraft.world.phys.BlockHitResult) mc.hitResult;
             var center = hit.getBlockPos();
-            // Skyblocker uses a radius based on Pickobulus level (2-4 blocks).
-            // we default to 2 for visibility; the user can spot-check from the highlight.
+            
+            
             int r = 2;
             for (int dx = -r; dx <= r; dx++)
                 for (int dy = -r; dy <= r; dy++)
@@ -169,7 +163,7 @@ public class AquilaMining extends BaseConstellation {
                     }
         });
 
-        // mineshaft entry + scatha — rare events worth a title ping
+        
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
             if (!cfg.mineshaftAlert && !cfg.scathaAlert && !cfg.goldenGoblinAlert) return;
@@ -182,7 +176,7 @@ public class AquilaMining extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.8f, 1.2f);
                 }
             }
-            // Verified pattern from SkyHanni: "Entered a {type} mineshaft!" or "Found a mineshaft!"
+            
             if (cfg.mineshaftAlert && (s.contains("mineshaft") && (s.contains("Entered") || s.contains("Found") || s.contains("entered")))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
@@ -357,7 +351,7 @@ public class AquilaMining extends BaseConstellation {
                 HudPosition.of(2, 178), cfg.gemstoneMixtureHelper));
         }
         if (cfg.crystalNucleusWaypoints) {
-            // Crystal Nucleus waypoints — highlight crystal structures in Crystal Hollows
+            
             ConstellationClient.world().register(wctx -> {
                 if (!inMining()) return;
                 var mc2 = net.minecraft.client.Minecraft.getInstance();
@@ -385,7 +379,6 @@ public class AquilaMining extends BaseConstellation {
             || a == SkyblockArea.GLACITE_TUNNELS || a == SkyblockArea.GLACITE_MINESHAFT;
     }
 
-    /** powder from sidebar. */
     private static String powderLine() {
         String mithril = null, gemstone = null, glacite = null;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
@@ -406,7 +399,6 @@ public class AquilaMining extends BaseConstellation {
         return sb.toString();
     }
 
-    /** commissions from tab. */
     private static String commissionLine() {
         List<String> tab = TabList.lines();
         boolean inSection = false;
@@ -416,7 +408,7 @@ public class AquilaMining extends BaseConstellation {
             if (line.startsWith("Commissions")) { inSection = true; continue; }
             if (!inSection) continue;
             Matcher m = COMMISSION.matcher(line);
-            if (!m.matches()) break; // section ended
+            if (!m.matches()) break; 
             if (shown++ > 0) sb.append("  §7| ");
             String val = m.group("val");
             sb.append("§f").append(m.group("name").trim()).append(" §b").append(val);
@@ -425,7 +417,6 @@ public class AquilaMining extends BaseConstellation {
         return sb.length() == 0 ? null : sb.toString();
     }
 
-    /** Forge slots with remaining time. */
     private static String forgeLine() {
         var tab = TabList.lines();
         boolean section = false;

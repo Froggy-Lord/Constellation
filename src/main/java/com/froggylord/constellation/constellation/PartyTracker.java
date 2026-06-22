@@ -8,11 +8,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Keeps a running list of who's in your party by reading the party chat. It's the backing for a
- * real /rp — Hypixel has no native reparty, so we disband and re-invite the people we last saw.
- * Membership parsing is the fiddly bit; these patterns cover the common join/leave/list lines.
- */
 public final class PartyTracker {
 
     private PartyTracker() {}
@@ -59,13 +54,12 @@ public final class PartyTracker {
 
     private static void addNames(String csv) {
         for (String raw : csv.split("[,●•]")) {
-            // each chunk may carry a rank prefix; the name is the last word-token
+            
             Matcher m = Pattern.compile("([A-Za-z0-9_]{2,16})\\s*$").matcher(raw.trim());
             if (m.find()) members.add(self(m.group(1)));
         }
     }
 
-    /** don't try to invite yourself back. */
     private static String self(String name) {
         var mc = Minecraft.getInstance();
         if (mc.player != null && name.equalsIgnoreCase(mc.player.getName().getString())) return "";
@@ -74,7 +68,6 @@ public final class PartyTracker {
 
     public static Set<String> members() { return members; }
 
-    /** disband and re-invite everyone we last had. */
     public static void reparty() {
         var mc = Minecraft.getInstance();
         if (mc.player == null) return;

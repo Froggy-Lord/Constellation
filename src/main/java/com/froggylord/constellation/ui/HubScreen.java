@@ -42,7 +42,7 @@ public class HubScreen extends Screen {
         String title = "✧ Constellation ✧";
         g.text(font, title, w / 2 - font.width(title) / 2, 6, NebulaTheme.ACCENT_GOLD, false);
 
-        // grid of constellation cards
+        
         int cols = Math.max(1, Math.min(4, (w - 20) / 220));
         int cardW = ((w - 20) - (cols - 1) * 6) / cols;
         int cardH = 54;
@@ -59,7 +59,7 @@ public class HubScreen extends Screen {
             int cx = gridX + col * (cardW + gapX);
             int cy = gridY + row * (cardH + gapY) - scrollOff;
 
-            // only draw cards that are on screen
+            
             if (cy + cardH > 0 && cy < h - 50) {
                 boolean enabled = c.isEnabled();
                 boolean hover = mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + cardH;
@@ -72,7 +72,7 @@ public class HubScreen extends Screen {
                     enabled ? NebulaTheme.STAR_WHITE : NebulaTheme.STAR_MUTED, false);
 
                 String desc = c.description();
-                // wrap the description to fit inside the card
+                
                 int textW = cardW - 16;
                 if (font.width(desc) > textW) {
                     for (String part : desc.split(" — ")) {
@@ -80,13 +80,13 @@ public class HubScreen extends Screen {
                         if (trimmed.isEmpty()) continue;
                         if (font.width(trimmed) > textW) trimmed = font.plainSubstrByWidth(trimmed, textW);
                         g.text(font, trimmed, cx + 8, cy + 20, NebulaTheme.STAR_MUTED, false);
-                        break; // one line is enough
+                        break; 
                     }
                 } else {
                     g.text(font, desc, cx + 8, cy + 20, NebulaTheme.STAR_MUTED, false);
                 }
 
-                // toggle switch on the right
+                
                 int sw = 16, sh = 10, sx = cx + cardW - sw - 10, sy = cy + cardH - sh - 6;
                 int swCol = enabled ? NebulaTheme.ACCENT_GOLD : 0xFF444466;
                 g.fill(sx, sy, sx + sw, sy + sh, swCol);
@@ -103,7 +103,7 @@ public class HubScreen extends Screen {
         if (scrollOff > maxScroll) scrollOff = maxScroll;
         if (scrollOff < 0) scrollOff = 0;
 
-        // scrollbar
+        
         if (maxScroll > 0) {
             int sbX = w - 6, sbH = h - 56, sbY = gridY;
             g.fill(sbX, sbY, sbX + 4, sbY + sbH, 0xFF2A2A3A);
@@ -113,7 +113,7 @@ public class HubScreen extends Screen {
             g.fill(sbX, thumbY, sbX + 4, thumbY + thumbH, NebulaTheme.ACCENT_DIM);
         }
 
-        // hud editor button
+        
         int btnW = 120, btnH = 22, hudBtnX = w / 2 - btnW / 2, hudBtnY = h - 58;
         boolean hoverHud = mx >= hudBtnX && mx <= hudBtnX + btnW && my >= hudBtnY && my <= hudBtnY + btnH;
         g.fill(hudBtnX, hudBtnY, hudBtnX + btnW, hudBtnY + btnH, hoverHud ? 0xFF3A3050 : 0xFF1A1428);
@@ -122,7 +122,7 @@ public class HubScreen extends Screen {
         g.text(font, hudLabel, w / 2 - font.width(hudLabel) / 2, hudBtnY + 6,
             hoverHud ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
 
-        // settings button
+        
         int setBtnY = h - 32;
         boolean hoverSet = mx >= hudBtnX && mx <= hudBtnX + btnW && my >= setBtnY && my <= setBtnY + btnH;
         g.fill(hudBtnX, setBtnY, hudBtnX + btnW, setBtnY + btnH, hoverSet ? 0xFF3A3050 : 0xFF1A1428);
@@ -156,7 +156,7 @@ public class HubScreen extends Screen {
             return true;
         }
 
-        // grid click — find which card
+        
         int cols = Math.max(1, Math.min(4, (w - 20) / 220));
         int cardW = ((w - 20) - (cols - 1) * 6) / cols;
         int cardH = 54;
@@ -178,7 +178,7 @@ public class HubScreen extends Screen {
             row = idx / cols;
         }
 
-        // scrollbar drag
+        
         if (maxScroll > 0 && mx >= w - 6) {
             scrolling = true;
             scrollGrabY = my;

@@ -7,9 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import java.util.Comparator;
 
-// the tab list is sorted by a private static comparator (spectators last, then team, then
-// name). Hypixel packs dungeon stats into fake tab entries ordered by hidden team names, so
-// we have to read them in this exact vanilla order to land on the right lines.
+// we have to read them in this e...
 @Mixin(PlayerTabOverlay.class)
 public interface PlayerTabOverlayAccessor {
     @Accessor("PLAYER_COMPARATOR")

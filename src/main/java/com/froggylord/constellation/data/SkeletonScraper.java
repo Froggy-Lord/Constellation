@@ -13,15 +13,6 @@ import java.nio.file.*;
 import java.util.*;
 import java.util.zip.DeflaterOutputStream;
 
-/**
- * Records a room's SKELETON (the matching fingerprint, not a full schematic) for rooms
- * missing from the bundled DB. Encodes only the 21 tracked block types as int[]
- * (relX<<24 | absY<<16 | relZ<<8 | id), room-relative in NW orientation, the same format
- * RoomMatch reads. Saved to <config>/constellation-skeletons/<shape>/<name>.skeleton —
- * drop the file into the mod's assets and add its "shape/name" line to index.txt to ship it.
- *
- * Scan is incremental (a few columns per tick) so it never lag-spikes the client.
- */
 public class SkeletonScraper {
 
     private static final Path DIR = FabricLoader.getInstance().getConfigDir().resolve("constellation-skeletons");
@@ -34,7 +25,7 @@ public class SkeletonScraper {
         final Set<Long> cells;
         final int wMinX, wMinZ, wMaxX, wMaxZ;
         final int shapeW, shapeH;
-        int cx, cz;                 // scan cursor (world)
+        int cx, cz;                 
         final Set<Integer> blocks = new TreeSet<>();
         Session(String name, Set<Long> cells, int wMinX, int wMinZ, int wMaxX, int wMaxZ) {
             this.name = name; this.cells = cells;
@@ -45,13 +36,12 @@ public class SkeletonScraper {
         }
     }
 
-    /** Start capturing the room the player is standing in. Returns a status message. */
     public static String capture(String name) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) return "§cnot in a world";
         if (!ConstellationClient.loc().inDungeons()) return "§cnot in a dungeon";
 
-        // get the room footprint (map preferred, flood fallback) via RoomMatch's helpers
+        
         Set<Long> cells = MapSegments.footprint();
         int pcx = RoomGrid.cornerX(mc.player.position());
         int pcz = RoomGrid.cornerZ(mc.player.position());
@@ -70,7 +60,6 @@ public class SkeletonScraper {
         return "§acapturing '" + session.name + "' (" + session.shapeW + "x" + session.shapeH + ", " + cells.size() + " cells)…";
     }
 
-    /** Call each tick; scans a few columns and saves when done. */
     public static void tick() {
         if (session == null) return;
         Minecraft mc = Minecraft.getInstance();
@@ -79,7 +68,7 @@ public class SkeletonScraper {
 
         int done = 0;
         while (session.cz <= session.wMaxZ && done < COLS_PER_TICK) {
-            // only scan columns inside the room's cells
+            
             if (session.cells.contains(RoomGrid.cellKey(RoomGrid.cornerX((double) session.cx), RoomGrid.cornerZ((double) session.cz)))) {
                 scanColumn(level, session);
                 done++;

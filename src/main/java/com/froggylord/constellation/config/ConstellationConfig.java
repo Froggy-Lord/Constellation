@@ -2,22 +2,18 @@ package com.froggylord.constellation.config;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Root config POJO. Holds sub-configs for every constellation.
- * cfgVersion drives migration logic.
- */
 public class ConstellationConfig {
 
     public static final int CURRENT_VERSION = 0;
 
     public int cfgVersion = CURRENT_VERSION;
 
-    // when true, stat HUDs (slayer PB, trackers, profit) show the all-time figure from the
-    // persistent stats file; when false they show this session only. counters are always
-    // saved regardless — this just picks which number the HUD shows.
+    
+    
+    
     public boolean lifetimeStats = true;
 
-    // sub-configs — one per constellation, named by their id
+    
     @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
     @SerializedName("cassiopeia") public CassiopeiaConfig cassiopeia = new CassiopeiaConfig();
     @SerializedName("orion")      public OrionConfig orion = new OrionConfig();
@@ -33,9 +29,6 @@ public class ConstellationConfig {
     @SerializedName("pegasus")    public PegasusConfig pegasus = new PegasusConfig();
     @SerializedName("auriga")     public AurigaConfig auriga = new AurigaConfig();
 
-    /**
-     * Migrate from older config versions. Called after deserialization.
-     */
     public void migrate() {
         if (cfgVersion < CURRENT_VERSION) {
             migrateFrom(cfgVersion);
@@ -44,12 +37,9 @@ public class ConstellationConfig {
     }
 
     private void migrateFrom(int fromVersion) {
-        // version-to-version migrations go here as the config evolves
+        
     }
 
-    /**
-     * Get a sub-config by constellation id.
-     */
     public BaseConfigGroup getSubConfig(String id) {
         return switch (id) {
             case "apollo"     -> apollo;

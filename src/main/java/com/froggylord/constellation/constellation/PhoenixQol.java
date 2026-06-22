@@ -29,7 +29,7 @@ public class PhoenixQol extends BaseConstellation {
                 }
             });
         }
-        // hide fire overlay — just keep extinguishing the fire ticks each frame
+        // hide fire overlay — just keep ...
         if (cfg.hideFireOverlay) {
             ConstellationClient.tick().every(1, "phoenix-fire", () -> {
                 Minecraft mc = Minecraft.getInstance();
@@ -43,7 +43,7 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.fullbright) {
-            // defer to first tick — Minecraft.options is null during mod init
+            // defer to first tick — minecraf...
             ConstellationClient.tick().once(1, "phoenix-fullbright", () -> {
                 Minecraft mc = Minecraft.getInstance();
                 if (mc.options != null) mc.options.gamma().set(15.0);
@@ -53,14 +53,14 @@ public class PhoenixQol extends BaseConstellation {
             ConstellationClient.world().register(wctx -> {
                 Minecraft mc = Minecraft.getInstance();
                 if (mc.player == null || mc.level == null) return;
-                // etherwarp only fires while sneaking with an Aspect of the Void in hand
+                
                 if (!mc.player.isShiftKeyDown()) return;
                 var stack = mc.player.getMainHandItem();
                 if (stack.isEmpty()) return;
                 String name = stack.getHoverName().getString();
                 if (!name.contains("Aspect of the Void") && !name.contains("Aspect of the End")) return;
-                // the vanilla hitResult only reaches ~5 blocks, but etherwarp travels ~57, so
-                // cast our own ray out to full range
+                
+                
                 var eye = mc.player.getEyePosition(1f);
                 var end = eye.add(mc.player.getViewVector(1f).scale(61.0));
                 var clip = mc.level.clip(new net.minecraft.world.level.ClipContext(eye, end,
@@ -68,7 +68,7 @@ public class PhoenixQol extends BaseConstellation {
                     net.minecraft.world.level.ClipContext.Fluid.NONE, mc.player));
                 if (clip.getType() != HitResult.Type.BLOCK) return;
                 var pos = clip.getBlockPos();
-                // you land on top of the block; it needs two air blocks above to be valid
+                
                 boolean valid = mc.level.getBlockState(pos.above()).isAir()
                     && mc.level.getBlockState(pos.above(2)).isAir();
                 wctx.highlight(new AABB(pos), valid ? 0x80AA00FF : 0x80FF4040, true);
@@ -124,7 +124,7 @@ public class PhoenixQol extends BaseConstellation {
                 if (mc.options != null) mc.options.screenEffectScale().set(0.0);
             });
         }
-        // auto-save reminder — ping every 5 min on Hypixel (cmp. Skyblocker SaveReminder)
+        // auto-save reminder — ping ever...
         if (cfg.autoSaveReminder) {
             ConstellationClient.tick().every(6000, "phoenix-autosave", () -> {
                 if (!ConstellationClient.loc().onHypixel()) return;
@@ -136,7 +136,7 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
 
-        // hideStatusEffects — needs particle-rendering mixin; deferred to avoid stripping actual effects
+        
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
                 var mc = Minecraft.getInstance();
@@ -145,7 +145,7 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.preventDroppingValuable) {
-            // intercept Q (drop) for valuable items — show a warning instead
+            
             ConstellationClient.tick().every(2, "phoenix-itemprotect", () -> {
                 var mc = Minecraft.getInstance();
                 if (mc.player == null || mc.gui.screen() != null) return;
@@ -153,7 +153,7 @@ public class PhoenixQol extends BaseConstellation {
                 var stack = mc.player.getMainHandItem();
                 if (stack.isEmpty()) return;
                 String name = stack.getHoverName().getString();
-                // prevent dropping items with rarity colors (valuable)
+                
                 if (name.contains("§6") || name.contains("§5") || name.contains("§9") || name.contains("§d") || name.contains("§c")) {
                     mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚠ Hold §nshift§r§c to drop §r" + name));
                     mc.options.keyDrop.setDown(false);
@@ -161,12 +161,12 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
         if (cfg.wardrobeKeybinds) {
-            // register keybinds that send /wd <n> — instant armor set swap.
-            // default keys: none assigned (prevents accidental sends); user binds in controls.
+            
+            
             var kr = com.froggylord.constellation.ConstellationClient.instance().keys();
             for (int i = 1; i <= 9; i++) {
                 final int slot = i;
-                var kb = kr.register("wardrobe" + i, -1); // -1 = unbound
+                var kb = kr.register("wardrobe" + i, -1); 
                 com.froggylord.constellation.ConstellationClient.tick().every(2, "wardrobe-bind-" + i, () -> {
                     while (kb.consumeClick()) {
                         var m = Minecraft.getInstance();
@@ -177,12 +177,12 @@ public class PhoenixQol extends BaseConstellation {
         }
 
         if (cfg.signCalculator) {
-            // evaluate simple math on signs — on Hypixel this is mostly bazaar/auction
-            // pricing, so having the answer in chat saves a mental calculation
+            // evaluate simple math on signs ...
+            
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
                 if (!cfg.signCalculator) return;
                 String s = message.getString();
-                // "Sign says: 143 * 64" or chat-edited sign text
+                
                 if (!s.contains("Sign says:")) return;
                 int colon = s.indexOf(':');
                 if (colon < 0) return;
@@ -193,7 +193,7 @@ public class PhoenixQol extends BaseConstellation {
     }
 
     private static void evaluateSign(String expr) {
-        // basic: number operator number (e.g. "143 * 64" or "1.45 * 850")
+        
         String[] parts = expr.split("\\s+");
         if (parts.length < 3) return;
         double a = Double.parseDouble(parts[0].replace(",", ""));

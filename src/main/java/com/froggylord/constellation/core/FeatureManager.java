@@ -86,12 +86,12 @@ public class FeatureManager {
     public void toggle(String id) {
         get(id).ifPresent(c -> {
             if (loaded.contains(id)) {
-                // disable: unregister HUD, mark config
+                
                 c.disable();
                 loaded.remove(id);
                 ConstellationClient.hudManager().getAll().removeIf(el -> el.id().startsWith(id + "-"));
             } else {
-                // enable: init if not already done, register HUD
+                
                 if (!c.isInitialized()) {
                     c.init(new InitContext());
                     c.markInitialized();

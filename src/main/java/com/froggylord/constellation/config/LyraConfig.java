@@ -1,6 +1,5 @@
 package com.froggylord.constellation.config;
 
-/** Config for the Lyra constellation (economy + inventory). */
 public class LyraConfig extends BaseConfigGroup {
 
     @Override public int currentVersion() { return 0; }
@@ -10,16 +9,16 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean bitsHud = false;
     public boolean quiverHud = false;
 
-    // compact text drawn on the item itself in inventories
+    // compact text drawn on the item...
     public boolean slotText = true;
     public boolean slotTextPetLevel = true;
     public boolean slotTextStars = true;
     public boolean slotTextCakeYear = true;
 
-    // live bazaar buy/sell in tooltips (public Hypixel feed, no key)
+    
     public boolean tooltipBazaar = true;
 
-    // item tooltips (read straight off the item's hidden SkyBlock data, no API needed)
+    
     public boolean tooltipSkyblockId = true;
     public boolean tooltipReforge = true;
     public boolean tooltipHotPotato = true;
@@ -27,19 +26,19 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipEnchantCount = true;
     public boolean tooltipRecomb = true;
     public boolean tooltipMissingEnchants = true;
-    public boolean backpackPreview = true; // shift-hover shows contents
-    public boolean tooltipAttributes = true; // show item attributes (Mana Pool, Breeze, etc.)
-    public boolean tooltipSalvageable = true; // mark museum-donated items safe to salvage
-    public boolean profileCommand = true; // /profile shows quick stats summary
-    public boolean auctionOutbidAlert = true; // highlight outbid messages (cmp. Skyblocker)
-    public boolean auctionSoldAlert = true;   // highlight sold/expired messages (cmp. Skyblocker)
-    public boolean tooltipAttributeShards = true; // show attribute shard details (cmp. Skyblocker)
-    public boolean bazaarUndercutAlert = true; // alert when your bazaar offer gets undercut (cmp. Skyblocker)
-    public boolean bazaarBookmarks = true; // save + recall favourite bazaar items
-    public boolean tooltipItemQuality = true; // show item quality (50/50, etc.) — cmp. Firmament
-    public boolean accessoryDisplay = true;   // show accessory bag slots from sidebar (cmp. Skyblocker)
-    public boolean bazaarPriceHistory = true; // track bazaar price trends (cmp. Skyblocker BazaarTracker)
-    public boolean auctionPriceCompare = true; // compare AH prices against bazaar (cmp. Skyblocker)
-    public boolean inventoryValueHud = true;   // total inventory/bag value from bazaar (cmp. Skyblocker)
-    public boolean essenceShopHelper = true;    // show essence costs in upgrade menus (cmp. Skyblocker)
+    public boolean backpackPreview = true; 
+    public boolean tooltipAttributes = true; 
+    public boolean tooltipSalvageable = true; 
+    public boolean profileCommand = true; 
+    public boolean auctionOutbidAlert = true; 
+    public boolean auctionSoldAlert = true;   // highlight sold/expired message...
+    public boolean tooltipAttributeShards = true; 
+    public boolean bazaarUndercutAlert = true; 
+    public boolean bazaarBookmarks = true; 
+    public boolean tooltipItemQuality = true; 
+    public boolean accessoryDisplay = true;   
+    public boolean bazaarPriceHistory = true; 
+    public boolean auctionPriceCompare = true; // compare ah prices against baza...
+    public boolean inventoryValueHud = true;   
+    public boolean essenceShopHelper = true;    
 }

@@ -8,8 +8,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// /<word> -> /warp <word> for any one-word command the server doesn't know.
-// lets you type /dragon, /forge, /crimson instead of /warp dragon etc.
 @Mixin(ClientPacketListener.class)
 public class WarpShortenerMixin {
 
@@ -19,15 +17,15 @@ public class WarpShortenerMixin {
         if (cfg == null || !cfg.warpShortcuts) return;
 
         String t = command.trim();
-        if (t.isEmpty() || t.indexOf(' ') >= 0) return; // only bare one-word
+        if (t.isEmpty() || t.indexOf(' ') >= 0) return; 
 
         var conn = Minecraft.getInstance().getConnection();
         if (conn == null) return;
 
-        // if the server already knows this command, leave it alone
+        
         if (conn.getCommands().getRoot().getChild(t) != null) return;
 
-        // rewrite to warp
+        
         conn.sendCommand("warp " + t);
         ci.cancel();
     }

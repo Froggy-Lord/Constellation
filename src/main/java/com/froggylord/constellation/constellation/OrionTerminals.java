@@ -13,10 +13,6 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * The F7/M7 phase-3 terminals. We only ever paint a hint over the slot you're meant to click —
- * nothing reaches in and clicks for you. Reading is done off the open chest's slots each frame.
- */
 public class OrionTerminals {
 
     private static OrionConfig cfg;
@@ -24,7 +20,7 @@ public class OrionTerminals {
     private static final Pattern LETTER = Pattern.compile("letter '?([A-Za-z])'?");
     private static final Pattern COLOUR = Pattern.compile("all the ([A-Z ]+?) (?:items|item)");
 
-    // the 16 vanilla dye colours as they appear inside item ids
+    
     private static final String[] COLOURS = {
         "white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray",
         "light_gray", "cyan", "purple", "blue", "brown", "green", "red", "black"
@@ -46,7 +42,7 @@ public class OrionTerminals {
         String title = cs.getTitle().getString();
         var menu = cs.getMenu();
         int total = menu.slots.size();
-        int chest = total - 36; // last 36 slots are always the player inventory
+        int chest = total - 36; 
         if (chest <= 0) return;
 
         int left = ((ContainerScreenAccessor) cs).constellation$left();
@@ -54,7 +50,7 @@ public class OrionTerminals {
         var font = Minecraft.getInstance().font;
 
         if (title.startsWith("Click in order") || title.contains("Melody")) {
-            // sequential: the next click is the lowest-numbered red pane left
+            
             int best = -1, bestCount = Integer.MAX_VALUE;
             for (int i = 0; i < chest; i++) {
                 ItemStack s = menu.slots.get(i).getItem();
@@ -75,7 +71,7 @@ public class OrionTerminals {
         }
 
         if (title.startsWith("Correct all") || title.startsWith("Change all to same")) {
-            // order doesn't matter — every red pane still needs clicking through to green
+            // order doesn't matter — every r...
             for (int i = 0; i < chest; i++) {
                 ItemStack s = menu.slots.get(i).getItem();
                 if (s.isEmpty()) continue;
@@ -90,7 +86,7 @@ public class OrionTerminals {
             String want = cm.group(1).trim().toLowerCase(Locale.ROOT).replace(' ', '_');
             for (int i = 0; i < chest; i++) {
                 ItemStack s = menu.slots.get(i).getItem();
-                if (s.isEmpty() || s.hasFoil()) continue; // foil = already selected
+                if (s.isEmpty() || s.hasFoil()) continue; 
                 if (matchesColour(id(s), want))
                     box(g, menu.slots.get(i), left, top, 0x9020FF20);
             }
@@ -111,7 +107,7 @@ public class OrionTerminals {
     }
 
     private static boolean matchesColour(String id, String want) {
-        // light_blue/light_gray must not be caught by blue/gray, so match the exact token
+        
         if (!id.contains(want)) return false;
         if ((want.equals("blue") || want.equals("gray")) && id.contains("light_" + want)) return false;
         return true;

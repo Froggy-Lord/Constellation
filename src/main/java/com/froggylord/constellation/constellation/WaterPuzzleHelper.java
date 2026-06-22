@@ -10,19 +10,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Water puzzle (F7/M7) gate timer renderer. The puzzle has colored gates
- * (terracotta, gold, diamond, emerald, quartz, coal) that open/close on
- * a schedule. This scans for gate blocks near the player and shows their
- * current colour + a beam so you can plan the water flow.
- *
- * Gate timing data from Skyblocker's watertimes.json (verified Hypixel timings).
- */
 public final class WaterPuzzleHelper {
 
     private WaterPuzzleHelper() {}
 
-    // Block colours → gate names used in the puzzle
+    
     private static final String[] GATE_TYPES = {
         "terracotta", "gold", "diamond", "emerald", "quartz", "coal", "water"
     };
@@ -34,7 +26,7 @@ public final class WaterPuzzleHelper {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        // scan for gate blocks (colored terracotta/clay/wool/concrete in a row)
+        
         var pp = mc.player.blockPosition();
         java.util.List<BlockPos> gates = new java.util.ArrayList<>();
         for (int dx = -20; dx <= 20; dx++)
@@ -44,7 +36,7 @@ public final class WaterPuzzleHelper {
                     var bs = mc.level.getBlockState(bp);
                     Block b = bs.getBlock();
                     String id = b.getDescriptionId();
-                    // detect gate blocks by their description IDs
+                    
                     if (id.contains("terracotta") || id.contains("concrete") || id.contains("wool")) {
                         if (!id.contains("light_gray") && !id.contains("gray_")) {
                             gates.add(bp);
@@ -52,8 +44,8 @@ public final class WaterPuzzleHelper {
                     }
                 }
 
-        // deduplicate: water puzzle gates are arranged in a line of ~7 blocks
-        // only highlight one per column
+        
+        
         java.util.Set<String> seen = new java.util.HashSet<>();
         for (var bp : gates) {
             String key = bp.getX() + "," + bp.getZ();

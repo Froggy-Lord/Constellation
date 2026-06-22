@@ -16,11 +16,6 @@ import net.minecraft.network.chat.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Lyra — economy. Tracks the purse off the sidebar (the most stable signal in the game) and
- * shows the net coins gained/lost this session. The "Purse:" / "Piggy:" line is present on
- * every SkyBlock sidebar, so this needs no per-area special casing.
- */
 public class LyraEconomy extends BaseConstellation {
 
     @Override public String id() { return "lyra"; }
@@ -43,7 +38,7 @@ public class LyraEconomy extends BaseConstellation {
         cfg = (LyraConfig) getConfig();
         // refresh the parsed purse each second
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
-        // bazaar undercut alerts
+        
         if (cfg.bazaarUndercutAlert) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -58,7 +53,7 @@ public class LyraEconomy extends BaseConstellation {
             });
         }
 
-        // auction alerts — outbid, sold, expired
+        
         if (cfg.auctionOutbidAlert || cfg.auctionSoldAlert) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -76,9 +71,9 @@ public class LyraEconomy extends BaseConstellation {
             });
         }
 
-        // extra item tooltip lines (reforge, stars, hpb, recomb, sb id)
+        
         LyraTooltips.init(cfg);
-        // compact slot markers (pet level, stars, cake year)
+        
         LyraSlotText.init(cfg);
     }
 
@@ -116,7 +111,7 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 80), cfg.purseHud));
         }
-        // purse change flash — shows briefly when coins change by a meaningful amount
+        
         hud.register(new HudWidget("lyra-change", "ΔCoins",
             () -> {
                 long ms = System.currentTimeMillis() - changeAt;
@@ -131,7 +126,7 @@ public class LyraEconomy extends BaseConstellation {
                 () -> {
                     var mc = net.minecraft.client.Minecraft.getInstance();
                     if (mc.player == null) return null;
-                    // check for arrows in the quiver
+                    
                     var inv = mc.player.getInventory();
                     for (int i = 0; i < inv.getContainerSize(); i++) {
                         var stack = inv.getItem(i);
@@ -209,7 +204,7 @@ public class LyraEconomy extends BaseConstellation {
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        // /buy <item> — opens bazaar search
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("buy")
             .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("item", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
                 .executes(ctx -> {
@@ -218,7 +213,7 @@ public class LyraEconomy extends BaseConstellation {
                     if (mc.player != null) mc.player.connection.sendCommand("bz " + item);
                     return 1;
                 })));
-        // /sell <item> — opens bazaar to sell
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sell")
             .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("item", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
                 .executes(ctx -> {
@@ -233,14 +228,14 @@ public class LyraEconomy extends BaseConstellation {
                     var mc = Minecraft.getInstance();
                     if (mc.player == null || !ConstellationClient.loc().onHypixel()) return 0;
                     mc.player.sendSystemMessage(Component.literal("§6=== Profile Summary ==="));
-                    // purse
+                    
                     long purse = currentPurse;
                     mc.player.sendSystemMessage(Component.literal("§6Purse: §f" + compact(purse)));
-                    // bits from sidebar
+                    
                     for (String line : ConstellationClient.loc().getSidebarLines()) {
                         if (line.contains("Bits")) mc.player.sendSystemMessage(Component.literal("§bBits: §f" + line.substring(line.indexOf(":") + 1).trim()));
                     }
-                    // stats from action bar
+                    
                     if (com.froggylord.constellation.core.ActionBar.hasData()) {
                         mc.player.sendSystemMessage(Component.literal("§cHP: §f" + compact(com.froggylord.constellation.core.ActionBar.health()) + " §7/ " + compact(com.froggylord.constellation.core.ActionBar.maxHealth())));
                         mc.player.sendSystemMessage(Component.literal("§bMana: §f" + compact(com.froggylord.constellation.core.ActionBar.mana()) + " §7/ " + compact(com.froggylord.constellation.core.ActionBar.maxMana())));
@@ -249,7 +244,7 @@ public class LyraEconomy extends BaseConstellation {
                     return 1;
                 }));
         }
-        // /coinsreset — reset the session baseline to the current purse
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("coinsreset")
             .executes(ctx -> {
                 sessionStart = currentPurse;

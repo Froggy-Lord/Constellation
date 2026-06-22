@@ -24,7 +24,7 @@ public class CassiopeiaChat extends BaseConstellation {
     private CassiopeiaConfig cfg;
     private final ChatPipeline pipeline = new ChatPipeline();
 
-    // party trigger state
+    
     private final Map<String, Long> triggerLastUsed = new HashMap<>();
     private static final List<String> KNOWN_PLAYERS = new ArrayList<>();
 
@@ -35,18 +35,18 @@ public class CassiopeiaChat extends BaseConstellation {
 
         pipeline.init();
 
-        // ---- ALLOW_GAME: action bar cleaner (SkyblockTweaks-style) ----
+        
         if (cfg.actionBarCleaner) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
                 if (!overlay || !cfg.actionBarCleaner) return true;
                 String s = msg.getString();
-                // strip the verbose action bar spam
-                if (s.contains("❤") && s.length() > 30) return false; // strip health/defense display
+                
+                if (s.contains("❤") && s.length() > 30) return false; 
                 return true;
             });
         }
 
-        // ---- ALLOW_GAME: cleaner (runs EARLIEST so it sees messages before anything else) ----
+        
         pipeline.allow(msg -> {
             if (!cfg.cleanBlocksInWay && !cfg.cleanNotEnoughMana && !cfg.cleanCantTeleport) return true;
             String s = msg.getString();
@@ -56,14 +56,14 @@ public class CassiopeiaChat extends BaseConstellation {
             return true;
         }, ChatPipeline.Priority.EARLIEST);
 
-        // ---- ALLOW_GAME: kill the useless "Warps" message ----
+        
         pipeline.allow(msg -> {
             String s = msg.getString();
             if (s.contains("●") && (s.contains("/warp") || s.contains("/hub"))) return false;
             return true;
         }, ChatPipeline.Priority.LATEST);
 
-        // ---- ALLOW_GAME: boss dialogue, blessings, milestones etc ----
+        
         pipeline.allow(msg -> {
             String s = msg.getString().toLowerCase(Locale.ROOT);
             if (cfg.cleanBossDialogue && s.startsWith("[boss]")) return false;
@@ -104,23 +104,23 @@ public class CassiopeiaChat extends BaseConstellation {
             if (cfg.cleanImplosion && s.contains("implosion")) return false;
             if (cfg.cleanAbilityCooldown && (s.contains("cooldown") || s.contains("no more charges"))) return false;
 
-            // custom spam filter list
+            
             for (String filter : cfg.spamFilters) {
                 if (s.contains(filter.toLowerCase(Locale.ROOT))) return false;
             }
             return true;
         });
 
-        // ---- MODIFY_GAME: compact potion messages ----
+        
         if (cfg.compactPotionMessages) {
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                if (s.contains("Potion effects") || s.contains("Your active")) return null; // null = hide
+                if (s.contains("Potion effects") || s.contains("Your active")) return null; 
                 return msg;
             });
         }
 
-        // ---- MODIFY_GAME: shorten coin amounts in chat ----
+        
         if (cfg.shortenCoins) {
             var COIN = java.util.regex.Pattern.compile("[\\d,]{4,}");
             pipeline.modify(msg -> {
@@ -134,22 +134,22 @@ public class CassiopeiaChat extends BaseConstellation {
                         return String.format("%.2fM", n / 1_000_000.0);
                     } catch (Exception e) { return mr.group(); }
                 });
-                // only recreate if something actually changed; preserves formatting on everything else
+                
                 return rep.equals(s) ? msg : net.minecraft.network.chat.Component.literal(rep);
             });
         }
 
-        // ---- MODIFY_GAME: compact bestiary messages ----
+        // ---- modify_game: compact best...
         if (cfg.compactBestiary) {
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                // just hide the verbose bestiary/magic-find lines entirely
+                
                 if (s.contains("Bestiary") && (s.contains("+") || s.contains("%"))) return null;
                 return msg;
             });
         }
 
-        // ---- GAME: mention alerts ----
+        // ---- game: mention alerts ----
         if (cfg.mentionAlert) {
             pipeline.onGame(msg -> {
                 String s = msg.getString().toLowerCase(Locale.ROOT);
@@ -163,7 +163,7 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
-        // ---- MODIFY_GAME: timestamps ----
+        
         if (cfg.timestamps) {
             var fmt = DateTimeFormatter.ofPattern("HH:mm");
             pipeline.modify(msg -> {
@@ -172,18 +172,18 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
-        // ---- MODIFY_GAME: clickable links ----
+        
         if (cfg.clickableLinks) {
             pipeline.modify(msg -> {
                 String s = msg.getString();
-                // only touch messages that actually have a url — leave the rest alone
+                // make urls clickable
                 if (!s.contains("http://") && !s.contains("https://")) return msg;
-                s = s.replaceAll("(https?://[^\\s]+)", "§9§n$1§r");
+                s = s.replaceAll("(https?://[^\\s]+)", "§9$1§r");
                 return Component.literal(s);
             });
         }
 
-        // ---- GAME: mention alert ----
+        
         if (cfg.mentionAlert) {
             pipeline.onGame(msg -> {
                 var mc = Minecraft.getInstance();
@@ -195,7 +195,7 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
-        // ---- GAME: AutoGG (send "gg" on dungeon/kuudra end) ----
+        
         if (cfg.autoGG) {
             pipeline.onGame(msg -> {
                 String s = msg.getString();
@@ -206,7 +206,7 @@ public class CassiopeiaChat extends BaseConstellation {
             });
         }
 
-        // ---- GAME: full inventory warning (SBA feature) ----
+        
         pipeline.onGame(msg -> {
             String s = msg.getString();
             if (s.contains("Your inventory is full") || s.contains("cannot fit") || s.contains("inventory full")) {
@@ -218,7 +218,7 @@ public class CassiopeiaChat extends BaseConstellation {
             }
         });
 
-        // ---- GAME: legendary sea creature alert (SBA feature) ----
+        
         pipeline.onGame(msg -> {
             String s = msg.getString();
             if (s.contains("A legendary Sea Creature has spawned")) {
@@ -231,19 +231,19 @@ public class CassiopeiaChat extends BaseConstellation {
             }
         });
 
-        // ---- GAME: party triggers ----
+        
         if (cfg.partyTriggers) {
             pipeline.onGame(msg -> handlePartyTrigger(msg));
         }
 
-        // AutoTip — send /tip all every 30 minutes on Hypixel
+        
         ConstellationClient.tick().every(20 * 60 * 30, "cassiopeia-autotip", () -> {
             var mc = Minecraft.getInstance();
             if (mc.player != null && ConstellationClient.loc().onHypixel())
                 mc.player.connection.sendCommand("tip all");
         });
 
-        // short commands handled in registerCommands
+        
     }
 
     private void handlePartyTrigger(Component msg) {
@@ -290,9 +290,9 @@ public class CassiopeiaChat extends BaseConstellation {
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         if (!cfg.floorShortcuts && !cfg.warpShortcuts && !cfg.partyShortcuts) return;
 
-        // floor shortcuts: /f1-/f7, /m1-/m7, /e, /r
+        
         if (cfg.floorShortcuts) {
-            // hypixel's dungeon-join instance ids use word floor numbers
+            
             for (int i = 0; i < 7; i++) {
                 final int idx = i;
                 dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("f" + (i + 1))
@@ -309,7 +309,7 @@ public class CassiopeiaChat extends BaseConstellation {
                 }));
         }
 
-        // /sbmenu — SkyBlock menu
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sbmenu")
             .executes(ctx -> { sendCmd("sbmenu"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("craft")
@@ -361,7 +361,7 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("sacks"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("potionbag")
             .executes(ctx -> { sendCmd("potionbag"); return 1; }));
-        // NoFrills-style sack filler commands
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getpearls")
             .executes(ctx -> { sendCmd("gfs ender_pearl 16"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getleaps")
@@ -410,7 +410,7 @@ public class CassiopeiaChat extends BaseConstellation {
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("equip")
             .executes(ctx -> { sendCmd("equipment"); return 1; }));
 
-        // warp shortcuts
+        
         if (cfg.warpShortcuts) {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("h")
                 .executes(ctx -> { sendCmd("warp hub"); return 1; }));
@@ -424,7 +424,7 @@ public class CassiopeiaChat extends BaseConstellation {
                 .executes(ctx -> { sendCmd("warp"); return 1; }));
         }
 
-        // party shortcuts
+        
         if (cfg.partyShortcuts) {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("pi")
                 .executes(ctx -> { sendCmd("party"); return 1; }));
@@ -451,7 +451,7 @@ public class CassiopeiaChat extends BaseConstellation {
         }
     }
 
-    // hypixel dungeon-join instance ids (word floor numbers)
+    // hypixel dungeon-join instance ...
     private static final String[] NORMAL_FLOORS = {
         "CATACOMBS_FLOOR_ONE","CATACOMBS_FLOOR_TWO","CATACOMBS_FLOOR_THREE","CATACOMBS_FLOOR_FOUR",
         "CATACOMBS_FLOOR_FIVE","CATACOMBS_FLOOR_SIX","CATACOMBS_FLOOR_SEVEN"
@@ -471,7 +471,7 @@ public class CassiopeiaChat extends BaseConstellation {
     private static void sendCmd(String cmd) {
         var mc = Minecraft.getInstance();
         if (mc.player == null) return;
-        // expand CommandKeys-style placeholders
+        
         String expanded = cmd
             .replace("%myname%", mc.player.getName().getString())
             .replace("%x%", String.valueOf((int)mc.player.getX()))
@@ -481,10 +481,9 @@ public class CassiopeiaChat extends BaseConstellation {
         mc.player.connection.sendCommand(expanded);
     }
 
-    /** Crude expression evaluator for basic arithmetic. */
     private static double eval(String expr) {
         expr = expr.replaceAll("\\s+", "");
-        // find the rightmost + or - (lowest precedence)
+        // find the rightmost + or - (low...
         int parens = 0;
         for (int i = expr.length() - 1; i >= 1; i--) {
             char c = expr.charAt(i);
@@ -495,7 +494,7 @@ public class CassiopeiaChat extends BaseConstellation {
                 if (c == '-') return eval(expr.substring(0, i)) - eval(expr.substring(i + 1));
             }
         }
-        // find rightmost * or /
+        
         parens = 0;
         for (int i = expr.length() - 1; i >= 1; i--) {
             char c = expr.charAt(i);
@@ -506,9 +505,9 @@ public class CassiopeiaChat extends BaseConstellation {
                 if (c == '/') return eval(expr.substring(0, i)) / eval(expr.substring(i + 1));
             }
         }
-        // strip parens
+        
         if (expr.startsWith("(") && expr.endsWith(")")) return eval(expr.substring(1, expr.length() - 1));
-        // number
+        
         if (expr.endsWith("k")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1000;
         if (expr.endsWith("m")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1_000_000;
         if (expr.endsWith("b")) return Double.parseDouble(expr.substring(0, expr.length() - 1)) * 1_000_000_000;

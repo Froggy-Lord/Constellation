@@ -11,11 +11,6 @@ import com.froggylord.constellation.hud.HudWidget;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Cygnus — events + calendar. For now a SkyBlock date/time readout pulled off the sidebar (the
- * season/day and the in-game clock are both shown there on most islands). Diana burrows, mayor
- * info and event countdowns come later.
- */
 public class CygnusEvents extends BaseConstellation {
 
     @Override public String id() { return "cygnus"; }
@@ -32,11 +27,11 @@ public class CygnusEvents extends BaseConstellation {
 
     private static int inquisitors = 0;
     private static int mythosDrops = 0;
-    // diana burrow triangulation — spade direction samples
-    private static final double[][] spadeSamples = new double[4][3]; // {x, z, angle}
+    
+    private static final double[][] spadeSamples = new double[4][3]; 
     private static int spadeIdx = 0;
     private static double burrowX = Double.NaN, burrowZ = Double.NaN;
-    // the mythological-ritual loot lines worth counting
+    
     private static final String[] MYTHOS = {
         "Griffin Feather", "Crown of Greed", "Washed-up Souvenir", "Daedalus Stick",
         "Minos Relic", "Enchanted Egg", "Dwarf Turtle Shelmet", "Antique Remedies",
@@ -50,8 +45,8 @@ public class CygnusEvents extends BaseConstellation {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
 
-            // Minos Inquisitor — parse exact coordinates from the verified chat format:
-            // "A MINOS INQUISITOR has spawned near [area] at Coords X Y Z"
+            
+            
             if (cfg.dianaInquisitorAlert && s.contains("MINOS INQUISITOR")) {
                 inquisitors++;
                 com.froggylord.constellation.core.StatStore.add("cygnus.diana.inquisitors", 1);
@@ -79,11 +74,11 @@ public class CygnusEvents extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.2f);
                 }
             }
-            // mythos drop tally — the dig loot lines
+            
             if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
                 for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; com.froggylord.constellation.core.StatStore.add("cygnus.diana.drops", 1); break; } }
             }
-            // spade direction — triangulate burrow position
+            
             if (cfg.dianaBurrowWaypoints && s.contains("The Spade points")) {
                 String low = s.toLowerCase(java.util.Locale.ROOT);
                 double angle = -1;
@@ -108,7 +103,7 @@ public class CygnusEvents extends BaseConstellation {
             }
         });
 
-        // Carnival helpers — chat-based hints
+        
         if (cfg.carnivalHelper) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -125,7 +120,7 @@ public class CygnusEvents extends BaseConstellation {
             });
         }
 
-        // world render — burrow waypoint
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.dianaBurrowWaypoints) return;
             if (!ConstellationClient.loc().onHypixel()) return;
@@ -138,7 +133,7 @@ public class CygnusEvents extends BaseConstellation {
 
     private static void triangulate() {
         if (spadeIdx < 2) return;
-        // take the 2 most recent samples and intersect their rays
+        
         double x1 = spadeSamples[(spadeIdx - 2) % 4][0];
         double z1 = spadeSamples[(spadeIdx - 2) % 4][1];
         double a1 = spadeSamples[(spadeIdx - 2) % 4][2];
@@ -149,7 +144,7 @@ public class CygnusEvents extends BaseConstellation {
         double dx1 = Math.sin(a1), dz1 = -Math.cos(a1);
         double dx2 = Math.sin(a2), dz2 = -Math.cos(a2);
         double det = dx1 * dz2 - dz1 * dx2;
-        if (Math.abs(det) < 0.001) return; // parallel rays
+        if (Math.abs(det) < 0.001) return; 
 
         double t = ((x2 - x1) * dz2 - (z2 - z1) * dx2) / det;
         burrowX = x1 + t * dx1;

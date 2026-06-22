@@ -9,10 +9,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.AnvilMenu;
 
-/**
- * Anvil helper — shows the XP cost prominently on the anvil screen so you can see
- * at a glance whether this combine is worth the levels. (cmp. Skyblocker AnvilHelper)
- */
 public final class AurigaHelpers {
 
     private AurigaHelpers() {}
@@ -40,7 +36,7 @@ public final class AurigaHelpers {
         var font = Minecraft.getInstance().font;
         String text = cost + " levels";
         int col = cost <= 30 ? 0xFF55FF55 : cost <= 60 ? 0xFFFFAA00 : 0xFFFF5555;
-        // draw left of the anvil output slot
+        
         g.text(font, text, left - font.width(text) - 4, top + 30, col, true);
     }
 }

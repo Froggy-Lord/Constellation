@@ -12,11 +12,6 @@ import com.froggylord.constellation.hud.HudWidget;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Hercules — farming. Pulls your current Jacob's contest progress off the tab list and
- * visitor queue status off the sidebar. Both are stable Hypixel signals; the garden is the
- * only place visitors appear.
- */
 public class HerculesFarming extends BaseConstellation {
 
     @Override public String id() { return "hercules"; }
@@ -40,7 +35,7 @@ public class HerculesFarming extends BaseConstellation {
     public void init(InitContext ctx) {
         cfg = (HerculesConfig) getConfig();
         if (cfg == null) return;
-        // contest start notification — check sidebar for "Starts in: 1m" or similar
+        // contest start notification — c...
         ConstellationClient.tick().every(20, "hercules-contest-alert", () -> {
             if (!inGarden()) return;
             for (String line : ConstellationClient.loc().getSidebarLines()) {
@@ -59,7 +54,7 @@ public class HerculesFarming extends BaseConstellation {
                 }
             }
         });
-        // Glowing mushrooms — highlight mushroom blocks in the garden
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.glowingMushrooms || !inGarden()) return;
             var mc3 = net.minecraft.client.Minecraft.getInstance();
@@ -76,7 +71,7 @@ public class HerculesFarming extends BaseConstellation {
                     }
         });
 
-        // sweep overlay — highlight the harvest area when holding a farming tool
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.sweepOverlay || !inGarden()) return;
             var mc2 = net.minecraft.client.Minecraft.getInstance();
@@ -87,7 +82,7 @@ public class HerculesFarming extends BaseConstellation {
             if (!id.contains("hoe") && !id.contains("axe") && !id.contains("shears")) return;
             var look = mc2.player.getViewVector(1f);
             var eye = mc2.player.getEyePosition(1f);
-            // 5 blocks in front, 2 to each side
+            
             for (int d = 1; d <= 5; d++) {
                 var center = eye.add(look.scale(d));
                 for (int x = -2; x <= 2; x++)
@@ -98,7 +93,7 @@ public class HerculesFarming extends BaseConstellation {
             }
         });
 
-        // space farmer — auto-hold space for farming rows
+        
         if (cfg.spaceFarmer) {
             ConstellationClient.tick().every(2, "hercules-space", () -> {
                 if (!inGarden()) return;
@@ -108,7 +103,7 @@ public class HerculesFarming extends BaseConstellation {
             });
         }
 
-        // dicer filter — suppress verbose dicer roll messages
+        
         if (cfg.dicerFilter) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return true;
@@ -118,7 +113,7 @@ public class HerculesFarming extends BaseConstellation {
             });
         }
 
-        // pest watch — the scoreboard shows a live "Pests: N" while any are loose in your plots
+        
         ConstellationClient.tick().every(20, "hercules-pests", () -> {
             if (cfg == null || !cfg.pestAlert || !inGarden()) return;
             int pests = readPests();
@@ -275,7 +270,7 @@ public class HerculesFarming extends BaseConstellation {
             Matcher m = CONTEST.matcher(line);
             if (!m.find()) break;
             sb.append("§a").append(m.group("crop").trim()).append(" §f").append(m.group("pct"));
-            break; // first crop line
+            break; 
         }
         return sb.length() == 0 ? null : sb.toString();
     }

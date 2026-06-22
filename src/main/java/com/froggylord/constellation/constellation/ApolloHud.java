@@ -21,12 +21,12 @@ public class ApolloHud extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
-        // make dmg numbers smaller
+        
         ApolloConfig cfg2 = (ApolloConfig) getConfig();
         if (cfg2 != null && cfg2.compactDamage) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
                 String s = message.getString();
-                // "✧ 1,234,567 ✧" → "✧ 1.2M ✧" on damage lines
+                
                 if (s.contains("✧") && s.length() < 40) {
                     s = java.util.regex.Pattern.compile("[\\d,]{4,}").matcher(s).replaceAll(
                         mr -> compactDamage(mr.group()));
@@ -35,7 +35,7 @@ public class ApolloHud extends BaseConstellation {
                 return message;
             });
         }
-        // tps guesser
+        
         ConstellationClient.tick().every(20, "apollo-tps", () -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level == null) { lastReal = 0; return; }
@@ -93,7 +93,7 @@ public class ApolloHud extends BaseConstellation {
                     return "§c" + compact(com.froggylord.constellation.core.ActionBar.health())
                         + "§7/" + compact(com.froggylord.constellation.core.ActionBar.maxHealth());
                 if (mc.player == null) return "?";
-                return String.format("%.0f", mc.player.getHealth()); // vanilla fallback off-Hypixel
+                return String.format("%.0f", mc.player.getHealth()); 
             },
             toPos(cfg.health), cfg.health.visible));
 
@@ -227,7 +227,7 @@ public class ApolloHud extends BaseConstellation {
                     var stack = mc.player.getInventory().getItem(i);
                     if (stack.isEmpty() || !cds.isOnCooldown(stack)) continue;
                     float pct = cds.getCooldownPercent(stack, 0);
-                    int rem = Math.round(pct * 10); // 10 = rough max; shows "4" = 40% remaining
+                    int rem = Math.round(pct * 10); 
                     if (sb.length() > 0) sb.append(" ");
                     sb.append("§7").append(i + 1).append(":§c").append(rem > 0 ? rem : 1);
                 }
@@ -262,7 +262,6 @@ public class ApolloHud extends BaseConstellation {
         } catch (NumberFormatException e) { return num; }
     }
 
-    /** 1234 -> 1.2k, 1500000 -> 1.5M */
     private static String compact(int n) {
         if (n < 1000) return Integer.toString(n);
         if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);

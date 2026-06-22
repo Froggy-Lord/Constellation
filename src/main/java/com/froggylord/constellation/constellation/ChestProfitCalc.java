@@ -12,11 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.component.CustomData;
 
-/**
- * When a dungeon reward chest opens at the end of a run, this reads every item's hidden SB id,
- * looks up its bazaar buy price, and draws a live total on the screen so you can decide
- * whether the chest is worth unlocking. (cmp. Skyblocker ChestValue)
- */
 public final class ChestProfitCalc {
 
     private ChestProfitCalc() {}
@@ -28,8 +23,8 @@ public final class ChestProfitCalc {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             if (!(screen instanceof AbstractContainerScreen<?> cs)) return;
             String title = cs.getTitle().getString();
-            // dungeon reward chests have titles like "Wood Chest", "Gold Chest", etc.
-            // or "Dungeon Reward" — match any chest screen that appears after a dungeon
+            
+            // or "dungeon reward" — match an...
             if (!title.contains("Chest") && !title.contains("Reward") && !title.contains("Dungeon")) return;
             if (!ConstellationClient.loc().inDungeons()) return;
             ScreenEvents.afterExtract(screen).register((scr, g, mx, my, d) -> {
@@ -54,7 +49,7 @@ public final class ChestProfitCalc {
             String id = extra.getStringOr("id", "");
             if (id.isEmpty()) continue;
             double[] bz = BazaarApi.get(id);
-            if (bz == null || bz[1] <= 0) continue; // bz[1] = sell price
+            if (bz == null || bz[1] <= 0) continue; 
             total += bz[1] * stack.getCount();
             count++;
         }

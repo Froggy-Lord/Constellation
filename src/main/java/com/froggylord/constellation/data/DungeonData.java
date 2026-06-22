@@ -8,39 +8,29 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.InflaterInputStream;
 
-/**
- * Loads the bundled dungeon room database (skeletons + secrets + routes).
- *
- * The skeleton format is the shared DungeonRooms community format: a Java-serialized
- * int[] per room, deflate-compressed, where each int packs a block position + numeric
- * block id as (relX<<24 | worldY<<16 | relZ<<8 | id). The 21-entry block id table and
- * the floor-relative Y normalisation are part of that on-disk format spec.
- */
 public class DungeonData {
 
-    // shape (e.g. "1x1") -> roomName -> sorted fingerprint
+    
     public static final Map<String, Map<String, int[]>> ROOMS = new HashMap<>();
-    // roomName -> secrets list
+    
     public static final Map<String, List<Secret>> SECRETS = new HashMap<>();
-    // roomName -> route variants (standard walk routes, and pearl-clip routes)
+    
     public static final Map<String, List<Route>> ROUTES = new HashMap<>();
     public static final Map<String, List<Route>> PEARL_ROUTES = new HashMap<>();
-    // flat candidate list with precomputed local dims (max relX / relZ), for fit-filtering
+    // flat candidate list with preco...
     public static final List<Candidate> CANDIDATES = new ArrayList<>();
 
     private static volatile boolean loaded = false;
 
     public record Secret(String category, String name, int x, int y, int z) {}
 
-    /** One secret route: the walk path plus typed action points, all room-relative coords. */
     public record Route(List<int[]> locations, List<int[]> etherwarps, List<int[]> interacts,
                         List<int[]> mines, List<int[]> tnts, List<int[]> pearls,
                         String secretType, int[] secret) {}
 
-    /** A room fingerprint with its local footprint dims (max relX, relZ). */
     public record Candidate(String name, int[] fp, int rx, int rz) {}
 
-    // ---- block id table (the on-disk format's fixed numeric ids; 0 = untracked) ----
+    // ---- block id table (the on-di...
     private static final Map<String, Byte> NUMERIC_ID = new HashMap<>();
     static {
         String[] names = {
@@ -75,7 +65,7 @@ public class DungeonData {
             if (in == null) return;
             JsonObject root = new Gson().fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), JsonObject.class);
             for (var entry : root.entrySet()) {
-                if (entry.getKey().startsWith("#") || !entry.getValue().isJsonArray()) continue; // skip #origin etc.
+                if (entry.getKey().startsWith("#") || !entry.getValue().isJsonArray()) continue; 
                 List<Route> variants = new ArrayList<>();
                 for (var el : entry.getValue().getAsJsonArray()) {
                     JsonObject o = el.getAsJsonObject();
@@ -126,13 +116,13 @@ public class DungeonData {
                 try (InputStream sk = res("catacombs/" + line + ".skeleton")) {
                     if (sk == null) continue;
                     try (ObjectInputStream in = new ObjectInputStream(new InflaterInputStream(sk))) {
-                        // skeletons use ABSOLUTE world Y (dungeon floor sits at a fixed height),
-                        // so no normalization — match world blocks against absolute Y directly,
-                        // the way Skyblocker does. just sort for binary search.
+                        
+                        
+                        // the way skyblocker does. just ...
                         int[] fp = (int[]) in.readObject();
                         java.util.Arrays.sort(fp);
                         ROOMS.computeIfAbsent(shape, k -> new HashMap<>()).put(name, fp);
-                        // compute local footprint dims for fit-filtering
+                        
                         int mx = 0, mz = 0;
                         for (int v : fp) {
                             int x = idX(v), z = idZ(v);
@@ -142,7 +132,7 @@ public class DungeonData {
                         CANDIDATES.add(new Candidate(name, fp, mx, mz));
                     }
                 } catch (Exception e) {
-                    // skip unreadable rooms
+                    
                 }
             }
         } catch (Exception e) {
@@ -176,7 +166,7 @@ public class DungeonData {
         return DungeonData.class.getResourceAsStream("/assets/constellation/dungeons/" + path);
     }
 
-    // ---- format helpers (the on-disk encoding) ----
+    
 
     public static int posIdToInt(int relX, int relY, int relZ, byte id) {
         return relX << 24 | relY << 16 | relZ << 8 | (id & 0xFF);

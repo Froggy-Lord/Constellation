@@ -11,10 +11,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
 
-/**
- * Spirit Leap helper — when the leap menu is open, tag each teammate's head with their class so
- * you can pick the right jump at a glance instead of reading every tooltip.
- */
 public final class OrionSpiritLeap {
 
     private OrionSpiritLeap() {}

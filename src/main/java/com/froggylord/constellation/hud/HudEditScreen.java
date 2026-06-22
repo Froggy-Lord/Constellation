@@ -9,11 +9,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-/**
- * One editor for every HUD element. Shows only elements that are visible now or were in
- * the last 10s — so dungeon stats are draggable while you're in a dungeon, the map while
- * it's showing, etc. Each element draws its real appearance; you drag to reposition.
- */
 public class HudEditScreen extends Screen {
 
     private final Screen parent;
@@ -41,17 +36,17 @@ public class HudEditScreen extends Screen {
             int py = el.position().y() * height / 100;
             int w = Math.max(el.width(), 12), h = Math.max(el.height(), 8);
 
-            // draw the element's real appearance where it would actually sit
+            
             try { el.render(g, px, py); } catch (Exception ignored) {}
 
-            // drag handle border
+            
             int border = (dragging == el) ? NebulaTheme.ACCENT_GOLD : 0x55FFFFFF;
             g.fill(px - 2, py - 2, px + w + 2, py - 1, border);
             g.fill(px - 2, py + h + 1, px + w + 2, py + h + 2, border);
             g.fill(px - 2, py - 2, px - 1, py + h + 2, border);
             g.fill(px + w + 1, py - 2, px + w + 2, py + h + 2, border);
 
-            // label tag above the element
+            
             String tag = el.editorLabel();
             g.text(font, tag, px, py - 11, dragging == el ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_MUTED, true);
         }

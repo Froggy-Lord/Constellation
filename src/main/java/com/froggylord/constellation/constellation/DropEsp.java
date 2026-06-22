@@ -7,16 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Boxes the dungeon utility items that get dropped on the floor mid-run — easy to walk past in a
- * fight, annoying to lose. Through-walls off (depth-tested) so it stays within the rules for
- * things that move.
- */
 public final class DropEsp {
 
     private DropEsp() {}
 
-    private static final int COLOUR = 0xFFFFFF55; // yellow
+    private static final int COLOUR = 0xFFFFFF55; 
     private static final String[] WATCH = {
         "Spirit Leap", "Decoy", "Training Weights", "Architect's First Draft",
         "Trap", "Defuse Kit", "Inflatable Jerry", "Spirit Bow", "Premium Flesh"

@@ -41,61 +41,61 @@ public class OrionDungeons extends BaseConstellation {
         cfg = (OrionConfig) getConfig();
         if (cfg == null) return;
 
-        // load dungeon data (room skeletons, secrets, routes)
+        
         DungeonData.load();
 
-        // phase-3 terminal solvers — highlight-only hints over the open chest
+        
         OrionTerminals.init(cfg);
-        // spirit-leap menu — class tags on teammate heads
+        
         OrionSpiritLeap.init(cfg);
-        // door/key highlighter — beam over dropped keys + door status
+        
         DoorHighlighter.init();
-        // puzzle solvers — Simon Says, Three Weirdos, Trivia (chat + screen) + Creeper Beams
+        // puzzle solvers — simon says, t...
         OrionPuzzles.init(cfg);
-        // dungeon chest profit calculator — shows total value of reward chest items
+        
         ChestProfitCalc.init(cfg);
-        // F5/M5 Livid finder — hide wrong clones, box real one by HP
+        // f5/m5 livid finder — hide wron...
         LividFinder.init();
 
-        // waypoint renderer
+        
         ConstellationClient.world().register(SecretWaypoints::draw);
-        // routes, takes over waypoints
+        
         ConstellationClient.world().register(Routes::draw);
-        // combat highlights
+        
         ConstellationClient.world().register(CombatEsp::draw);
-        // F3/M3 blaze puzzle — mark lowest + highest health blaze
+        // f3/m3 blaze puzzle — mark lowe...
         ConstellationClient.world().register(BlazeSolver::draw);
-        // drop esp — box useful items dropped on the floor
+        
         ConstellationClient.world().register(DropEsp::draw);
-        // door/key highlighter — beam over keys + door status (red/green)
+        
         ConstellationClient.world().register(DoorHighlighter::draw);
-        // creeper beams — draw links between sea lanterns
+        
         ConstellationClient.world().register(OrionPuzzles::drawBeams);
-        // M7 dragon markers — highlight priority dragon
+        
         ConstellationClient.world().register(M7Dragons::draw);
-        // Goldor phase waypoints — terminal positions from Skyblocker data
+        
         ConstellationClient.world().register(GoldorWaypoints::draw);
-        // Water puzzle gate highlighter
+        // water puzzle gate highlighter
         ConstellationClient.world().register(WaterPuzzleHelper::draw);
-        // Ice Fill helper — highlight unfilled vs filled ice blocks
+        
         ConstellationClient.world().register(IceFillHelper::draw);
-        // Boulder solver — box the boulder and goal, draw direction hint
+        
         ConstellationClient.world().register(BoulderSolver::draw);
-        // Silverfish solver — highlight fish + nearest pressure plate path
+        // silverfish solver — highlight ...
         ConstellationClient.world().register(SilverfishSolver::draw);
-        // F5/M5 Livid finder — hide wrong clones, box the real one
+        
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
 
-        // score chat reader. read-only (always allow) so it
-        // sees boss dialogue even if the chat cleaner would later hide it.
+        
+        // sees boss dialogue even if the...
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (!overlay && ConstellationClient.loc().inDungeons()) {
                 String s = message.getString();
                 com.froggylord.constellation.data.DungeonScore.onChat(s);
                 com.froggylord.constellation.data.DefensiveTracker.onChat(s);
                 if (cfg.blessingDisplay) OrionBlessings.onChat(s);
-                // rare room alerts
+                
                 if (cfg.rareRoomAlerts) {
                     String low = s.toLowerCase(java.util.Locale.ROOT);
                     if (low.contains("trinity")) rareRoomAlert("Trinity", "§d");
@@ -103,22 +103,22 @@ public class OrionDungeons extends BaseConstellation {
                     else if (low.contains("duncan")) rareRoomAlert("Duncan", "§6");
                     else if (low.contains("this room seems") && low.contains("empty")) rareRoomAlert("Empty Room", "§8");
                 }
-                // mimic party ping (respects streamer mode)
+                
                 if (cfg.mimicPartyPing && !cfg.streamerMode && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!"))) {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
                 }
-                // Spirit Bow — pickup starts a 30s respawn timer
+                // spirit bow — pickup starts a 3...
                 if (cfg.spiritBowTimer && s.contains("Spirit Bow") && s.contains("picked up"))
                     spiritBowUntil = System.currentTimeMillis() + 30_000;
 
-                // Fire Freeze staff cooldown — chat says "Fire Freeze Staff is now ready!"
+                // fire freeze staff cooldown — c...
                 if (cfg.fireFreezeTimer && s.contains("Fire Freeze")) {
                     if (s.contains("ready")) fireFreezeMs = 0;
                     else fireFreezeMs = System.currentTimeMillis() + 5700;
                 }
 
-                // Shadow Assassin targeting you — title warning
+                
                 if (cfg.shadowAssassinAlert && s.contains("Shadow Assassin") && (s.contains("targeted") || s.contains("targeting"))) {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
@@ -126,11 +126,11 @@ public class OrionDungeons extends BaseConstellation {
                         mc.gui.hud.setTitle(Component.literal("§5🗡 Shadow Assassin!"));
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.8f);
                     }
-                    // SA vanishes ~20s after spawning; start a countdown
+                    
                     if (cfg.saVanishTimer) saVanishUntil = System.currentTimeMillis() + 20_000;
                 }
 
-                // key pickup alerts — also count them
+                
                 if (s.contains("Wither Key") || s.contains("Blood Key")) {
                     if (s.contains("picked up")) {
                         if (s.contains("Wither")) doorsOpened++;
@@ -150,7 +150,7 @@ public class OrionDungeons extends BaseConstellation {
                         mc.gui.hud.setTitle(Component.literal("§5🚪 " + s.trim()));
                     }
                 }
-                // rare drop alerts from dungeon chests
+                
                 if (s.contains("Recombobulator 3000") || s.contains("Giant's Sword")
                     || s.contains("Necron's Handle") || s.contains("Shadow Fury")
                     || s.contains("Wither Chestplate") || s.contains("Precursor Eye")
@@ -163,7 +163,7 @@ public class OrionDungeons extends BaseConstellation {
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.8f);
                     }
                 }
-                // rare room alerts — Trinity, Tomioka, Duncan
+                
                 if (s.contains("Trinity") || s.contains("Tomioka") || s.contains("Duncan")) {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
@@ -176,7 +176,7 @@ public class OrionDungeons extends BaseConstellation {
             return true;
         });
 
-        // dungeon copilot — occasional chat hints based on run state
+        // dungeon copilot — occasional c...
         ConstellationClient.tick().every(200, "orion-copilot", () -> {
             if (cfg == null || !cfg.dungeonCopilot || !ConstellationClient.loc().inDungeons()) return;
             var mc2 = Minecraft.getInstance();
@@ -188,7 +188,7 @@ public class OrionDungeons extends BaseConstellation {
             else mc2.player.sendSystemMessage(Component.literal("§c✦ Copilot: " + s + " — need secrets + crypts for higher score"));
         });
 
-        // room detection every 4 ticks — inside it self-throttles to ~4x/sec and caches
+        
         ConstellationClient.tick().every(4, "orion-room-match", () -> {
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
@@ -196,7 +196,7 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.DefensiveTracker.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
-                // left the dungeon — print the run summary, then reset detection + score state
+                
                 doorsOpened = 0;
                 com.froggylord.constellation.data.RunStats.finishRun();
                 com.froggylord.constellation.data.MapSegments.reset();
@@ -205,7 +205,7 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.DefensiveTracker.reset();
                 OrionBlessings.reset();
                 wasInDungeon = false;
-                // auto-requeue after a delay (configurable)
+                
                 if (cfg.autoRequeue && !cfg.requeueSafeMode) {
                     ConstellationClient.tick().once(cfg.requeueDelaySec * 20, "orion-requeue", () -> {
                         var mc = Minecraft.getInstance();
@@ -218,7 +218,7 @@ public class OrionDungeons extends BaseConstellation {
             }
         });
 
-        // recompute score ~1/sec from the sidebar + tab list
+        
         ConstellationClient.tick().every(20, "orion-score", () -> {
             if (ConstellationClient.loc().inDungeons()) com.froggylord.constellation.data.DungeonScore.update();
         });
@@ -229,7 +229,7 @@ public class OrionDungeons extends BaseConstellation {
         if (cfg == null) return;
         Minecraft mc = Minecraft.getInstance();
 
-        // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
+        
         if (cfg.saVanishTimer) {
             hud.register(new HudWidget("orion-sa", "SA",
                 () -> {
@@ -373,13 +373,13 @@ public class OrionDungeons extends BaseConstellation {
                 },
                 HudPosition.of(6, 162), cfg.dungeonCopilot));
         }
-        // dungeon map — lives in the same registry/editor as everything else
+        
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-        // /roomdebug — dump detection state so we can see what's happening live
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomdebug")
             .executes(ctx -> {
                 var loc = ConstellationClient.loc();
@@ -393,15 +393,15 @@ public class OrionDungeons extends BaseConstellation {
                     + "§7current room:§r '" + RoomMatch.currentRoom() + "'";
                 var mc = Minecraft.getInstance();
                 if (mc.player != null) mc.player.sendSystemMessage(Component.literal(msg));
-                // also dump sidebar lines
+                
                 for (String line : loc.getSidebarLines()) {
                     if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§8| §7" + line));
                 }
                 return 1;
             }));
 
-        // /dungeonstats — session run history
-        // /cn debug — dump dungeon state (room, score, sidebar, tab)
+        
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dndebug")
             .executes(ctx -> {
                 var mc = Minecraft.getInstance();
@@ -420,7 +420,7 @@ public class OrionDungeons extends BaseConstellation {
 
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
             .executes(ctx -> { com.froggylord.constellation.data.RunStats.printSession(); return 1; }));
-        // /key — check held item for dungeon key
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("key")
             .executes(ctx -> {
                 var mc = Minecraft.getInstance();
@@ -432,7 +432,7 @@ public class OrionDungeons extends BaseConstellation {
                 return 1;
             }));
 
-        // force a room scan right now with full diagnostics
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomscan")
             .executes(ctx -> {
                 String dbg = RoomMatch.debugScan();
@@ -444,7 +444,7 @@ public class OrionDungeons extends BaseConstellation {
                 return 1;
             }));
 
-        // /roomcapture <name> — record the current room's skeleton (for rooms missing from the DB)
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomcapture")
             .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
                     "name", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
@@ -456,7 +456,7 @@ public class OrionDungeons extends BaseConstellation {
                     return 1;
                 })));
 
-        // /map scale <1-5> — adjust the dungeon map size
+        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("map")
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("scale")
                 .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument(
@@ -483,7 +483,7 @@ public class OrionDungeons extends BaseConstellation {
         return ConstellationClient.loc().inDungeons();
     }
 
-    // score values are only meaningful once the run has actually started (elapsed-time line up)
+    
     private static boolean scoreReady() {
         return inDungeon() && com.froggylord.constellation.data.DungeonScore.isActive();
     }

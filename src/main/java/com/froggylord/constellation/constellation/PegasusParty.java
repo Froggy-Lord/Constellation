@@ -12,10 +12,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 
-/**
- * Pegasus — party + social. /rp reparty command, /pl alias, party size HUD widget.
- * Full party triggers + carry mode come later.
- */
 public class PegasusParty extends BaseConstellation {
 
     @Override public String id() { return "pegasus"; }
@@ -106,7 +102,7 @@ public class PegasusParty extends BaseConstellation {
         dispatcher.register(
             LiteralArgumentBuilder.<FabricClientCommandSource>literal("rp")
                 .executes(ctx -> {
-                    // real reparty: rebuild from the tracked member list
+                    // real reparty: rebuild from the...
                     PartyTracker.reparty();
                     return 1;
                 }));

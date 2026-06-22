@@ -10,9 +10,6 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * // saves stuff to config/constellation-stats.json so it survives restarts
- */
 public final class StatStore {
 
     private StatStore() {}
@@ -83,7 +80,6 @@ public final class StatStore {
         dirty = true;
     }
 
-    /** // add to a counter. */
     public static synchronized long add(String key, long delta) {
         long v = getLong(key, 0) + delta;
         putLong(key, v);
@@ -96,14 +92,12 @@ public final class StatStore {
         return v;
     }
 
-    /** // keep the best (smallest). */
     public static synchronized long recordBest(String key, long candidate) {
         long cur = getLong(key, Long.MAX_VALUE);
         if (candidate < cur) { putLong(key, candidate); return candidate; }
         return cur;
     }
 
-    /** // keep highest score. */
     public static synchronized long recordMax(String key, long candidate) {
         long cur = getLong(key, Long.MIN_VALUE);
         if (candidate > cur) { putLong(key, candidate); return candidate; }

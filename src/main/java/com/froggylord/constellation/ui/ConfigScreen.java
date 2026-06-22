@@ -27,9 +27,9 @@ public class ConfigScreen extends Screen {
         Module(String n, String d, String c, BooleanSupplier g, Consumer<Boolean> s) {
             name = n; desc = d; cat = c; get = g; set = s; knob = g.getAsBoolean() ? 1 : 0;
         }
-        // sub-option backed by a real config field
+        
         Module b(String l, BooleanSupplier g, Consumer<Boolean> s) { subs.add(new SubOpt(l, g, s)); return this; }
-        // independent sub-option backed by the constellation's generic subOptions map
+        
         Module sub(String l, boolean def) {
             String key = name + "." + l;
             subs.add(new SubOpt(l,
@@ -64,8 +64,8 @@ public class ConfigScreen extends Screen {
         buildModules();
     }
 
-    // ---- layout ----
-    // never exceed the actual scaled screen — clamp the minimum to what fits
+    
+    
     private static String autoLabel(String camel) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < camel.length(); i++) {
@@ -255,7 +255,7 @@ public class ConfigScreen extends Screen {
                     () -> c.autoRequeue, v -> { c.autoRequeue = v; ConstellationClient.saveConfig(); })
                     .b("Safe mode", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); })
                     .b("Confirm first", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); }));
-                // solvers
+                
                 modules.add(new Module("terminalSolvers", "F7 phase-3 terminals", "Solvers",
                     () -> c.terminalSolvers, v -> { c.terminalSolvers = v; ConstellationClient.saveConfig(); })
                     .b("Show numbers", () -> c.terminalNumbers, v -> { c.terminalNumbers = v; ConstellationClient.saveConfig(); })
@@ -275,14 +275,14 @@ public class ConfigScreen extends Screen {
                 modules.add(new Module("creeperBeamsSolver", "Creeper Beams — lantern links", "Solvers",
                     () -> c.creeperBeamsSolver, v -> { c.creeperBeamsSolver = v; ConstellationClient.saveConfig(); })
                     .sub("Beam colour", true));
-                // combat
+                
                 modules.add(new Module("starredMobs", "Starred / objective mobs", "Combat",
                     () -> c.starredMobs, v -> { c.starredMobs = v; ConstellationClient.saveConfig(); })
-                    .b("Through walls", () -> false, v -> {}) // always depth-tested
+                    .b("Through walls", () -> false, v -> {}) 
                     .sub("Show ✯", true));
                 modules.add(new Module("secretBats", "Secret bat highlights", "Combat",
                     () -> c.secretBats, v -> { c.secretBats = v; ConstellationClient.saveConfig(); })
-                    .b("Filter doors", () -> true, v -> {}) // always filtered
+                    .b("Filter doors", () -> true, v -> {}) 
                     .sub("Glow", false));
                 modules.add(new Module("lividFinder", "F5/M5 — hide fake clones", "Combat",
                     () -> c.lividFinder, v -> { c.lividFinder = v; ConstellationClient.saveConfig(); })
@@ -304,8 +304,8 @@ public class ConfigScreen extends Screen {
                     .b("Key beam", () -> c.doorTracker, v -> c.doorTracker = v)
                     .sub("Door colours", true));
             }
-            // generic auto-builder for every other constellation — scans the config fields and
-            // builds modules from every boolean toggle, grouped loosely by name
+            
+            // builds modules from every bool...
             default -> {
                 BaseConfigGroup c = cfg.getSubConfig(constellationId);
                 if (c != null) {
@@ -325,11 +325,11 @@ public class ConfigScreen extends Screen {
                 }
             }
         }
-        // guard: a constellation with no modules gets a placeholder category so the screen never crashes
+        
         if (cats.length == 0) cats = new String[]{"General"};
         selectedCat = Math.clamp(selectedCat, 0, cats.length - 1);
 
-        // give every module a backing config for its independent sub-options
+        
         activeConfig = ConstellationClient.instance().configManager().getGroup(constellationId);
         for (Module m : modules) {
             m.backing = activeConfig;
@@ -406,7 +406,7 @@ public class ConfigScreen extends Screen {
             g.fill(tx, gTop + (int)((viewH - barH) * (scrollF / maxScroll)), tx + 3, gTop + (int)((viewH - barH) * (scrollF / maxScroll)) + barH, NebulaTheme.ACCENT_DIM);
         }
 
-        // modal
+        
         boolean modalUp = openModule != null;
         modalAnim += ((modalUp ? 1f : 0f) - modalAnim) * Math.min(1, dt * 14);
         if (modalAnim > 0.01f && openModule != null) {
@@ -444,7 +444,7 @@ public class ConfigScreen extends Screen {
         Minecraft mc = Minecraft.getInstance();
         g.text(mc.font, name, cx + 5, cy + 8, m.knob > 0.5f ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
         g.text(mc.font, m.desc, cx + 5, cy + 22, NebulaTheme.STAR_MUTED, false);
-        // sub-option count badge
+        
         if (!m.subs.isEmpty()) {
             String badge = m.subs.size() + " opts";
             g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 32, NebulaTheme.ACCENT_DIM, false);
@@ -458,7 +458,7 @@ public class ConfigScreen extends Screen {
         return out;
     }
 
-    // ---- input ----
+    
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
@@ -468,7 +468,7 @@ public class ConfigScreen extends Screen {
         int px = (fullW - w) / 2, py = (fullH - h) / 2;
         mx -= px; my -= py;
 
-        // modal sub-option clicks
+        
         if (openModule != null) {
             int mx2 = w/2 - 180, my2 = h/2 - 120, oy = my2 + 44;
             for (var sub : openModule.subs) {
@@ -483,7 +483,7 @@ public class ConfigScreen extends Screen {
             return true;
         }
 
-        // sidebar
+        
         int sw = sideW(w), navY0 = TB + 4;
         for (int i = 0; i < cats.length; i++) {
             if (mx >= 0 && mx < sw && my >= navY0 + i * 24 && my < navY0 + i * 24 + 24) {
@@ -491,7 +491,7 @@ public class ConfigScreen extends Screen {
             }
         }
 
-        // card grid
+        
         var vis = visibleModules();
         int cols = cols(w), cardW = cardW(w);
         int gx = gridX(w), gTop = gridTop(), sc = Math.round(scrollF);
@@ -502,7 +502,7 @@ public class ConfigScreen extends Screen {
             int cy = gTop + (idx / cols) * (CARD_H + CARD_GAP) - sc;
             if (mx >= cx && mx < cx + cardW && my >= cy && my < cy + CARD_H && my >= gTop) {
                 if (rightClick) {
-                    // right-click: open settings modal if module has sub-options
+                    
                     if (!m.subs.isEmpty()) openModule = (openModule == m) ? null : m;
                 } else {
                     // left-click: toggle master switch
@@ -518,7 +518,7 @@ public class ConfigScreen extends Screen {
         return super.mouseClicked(event, dbl);
     }
 
-    // mouseScrolled from GuiEventListener interface
+    
     public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
         if (openModule != null) return true;
         scrollTarget -= (int)(scrollY * 30);

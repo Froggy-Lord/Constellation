@@ -7,18 +7,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Live catacombs score (0-300 + letter grade). Hypixel never sends the score directly, so we
- * rebuild it the same way the game does: time + exploration + skill + bonus, each capped, with
- * the entrance floor scaled to 70%. Numbers come from the sidebar (floor, cleared %, elapsed
- * time) and the tab list (secrets %, completed rooms, crypts, puzzles); deaths/mimic/prince
- * are tracked off chat. Formula mirrors the public Hypixel breakdown.
- */
 public final class DungeonScore {
 
     private DungeonScore() {}
 
-    // ---- sidebar ----
+    
     private static final Pattern FLOOR = Pattern.compile("The Catacombs \\((?<f>[^)]+)\\)");
     private static final Pattern CLEARED = Pattern.compile("Cleared: (?<c>\\d+)%.*");
     private static final Pattern TIME = Pattern.compile("Time Elapsed: (?:(?<m>\\d+)m )?(?<s>\\d+)s");
@@ -30,20 +23,20 @@ public final class DungeonScore {
     private static final Pattern PUZZLE_COUNT = Pattern.compile("Puzzles: \\((?<n>\\d+)\\)");
     private static final Pattern PUZZLE = Pattern.compile(".+?: \\[(?<state>.)](?: \\(\\w*\\))?");
 
-    // chat-tracked run state
+    
     private static boolean active;
     private static int deaths;
     private static boolean mimicKilled;
     private static boolean princeKilled;
     private static boolean bloodDone;
     private static boolean inBoss;
-    private static long bloodAt; // when blood room completed
-    private static long bossAt;  // when boss fight started
-    private static boolean mayorPaul; // EZPZ perk +10; not wired to a mayor source yet
+    private static long bloodAt; 
+    private static long bossAt;  
+    private static boolean mayorPaul; 
     private static boolean sent270;
     private static boolean sent300;
 
-    // last computed values (read by the HUD)
+    
     private static int score;
     private static String grade = "D";
     private static double secretPct;
@@ -52,19 +45,18 @@ public final class DungeonScore {
     private static String floorName = "";
     private static boolean mimicFloor;
 
-    /** Recompute from the current sidebar + tab. Call ~1/sec while in a dungeon. */
     public static void update() {
         List<String> side = ConstellationClient.loc().getSidebarLines();
         Matcher tm = matchContains(side, TIME);
-        if (tm == null) { // no elapsed time line = run hasn't started, or it just ended
-            active = false; // keep the last values so the run summary can read them on leave
+        if (tm == null) { 
+            active = false; 
             return;
         }
         active = true;
         timeSecs = (tm.group("m") != null ? Integer.parseInt(tm.group("m")) * 60 : 0) + Integer.parseInt(tm.group("s"));
 
         floorName = floorName(side);
-        mimicFloor = floorName.matches("[FM][67]"); // mimics spawn on floors 6 and 7
+        mimicFloor = floorName.matches("[FM][67]"); 
         FloorReq floor = FloorReq.from(floorName);
         boolean entrance = floor == FloorReq.E;
         double cleared = clearedFrac(side);
@@ -74,7 +66,7 @@ public final class DungeonScore {
         int completed = completedRooms(tab);
         crypts = crypts(tab);
         int sidebarDeaths = sidebarDeaths(side);
-        if (sidebarDeaths > deaths) deaths = sidebarDeaths; // sidebar is authoritative
+        if (sidebarDeaths > deaths) deaths = sidebarDeaths; 
         int incompletePuzzles = incompletePuzzles(tab);
 
         int total = cleared > 0 ? (int) Math.round(completed / cleared) : 0;
@@ -93,7 +85,7 @@ public final class DungeonScore {
         checkMilestones();
     }
 
-    // one-shot title + sound the moment the run crosses S (270) and S+ (300)
+    
     private static void checkMilestones() {
         var cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.scorePings) return;
@@ -113,7 +105,7 @@ public final class DungeonScore {
         }
     }
 
-    // ---- score categories (Hypixel formula) ----
+    
 
     private static int skillScore(int total, int completed, int extra, int incompletePuzzles) {
         int roomScore = total != 0 ? clamp((int) (80.0 * (completed + extra) / total), 0, 80) : 0;
@@ -141,26 +133,25 @@ public final class DungeonScore {
         int paul = mayorPaul ? 10 : 0;
         int crypt = clamp(crypts, 0, 5);
         int mimic = mimicKilled ? 2 : 0;
-        if (secretPct >= 100 && mimicFloor) mimic = 2; // mimic must be dead if 100% secrets on a mimic floor
+        if (secretPct >= 100 && mimicFloor) mimic = 2; 
         int prince = princeKilled ? 1 : 0;
         return paul + crypt + mimic + prince;
     }
 
     private static int deathPenalty() { return deaths * 2; }
 
-    // an extra room or two is credited before the scoreboard catches up, so the score
-    // settles sooner instead of jumping when you finish blood / enter boss.
+    
+    // settles sooner instead of jump...
     private static int extraRooms(boolean entrance) {
         if (!bloodDone) return entrance ? 1 : 2;
         if (!inBoss && !entrance) return 1;
         return 0;
     }
 
-    // ---- chat tracking ----
+    
 
-    private static final Pattern DEATH = Pattern.compile("\\s*☠ \\S+ .*"); // " ☠ Name became a corpse"
+    private static final Pattern DEATH = Pattern.compile("\\s*☠ \\S+ .*"); 
 
-    /** Feed every received chat line while in a dungeon. */
     public static void onChat(String msg) {
         if (DEATH.matcher(msg).matches()) { deaths++; return; }
         if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!")) { mimicKilled = true; return; }
@@ -178,14 +169,14 @@ public final class DungeonScore {
 
     public static void setMayorPaul(boolean paul) { mayorPaul = paul; }
 
-    // ---- parsing helpers ----
+    
 
     private static String floorName(List<String> side) {
         Matcher m = matchContains(side, FLOOR);
         if (m == null) return "";
         String f = m.group("f").trim();
         if (f.isEmpty()) return "";
-        // "Entrance" -> E, "F7"/"M2" stay as-is
+        
         return Character.isDigit(f.charAt(f.length() - 1)) ? f : "E";
     }
 
@@ -229,7 +220,7 @@ public final class DungeonScore {
             if (!pm.matches()) break;
             remaining--;
             String state = pm.group("state");
-            if (state.equals("✖") || state.equals("✦")) n++; // ✖ failed / ✦ unsolved
+            if (state.equals("✖") || state.equals("✦")) n++; 
         }
         return n;
     }
@@ -250,7 +241,7 @@ public final class DungeonScore {
 
     private static int clamp(int v, int lo, int hi) { return Math.max(lo, Math.min(hi, v)); }
 
-    // ---- HUD getters ----
+    
     public static boolean isActive() { return active; }
     public static int score() { return score; }
     public static String grade() { return grade; }
@@ -261,14 +252,13 @@ public final class DungeonScore {
     public static String floor() { return floorName; }
     public static boolean isMimicFloor() { return mimicFloor; }
     public static boolean mimicKilled() { return mimicKilled; }
-    public static boolean hadRun() { return timeSecs > 10; } // a real run produced an elapsed time
+    public static boolean hadRun() { return timeSecs > 10; } 
     public static boolean inBoss() { return inBoss; }
     public static String lastFloor() { return floorName.isEmpty() ? null : floorName; }
     public static long bloodSplitMs() { return bloodAt > 0 ? bloodAt - runStartedAt() : 0; }
     public static long bossSplitMs() { return bossAt > 0 ? bossAt - runStartedAt() : 0; }
     private static long runStartedAt() { return bloodAt > 0 ? bloodAt - timeSecs * 1000L : System.currentTimeMillis() - timeSecs * 1000L; }
 
-    /** Floor pass requirement (min secret %, time limit seconds). */
     private enum FloorReq {
         E(30, 1200), F1(30, 600), F2(40, 600), F3(50, 600), F4(60, 720), F5(70, 600),
         F6(85, 720), F7(100, 840), M1(100, 480), M2(100, 480), M3(100, 480), M4(100, 480),

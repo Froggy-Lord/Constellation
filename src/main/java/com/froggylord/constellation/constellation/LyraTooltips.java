@@ -9,16 +9,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.component.CustomData;
 
-/**
- * Extra tooltip lines pulled straight out of an item's hidden Hypixel data — no API key, no
- * network. Everything here is already on the stack you're hovering, Hypixel just doesn't surface
- * it. Lines only show on Hypixel so vanilla worlds stay untouched.
- */
 public class LyraTooltips {
 
     private static LyraConfig cfg;
 
-    // the enchant keys Hypixel uses on items — checked against what's already applied
+    
     private static final String[] COMMON_ENCHANTS = {
         "growth", "protection", "feather_falling", "rejuvenate", "respite",
         "sharpness", "critical", "execute", "first_strike", "giant_killer",
@@ -34,9 +29,9 @@ public class LyraTooltips {
         cfg = config;
         ItemTooltipCallback.EVENT.register((stack, ctx, flag, lines) -> {
             if (cfg == null || stack.isEmpty()) return;
-            // items carry their SB data even in singleplayer; the onHypixel gate only helps
-            // avoid adding garbage lines to vanilla items. the extra-attributes check below
-            // already filters those, so we skip the gate here.
+            
+            
+            
             CustomData cd = stack.get(DataComponents.CUSTOM_DATA);
             if (cd == null) return;
             CompoundTag extra = cd.copyTag().getCompoundOrEmpty("ExtraAttributes");

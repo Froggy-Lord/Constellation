@@ -5,10 +5,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Tracks the dungeon blessings your party has grabbed this run. Each blessing tier is announced
- * in chat as a roman numeral; we keep the highest seen of each so the HUD shows the live totals.
- */
 public final class OrionBlessings {
 
     private OrionBlessings() {}

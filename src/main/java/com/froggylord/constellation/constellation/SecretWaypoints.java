@@ -13,15 +13,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-/**
- * Draws the bundled secret locations for whatever room you're standing in, colour-coded by
- * type. The DB stores each secret room-relative (NW corner, canonical rotation) so we run it
- * back through the same rotation transform the matcher uses to land them in the world.
- *
- * Reveal modes mirror the usual dungeon-mod behaviour: show everything, reveal-as-you-approach,
- * or one-at-a-time. Secrets count as collected when you get close to them — a rough stand-in
- * until per-type collection (chest open, bat kill, etc.) lands.
- */
 public final class SecretWaypoints {
 
     private static final double REACH = 4.0;    // collected when you're this close
@@ -37,7 +28,6 @@ public final class SecretWaypoints {
 
     private SecretWaypoints() {}
 
-    /** Number of secrets collected / total in the current room (for the HUD). */
     public static int collectedCount() { return collected.size(); }
     public static int totalCount() { return wps.size(); }
 
@@ -45,7 +35,7 @@ public final class SecretWaypoints {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.secretWaypoints) return;
         if (!ConstellationClient.loc().inDungeons() || !RoomMatch.isMatched()) { room = ""; wps.clear(); return; }
-        // a route already covers this room — let it own the overlay
+        
         if (cfg.routes && Routes.hasRouteFor(RoomMatch.currentRoom())) return;
 
         sync();
@@ -54,7 +44,7 @@ public final class SecretWaypoints {
         if (mc.player == null) return;
         Vec3 pp = mc.player.position();
 
-        // proximity collection
+        
         for (Wp w : wps) {
             if (collected.contains(w.idx())) continue;
             if (dist2(pp, w) <= REACH * REACH) {
@@ -63,7 +53,7 @@ public final class SecretWaypoints {
             }
         }
 
-        // one-at-a-time: only the nearest uncollected secret
+        
         Wp only = null;
         if (cfg.oneSecretAtATime) {
             double best = Double.MAX_VALUE;
@@ -83,7 +73,6 @@ public final class SecretWaypoints {
         }
     }
 
-    /** Recompute world positions when the room (or its anchor/rotation) changes. */
     private static void sync() {
         String cur = RoomMatch.currentRoom();
         int ax = RoomMatch.anchorX(), az = RoomMatch.anchorZ();
@@ -106,20 +95,20 @@ public final class SecretWaypoints {
         return dx * dx + dy * dy + dz * dz;
     }
 
-    // colour-coded by secret type (alpha 0xFF; the renderer caps the fill alpha itself)
+    
     private static int colourFor(String cat) {
         if (cat == null) return 0xFFFFFF55;
         return switch (cat.toLowerCase(Locale.ROOT)) {
-            case "chest" -> 0xFFFFAA00;                     // gold
+            case "chest" -> 0xFFFFAA00;                     
             case "item" -> 0xFF55FFFF;                      // aqua
-            case "bat" -> 0xFF5555FF;                       // blue
-            case "wither", "wither_essence" -> 0xFFAA00FF;  // purple
-            case "lever" -> 0xFF00FF88;                     // green
+            case "bat" -> 0xFF5555FF;                       
+            case "wither", "wither_essence" -> 0xFFAA00FF;  
+            case "lever" -> 0xFF00FF88;                     
             case "fairysoul", "fairy" -> 0xFFFF66CC;        // pink
-            case "superboom" -> 0xFFFF5500;                 // orange
-            case "entrance" -> 0xFFFFFFFF;                  // white
-            case "stonk", "pearl", "aotv" -> 0xFFAAFF00;    // lime
-            default -> 0xFFFFFF55;                          // yellow
+            case "superboom" -> 0xFFFF5500;                 
+            case "entrance" -> 0xFFFFFFFF;                  
+            case "stonk", "pearl", "aotv" -> 0xFFAAFF00;    
+            default -> 0xFFFFFF55;                          
         };
     }
 }

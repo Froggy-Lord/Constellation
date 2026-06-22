@@ -6,11 +6,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Registry + renderer for every HUD element. Tracks when each element was last visible so
- * the drag editor can show only elements that are on-screen now or were within the last 10s
- * (so you can position e.g. dungeon stats while actually in a dungeon, not before).
- */
 public class HudManager {
 
     private static final long EDIT_GRACE_MS = 10_000;
@@ -24,9 +19,8 @@ public class HudManager {
     public void removeIf(java.util.function.Predicate<HudElement> p) { elements.removeIf(p); }
     public List<HudElement> getAll() { return Collections.unmodifiableList(elements); }
 
-    /** Render all currently-visible elements and stamp their last-visible time. */
     public void render(GuiGraphicsExtractor g, net.minecraft.client.gui.Font font, int screenW, int screenH) {
-        if (editorOpen) return; // editor draws its own preview
+        if (editorOpen) return; 
         long now = System.currentTimeMillis();
         for (HudElement el : elements) {
             if (!el.visibleNow()) continue;
@@ -37,7 +31,6 @@ public class HudManager {
         }
     }
 
-    /** Elements eligible to drag right now: visible now, or visible within the last 10s. */
     public List<HudElement> getEditable() {
         long now = System.currentTimeMillis();
         List<HudElement> out = new ArrayList<>();

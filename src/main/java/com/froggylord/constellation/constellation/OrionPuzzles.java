@@ -15,10 +15,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Locale;
 
-/**
- * Dungeon puzzle solvers — chat-driven hints + screen/render overlays.
- * Only ever paints a hint; never clicks.
- */
 public final class OrionPuzzles {
 
     private OrionPuzzles() {}
@@ -29,7 +25,7 @@ public final class OrionPuzzles {
     private static String triviaQuestion = "";
     private static String triviaAnswer = "";
 
-    // Trivia answer database from Odin/Skyblocker — verified Hypixel quiz questions
+    
     private static final java.util.Map<String, String> TRIVIA = new java.util.HashMap<>();
     static {
         TRIVIA.put("Which of these enemies does not spawn in the Spiders Den?", "Zombie Spider");
@@ -71,12 +67,12 @@ public final class OrionPuzzles {
     public static void init(OrionConfig config) {
         cfg = config;
 
-        // --- chat-driven puzzle hints ---
+        
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || cfg == null || !ConstellationClient.loc().inDungeons()) return;
             String s = msg.getString();
 
-            // Simon Says: "Simon says click the <color> button!" or "[NPC] Simon Says: <color>"
+            
             if (cfg.simonSaysSolver && s.contains("Simon") && (s.contains("click") || s.contains("Click"))) {
                 String low = s.toLowerCase(Locale.ROOT);
                 for (String c : new String[]{"red", "green", "blue", "yellow", "purple", "orange", "pink", "lime", "cyan"}) {
@@ -84,9 +80,9 @@ public final class OrionPuzzles {
                 }
             }
 
-            // Three Weirdos: three NPCs chat, one has the reward. the chat line looks like
-            // "[NPC] Name: My chest holds the reward" or the puzzle name text on the GUI.
-            // the correct answer is the NPC name whose dialogue contradicts the other two.
+            
+            
+            // the correct answer is the npc ...
             if (cfg.threeWeirdosSolver && s.contains(":")) {
                 int colon = s.indexOf(':');
                 String after = s.substring(colon + 1).trim().toLowerCase(Locale.ROOT);
@@ -96,10 +92,10 @@ public final class OrionPuzzles {
                     weirdoAnswer = s.substring(0, colon).trim();
             }
 
-            // Trivia: match the question against the verified answer database
+            
             if (cfg.triviaSolver && s.contains("?")) {
                 String clean = s.trim();
-                // try exact match first, then substring match
+                
                 triviaAnswer = TRIVIA.getOrDefault(clean, null);
                 if (triviaAnswer == null) {
                     for (var e : TRIVIA.entrySet()) {
@@ -113,7 +109,7 @@ public final class OrionPuzzles {
             }
         });
 
-        // --- screen overlays for the GUI puzzles ---
+        
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             if (!(screen instanceof AbstractContainerScreen<?> cs)) return;
             String title = cs.getTitle().getString().toLowerCase(Locale.ROOT);
@@ -145,7 +141,7 @@ public final class OrionPuzzles {
         return toggle && cfg != null && ConstellationClient.loc().inDungeons();
     }
 
-    // --- screen overlays ---
+    
 
     private static void simonOverlay(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
         if (simonTarget.isEmpty()) return;
@@ -157,7 +153,7 @@ public final class OrionPuzzles {
             var s = slot.getItem();
             if (s.isEmpty()) continue;
             String name = s.getHoverName().getString().toLowerCase(Locale.ROOT);
-            // the glass panes / clay in simon are colored; match the target
+            
             if (name.contains(simonTarget) || s.getItem().getDescriptionId().contains(simonTarget)) {
                 box(cs, g, slot, 0xA020FF20);
                 return;
@@ -183,7 +179,7 @@ public final class OrionPuzzles {
     private static void triviaOverlay(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
         if (triviaAnswer.isEmpty()) return;
         int chest = cs.getMenu().slots.size() - 36;
-        // scan all chest slots for an item name containing the answer text
+        
         for (int i = 0; i < chest; i++) {
             var slot = cs.getMenu().slots.get(i);
             var s = slot.getItem();
@@ -194,18 +190,18 @@ public final class OrionPuzzles {
                 return;
             }
         }
-        // fallback: highlight slot 10 (common answer position) if we know the answer
+        // fallback: highlight slot 10 (c...
         if (chest > 10) box(cs, g, cs.getMenu().slots.get(10), 0x80FFD020);
     }
 
-    // --- Creeper Beams world render ---
+    
     public static void drawBeams(WorldRenderer.Ctx ctx) {
         if (cfg == null || !cfg.creeperBeamsSolver) return;
         if (!ConstellationClient.loc().inDungeons()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null) return;
 
-        // find sea lanterns — the creeper-beam puzzle uses them as nodes
+        
         java.util.List<Vec3> lanterns = new java.util.ArrayList<>();
         var area = mc.player.getBoundingBox().inflate(50);
         int sx = (int) area.minX, sy = (int) area.minY, sz = (int) area.minZ;
@@ -217,41 +213,41 @@ public final class OrionPuzzles {
             }
         }
 
-        // creeper beams: link each sea lantern to the nearest 2 others in a chain.
-        // the puzzle wants you to trace the beam to the right target.
+        
+        
         if (lanterns.size() >= 2) {
             for (int i = 0; i < lanterns.size(); i++) {
                 Vec3 a = lanterns.get(i);
-                // draw to next lantern in the chain (sorted by x for a consistent sweep)
+                
                 Vec3 b = lanterns.get((i + 1) % lanterns.size());
                 ctx.line(a, b, 0xFFAAFF00, true);
-                // box each lantern
+                
                 ctx.highlight(new AABB(a.x - 0.5, a.y - 0.5, a.z - 0.5,
                     a.x + 0.5, a.y + 0.5, a.z + 0.5), 0x40AAFF00, true);
             }
         }
     }
 
-    // --- TicTacToe overlay + minimax solver ---
+    
     private static void ticTacToeOverlay(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
         int chest = cs.getMenu().slots.size() - 36;
         if (chest < 9) return;
-        // the board is in slots 0-8 (top 3 rows of the chest)
+        // the board is in slots 0-8 (top...
         int[] board = new int[9]; // 0=empty, 1=your piece, -1=opponent
         for (int i = 0; i < 9; i++) {
             var s = cs.getMenu().slots.get(i).getItem();
             if (s.isEmpty()) { board[i] = 0; continue; }
             String id = s.getItem().getDescriptionId().toLowerCase(Locale.ROOT);
-            // X pieces: red, pink, orange stained glass
+            
             if (id.contains("red_") || id.contains("pink_") || id.contains("orange_"))
-                board[i] = 1; // your piece
+                board[i] = 1; 
             else if (id.contains("green_") || id.contains("lime_") || id.contains("cyan_"))
-                board[i] = -1; // opponent
+                board[i] = -1; 
             else
-                board[i] = 0; // unknown/empty mark
+                board[i] = 0; 
         }
 
-        // minimal: ensure at least one piece is present before doing the math
+        
         boolean any = false;
         for (int v : board) { if (v != 0) { any = true; break; } }
         if (!any) return;
@@ -261,7 +257,7 @@ public final class OrionPuzzles {
     }
 
     private static int minimaxBest(int[] board, boolean myTurn) {
-        // score each possible move; return the one that yields the highest score
+        
         int bestScore = Integer.MIN_VALUE, bestMove = -1;
         for (int i = 0; i < 9; i++) {
             if (board[i] != 0) continue;
@@ -275,8 +271,8 @@ public final class OrionPuzzles {
 
     private static int minimax(int[] board, int depth, boolean maximizing, int alpha, int beta) {
         int winner = checkWin(board);
-        if (winner != 0) return winner * (10 - depth); // win early
-        if (isFull(board)) return 0; // draw
+        if (winner != 0) return winner * (10 - depth); 
+        if (isFull(board)) return 0; 
 
         if (maximizing) {
             int maxEval = Integer.MIN_VALUE;
@@ -318,7 +314,7 @@ public final class OrionPuzzles {
         return true;
     }
 
-    // --- utilities ---
+    
 
     private static void box(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g, net.minecraft.world.inventory.Slot slot, int argb) {
         int left = ((ContainerScreenAccessor) cs).constellation$left();

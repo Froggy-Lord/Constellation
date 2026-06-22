@@ -7,11 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * M7/F7 dragon fight — highlight each dragon with a name tag so you can pick the right one
- * at a glance. The dragon with the lowest health gets a green box; others get yellow.
- * (cmp. Skyblocker M7Dragons / Odin DragonPriority)
- */
 public final class M7Dragons {
 
     private M7Dragons() {}

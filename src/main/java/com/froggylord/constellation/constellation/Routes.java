@@ -11,15 +11,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-/**
- * Draws secret routes for the current room — a walk path line through the route's waypoints,
- * plus typed action markers (etherwarp, interact, mine, superboom tnt, pearl) and the secret
- * at the end. Coords come from the bundled SecretRoutes data, room-relative, placed in the
- * world with the matcher's rotation transform like the plain secret waypoints.
- *
- * In a room that has a route, the route takes over from the plain secret boxes so you're not
- * looking at two overlays at once.
- */
 public final class Routes {
 
     private static String room = "";
@@ -32,7 +23,6 @@ public final class Routes {
 
     private Routes() {}
 
-    /** True if the current route source has an entry for this room (used for waypoint takeover). */
     public static boolean hasRouteFor(String roomName) {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || roomName == null || roomName.isEmpty()) return false;
@@ -79,11 +69,11 @@ public final class Routes {
                 path.add(new Vec3(w[0] + 0.5, w[1] + 0.5, w[2] + 0.5));
             }
             List<Marker> markers = new ArrayList<>();
-            for (int[] p : rt.etherwarps()) markers.add(marker(p, 0xFF55FFFF)); // aqua
+            for (int[] p : rt.etherwarps()) markers.add(marker(p, 0xFF55FFFF)); 
             for (int[] p : rt.interacts()) markers.add(marker(p, 0xFF55FF55));  // lime
-            for (int[] p : rt.mines()) markers.add(marker(p, 0xFFFFAA00));      // orange
-            for (int[] p : rt.tnts()) markers.add(marker(p, 0xFFFF4444));       // superboom red
-            for (int[] p : rt.pearls()) markers.add(marker(p, 0xFFAA44FF));     // pearl purple
+            for (int[] p : rt.mines()) markers.add(marker(p, 0xFFFFAA00));      
+            for (int[] p : rt.tnts()) markers.add(marker(p, 0xFFFF4444));       
+            for (int[] p : rt.pearls()) markers.add(marker(p, 0xFFAA44FF));     
             if (rt.secret() != null) markers.add(marker(rt.secret(), secretColour(rt.secretType())));
             routes.add(new RouteR(path, markers));
         }

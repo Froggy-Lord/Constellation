@@ -4,11 +4,6 @@ import com.froggylord.constellation.ConstellationClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-/**
- * Per-session dungeon run history. When a run ends (you leave the dungeon) we snapshot the
- * final score off {@link DungeonScore} before it resets, print a tidy summary to chat, and
- * track the session's best + run count. Lives only for the game session — nothing persisted.
- */
 public final class RunStats {
 
     private RunStats() {}
@@ -17,7 +12,6 @@ public final class RunStats {
     private static int bestScore = 0;
     private static String lastSummary = "";
 
-    /** Call once when a run ends, before DungeonScore.reset(). */
     public static void finishRun() {
         if (!DungeonScore.hadRun()) return;
 
@@ -46,7 +40,6 @@ public final class RunStats {
         mc.player.sendSystemMessage(Component.literal("§8§m                                        "));
     }
 
-    /** Lines for the /cn stats command. */
     public static void printSession() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;

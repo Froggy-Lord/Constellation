@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-// cancels block-placement when holding a weapon item, so right-click fires the
-// weapon ability instead of placing whatever block is in your offhand.
+// cancels block-placement when h...
+
 @Mixin(MultiPlayerGameMode.class)
 public class PreventWeaponPlaceMixin {
 
@@ -26,7 +26,7 @@ public class PreventWeaponPlaceMixin {
 
         var stack = player.getItemInHand(hand);
         if (stack.isEmpty()) return;
-        // 26.2 removed SwordItem — detect via bow superclass + description patterns
+        
         var item = stack.getItem();
         if (item instanceof ProjectileWeaponItem) {
             cir.setReturnValue(InteractionResult.PASS);

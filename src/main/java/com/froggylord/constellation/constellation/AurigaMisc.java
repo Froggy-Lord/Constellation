@@ -8,11 +8,6 @@ import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
 
-/**
- * Auriga — experiments + enchanting + misc. Starter: experiments table helper indicator. Full
- * experiment solvers (Chronomatron / Ultrasequencer / Superpairs) come later as GUI-slot
- * overlays since the 26.2 screen API moved to an extract-render-state model.
- */
 public class AurigaMisc extends BaseConstellation {
 
     @Override public String id() { return "auriga"; }
@@ -27,7 +22,7 @@ public class AurigaMisc extends BaseConstellation {
             .executes(ctx -> {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player == null || !ConstellationClient.loc().onHypixel()) return 0;
-                // read strength + crit damage + weapon damage from sidebar
+                
                 int str = 0, cd = 0, wd = 100;
                 for (String line : ConstellationClient.loc().getSidebarLines()) {
                     var sm = java.util.regex.Pattern.compile("❁ Strength:?\\s*([\\d,]+)").matcher(line);
@@ -56,7 +51,7 @@ public class AurigaMisc extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (AurigaConfig) getConfig();
-        // enchanted clock event reminders — highlight upcoming events
+        
         if (cfg.clockReminder) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -71,9 +66,9 @@ public class AurigaMisc extends BaseConstellation {
             });
         }
 
-        // experiment-table slot solvers (Ultrasequencer / Superpairs)
+        
         AurigaExperiments.init(cfg);
-        // anvil helper — show combine cost
+        
         AurigaHelpers.init(cfg);
     }
 

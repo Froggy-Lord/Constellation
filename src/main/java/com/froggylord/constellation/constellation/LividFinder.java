@@ -13,15 +13,6 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 
-/**
- * F5/M5 Livid fight — 9 clones, one real. The correct Livid's colour is encoded
- * in a wool block at (5, 110, 42) in the boss room. (cmp. Skyblocker LividColor)
- *
- * Livid clone names and their colours:
- *   Hockey → Red, Arcade → Yellow, Smile → Green, Frog → Dark Green,
- *   Scream → Blue, Crossed → Light Purple, Purple → Dark Purple,
- *   Doctor → Gray, Vendetta → White
- */
 public final class LividFinder {
 
     private LividFinder() {}
@@ -56,7 +47,7 @@ public final class LividFinder {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        // read the wool block every 2s to detect colour (and M5 recolour)
+        // read the wool block every 2s t...
         long now = System.currentTimeMillis();
         if (now - lastWoolCheck > 2000) {
             lastWoolCheck = now;
@@ -65,7 +56,7 @@ public final class LividFinder {
         }
         if (correctName.isEmpty()) return;
 
-        // scan entities for Livid clones
+        
         boolean foundAny = false;
         for (Entity e : mc.level.entitiesForRendering()) {
             if (!(e instanceof Player)) continue;
@@ -74,18 +65,18 @@ public final class LividFinder {
             if (!WOOL_TO_LIVID.containsValue(nm)) continue;
             foundAny = true;
             if (nm.equals(correctName)) {
-                // real Livid — box and label, ensure visible
+                
                 e.setInvisible(false);
                 correctEntityId = e.getId();
                 ctx.outline(e.getBoundingBox().inflate(0.3), 0xFF55FF55, false);
                 ctx.label(new Vec3(e.getX(), e.getY() + e.getBbHeight() + 0.5, e.getZ()),
                     "✦ " + nm, 0xFF55FF55, false);
             } else {
-                // wrong clone — hide it (M5 may recolour, so re-check next tick)
+                
                 if (e.getId() != correctEntityId) e.setInvisible(true);
             }
         }
-        // if no Livid entities matched (e.g., M5 recolour during colour swap), show all
+        
         if (!foundAny) correctEntityId = -1;
     }
 }

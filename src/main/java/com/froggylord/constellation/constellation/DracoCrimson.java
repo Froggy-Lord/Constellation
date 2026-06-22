@@ -12,10 +12,6 @@ import com.froggylord.constellation.hud.HudWidget;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Draco — Crimson Isle. Shows reputation / faction standing off the sidebar (the faction
- * name + rep count are always present on the Isle). Kuudra phases + supplies come later.
- */
 public class DracoCrimson extends BaseConstellation {
 
     @Override public String id() { return "draco"; }
@@ -41,8 +37,8 @@ public class DracoCrimson extends BaseConstellation {
             if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
 
-            // Vanquisher — spawns for everyone nearby, easy to miss in the lava glow
-            // Verified pattern from SkyHanni: "A Vanquisher is spawning nearby!"
+            
+            
             if (cfg.vanquisherAlert && s.contains("Vanquisher is spawning")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
@@ -55,17 +51,17 @@ public class DracoCrimson extends BaseConstellation {
                     }
                 }
             }
-            // Kuudra phase cues from the fight chatter
+            
             if (cfg.kuudraPhaseHud) {
                 String ph = kuudraPhaseOf(s);
                 if (ph != null) { kuudraPhase = ph; kuudraPhaseAt = System.currentTimeMillis(); }
             }
-            // Abiphone call — track who's calling
+            
             if (cfg.abiphoneHud && s.contains("Abiphone") && (s.contains("calling") || s.contains("ringing"))) {
                 String name = s.replaceAll(".*?:\\s*", "").replace("is calling", "").replace("is ringing", "").trim();
                 if (!name.isEmpty() && name.length() < 30) { abiphoneCaller = name; abiphoneCallAt = System.currentTimeMillis(); }
             }
-            // Ashfang freeze — you're locked for a few seconds, show the countdown
+            // ashfang freeze — you're locked...
             if (cfg.ashfangFreezeTimer && s.contains("Ashfang") && s.contains("freezes you")) {
                 ashfangFrozenUntil = System.currentTimeMillis() + 5000;
                 var mc = net.minecraft.client.Minecraft.getInstance();

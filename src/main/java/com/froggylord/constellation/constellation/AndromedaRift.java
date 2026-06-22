@@ -12,17 +12,13 @@ import com.froggylord.constellation.hud.HudWidget;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Andromeda — the Rift. Shows the rift time remaining off the sidebar (a stable Hypixel
- * signal on every rift-side island).
- */
 public class AndromedaRift extends BaseConstellation {
 
     @Override public String id() { return "andromeda"; }
     @Override public String displayName() { return "Andromeda"; }
     @Override public String description() { return "rift hud"; }
 
-    // "Rift Time: 12:34" or just "Time: 12:34" on rift islands
+    
     private static final Pattern RIFT_TIME = Pattern.compile("(?:Rift|⏣ )Time:?\\s*(\\d+):(\\d+)");
     private static final Pattern MOTES = Pattern.compile("Motes:?\\s*([\\d,]+)");
 
@@ -53,7 +49,7 @@ public class AndromedaRift extends BaseConstellation {
                 }
             }
         });
-        // Blobbercyst world highlight — scan for the entity in Rift areas
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.blobbercystGlow || !inRift()) return;
             var mc2 = net.minecraft.client.Minecraft.getInstance();
@@ -68,10 +64,10 @@ public class AndromedaRift extends BaseConstellation {
             }
         });
 
-        // Rift waypoints — Mirrorverse paths + Enigma soul beams
+        
         ConstellationClient.world().register(RiftWaypoints::draw);
 
-        // warn when the rift clock is about to run out
+        
         ConstellationClient.tick().every(20, "andromeda-lowtime", () -> {
             if (cfg == null || !cfg.riftLowTimeAlert || !inRift()) return;
             for (String line : ConstellationClient.loc().getSidebarLines()) {

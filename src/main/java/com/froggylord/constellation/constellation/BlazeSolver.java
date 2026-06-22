@@ -13,15 +13,10 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The F3/M3 blaze puzzle ("higher or lower"). Each blaze floats under an armour-stand nameplate
- * that holds its health. We pair every blaze to its tag, sort by health and mark the smallest and
- * largest — the two rooms want opposite orders, so showing both lets you pick the right end.
- */
 public final class BlazeSolver {
 
     private static final int LOW = 0xFF55FF55;  // green — smallest health
-    private static final int HIGH = 0xFFFF5555; // red — largest health
+    private static final int HIGH = 0xFFFF5555; 
 
     private BlazeSolver() {}
 
@@ -70,8 +65,8 @@ public final class BlazeSolver {
     }
 
     private static long parseHp(String name) {
-        // the health sits right before the ❤; a "[Lv200]" prefix has its own digits, so only take
-        // the run of digits immediately left of the heart
+        
+        
         int heart = name.indexOf('❤');
         if (heart < 0) return 0;
         int i = heart - 1;

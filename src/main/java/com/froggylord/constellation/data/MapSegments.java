@@ -13,44 +13,30 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 
 import java.util.*;
 
-/**
- * Determines a room's footprint (its 32-grid cells) from the dungeon map item instead of
- * world-block flooding. The map shows room shapes deterministically via pixel colours, so
- * this works for multi-level rooms (sewer/stairs) where world-flood fails — the map doesn't
- * care what Y the room's cells sit at.
- *
- * Math is the standard SkyBlock dungeon-mod approach (Skyblocker's DungeonMapUtils): find the
- * entrance green block to calibrate room pixel size, read the player's map marker, flood
- * connected same-colour map cells, then convert map cells → physical cells anchored on the
- * player's own known position.
- */
 public class MapSegments {
 
-    private static final int ENTRANCE_COLOR = 30; // MapColor.PLANT / HIGH
+    private static final int ENTRANCE_COLOR = 30; 
 
     public static String lastDebug = "no map scan";
 
-    // cached entrance anchor (calibrated once from Mort's armor stand + the map's green block).
-    // gives a fixed map↔world transform that doesn't depend on the player marker each scan.
+    
+    
     private static boolean calibrated = false;
-    private static int mapEntranceX, mapEntranceZ;        // map pixel of entrance top-left
-    private static int physEntranceX, physEntranceZ;      // world NW corner of entrance room
+    private static int mapEntranceX, mapEntranceZ;        
+    private static int physEntranceX, physEntranceZ;      
     private static int mapStep = 0;                        // pixels per room cell (size + gap)
 
-    /** Reset on dungeon enter/leave so a new run re-calibrates. */
     public static void reset() { calibrated = false; }
 
-    /** Map pixel (0-128) → approximate world x,z, using the cached Mort anchor. Null if not ready. */
     public static int[] worldXZFromMapPixel(int mpx, int mpz) {
         if (!calibrated || mapStep <= 0) return null;
         double cellsX = (mpx - mapEntranceX) / (double) mapStep;
         double cellsZ = (mpz - mapEntranceZ) / (double) mapStep;
-        int x = (int) Math.round(physEntranceX + cellsX * 32 + 15); // +15 ≈ room centre
+        int x = (int) Math.round(physEntranceX + cellsX * 32 + 15); 
         int z = (int) Math.round(physEntranceZ + cellsZ * 32 + 15);
         return new int[]{ x, z };
     }
 
-    /** Returns the set of physical NW-corner cell keys for the room the player is in, or empty. */
     public static Set<Long> footprint() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.level == null) { lastDebug = "no player"; return Set.of(); }
@@ -65,13 +51,13 @@ public class MapSegments {
             return Set.of();
         }
 
-        // calibrate from the entrance green block: its top-left position + room pixel size
+        
         int[] entrance = entranceInfo(map, playerMap);
         if (entrance == null) { lastDebug = "no entrance found (marker " + playerMap[0] + "," + playerMap[1] + ")"; return Set.of(); }
         int roomSize = entrance[2];
-        int step = roomSize + 4; // room size + gap between rooms on the map
+        int step = roomSize + 4; 
 
-        // the player's map cell (top-left pixel), aligned to the grid the entrance defines
+        
         int offX = Math.floorMod(entrance[0], step);
         int offZ = Math.floorMod(entrance[1], step);
         int alignedX = (playerMap[0] + 2) - offX;
@@ -80,15 +66,15 @@ public class MapSegments {
             alignedX - Math.floorMod(alignedX, step) + offX,
             alignedZ - Math.floorMod(alignedZ, step) + offZ
         };
-        // sample the cell centre, not the corner
+        
         byte color = colorAt(map, playerCell[0] + roomSize / 2, playerCell[1] + roomSize / 2);
         if (color <= 0) { lastDebug = "no colour @ cell " + playerCell[0] + "," + playerCell[1] + " (size=" + roomSize + " off=" + offX + "," + offZ + ")"; return Set.of(); }
 
-        // flood connected same-colour map cells
+        
         List<int[]> mapCells = floodMapCells(map, playerCell, step, color, roomSize);
 
-        // anchor the map↔world transform. prefer Mort (fixed entrance, calibrated once);
-        // otherwise anchor on the player's own map cell ↔ physical cell this scan.
+        
+        
         int anchorMapX, anchorMapZ, anchorPhysX, anchorPhysZ;
         String anchorSrc;
         mapStep = step;
@@ -116,7 +102,6 @@ public class MapSegments {
         return physCells;
     }
 
-    /** Find Mort's armor stand once and cache the entrance map↔world anchor. */
     private static void tryCalibrateMort(Minecraft mc, int mapEntX, int mapEntZ) {
         if (calibrated) return;
         var area = mc.player.getBoundingBox().inflate(120);
@@ -125,7 +110,7 @@ public class MapSegments {
             var name = stand.getCustomName();
             if (name == null) continue;
             if (!name.getString().contains("Mort")) continue;
-            // Mort stands in the entrance room — snap his pos to the room grid
+            // mort stands in the entrance ro...
             physEntranceX = RoomGrid.cornerX(stand.position());
             physEntranceZ = RoomGrid.cornerZ(stand.position());
             mapEntranceX = mapEntX;
@@ -147,7 +132,6 @@ public class MapSegments {
         return map.colors[x + (z << 7)];
     }
 
-    /** Player's pixel position on the map, from the FRAME/PLAYER decoration. */
     private static int[] mapPlayerPos(MapItemSavedData map) {
         var decos = ((MapDataAccessor) (Object) map).constellation$decorations();
         if (decos == null) return null;
@@ -160,7 +144,6 @@ public class MapSegments {
         return null;
     }
 
-    /** Scan outward from the player to find the entrance green block: [topLeftX, topLeftZ, size]. */
     private static int[] entranceInfo(MapItemSavedData map, int[] start) {
         Deque<int[]> q = new ArrayDeque<>();
         Set<Long> seen = new HashSet<>();
@@ -168,7 +151,7 @@ public class MapSegments {
         while (!q.isEmpty()) {
             int[] p = q.poll();
             if (colorAt(map, p[0], p[1]) == ENTRANCE_COLOR) {
-                // walk left+up to the entrance's top-left, then measure its width
+                
                 int x = p[0], z = p[1];
                 while (colorAt(map, x - 1, z) == ENTRANCE_COLOR) x--;
                 while (colorAt(map, x, z - 1) == ENTRANCE_COLOR) z--;
@@ -185,28 +168,26 @@ public class MapSegments {
         return null;
     }
 
-    /** BFS connected same-colour room cells on the map. Checks a border pixel between cells
-     *  to prevent crossing the 4-pixel gap into a different room of the same colour. */
     private static List<int[]> floodMapCells(MapItemSavedData map, int[] start, int step, byte color, int roomSize) {
         List<int[]> cells = new ArrayList<>();
         Deque<int[]> q = new ArrayDeque<>();
         Set<Long> seen = new HashSet<>();
         q.add(start); seen.add(key(start[0], start[1]));
         int half = roomSize / 2;
-        int border = roomSize + 2; // midpoint of the 4-pixel gap between rooms
+        int border = roomSize + 2; 
         while (!q.isEmpty() && cells.size() < 12) {
             int[] c = q.poll();
             cells.add(c);
-            // right
+            
             tryFlood(map, c, new int[]{c[0] + step, c[1]},
                 new int[]{c[0] + border, c[1] + half}, color, half, q, seen);
-            // left
+            
             tryFlood(map, c, new int[]{c[0] - step, c[1]},
                 new int[]{c[0] - (step - border), c[1] + half}, color, half, q, seen);
-            // down
+            
             tryFlood(map, c, new int[]{c[0], c[1] + step},
                 new int[]{c[0] + half, c[1] + border}, color, half, q, seen);
-            // up
+            
             tryFlood(map, c, new int[]{c[0], c[1] - step},
                 new int[]{c[0] + half, c[1] - (step - border)}, color, half, q, seen);
         }

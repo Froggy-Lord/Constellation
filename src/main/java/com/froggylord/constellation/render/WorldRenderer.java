@@ -16,15 +16,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 import java.util.function.Consumer;
 
-/**
- * World-space 3D overlay renderer for 26.2. Features queue primitives via {@link Ctx} during
- * the render hook, and they get submitted to the level's draw collector grouped by type.
- *
- * 26.2 dropped the old immediate BufferSource you'd pull off the render context — geometry now
- * goes through the submit-node system. AFTER_TRANSLUCENT_TERRAIN hands us a context with both a
- * poseStack and a node collector; we shift the pose back by the camera once so feature code can
- * just hand over plain world coordinates, then submitCustomGeometry does the batching for us.
- */
 public class WorldRenderer {
 
     public static class Ctx {
@@ -35,17 +26,14 @@ public class WorldRenderer {
 
         public Ctx(Vec3 camera) { this.camera = camera; }
 
-        /** Translucent filled box. */
         public void box(AABB box, int colour, boolean throughWalls) {
             boxes.add(new BoxPrim(box, colour, throughWalls, true));
         }
 
-        /** Wireframe outline. */
         public void outline(AABB box, int colour, boolean throughWalls) {
             boxes.add(new BoxPrim(box, colour, throughWalls, false));
         }
 
-        /** Fill + solid outline — reads as a glowing highlight rather than a wire box. */
         public void highlight(AABB box, int colour, boolean throughWalls) {
             int a = colour >>> 24;
             int fill = (Math.min(a, 0x60) << 24) | (colour & 0xFFFFFF);
@@ -57,7 +45,6 @@ public class WorldRenderer {
             lines.add(new LinePrim(from, to, colour, throughWalls));
         }
 
-        /** A marker line straight up from a block — cheap stand-in for a beacon beam. */
         public void beam(double x, double y, double z, int colour, int height, boolean throughWalls) {
             lines.add(new LinePrim(new Vec3(x, y, z), new Vec3(x, y + height, z), colour, throughWalls));
         }
@@ -94,7 +81,7 @@ public class WorldRenderer {
         Ctx ctx = new Ctx(cam);
         for (Consumer<Ctx> r : featureRenderers) {
             try { r.accept(ctx); }
-            catch (Exception ignored) { /* one bad feature shouldn't drop the frame */ }
+            catch (Exception ignored) {  }
         }
         if (ctx.boxes.isEmpty() && ctx.lines.isEmpty() && ctx.labels.isEmpty()) return;
 
@@ -103,7 +90,7 @@ public class WorldRenderer {
         pose.translate(-cam.x, -cam.y, -cam.z);
         SubmitNodeCollector collector = context.submitNodeCollector();
 
-        // depth-tested layer first (combat ESP), then through-walls (waypoints/routes)
+        
         for (boolean tw : new boolean[]{false, true}) {
             for (BoxPrim b : ctx.boxes) {
                 if (b.throughWalls() != tw) continue;
@@ -116,19 +103,19 @@ public class WorldRenderer {
             }
         }
 
-        // world-space labels via the collector's native name-tag submitter (supports see-through)
+        
         for (LabelPrim l : ctx.labels) {
             Component c = Component.literal(l.text());
-            int bg = ((l.colour() >>> 24) << 24); // alpha → background
+            int bg = ((l.colour() >>> 24) << 24); 
             collector.submitNameTag(pose, l.pos(), LightCoordsUtil.FULL_BRIGHT, c, l.throughWalls(), bg, camState);
         }
 
         pose.popPose();
     }
 
-    // no-depth (through-walls) render types need custom shader pipelines — deferred.
-    // both paths use the vanilla depth-tested types for now; the throughWalls flag is plumbed
-    // so switching to no-depth pipelines later is a one-line change per submit method.
+    // no-depth (through-walls) rende...
+    
+    
     private static RenderType filledType() { return RenderTypes.debugFilledBox(); }
     private static RenderType lineType() { return RenderTypes.lines(); }
 
@@ -136,12 +123,12 @@ public class WorldRenderer {
         collector.submitCustomGeometry(pose, filledType(), (p, buf) -> {
             float x0 = (float) b.minX, y0 = (float) b.minY, z0 = (float) b.minZ;
             float x1 = (float) b.maxX, y1 = (float) b.maxY, z1 = (float) b.maxZ;
-            quad(buf, p, argb, x0,y0,z0, x0,y1,z0, x1,y1,z0, x1,y0,z0); // north
-            quad(buf, p, argb, x1,y0,z1, x1,y1,z1, x0,y1,z1, x0,y0,z1); // south
-            quad(buf, p, argb, x0,y0,z1, x0,y1,z1, x0,y1,z0, x0,y0,z0); // west
+            quad(buf, p, argb, x0,y0,z0, x0,y1,z0, x1,y1,z0, x1,y0,z0); 
+            quad(buf, p, argb, x1,y0,z1, x1,y1,z1, x0,y1,z1, x0,y0,z1); 
+            quad(buf, p, argb, x0,y0,z1, x0,y1,z1, x0,y1,z0, x0,y0,z0); 
             quad(buf, p, argb, x1,y0,z0, x1,y1,z0, x1,y1,z1, x1,y0,z1); // east
-            quad(buf, p, argb, x0,y1,z0, x0,y1,z1, x1,y1,z1, x1,y1,z0); // top
-            quad(buf, p, argb, x0,y0,z1, x0,y0,z0, x1,y0,z0, x1,y0,z1); // bottom
+            quad(buf, p, argb, x0,y1,z0, x0,y1,z1, x1,y1,z1, x1,y1,z0); 
+            quad(buf, p, argb, x0,y0,z1, x0,y0,z0, x1,y0,z0, x1,y0,z1); 
         });
     }
 

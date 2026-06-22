@@ -5,10 +5,6 @@ import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.render.DungeonMap;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
-/**
- * Wraps the dungeon map as a HUD element so it lives in the one editor + registry.
- * Position is mirrored into OrionConfig.mapX/mapY (stored as screen %).
- */
 public class MapHudElement implements HudElement {
 
     @Override public String id() { return "orion-map"; }

@@ -16,10 +16,6 @@ import net.minecraft.world.item.component.CustomData;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Little corner markers painted onto items in any inventory — a pet's level, a weapon's star
- * count, a cake's year. All read off the stack you're looking at, nothing fetched.
- */
 public final class LyraSlotText {
 
     private LyraSlotText() {}
@@ -71,7 +67,7 @@ public final class LyraSlotText {
         return extra.getIntOr("upgrade_level", extra.getIntOr("dungeon_item_level", 0));
     }
 
-    // top-left, drawn over the item so it reads clearly against the slot
+    
     private static void corner(GuiGraphicsExtractor g, net.minecraft.client.gui.Font font, Slot slot,
                                int left, int top, String text, int colour) {
         g.text(font, text, left + slot.x, top + slot.y - 1, colour, true);

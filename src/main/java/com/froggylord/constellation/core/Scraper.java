@@ -26,20 +26,6 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.util.*;
 
-/**
- * // /cn scrape <mode> dumps game data to json files for debugging
- *   sidebar   — current sidebar lines
- *   tab       — current tab list lines
- *   entities  — all entities within 50 blocks (name, type, pos, hp, bb)
- *   actionbar — last parsed health/mana/defense/overflow/skill
- *   gui       — current open container screen slot contents
- *   map       — dungeon map pixel + decoration data
- *   room      — room detection state (name, anchor, rotation, matched)
- *   score     — dungeon score state (score, grade, secrets, crypts, deaths)
- *   chat      — record next 30s of chat messages
- *   all       — run sidebar+tab+entities+actionbar+room+score at once
- *   location  — current location detection state
- */
 public final class Scraper {
 
     private Scraper() {}
@@ -50,8 +36,8 @@ public final class Scraper {
     private static boolean recording = false;
     private static long recordUntil = 0;
 
-    // ---- auto-scrape (passive, always-on capture - runs while player plays) ----
-    private static boolean autoScrape = true; // on by default
+    
+    private static boolean autoScrape = true; 
     private static String lastSidebarHash = "";
     private static String lastArea = "";
     private static String lastGuiTitle = "";
@@ -61,12 +47,12 @@ public final class Scraper {
 
     public static void init() {
         try { Files.createDirectories(DIR); } catch (Exception ignored) {}
-        // record chat for /cn scrape chat
+        
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!recording) return;
             chatBuffer.add((overlay ? "[overlay] " : "") + msg.getString());
         });
-        // log all chat to a file
+        
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!autoScrape) return;
             try {
@@ -96,7 +82,7 @@ public final class Scraper {
                 }
             }
         });
-        // dump gui slots on open
+        
         ConstellationClient.tick().every(10, "autoscrape-gui", () -> {
             if (!autoScrape) return;
             var mc = Minecraft.getInstance();
@@ -110,7 +96,7 @@ public final class Scraper {
                 lastGuiTitle = "";
             }
         });
-        // dump actionbar when hp/mana changes a lot
+        
         ConstellationClient.tick().every(40, "autoscrape-actionbar", () -> {
             if (!autoScrape) return;
             int h = ActionBar.health(), m = ActionBar.mana();
@@ -142,7 +128,7 @@ public final class Scraper {
         }
     }
 
-    // -- dispatcher --
+    
 
     public static void scrape(String mode) {
         try { Files.createDirectories(DIR); } catch (Exception ignored) {}
@@ -165,7 +151,7 @@ public final class Scraper {
         }
     }
 
-    // -- individual scrapers --
+    
 
     private static JsonObject scrapeSidebar() {
         JsonArray arr = new JsonArray();
@@ -189,7 +175,7 @@ public final class Scraper {
         JsonArray arr = new JsonArray();
         var pp = mc.player.position();
         for (Entity e : mc.level.entitiesForRendering()) {
-            if (e.distanceToSqr(pp) > 2500) continue; // 50-block radius
+            if (e.distanceToSqr(pp) > 2500) continue; 
             JsonObject ent = new JsonObject();
             ent.addProperty("type", e.getType().getDescriptionId());
             ent.addProperty("className", e.getClass().getSimpleName());
@@ -258,7 +244,7 @@ public final class Scraper {
             s.addProperty("count", stack.getCount());
             s.addProperty("hoverName", stack.getHoverName().getString());
             s.addProperty("hasFoil", stack.hasFoil());
-            // NBT ExtraAttributes dump
+            // nbt extraattributes dump
             CustomData cd = stack.get(DataComponents.CUSTOM_DATA);
             if (cd != null) {
                 CompoundTag extra = cd.copyTag().getCompoundOrEmpty("ExtraAttributes");
@@ -272,7 +258,7 @@ public final class Scraper {
                     s.add("extraAttributes", nbt);
                 }
             }
-            // LORE dump
+            // lore dump
             ItemLore lore = stack.get(DataComponents.LORE);
             if (lore != null) {
                 JsonArray loreArr = new JsonArray();
@@ -287,7 +273,7 @@ public final class Scraper {
 
     private static JsonObject scrapeMap(Minecraft mc) {
         JsonObject o = new JsonObject();
-        // find dungeon map in inventory
+        
         var inv = mc.player.getInventory();
         MapItemSavedData map = null;
         for (int i = 0; i < inv.getContainerSize(); i++) {
@@ -303,7 +289,7 @@ public final class Scraper {
         o.addProperty("centerZ", map.centerZ);
         o.addProperty("dimension", map.dimension.registry().toString());
         o.addProperty("scale", map.scale);
-        // dump decorations (player markers, room markers etc.)
+        
         var decos = ((MapDataAccessor) (Object) map).constellation$decorations();
         if (decos != null) {
             JsonArray da = new JsonArray();
@@ -318,7 +304,7 @@ public final class Scraper {
             }
             o.add("decorations", da);
         }
-        // dump first 500 color bytes as base64 (too big for full JSON)
+        
         StringBuilder hex = new StringBuilder();
         int max = Math.min(500, map.colors.length);
         for (int i = 0; i < max; i++) {
@@ -381,7 +367,7 @@ public final class Scraper {
         recordUntil = System.currentTimeMillis() + 30_000;
         chatBuffer.clear();
         reply("§aScraper: recording chat for 30s. Run again to stop early.");
-        // auto-stop after 30s
+        
         ConstellationClient.tick().once(600, "scraper-chat-stop", () -> {
             if (!recording) return;
             recording = false;
@@ -408,7 +394,7 @@ public final class Scraper {
         reply("§aScraper: dumped sidebar+tab+entities+actionbar+room+score+location to scrapes folder");
     }
 
-    // -- helpers --
+    
 
     private static void save(String mode, JsonObject data) {
         String ts = Instant.now().toString().replace(':', '-').substring(0, 19);
@@ -418,7 +404,7 @@ public final class Scraper {
         try (Writer w = Files.newBufferedWriter(file)) { GSON.toJson(data, w); }
         catch (Exception e) { ConstellationClient.LOGGER.error("Scraper save failed", e); }
         reply("§aScraper: saved " + file.getFileName().toString());
-        // also print a quick preview to chat
+        
         reply("§7  → " + DIR.toAbsolutePath().normalize() + "/" + file.getFileName());
     }
 

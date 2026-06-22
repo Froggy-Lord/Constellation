@@ -1,8 +1,5 @@
 package com.froggylord.constellation.config;
 
-/**
- * Config for the Phoenix constellation (QoL toggles).
- */
 public class PhoenixConfig extends BaseConfigGroup {
 
     @Override public int currentVersion() { return 0; }
@@ -29,9 +26,9 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean itemProtection = true;
     public boolean preventDroppingValuable = true;
     public boolean hotbarScrollLock = false;
-    public boolean wardrobeKeybinds = false; // press keys to instant-swap armor sets
+    public boolean wardrobeKeybinds = false; 
     public boolean autoSaveReminder = true;   // ping every 5 min to /is the lobby
-    public boolean hotbarLock = false;         // lock hotbar slots from being moved
-    public boolean hotbarSwapHelper = false;   // quick-swap between hotbar rows (cmp. Skyblocker)
-    public boolean viewmodelCustomize = false; // change hand position / scale (cmp. Skyblocker)
+    public boolean hotbarLock = false;         
+    public boolean hotbarSwapHelper = false;   
+    public boolean viewmodelCustomize = false; 
 }

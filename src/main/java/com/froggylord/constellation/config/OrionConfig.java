@@ -6,7 +6,7 @@ public class OrionConfig extends BaseConfigGroup {
 
     @Override public int currentVersion() { return 0; }
 
-    // HUD elements
+    
     public boolean scoreHud = true;
     public boolean secretsHud = true;
     public boolean cryptsHud = true;
@@ -16,18 +16,18 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean mimicIndicator = true;
     public boolean splitsHud = false;
 
-    // score milestone pings (270 = S, 300 = S+)
+    
     public boolean scorePings = true;
     public boolean scorePingTitle = true;
     public boolean scorePingSound = true;
 
-    // map
+    
     public boolean dungeonMap = true;
-    public int mapScale = 2; // 1-5
-    public int mapX = 1;     // top-left, screen %
+    public int mapScale = 2; 
+    public int mapX = 1;     
     public int mapY = 2;
 
-    // secrets
+    
     public boolean secretWaypoints = true;
     public boolean progressiveReveal = true;
     public boolean oneSecretAtATime = false;
@@ -38,22 +38,22 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean echoOnCollect = true;
     public boolean perRoomCount = true;
 
-    // party finder
+    
     public boolean partyFinderGui = true;
     public int minSecrets = 0;
     public String classFilter = "";
 
-    // auto requeue
+    
     public boolean autoRequeue = false;
     public int requeueDelaySec = 3;
     public boolean requeueSafeMode = true;
 
-    // combat esp (depth-tested — moving entities must respect walls per Hypixel rules)
+    
     public boolean starredMobs = true;
     public boolean secretBats = true;
     public boolean teammateBoxes = false;
 
-    // defensive ability tracker (Bonzo / Spirit / Phoenix cooldowns)
+    
     public boolean abilityTracker = true;
     public boolean abilityReadyDing = true;
     public boolean lowHealthAlert = true;
@@ -64,19 +64,19 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean streamerMode = false;
     public boolean rareDropAlerts = true;
 
-    // f7/m7 term solvers, highlight only
+    
     public boolean terminalSolvers = true;
     public boolean terminalNumbers = true;
     public boolean blockWrongTerminalClicks = false;
 
-    // blaze room
+    
     public boolean blazeSolver = true;
 
-    // blessing levels
+    
     public boolean blessingDisplay = true;
     public boolean spiritLeapHelperMenu = true;
 
-    // drop items on floor
+    
     public boolean dropEsp = true;
 
     // puzzle solvers
@@ -85,35 +85,35 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean triviaSolver = true;
     public boolean creeperBeamsSolver = true;
 
-    // livid fight (f5/m5)
+    
     public boolean lividFinder = true;
 
-    // ttt solver
+    
     public boolean ticTacToeSolver = true;
 
-    // ff staff timer
+    
     public boolean fireFreezeTimer = true;
 
-    // guardian hp + sa warn
+    
     public boolean guardianHealth = true;
     public boolean shadowAssassinAlert = true;
 
-    // miniboss boxes + rare rooms
+    
     public boolean minibossHighlights = true;
     public boolean rareRoomAlerts = true;
-    public boolean mageBeamCleaner = true; // clean line instead of firework particles (cmp. Skyblocker MageBeamRenderer)
-    public boolean spiritBowTimer = true;  // show cooldown when spirit bow is picked up (cmp. Skyblocker)
-    public boolean melodyTerminalHelper = true; // highlight next note in Melody terminal (cmp. Skyblocker)
-    public boolean saVanishTimer = true;    // SA vanish countdown (cmp. Skyblocker BossManager)
-    public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
-    public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
-    public boolean m7DragonMarkers = true;    // highlight M7 dragon priority (cmp. Skyblocker M7Dragons)
-    public boolean secretChimeCustom = true;  // custom secret chime (cmp. Skyblocker)
-    public boolean waterboardSolver = true;    // highlight water puzzle gates (cmp. Odin waterSolutions)
-    public boolean iceFillSolver = true;       // show ice fill path (cmp. Odin iceFillFloors)
-    public boolean teleportMazeSolver = true;  // highlight correct teleport pad (cmp. Skyblocker)
-    public boolean silverfishSolver = true;    // highlight silverfish BFS path (cmp. Skyblocker)
-    public boolean lightsOnSolver = true;     // lights on puzzle (cmp. Skyblocker)
-    public boolean arrowAlignSolver = true;    // arrow align (cmp. Skyblocker)
-    public boolean targetPracticeSolver = true; // target practice (cmp. Skyblocker)
+    public boolean mageBeamCleaner = true; 
+    public boolean spiritBowTimer = true;  
+    public boolean melodyTerminalHelper = true; 
+    public boolean saVanishTimer = true;    
+    public boolean dungeonPotionsHud = true; 
+    public boolean chestProfitCalc = true;    
+    public boolean m7DragonMarkers = true;    
+    public boolean secretChimeCustom = true;  
+    public boolean waterboardSolver = true;    // highlight water puzzle gates (...
+    public boolean iceFillSolver = true;       
+    public boolean teleportMazeSolver = true;  
+    public boolean silverfishSolver = true;    // highlight silverfish bfs path ...
+    public boolean lightsOnSolver = true;     
+    public boolean arrowAlignSolver = true;    
+    public boolean targetPracticeSolver = true; 
 }

@@ -2,15 +2,11 @@ package com.froggylord.constellation.config;
 
 import java.util.*;
 
-/**
- * Config for the Cassiopeia constellation (chat + commands).
- * Expanded with SkyHanni/Odin research — 30+ filter toggles.
- */
 public class CassiopeiaConfig extends BaseConfigGroup {
 
     @Override public int currentVersion() { return 0; }
 
-    // chat cleaner — per-category toggles for spam
+    // chat cleaner — per-category to...
     public boolean cleanBlocksInWay = true;
     public boolean cleanNotEnoughMana = true;
     public boolean cleanCantTeleport = true;
@@ -55,7 +51,7 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean autoTip = true;
     public boolean actionBarCleaner = false;
 
-    // chat enhancements
+    
     public boolean timestamps = true;
     public boolean compactChat = false;
     public boolean clickableLinks = true;
@@ -68,7 +64,7 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean rareDropFormat = true;
     public boolean compactJacobClaim = true;
 
-    // spam filter — lines containing any of these are hidden
+    // spam filter — lines containing...
     public List<String> spamFilters = Arrays.asList(
         "[BOSS] The Watcher",
         "blessing of",
@@ -82,13 +78,13 @@ public class CassiopeiaConfig extends BaseConfigGroup {
         "no longer have an active"
     );
 
-    // commands
+    
     public boolean floorShortcuts = true;
     public boolean warpShortcuts = true;
     public boolean partyShortcuts = true;
-    public boolean warpShortener = true; // /drag -> /warp drag, etc.
+    public boolean warpShortener = true; // /drag -> /warp drag, etc
 
-    // party triggers
+    
     public boolean partyTriggers = true;
     public int triggerCooldownSec = 3;
     public boolean triggerSafeMode = false;

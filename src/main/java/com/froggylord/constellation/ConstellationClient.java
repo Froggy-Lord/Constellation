@@ -57,7 +57,7 @@ public class ConstellationClient implements ClientModInitializer {
         com.froggylord.constellation.core.StatStore.init();
         com.froggylord.constellation.core.Scraper.init();
 
-        // world renderer hooked before features init so they can register draw callbacks
+        
         worldRenderer = new WorldRenderer();
         batchRenderer = new BatchRenderer();
         worldRenderer.init();
@@ -69,18 +69,18 @@ public class ConstellationClient implements ClientModInitializer {
         HudRenderer.init();
         featureManager.registerHudElements();
 
-        // root commands via vanilla brigadier
-        // screen opens deferred to next tick so the chat-close doesn't race and insta-close us
+        
+        
         net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             var mc = Minecraft.getInstance();
 
-            // /constellation → opens hub
+            
             dispatcher.register(
                 com.mojang.brigadier.builder.LiteralArgumentBuilder
                     .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("constellation")
                     .executes(ctx -> { mc.execute(() -> mc.setScreenAndShow(new HubScreen(null))); return 1; })
             );
-            // /cn → opens hub. subcommands: hud, config
+            
             dispatcher.register(
                 com.mojang.brigadier.builder.LiteralArgumentBuilder
                     .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("cn")
@@ -139,7 +139,7 @@ public class ConstellationClient implements ClientModInitializer {
     public KeybindRegistry keys() { return keybindRegistry; }
     public PacketBus packets() { return packetBus; }
 
-    // static convenience
+    
     public static ConstellationConfig cfg() { return instance.configManager.get(); }
     public static EventBus bus() { return instance.eventBus; }
     public static TickManager tick() { return instance.tickManager; }

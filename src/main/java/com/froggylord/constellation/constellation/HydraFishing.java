@@ -10,10 +10,6 @@ import com.froggylord.constellation.hud.HudWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-/**
- * Hydra — fishing. Cast timer, a running sea-creature tally, and a loud alert for the rare
- * catches that are easy to miss in the spawn spam (and worth a party heads-up).
- */
 public class HydraFishing extends BaseConstellation {
 
     @Override public String id() { return "hydra"; }
@@ -30,7 +26,7 @@ public class HydraFishing extends BaseConstellation {
     private static int sharkKills = 0;
     private static long totemPlacedAt = 0;
 
-    // the catches worth stopping for — their names are distinct enough to spot in a chat line
+    
     private static final String[] RARE = {
         "Sea Emperor", "Water Hydra", "Lord Jawbus", "Thunder", "Plhlegblast",
         "Phantom Fisher", "Grim Reaper", "Reindrake", "Yeti", "Carrot King",
@@ -42,7 +38,7 @@ public class HydraFishing extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (HydraConfig) getConfig();
-        // cast timer — the rod casts on right-click while held
+        
         ConstellationClient.tick().every(4, "hydra-cast", () -> {
             var mc = Minecraft.getInstance();
             if (mc.player == null) return;
@@ -50,7 +46,7 @@ public class HydraFishing extends BaseConstellation {
             if (stack.getItem() instanceof net.minecraft.world.item.FishingRodItem
                 && mc.options.keyAttack.isDown()) castAt = System.currentTimeMillis();
         });
-        // hide other players' bobbers so the water around you stays readable
+        
         ConstellationClient.tick().every(2, "hydra-hooks", () -> {
             if (cfg == null || !cfg.hideOtherHooks) return;
             var mc = Minecraft.getInstance();
@@ -60,7 +56,7 @@ public class HydraFishing extends BaseConstellation {
                     && h.getPlayerOwner() != mc.player) h.setInvisible(true);
             }
         });
-        // Odger waypoint — find the NPC by scanning for his ArmorStand
+        // odger waypoint — find the npc ...
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.odgerWaypoint || !ConstellationClient.loc().onHypixel()) return;
             var mc3 = Minecraft.getInstance();
@@ -76,7 +72,7 @@ public class HydraFishing extends BaseConstellation {
             }
         });
 
-        // Wormhole locator — chat announces wormhole spawns near you
+        
         if (cfg.wormholeLocator) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -89,7 +85,7 @@ public class HydraFishing extends BaseConstellation {
             });
         }
 
-        // Lava fishing spot highlighter — find lava source blocks nearby
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.lavaFishingHelper || !ConstellationClient.loc().onHypixel()) return;
             var mc4 = Minecraft.getInstance();
@@ -106,7 +102,7 @@ public class HydraFishing extends BaseConstellation {
                     }
         });
 
-        // Chum hider — hide chum bucket entities in the water
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.chumHider || !ConstellationClient.loc().onHypixel()) return;
             var mc5 = Minecraft.getInstance();
@@ -118,7 +114,7 @@ public class HydraFishing extends BaseConstellation {
             }
         });
 
-        // Thunder entity highlight — rare SC, box it in the water
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.thunderHighlight || !ConstellationClient.loc().onHypixel()) return;
             var mc = Minecraft.getInstance();
@@ -137,17 +133,17 @@ public class HydraFishing extends BaseConstellation {
             String s = msg.getString();
             if (s.contains("Sea Creature") || s.contains("sea creature")) seaCreatures++;
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
-            // shark kills — count them
+            
             if (cfg != null && cfg.sharkCounter && (s.contains("Shark") || s.contains("shark")) && (s.contains("killed") || s.contains("slain"))) {
                 sharkKills++;
                 com.froggylord.constellation.core.StatStore.add("hydra.shark.kills", 1);
             }
-            // totem timer — track when placed
+            
             if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("placed") || s.contains("activated")))
                 totemPlacedAt = System.currentTimeMillis();
             if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("expired") || s.contains("wore off")))
                 totemPlacedAt = 0;
-            // cocoon alert — rare fishing event
+            
             if (cfg != null && cfg.cocoonAlert && s.contains("Cocoon") && (s.contains("appeared") || s.contains("spawned"))) {
                 var mc3 = Minecraft.getInstance();
                 if (mc3.player != null) {
@@ -155,22 +151,22 @@ public class HydraFishing extends BaseConstellation {
                     mc3.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.8f, 1.0f);
                 }
             }
-            // golden fish spawn — verified pattern: "A Golden Fish has appeared"
+            // golden fish spawn — verified p...
             if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish") && (s.contains("appeared") || s.contains("spawned"))) {
                 if (s.contains("appeared") || s.contains("spawned")) goldenFishAt = System.currentTimeMillis();
                 else if (s.contains("caught") || s.contains("despawned")) goldenFishAt = 0;
             }
-            // barn timer — track open/close from chat
+            
             if (cfg != null && cfg.barnTimer) {
                 if (s.contains("barn") && (s.contains("open") || s.contains("doors"))) {
                     barnOpenAt = System.currentTimeMillis();
-                    // try to parse the duration: "for X minutes" or "closes in Xm"
+                    
                     var bm = java.util.regex.Pattern.compile("(\\d+)\\s*(?:minute|min|m)").matcher(s.toLowerCase(java.util.Locale.ROOT));
                     if (bm.find()) barnCloseAt = barnOpenAt + Long.parseLong(bm.group(1)) * 60_000L;
                 }
                 if (s.contains("barn") && (s.contains("close") || s.contains("shut"))) barnOpenAt = 0;
             }
-            // trophy fish — the catch line names the tier
+            
             if (cfg != null && cfg.trophyFishTracker && (s.contains("TROPHY FISH") || s.contains("You caught"))) {
                 if (s.contains("Diamond")) { tDiamond++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.diamond", 1); }
                 else if (s.contains("Gold")) { tGold++; com.froggylord.constellation.core.StatStore.add("hydra.trophy.gold", 1); }
@@ -181,13 +177,13 @@ public class HydraFishing extends BaseConstellation {
     }
 
     private void checkRare(String s) {
-        // skip kill/death lines so we only fire on the spawn
+        
         String low = s.toLowerCase(java.util.Locale.ROOT);
         if (low.contains("killed") || low.contains("slain") || low.contains("defeated") || low.contains("died")) return;
         for (String name : RARE) {
             if (!s.contains(name)) continue;
             long now = System.currentTimeMillis();
-            if (now - lastRareAt < 4000) return; // dedupe the multi-line spawn flavour
+            if (now - lastRareAt < 4000) return; 
             lastRareAt = now;
             var mc = Minecraft.getInstance();
             if (mc.player != null) {

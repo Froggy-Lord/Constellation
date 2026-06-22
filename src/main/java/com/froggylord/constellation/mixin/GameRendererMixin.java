@@ -10,8 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-// Phoenix camera QoL — skip the view-bob walk sway and the hurt-camera tilt when toggled.
-// both are self-contained private steps in the camera setup, so a HEAD cancel is clean.
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 

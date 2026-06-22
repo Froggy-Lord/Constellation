@@ -8,11 +8,6 @@ import net.minecraft.world.entity.monster.Silverfish;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Silverfish puzzle (F7/M7) — highlights silverfish entities in the ice
- * puzzle room and draws lines to the nearest pressure plate target.
- * The puzzle requires guiding silverfish to plates by breaking ice blocks.
- */
 public final class SilverfishSolver {
 
     private SilverfishSolver() {}
@@ -24,7 +19,7 @@ public final class SilverfishSolver {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        // scan for silverfish entities
+        
         java.util.List<Silverfish> fish = new java.util.ArrayList<>();
         for (var e : mc.level.entitiesForRendering()) {
             if (e instanceof Silverfish sf && e.distanceToSqr(mc.player.position()) < 400) {
@@ -33,7 +28,7 @@ public final class SilverfishSolver {
         }
         if (fish.isEmpty()) return;
 
-        // scan for pressure plates (targets)
+        
         java.util.List<Vec3> targets = new java.util.ArrayList<>();
         var pp = mc.player.blockPosition();
         for (int dx = -10; dx <= 10; dx++)

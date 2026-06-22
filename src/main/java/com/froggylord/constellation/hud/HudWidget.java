@@ -6,10 +6,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.function.Supplier;
 
-/**
- * A simple "Label: value" HUD element. The value supplier returns null when the element
- * shouldn't show (e.g. dungeon stats outside a dungeon), which makes visibleNow() false.
- */
 public class HudWidget implements HudElement {
 
     private final String id;
@@ -27,7 +23,6 @@ public class HudWidget implements HudElement {
         this.enabled = enabled;
     }
 
-    /** call this callback every time the element is dragged, so the config gets written back. */
     public HudWidget onMove(java.util.function.Consumer<HudPosition> cb) { this.onMove = cb; return this; }
 
     private String currentValue() {
@@ -63,7 +58,7 @@ public class HudWidget implements HudElement {
         var font = Minecraft.getInstance().font;
         String text = label + ": " + v;
         int w = font.width(text);
-        // accent line + text
+        
         g.fill(px, py - 2, px + w + 6, py - 1, NebulaTheme.HUD_ACCENT);
         g.text(font, text, px + 3, py + 1, NebulaTheme.STAR_WHITE, true);
     }

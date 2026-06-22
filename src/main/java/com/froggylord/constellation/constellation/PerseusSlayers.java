@@ -11,10 +11,6 @@ import com.froggylord.constellation.hud.HudWidget;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Perseus — slayers. Reads slayer XP off the sidebar (a stable Hypixel signal) and shows
- * a compact readout. Boss timer deferred — the BossHealthOverlay access path changed in 26.2.
- */
 public class PerseusSlayers extends BaseConstellation {
 
     @Override public String id() { return "perseus"; }
@@ -43,7 +39,6 @@ public class PerseusSlayers extends BaseConstellation {
         return String.format("%d:%02d", s / 60, s % 60);
     }
 
-    /** which personal best to show — all-time from disk, or just this session. */
     private static long pbMs() {
         boolean lifetime = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
         if (lifetime) return com.froggylord.constellation.core.StatStore.getLong("perseus.slayer.bestMs", slayerBestMs);
@@ -52,7 +47,7 @@ public class PerseusSlayers extends BaseConstellation {
 
     private static int bestiaryKills = 0;
 
-    // Spider's Den relic positions from Skyblocker's relics.json (28 relics)
+    
     private static final int[][] RELICS = {
         {-342,122,-253},{-384,89,-225},{-274,100,-178},{-178,136,-297},{-147,83,-335},
         {-188,80,-346},{-183,68,-283},{-342,89,-221},{-355,86,-213},{-372,89,-242},
@@ -65,7 +60,7 @@ public class PerseusSlayers extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (PerseusConfig) getConfig();
-        // Spider's Den relic waypoints
+        
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.xpBar) return;
             if (ConstellationClient.loc().area() != com.froggylord.constellation.core.LocationManager.SkyblockArea.SPIDER_DEN) return;
@@ -83,17 +78,17 @@ public class PerseusSlayers extends BaseConstellation {
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
-            // Endstone Protector spawn
+            // endstone protector spawn
             if (s.contains("The Endstone Protector") || s.contains("Protector") && s.contains("spawn"))
-                zealotKills = 0; // reset zealot count after protector spawn
-            // Summoning Eye drop
+                zealotKills = 0; 
+            
             if (s.contains("SUMMONING EYE") || s.contains("Summoning Eye")) {
                 summoningEyes++;
                 zealotSinceEye = 0;
             }
-            // Zealot kill (from bestiary or kill combo — rough tracking)
+            
             if (s.contains("Zealot") && !s.contains("Bruiser")) { zealotKills++; zealotSinceEye++; }
-            // Slayer boss spawn
+            
             if (s.contains("SLAYER") && s.contains("SPAWN")) {
                 lastBoss = s.trim();
                 lastBossAt = System.currentTimeMillis();
@@ -105,7 +100,7 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.0f);
                 }
             }
-            // Slayer quest complete — stop the timer, keep session + lifetime bests
+            
             if (slayerStartAt > 0 && (s.contains("SLAYER QUEST COMPLETE") || s.contains("NICE! SLAYER BOSS SLAIN"))) {
                 slayerLastMs = System.currentTimeMillis() - slayerStartAt;
                 if (slayerBestMs == 0 || slayerLastMs < slayerBestMs) slayerBestMs = slayerLastMs;
@@ -117,7 +112,7 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
                         "§a✔ Slayer §f" + fmt(slayerLastMs) + " §7(pb " + fmt(lifeBest) + ", #" + lifeKills + " all-time)"));
             }
-            // Mini-boss spawn
+            // mini-boss spawn
             if (s.contains(" spawned") && (s.contains("Revenant") || s.contains("Tarantula") || s.contains("Sven") || s.contains("Voidgloom") || s.contains("Inferno"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
@@ -128,7 +123,7 @@ public class PerseusSlayers extends BaseConstellation {
                     }
                 }
             }
-            // Skill level-up — strip formatting before check (Hypixel uses § codes)
+            
             if (cfg.skillLevelUpAlert) {
                 String stripped2 = net.minecraft.ChatFormatting.stripFormatting(s);
                 if (stripped2.contains("LEVEL UP") || stripped2.contains("SKYBLOCK LEVEL UP") || stripped2.contains("SKILL LEVEL UP")) {
@@ -140,7 +135,7 @@ public class PerseusSlayers extends BaseConstellation {
                 }
                 }
             }
-            // Broken Hyperion / wither blade alert — title ping
+            
             if (cfg.brokenHyperionAlert && (s.contains("out of charges") || s.contains("no more charges") || s.contains("ran out of"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
@@ -149,7 +144,7 @@ public class PerseusSlayers extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.4f);
                 }
             }
-            // Rare drop effect — strip formatting before checking (Hypixel uses § codes)
+            
             if (cfg.rareDropEffect) {
                 String stripped = net.minecraft.ChatFormatting.stripFormatting(s);
                 if (stripped.contains("RARE DROP") || stripped.contains("CRAZY RARE DROP") || stripped.contains("PRAY RNGESUS")) {
@@ -161,7 +156,7 @@ public class PerseusSlayers extends BaseConstellation {
                 }
                 }
             }
-            // Brood Mother spawn alert (SBA feature)
+            
             if (s.contains("Brood Mother") && s.contains("hatched")) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {

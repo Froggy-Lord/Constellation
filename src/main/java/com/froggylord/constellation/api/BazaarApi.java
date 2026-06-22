@@ -12,22 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Reads the public Hypixel bazaar feed (no API key needed) so item tooltips can show live
- * buy/sell prices. The fetch runs on a daemon thread and refreshes a couple of times an hour;
- * everything that reads {@link #get} just hits the cached map, never the network.
- */
 public final class BazaarApi {
 
     private BazaarApi() {}
 
     private static final String URL = "https://api.hypixel.net/v2/skyblock/bazaar";
-    private static final long TTL = 180_000; // 3 min
-    private static final Map<String, double[]> prices = new ConcurrentHashMap<>(); // id -> {buy, sell}
+    private static final long TTL = 180_000;
+    private static final Map<String, double[]> prices = new ConcurrentHashMap<>(); 
     private static volatile long lastFetch = 0;
     private static volatile boolean fetching = false;
 
-    /** kick a refresh if the cache is stale; cheap to call every frame. */
     public static void ensureFresh() {
         long now = System.currentTimeMillis();
         if (fetching || now - lastFetch < TTL) return;
@@ -58,12 +52,11 @@ public final class BazaarApi {
             }
             if (!fresh.isEmpty()) { prices.clear(); prices.putAll(fresh); lastFetch = System.currentTimeMillis(); }
         } catch (Exception ignored) {
-            // offline, rate-limited, whatever — try again next interval
+            
         } finally {
             fetching = false;
         }
     }
 
-    /** {buyPrice, sellPrice} for a bazaar product id, or null if not traded / not loaded yet. */
     public static double[] get(String id) { return prices.get(id); }
 }

@@ -6,13 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
-/**
- * Tracks the dungeon defensive-ability cooldowns that actually matter — Bonzo's Mask (180s),
- * Spirit Mask (30s) and the Phoenix pet (60s). Hypixel announces each save in chat; we start a
- * countdown from that, surface it on the HUD, and ding when it comes back. Cooldowns are the
- * base values — class CDR will make the real cooldown a touch shorter, so treat it as an upper
- * bound.
- */
 public final class DefensiveTracker {
 
     private DefensiveTracker() {}
@@ -42,7 +35,6 @@ public final class DefensiveTracker {
 
     private static long lastLowAlert = 0;
 
-    /** Called each tick — dings cooled-down abilities and fires the low-health alert. */
     public static void tick() {
         var cfg = ConstellationClient.cfg().orion;
         if (cfg == null) return;
@@ -69,7 +61,6 @@ public final class DefensiveTracker {
         }
     }
 
-    /** HUD line of any active cooldowns, e.g. "Bonzo 2:14  Spirit 0:08", or null if all ready. */
     public static String hudLine() {
         long now = System.currentTimeMillis();
         StringBuilder sb = new StringBuilder();

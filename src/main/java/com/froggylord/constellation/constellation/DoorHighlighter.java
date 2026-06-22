@@ -9,11 +9,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/**
- * Paints a beam over wither/blood keys on the floor (through walls so you never walk past one)
- * and highlights the actual door once it's detected. Keys are spotted from the chat pickup line;
- * the nearest door block is found by scanning the world around the key pickup point.
- */
 public final class DoorHighlighter {
 
     private DoorHighlighter() {}
@@ -24,7 +19,7 @@ public final class DoorHighlighter {
     private static boolean hasBloodKey = false;
 
     private static BlockPos doorPos = null;
-    private static int doorColour = 0xFFFF3333; // red = no key yet
+    private static int doorColour = 0xFFFF3333; 
 
     public static void init() {
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
@@ -38,7 +33,7 @@ public final class DoorHighlighter {
                         lastKeyAt = System.currentTimeMillis();
                         if (s.contains("Wither")) hasWitherKey = true;
                         else hasBloodKey = true;
-                        // scan for the nearest door block
+                        
                         doorPos = findDoorNear(mc.player.blockPosition(), s.contains("Wither"));
                     }
                 }
@@ -50,7 +45,7 @@ public final class DoorHighlighter {
         var mc = Minecraft.getInstance();
         if (mc.level == null) return null;
         BlockPos best = null;
-        double bestDist = 64; // max scan radius
+        double bestDist = 64; 
         for (int dx = -40; dx <= 40; dx += 4) {
             for (int dz = -40; dz <= 40; dz += 4) {
                 for (int dy = -5; dy <= 5; dy++) {
@@ -58,7 +53,7 @@ public final class DoorHighlighter {
                     var bs = mc.level.getBlockState(bp);
                     String id = bs.getBlock().getDescriptionId();
                     if (wither && id.contains("coal_block")) {
-                        // check for wither skull above
+                        
                         var above = mc.level.getBlockState(bp.above());
                         if (above.getBlock().getDescriptionId().contains("skull")) {
                             double d = bp.distSqr(center);
@@ -79,12 +74,12 @@ public final class DoorHighlighter {
         if (cfg == null || !cfg.doorTracker) return;
         if (!ConstellationClient.loc().inDungeons()) return;
 
-        // key beam — glow the key's last known position for ~10s
+        
         if (keyPos != null && System.currentTimeMillis() - lastKeyAt < 12_000) {
             ctx.beam(keyPos.x, keyPos.y, keyPos.z, 0xFFFFFF00, 4, true);
         }
 
-        // door highlight — show the door red (needs key) or green (key held)
+        // door highlight — show the door...
         if (doorPos != null) {
             boolean hasKey = hasWitherKey || hasBloodKey;
             int colour = hasKey ? 0xFF33FF33 : 0xFFFF3333;

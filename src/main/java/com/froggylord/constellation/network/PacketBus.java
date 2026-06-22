@@ -4,11 +4,6 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
-/**
- * Clientbound packet observation bus.
- * Listeners receive every clientbound packet; they filter by type themselves.
- * The ClientPacketListenerMixin fires packets through here.
- */
 public class PacketBus {
 
     private final List<Consumer<Object>> listeners = new CopyOnWriteArrayList<>();

@@ -12,16 +12,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Reads the player-list (tab) entries in vanilla sort order. Hypixel hides the dungeon stats
- * — secrets found, completed rooms, crypts, puzzle states — inside fake tab entries rather
- * than the sidebar, so this is the only place to get them. Refreshed each call; it's cheap.
- */
 public final class TabList {
 
     private TabList() {}
 
-    /** All tab entries' display text, vanilla-sorted, colour-stripped + trimmed. */
     public static List<String> lines() {
         List<String> out = new ArrayList<>();
         Minecraft mc = Minecraft.getInstance();
@@ -45,8 +39,6 @@ public final class TabList {
         return out;
     }
 
-    /** First tab line containing the pattern, or null. (find, not full-match — Hypixel lines
-     *  sometimes carry trailing counts/icons we don't care about.) */
     public static Matcher find(List<String> lines, Pattern pattern) {
         for (String line : lines) {
             Matcher m = pattern.matcher(line);

@@ -6,15 +6,12 @@ import net.minecraft.ChatFormatting;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * // reads hp/mana/defense from the action bar overlay
- */
 public final class ActionBar {
 
     private ActionBar() {}
 
-    // Hypixel shortens large numbers with k/M suffixes on the action bar — the groups need to
-    // swallow dots and the suffix so num() can expand them back to ints.
+    
+    
     private static final Pattern HEALTH = Pattern.compile("([\\d.,]+[kKmMbB]?)/([\\d.,]+[kKmMbB]?)❤");
     private static final Pattern MANA = Pattern.compile("([\\d.,]+[kKmMbB]?)/([\\d.,]+[kKmMbB]?)✎");
     private static final Pattern OVERFLOW = Pattern.compile("([\\d.,]+[kKmMbB]?)ʬ");
@@ -28,7 +25,7 @@ public final class ActionBar {
 
     public static void init() {
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (!overlay) return; // only the action bar
+            if (!overlay) return; 
             parse(ChatFormatting.stripFormatting(message.getString()));
         });
     }
@@ -64,7 +61,6 @@ public final class ActionBar {
         catch (NumberFormatException e) { return 0; }
     }
 
-    /** 0..1, or 1 if we haven't seen health yet (don't false-alarm). */
     public static double healthFraction() {
         return maxHealth <= 0 ? 1.0 : (double) health / maxHealth;
     }
@@ -78,7 +74,6 @@ public final class ActionBar {
     public static int defense() { return defense; }
     public static int overflowMana() { return overflowMana; }
 
-    /** // ehp = hp * (1 + def/100) */
     public static int effectiveHealth() { return (int) Math.round(health * (1.0 + defense / 100.0)); }
 
     public static boolean hasSkill() { return !skillName.isEmpty() && System.currentTimeMillis() - lastSkillAt < 4000; }
