@@ -2,7 +2,9 @@ package com.froggylord.constellation.config;
 
 public class PhoenixConfig extends BaseConfigGroup {
 
-    @Override public int currentVersion() { return 0; }
+    @Override public int currentVersion() { return 0;     public boolean nameTagShadows = true;
+    public boolean disableNpcDialogue = true;
+}
 
     public boolean fullbright = true;
     public boolean noHurtCam = true;
@@ -31,4 +33,6 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean hotbarLock = false;         
     public boolean hotbarSwapHelper = false;   
     public boolean viewmodelCustomize = false; 
+    public boolean nameTagShadows = true;
+    public boolean disableNpcDialogue = true;
 }
