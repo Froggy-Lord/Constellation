@@ -235,7 +235,6 @@ public class OrionDungeons extends BaseConstellation {
             hud.register(new HudWidget("orion-dpotions", "DungeonPotions",
                 () -> {
                     if (!ConstellationClient.loc().inDungeons()) return null;
-                    var mc = Minecraft.getInstance();
                     if (mc.player == null) return null;
                     var effects = mc.player.getActiveEffects();
                     if (effects.isEmpty()) return null;

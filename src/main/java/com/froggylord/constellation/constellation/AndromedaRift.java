@@ -101,6 +101,16 @@ public class AndromedaRift extends BaseConstellation {
                 () -> (inRift() && effigies > 0) ? "§4☠ " + effigies + " effigies" : null,
                 HudPosition.of(2, 170), cfg.effigyTracker));
         }
+        if (cfg.dreadfarmHelper) {
+            hud.register(new HudWidget("andromeda-dreadfarm", "Dreadfarm",
+                () -> inRift() ? "§4☠ Dreadfarm — kill blobs" : null,
+                HudPosition.of(2, 180), cfg.dreadfarmHelper));
+        }
+        if (cfg.livingCaveHelper) {
+            hud.register(new HudWidget("andromeda-cave", "LivingCave",
+                () -> inRift() ? "§a🕷 Living Cave — spooders" : null,
+                HudPosition.of(2, 190), cfg.livingCaveHelper));
+        }
     }
 
     private static boolean inRift() {

@@ -56,6 +56,21 @@ public class AurigaMisc extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (AurigaConfig) getConfig();
+        // enchanted clock event reminders — highlight upcoming events
+        if (cfg.clockReminder) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                if (s.contains("Event") || s.contains("event")) {
+                    if (s.contains("starting") || s.contains("soon") || s.contains("in") && s.contains("minute")) {
+                        var mc = net.minecraft.client.Minecraft.getInstance();
+                        if (mc.player != null)
+                            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e⏰ Event: §f" + s));
+                    }
+                }
+            });
+        }
+
         // experiment-table slot solvers (Ultrasequencer / Superpairs)
         AurigaExperiments.init(cfg);
         // anvil helper — show combine cost
