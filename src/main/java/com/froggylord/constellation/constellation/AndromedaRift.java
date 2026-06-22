@@ -116,14 +116,23 @@ public class AndromedaRift extends BaseConstellation {
                 () -> {
                     if (!inRift()) return null;
                     boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
-                    long n = life ? com.froggylord.constellation.core.StatStore.getLong("andromeda.enigmaSouls", enigmaSouls) : enigmaSouls;
-                    return n > 0 ? "§5✦ " + n + " souls" + (life ? " §8(all-time)" : "") : null;
+                    long total = life ? com.froggylord.constellation.core.StatStore.getLong("andromeda.enigmaSouls", enigmaSouls) : enigmaSouls;
+                    long session = enigmaSouls;
+                    // skyhanni-style: show session count, total as secondary
+                    String line = "§5✦ " + session + " this session";
+                    if (life && total > session) line += " §8(" + total + " all-time)";
+                    return line;
                 },
                 HudPosition.of(2, 160), cfg.enigmaSoulTracker));
         }
         if (cfg.effigyTracker) {
             hud.register(new HudWidget("andromeda-effigy", "Effigies",
-                () -> (inRift() && effigies > 0) ? "§4☠ " + effigies + " effigies" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+                    long t = life ? com.froggylord.constellation.core.StatStore.getLong("andromeda.effigies", effigies) : effigies;
+                    return t > 0 ? "§4☠ " + effigies + " this session" + (life && t > effigies ? " §8(" + t + " all-time)" : "") : null;
+                },
                 HudPosition.of(2, 170), cfg.effigyTracker));
         }
         if (cfg.dreadfarmHelper) {
@@ -187,10 +196,23 @@ public class AndromedaRift extends BaseConstellation {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;
     }
 
+    private static int maxRiftSecs = 0;
+
     private static String timeLine() {
+        // mirrorverse freezes rift time — hide so we dont show stale data
+        if (ConstellationClient.loc().area() == SkyblockArea.MIRRORVERSE) return null;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = RIFT_TIME.matcher(line);
-            if (m.find()) return "§d" + m.group(1) + ":" + m.group(2);
+            if (m.find()) {
+                int mins = Integer.parseInt(m.group(1));
+                int secs = Integer.parseInt(m.group(2));
+                int total = mins * 60 + secs;
+                if (total > maxRiftSecs) maxRiftSecs = total;
+                // colour by urgency — red < 60s, yellow < 5min, cyan otherwise (like skyhanni)
+                String col = total < 60 ? "§c" : total < 300 ? "§e" : "§b";
+                String pct = maxRiftSecs > 0 ? " §7(" + (total * 100 / maxRiftSecs) + "%)" : "";
+                return col + String.format("%d:%02d", mins, secs) + pct;
+            }
         }
         return null;
     }
