@@ -9,4 +9,5 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean effigyTracker = true; // count effigies found
     public boolean dreadfarmHelper = true; // Dreadfarm area hints
     public boolean livingCaveHelper = true; // Living Cave area hints
+    public boolean blobbercystGlow = true; // highlight Blobbercysts in world (cmp. Skyblocker)
 }

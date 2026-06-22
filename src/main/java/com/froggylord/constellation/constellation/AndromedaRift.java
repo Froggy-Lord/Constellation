@@ -53,6 +53,21 @@ public class AndromedaRift extends BaseConstellation {
                 }
             }
         });
+        // Blobbercyst world highlight — scan for the entity in Rift areas
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.blobbercystGlow || !inRift()) return;
+            var mc2 = net.minecraft.client.Minecraft.getInstance();
+            if (mc2.level == null || mc2.player == null) return;
+            for (var e : mc2.level.entitiesForRendering()) {
+                if (e.distanceToSqr(mc2.player.position()) > 400) continue;
+                var name = e.getCustomName();
+                if (name != null && name.getString().contains("Blobbercyst")) {
+                    wctx.highlight(e.getBoundingBox().inflate(0.3), 0x80FF55FF, true);
+                    wctx.label(e.position().add(0, e.getBbHeight() + 0.4, 0), "Blobbercyst", 0xFFFF55FF, true);
+                }
+            }
+        });
+
         // warn when the rift clock is about to run out
         ConstellationClient.tick().every(20, "andromeda-lowtime", () -> {
             if (cfg == null || !cfg.riftLowTimeAlert || !inRift()) return;

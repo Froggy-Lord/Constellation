@@ -204,6 +204,22 @@ public class HerculesFarming extends BaseConstellation {
                 },
                 HudPosition.of(2, 168), cfg.speedHud));
         }
+        if (cfg.moongladeBeacon) {
+            hud.register(new HudWidget("hercules-beacon", "Beacon",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Beacon") || line.contains("Moonglade")) return "§d🌙 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 176), cfg.moongladeBeacon));
+        }
+        if (cfg.greenhouseHelper) {
+            hud.register(new HudWidget("hercules-greenhouse", "Greenhouse",
+                () -> inGarden() ? "§a🌿 Greenhouse active" : null,
+                HudPosition.of(2, 184), cfg.greenhouseHelper));
+        }
     }
 
     private static boolean inGarden() {

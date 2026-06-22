@@ -17,4 +17,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean plotBorders = true; // render garden plot borders (cmp. SkyHanni)
     public boolean sweepOverlay = true; // show farming tool harvest range (cmp. SkyHanni)
     public boolean dicerFilter = true;  // suppress verbose dicer messages (cmp. SkyHanni)
+    public boolean moongladeBeacon = true; // show Moonglade Beacon level (cmp. SkyHanni)
+    public boolean greenhouseHelper = true; // greenhouse paste preview
 }
