@@ -116,6 +116,14 @@ public class HydraFishing extends BaseConstellation {
                 totemPlacedAt = System.currentTimeMillis();
             if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("expired") || s.contains("wore off")))
                 totemPlacedAt = 0;
+            // cocoon alert — rare fishing event
+            if (cfg != null && cfg.cocoonAlert && s.contains("Cocoon") && (s.contains("appeared") || s.contains("spawned"))) {
+                var mc3 = Minecraft.getInstance();
+                if (mc3.player != null) {
+                    mc3.player.sendSystemMessage(Component.literal("§d🕸 Cocoon spawned nearby!"));
+                    mc3.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.8f, 1.0f);
+                }
+            }
             // golden fish spawn — start a 60s timer
             if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish")) {
                 if (s.contains("appeared") || s.contains("spawned")) goldenFishAt = System.currentTimeMillis();
@@ -225,6 +233,17 @@ public class HydraFishing extends BaseConstellation {
                     return "§5⏱ Totem " + (elapsed / 60000) + "m ago";
                 },
                 HudPosition.of(50, 126), cfg.totemTimer));
+        }
+        if (cfg.baitDisplay) {
+            hud.register(new HudWidget("hydra-bait", "Bait",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Bait") || line.contains("bait")) return "§6🪱 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 134), cfg.baitDisplay));
         }
     }
 }

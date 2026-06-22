@@ -15,4 +15,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean wormholeLocator = true;    // wormhole chat hints (cmp. Skyblocker)
     public boolean sharkCounter = true;        // track shark kills (cmp. Skyblocker)
     public boolean totemTimer = true;          // show time since totem placed (cmp. Skyblocker)
+    public boolean cocoonAlert = true;         // cocoon spawn warning (cmp. Skyblocker)
+    public boolean baitDisplay = true;         // current bait + remaining uses (cmp. Skyblocker)
 }
