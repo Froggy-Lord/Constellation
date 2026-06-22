@@ -21,4 +21,7 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean supplyObjectiveHud = true;  // show Kuudra supply objectives (cmp. Skyblocker)
     public boolean keyGuardianAlert = true;    // alert when Key Guardian spawns (cmp. Skyblocker)
     public boolean heavyPearlsTracker = true;  // count heavy pearls gathered (cmp. Skyblocker)
+    public boolean magmafishCounter = true;     // track magmafish caught (cmp. Skyblocker)
+    public boolean trophyBestDisplay = true;    // show best trophy fish sizes (cmp. Skyblocker)
+    public boolean bladeVolcanoTimer = true;    // Blade of the Volcano cooldown (cmp. Skyblocker)
 }

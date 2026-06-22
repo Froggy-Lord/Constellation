@@ -19,4 +19,7 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean deadgehogCounter = true;    // count Deadgehogs killed in Rift (cmp. Skyblocker)
     public boolean shyFarmHelper = true;        // Shy farm/crux counter in Dreadfarm (cmp. Skyblocker)
     public boolean moteProfitTracker = true;    // track motes gained/lost this session (cmp. Skyblocker)
+    public boolean cruxCounter = true;           // count crux mob kills in Rift (cmp. Skyblocker)
+    public boolean bluetoothRingHelper = true;   // show nearby Bluetooth Ring targets (cmp. Skyblocker)
+    public boolean vampireSlayerRiftHelper = true; // vampire slayer hints in Rift (cmp. Skyblocker)
 }
