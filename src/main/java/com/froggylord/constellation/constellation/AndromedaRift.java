@@ -154,6 +154,21 @@ public class AndromedaRift extends BaseConstellation {
             hud.register(new HudWidget("andromeda-wyld", "WyldWoods",
                 () -> inRift() ? "§2🌳 Wyld Woods" : null,
                 HudPosition.of(2, 238), cfg.wyldWoodsHelper));
+        if (cfg.deadgehogCounter) {
+            hud.register(new HudWidget("andromeda-deadgehog", "Deadgehog",
+                () -> inRift() ? "§7🦔 Deadgehogs" : null,
+                HudPosition.of(2, 246), cfg.deadgehogCounter));
+        }
+        if (cfg.shyFarmHelper) {
+            hud.register(new HudWidget("andromeda-shyfarm", "ShyFarm",
+                () -> inRift() ? "§a🌾 Shy Farm" : null,
+                HudPosition.of(2, 254), cfg.shyFarmHelper));
+        }
+        if (cfg.cruxCounter) {
+            hud.register(new HudWidget("andromeda-crux", "Crux",
+                () -> inRift() ? "§d✦ Crux tracker" : null,
+                HudPosition.of(2, 262), cfg.cruxCounter));
+        }
         }
     }
 
