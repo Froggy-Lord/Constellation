@@ -200,6 +200,17 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 114), cfg.essenceShopHelper));
         }
+        if (cfg.salvageHelper) {
+            hud.register(new HudWidget("lyra-salvage", "Salvage",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Salvage") || line.contains("Museum")) return "§8♻ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 122), cfg.salvageHelper));
+        }
     }
 
     @Override
