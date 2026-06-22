@@ -118,6 +118,24 @@ public class HerculesFarming extends BaseConstellation {
                 },
                 HudPosition.of(2, 140), cfg.cropMilestones));
         }
+        if (cfg.visitorRequirements) {
+            hud.register(new HudWidget("hercules-visitor-req", "VisitorReq",
+                () -> {
+                    if (!inGarden()) return null;
+                    var tab = com.froggylord.constellation.data.TabList.lines();
+                    boolean inSection = false;
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : tab) {
+                        if (line.contains("Visitor")) { inSection = true; continue; }
+                        if (!inSection) continue;
+                        if (line.length() < 5) break;
+                        sb.append("§e").append(line.trim());
+                        break;
+                    }
+                    return sb.length() > 0 ? sb.toString() : null;
+                },
+                HudPosition.of(2, 150), cfg.visitorRequirements));
+        }
     }
 
     private static boolean inGarden() {
