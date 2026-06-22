@@ -323,6 +323,17 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 154), cfg.coleweightHud));
         }
+        if (cfg.fossilHelper) {
+            hud.register(new HudWidget("aquila-fossil", "Fossil",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Fossil") || line.contains("Suspicious")) return "§7🦴 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 162), cfg.fossilHelper));
+        }
     }
 
     private static boolean inMining() {

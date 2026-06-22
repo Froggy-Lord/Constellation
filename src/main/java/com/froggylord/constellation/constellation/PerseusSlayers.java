@@ -196,6 +196,16 @@ public class PerseusSlayers extends BaseConstellation {
                 () -> bestiaryKills > 0 ? "§a📖 Bestiary: " + bestiaryKills + " kills" : null,
                 HudPosition.of(50, 62), cfg.bestiaryTracker));
         }
+        if (cfg.bestiaryTracker) {
+            hud.register(new HudWidget("perseus-bestiary-milestone", "BestiaryMS",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Bestiary") && line.contains("Milestone")) return "§a📖 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 46), cfg.bestiaryTracker));
         if (cfg.rngMeterDetail) {
             hud.register(new HudWidget("perseus-rng-detail", "RNGDetail",
                 () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,
