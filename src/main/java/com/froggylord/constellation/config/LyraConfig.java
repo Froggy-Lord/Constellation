@@ -44,4 +44,6 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean salvageHelper = true;
     public boolean exoticArmorIdentifier = true;
     public boolean trueHexDisplay = true;
+    public boolean museumDonationStatus = true;
+    public boolean missingAccessoryHelper = true;
 }
