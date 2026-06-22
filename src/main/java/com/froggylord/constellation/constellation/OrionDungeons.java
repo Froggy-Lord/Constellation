@@ -73,6 +73,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(OrionPuzzles::drawBeams);
         // M7 dragon markers — highlight priority dragon
         ConstellationClient.world().register(M7Dragons::draw);
+        // Goldor phase waypoints — terminal positions from Skyblocker data
+        ConstellationClient.world().register(GoldorWaypoints::draw);
         // F5/M5 Livid finder — hide wrong clones, box the real one
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);

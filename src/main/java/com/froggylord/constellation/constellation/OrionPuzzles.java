@@ -26,7 +26,47 @@ public final class OrionPuzzles {
     private static OrionConfig cfg;
     private static String simonTarget = "";
     private static String weirdoAnswer = "";
-    private static int triviaAnswer = -1;
+    private static String triviaQuestion = "";
+    private static String triviaAnswer = "";
+
+    // Trivia answer database from Odin/Skyblocker — verified Hypixel quiz questions
+    private static final java.util.Map<String, String> TRIVIA = new java.util.HashMap<>();
+    static {
+        TRIVIA.put("Which of these enemies does not spawn in the Spiders Den?", "Zombie Spider");
+        TRIVIA.put("What is the status of Scarf?", "Apprentice Necromancer");
+        TRIVIA.put("What is the name of the lady of the Nether?", "Elle");
+        TRIVIA.put("What is the status of Bonzo?", "New Necromancer");
+        TRIVIA.put("How many total Fairy Souls are there?", "273 Fairy Souls");
+        TRIVIA.put("How many Fairy Souls are there in Backwater Bayou?", "5 Fairy Souls");
+        TRIVIA.put("What is the status of Thorn?", "Shaman Necromancer");
+        TRIVIA.put("How many Fairy Souls are there in Spider's Den?", "19 Fairy Souls");
+        TRIVIA.put("What is the status of The Watcher?", "Stalker");
+        TRIVIA.put("What is the status of Sadan?", "Necromancer Lord");
+        TRIVIA.put("How many Fairy Souls are there in Spiders Den?", "19 Fairy Souls");
+        TRIVIA.put("How many Fairy Souls are there in The End?", "12 Fairy Souls");
+        TRIVIA.put("What is the status of Maxor, Storm, Goldor, and Necron?", "The Wither Lords");
+        TRIVIA.put("How many Fairy Souls are there in The Farming Islands?", "20 Fairy Souls");
+        TRIVIA.put("How many Fairy Souls are there in Crimson Isle?", "29 Fairy Souls");
+        TRIVIA.put("What is the status of Livid?", "Master Necromancer");
+        TRIVIA.put("How many Fairy Souls are there in The Park?", "12 Fairy Souls");
+        TRIVIA.put("What is the status of The Professor?", "Professor");
+        TRIVIA.put("How many Fairy Souls are there in Deep Caverns?", "21 Fairy Souls");
+        TRIVIA.put("How many Fairy Souls are there in Jerry's Workshop?", "5 Fairy Souls");
+        TRIVIA.put("Which brother is on the Spiders Den?", "Rick");
+        TRIVIA.put("How many unique minions are there?", "61 Minions");
+        TRIVIA.put("How many Fairy Souls are there in Hub?", "80 Fairy Souls");
+        TRIVIA.put("Which brother is on the Spider's Den?", "Rick");
+        TRIVIA.put("How many Fairy Souls are there in Dungeon Hub?", "7 Fairy Souls");
+        TRIVIA.put("Which villager in the Village gives you a Rogue Sword?", "Jamie");
+        TRIVIA.put("How many Fairy Souls are there in Gold Mine?", "12 Fairy Souls");
+        TRIVIA.put("How many Fairy Souls are there in The Hub?", "80 Fairy Souls");
+        TRIVIA.put("What is the name of Rick's brother?", "Pat");
+        TRIVIA.put("Which of these is not a dragon in The End?", "Zoomer Dragon");
+        TRIVIA.put("What is the name of the vendor in the Hub who sells stained", "Wool Weaver");
+        TRIVIA.put("What is the name of the person that upgrades pets?", "Kat");
+        TRIVIA.put("Which of these enemies does not spawn in the Spider's Den?", "Zombie Spider");
+        TRIVIA.put("Which of these monsters only spawns at night?", "Zombie Villager");
+    }
 
     public static void init(OrionConfig config) {
         cfg = config;
@@ -56,14 +96,20 @@ public final class OrionPuzzles {
                     weirdoAnswer = s.substring(0, colon).trim();
             }
 
-            // Trivia: "What is the..." / "How many..." / "Which..." — the answer is in a
-            // solver cache from the plan. simplest case: match the question against known pairs.
-            // for now, highlight slot 1 (left) as a safe default and let chat-reading finish it.
-            if (cfg.triviaSolver && (s.contains("trivia") || s.contains("?")) && s.length() < 120) {
-                String q = s.toLowerCase(Locale.ROOT).replaceAll("[?]", "").trim();
-                if (q.contains("who") || q.contains("what") || q.contains("how many") || q.contains("which")) {
-                    triviaAnswer = triviaMatch(q);
+            // Trivia: match the question against the verified answer database
+            if (cfg.triviaSolver && s.contains("?")) {
+                String clean = s.trim();
+                // try exact match first, then substring match
+                triviaAnswer = TRIVIA.getOrDefault(clean, null);
+                if (triviaAnswer == null) {
+                    for (var e : TRIVIA.entrySet()) {
+                        if (clean.contains(e.getKey()) || e.getKey().contains(clean)) {
+                            triviaAnswer = e.getValue();
+                            break;
+                        }
+                    }
                 }
+                if (triviaAnswer != null) triviaQuestion = clean;
             }
         });
 
@@ -135,55 +181,21 @@ public final class OrionPuzzles {
     }
 
     private static void triviaOverlay(AbstractContainerScreen<?> cs, GuiGraphicsExtractor g) {
-        if (triviaAnswer < 0) return;
-        int left = ((ContainerScreenAccessor) cs).constellation$left();
-        int top = ((ContainerScreenAccessor) cs).constellation$top();
+        if (triviaAnswer.isEmpty()) return;
         int chest = cs.getMenu().slots.size() - 36;
-        // trivia answers are in the middle row of the chest, typically slots 11/13/15
-        int slotIdx = switch (triviaAnswer) {
-            case 0 -> 11; case 1 -> 13; case 2 -> 15;
-            default -> -1;
-        };
-        if (slotIdx >= 0 && slotIdx < chest) {
-            box(cs, g, cs.getMenu().slots.get(slotIdx), 0xA020FF20);
+        // scan all chest slots for an item name containing the answer text
+        for (int i = 0; i < chest; i++) {
+            var slot = cs.getMenu().slots.get(i);
+            var s = slot.getItem();
+            if (s.isEmpty()) continue;
+            String name = s.getHoverName().getString().toLowerCase(Locale.ROOT);
+            if (name.contains(triviaAnswer.toLowerCase(Locale.ROOT))) {
+                box(cs, g, slot, 0xA020FF20);
+                return;
+            }
         }
-    }
-
-    // --- trivia knowledge base (subset — fill from Skyblocker's Trivia.java) ---
-    private static int triviaMatch(String q) {
-        // common dungeon trivia questions — answer slot index: 0/1/2
-        if (q.contains("watcher")) return 0;
-        if (q.contains("bonzo")) return 1;
-        if (q.contains("scarf")) return 2;
-        if (q.contains("livid")) return 0;
-        if (q.contains("sadan")) return 1;
-        if (q.contains("necron")) return 2;
-        if (q.contains("maxor") || q.contains("goldor") || q.contains("storm")) return 0;
-        // floor-related
-        if (q.contains("f1") || q.contains("floor 1") || q.contains("floor i")) return 0;
-        if (q.contains("f2") || q.contains("floor 2") || q.contains("floor ii")) return 1;
-        if (q.contains("f3") || q.contains("floor 3") || q.contains("floor iii")) return 2;
-        if (q.contains("f4") || q.contains("floor 4") || q.contains("floor iv")) return 0;
-        if (q.contains("f5") || q.contains("floor 5") || q.contains("floor v")) return 1;
-        if (q.contains("f6") || q.contains("floor 6") || q.contains("floor vi")) return 2;
-        if (q.contains("f7") || q.contains("floor 7") || q.contains("floor vii")) return 0;
-        // dungeon classes
-        if (q.contains("healer")) return 0;
-        if (q.contains("mage")) return 1;
-        if (q.contains("berserk")) return 2;
-        if (q.contains("archer")) return 0;
-        if (q.contains("tank")) return 1;
-        // boss names
-        if (q.contains("the professor") || q.contains("professor")) return 1;
-        if (q.contains("thorn")) return 2;
-        // misc common ones
-        if (q.contains("blaze")) return 0;
-        if (q.contains("skeleton")) return 1;
-        if (q.contains("wither")) return 2;
-        if (q.contains("zombie")) return 0;
-        if (q.contains("spider")) return 1;
-        if (q.contains("crypt")) return 2;
-        return -1; // unknown — don't highlight anything
+        // fallback: highlight slot 10 (common answer position) if we know the answer
+        if (chest > 10) box(cs, g, cs.getMenu().slots.get(10), 0x80FFD020);
     }
 
     // --- Creeper Beams world render ---
