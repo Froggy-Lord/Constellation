@@ -33,6 +33,9 @@ public class OrionDungeons extends BaseConstellation {
         // load dungeon data (room skeletons, secrets, routes)
         DungeonData.load();
 
+        // phase-3 terminal solvers — highlight-only hints over the open chest
+        OrionTerminals.init(cfg);
+
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
         // secret routes — walk path + typed action markers (takes over waypoints in routed rooms)

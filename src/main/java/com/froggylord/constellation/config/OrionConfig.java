@@ -63,4 +63,9 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean mimicPartyPing = true;
     public boolean streamerMode = false;
     public boolean rareDropAlerts = true;
+
+    // terminal solvers (F7/M7 phase 3) — highlight only, never auto-click
+    public boolean terminalSolvers = true;
+    public boolean terminalNumbers = true;
+    public boolean blockWrongTerminalClicks = false;
 }
