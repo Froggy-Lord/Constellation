@@ -186,23 +186,44 @@ public class AndromedaRift extends BaseConstellation {
         }
         if (cfg.colosseumHelper) {
             hud.register(new HudWidget("andromeda-colosseum", "Colosseum",
-                () -> inRift() ? "§c🏟 Colosseum" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Colosseum") || line.contains("Round")) return "§c🏟 " + line.trim();
+                    return "§c🏟 Colosseum";
+                },
                 HudPosition.of(2, 214), cfg.colosseumHelper));
         }
         if (cfg.danceRoomHelper) {
             hud.register(new HudWidget("andromeda-dance", "DanceRoom",
-                () -> inRift() ? "§d💃 Dance Room" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Dance") || line.contains("Move")) return "§d💃 " + line.trim();
+                    return "§d💃 Dance Room";
+                },
                 HudPosition.of(2, 222), cfg.danceRoomHelper));
         }
         if (cfg.westVillageHelper) {
             hud.register(new HudWidget("andromeda-westvillage", "WestVillage",
-                () -> inRift() ? "§e🏘 West Village" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Village") || line.contains("West")) return "§e🏘 " + line.trim();
+                    return "§e🏘 West Village";
+                },
                 HudPosition.of(2, 230), cfg.westVillageHelper));
         }
         if (cfg.wyldWoodsHelper) {
             hud.register(new HudWidget("andromeda-wyld", "WyldWoods",
-                () -> inRift() ? "§2🌳 Wyld Woods" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Wyld") || line.contains("Woods")) return "§2🌳 " + line.trim();
+                    return "§2🌳 Wyld Woods";
+                },
                 HudPosition.of(2, 238), cfg.wyldWoodsHelper));
+        }
         if (cfg.deadgehogCounter) {
             hud.register(new HudWidget("andromeda-deadgehog", "Deadgehog",
                 () -> inRift() ? "§7🦔 Deadgehogs" : null,
