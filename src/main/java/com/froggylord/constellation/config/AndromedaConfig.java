@@ -16,4 +16,7 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean danceRoomHelper = true;     // Dance Room area hints
     public boolean westVillageHelper = true;   // West Village area hints
     public boolean wyldWoodsHelper = true;     // Wyld Woods area hints
+    public boolean deadgehogCounter = true;    // count Deadgehogs killed in Rift (cmp. Skyblocker)
+    public boolean shyFarmHelper = true;        // Shy farm/crux counter in Dreadfarm (cmp. Skyblocker)
+    public boolean moteProfitTracker = true;    // track motes gained/lost this session (cmp. Skyblocker)
 }

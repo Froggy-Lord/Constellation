@@ -19,4 +19,6 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean freshToolsTimer = true;     // countdown for fresh tools buff (cmp. Skyblocker)
     public boolean dangerWarningHud = true;    // warn when danger imminent in Kuudra (cmp. Skyblocker)
     public boolean supplyObjectiveHud = true;  // show Kuudra supply objectives (cmp. Skyblocker)
+    public boolean keyGuardianAlert = true;    // alert when Key Guardian spawns (cmp. Skyblocker)
+    public boolean heavyPearlsTracker = true;  // count heavy pearls gathered (cmp. Skyblocker)
 }
