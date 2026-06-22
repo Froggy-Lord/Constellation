@@ -47,7 +47,7 @@ public class DracoCrimson extends BaseConstellation {
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.3f);
                     if (cfg.vanquisherShare) {
                         var p = mc.player.blockPosition();
-                        mc.player.connection.sendCommand("pc Vanquisher @ " + p.getX() + " " + p.getY() + " " + p.getZ());
+                        mc.player.connection.sendCommand("pc Vanquisher @ " + Math.round(p.getX()) + " " + Math.round(p.getY()) + " " + Math.round(p.getZ()));
                     }
                 }
             }

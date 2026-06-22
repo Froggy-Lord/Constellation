@@ -88,7 +88,7 @@ public class CygnusEvents extends BaseConstellation {
                             mc.player.connection.sendCommand("pc Inquisitor @ " + cm.group(1) + " " + cm.group(2) + " " + cm.group(3));
                     } else if (cfg.dianaInquisitorShare) {
                         var p = mc.player.blockPosition();
-                        mc.player.connection.sendCommand("pc Inquisitor @ " + p.getX() + " " + p.getY() + " " + p.getZ());
+                        mc.player.connection.sendCommand("pc Inquisitor @ " + Math.round(p.getX()) + " " + Math.round(p.getY()) + " " + Math.round(p.getZ()));
                     }
                 }
             } else if (cfg.dianaInquisitorAlert && s.contains("You dug out a Minos Inquisitor")) {
