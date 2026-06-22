@@ -39,6 +39,20 @@ public class LyraEconomy extends BaseConstellation {
         // refresh the parsed purse each second
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
         
+        // essence gain — real hypixel line is "<Type> Essence x<n>", count it this session
+        if (cfg.essenceShopHelper) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                var em = ESSENCE.matcher(net.minecraft.ChatFormatting.stripFormatting(msg.getString()));
+                if (em.find()) {
+                    int amt = em.group(2) == null ? 1 : Integer.parseInt(em.group(2));
+                    essenceType = em.group(1);
+                    essenceSession += amt;
+                    essenceAt = System.currentTimeMillis();
+                }
+            });
+        }
+
         if (cfg.bazaarUndercutAlert) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
@@ -76,6 +90,11 @@ public class LyraEconomy extends BaseConstellation {
         
         LyraSlotText.init(cfg);
     }
+
+    private static final Pattern ESSENCE = Pattern.compile("([A-Za-z]+) Essence(?: x(\\d+))?");
+    private static String essenceType = "";
+    private static int essenceSession = 0;
+    private static long essenceAt = 0;
 
     private static void readPurse() {
         long prev = currentPurse;
@@ -191,12 +210,8 @@ public class LyraEconomy extends BaseConstellation {
         if (cfg.essenceShopHelper) {
             hud.register(new HudWidget("lyra-essence", "Essence",
                 () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Essence") || line.contains("Wither Essence") || line.contains("Undead Essence"))
-                            return "§d✦ " + line.trim();
-                    }
-                    return null;
+                    if (essenceSession == 0 || System.currentTimeMillis() - essenceAt > 600_000) return null;
+                    return "§d✦ +" + essenceSession + " " + essenceType + " Essence";
                 },
                 HudPosition.of(2, 114), cfg.essenceShopHelper));
         }
