@@ -21,7 +21,9 @@ public class LyraTooltips {
         cfg = config;
         ItemTooltipCallback.EVENT.register((stack, ctx, flag, lines) -> {
             if (cfg == null || stack.isEmpty()) return;
-            if (!ConstellationClient.loc().onHypixel()) return;
+            // items carry their SB data even in singleplayer; the onHypixel gate only helps
+            // avoid adding garbage lines to vanilla items. the extra-attributes check below
+            // already filters those, so we skip the gate here.
             CustomData cd = stack.get(DataComponents.CUSTOM_DATA);
             if (cd == null) return;
             CompoundTag extra = cd.copyTag().getCompoundOrEmpty("ExtraAttributes");
