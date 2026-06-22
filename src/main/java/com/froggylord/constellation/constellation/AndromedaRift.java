@@ -239,7 +239,6 @@ public class AndromedaRift extends BaseConstellation {
                 () -> inRift() ? "§d✦ Crux tracker" : null,
                 HudPosition.of(2, 262), cfg.cruxCounter));
         }
-        }
     }
 
     private static boolean inRift() {
