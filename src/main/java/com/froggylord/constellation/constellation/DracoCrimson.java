@@ -205,6 +205,17 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 14), cfg.trophyBestDisplay));
+        if (cfg.bladeVolcanoTimer) {
+            hud.register(new HudWidget("draco-blade", "Blade",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Blade") || line.contains("Volcano")) return "§c🌋 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 8), cfg.bladeVolcanoTimer));
+        }
         }
         }
     }
