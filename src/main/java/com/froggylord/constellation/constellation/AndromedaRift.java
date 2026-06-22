@@ -137,7 +137,14 @@ public class AndromedaRift extends BaseConstellation {
         }
         if (cfg.dreadfarmHelper) {
             hud.register(new HudWidget("andromeda-dreadfarm", "Dreadfarm",
-                () -> inRift() ? "§4☠ Dreadfarm — kill blobs" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    // show blobercyst kills from sidebar if available, otherwise area hint
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Blobbercyst") || line.contains("Dreadfarm")) return "§4☠ " + line.trim();
+                    }
+                    return "§4☠ Dreadfarm";
+                },
                 HudPosition.of(2, 180), cfg.dreadfarmHelper));
         }
         if (cfg.livingCaveHelper) {
