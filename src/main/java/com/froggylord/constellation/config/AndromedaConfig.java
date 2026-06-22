@@ -20,5 +20,7 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean moteProfitTracker = true;    
     public boolean cruxCounter = true;           
     public boolean bluetoothRingHelper = true;   
-    public boolean vampireSlayerRiftHelper = true; 
+    public boolean vampireSlayerRiftHelper = true;
+    public boolean wyldWoodsSoulHelper = true;
+    public boolean dreadfarmEnigmaHelper = true;
 }
