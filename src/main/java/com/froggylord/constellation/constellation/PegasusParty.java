@@ -25,6 +25,8 @@ public class PegasusParty extends BaseConstellation {
     private PegasusConfig cfg;
 
     private static final java.util.Map<String, Integer> carryLedger = new java.util.LinkedHashMap<>();
+    private static final java.util.Set<String> readyPlayers = new java.util.HashSet<>();
+    private static final java.util.Set<String> markedPlayers = new java.util.HashSet<>();
 
     @Override
     public void init(InitContext ctx) {
@@ -34,10 +36,32 @@ public class PegasusParty extends BaseConstellation {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
                 if (overlay || !ConstellationClient.loc().onHypixel()) return;
                 String s = msg.getString();
-                // "!paid" or "!paid <player>" or "/pc !paid <name>"
                 if (s.contains("!paid") || s.contains("paid")) {
                     var m = java.util.regex.Pattern.compile("!?paid\\s+(\\w{2,16})").matcher(s);
                     if (m.find()) carryLedger.merge(m.group(1), 1, Integer::sum);
+                }
+            });
+        }
+        // ready checker + marked players
+        if (cfg != null && (cfg.readyChecker || cfg.markedPlayers)) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                if (cfg.readyChecker && (s.contains("!ready") || s.contains("ready"))) {
+                    var m = java.util.regex.Pattern.compile("(\\w{2,16}).*!?ready").matcher(s);
+                    if (m.find()) readyPlayers.add(m.group(1));
+                }
+                if (cfg.markedPlayers && (s.contains("joined") || s.contains("left"))) {
+                    var m = java.util.regex.Pattern.compile("(\\w{2,16})\\s+(?:joined|left)").matcher(s);
+                    if (m.find()) {
+                        String name = m.group(1);
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) {
+                            String myName = mc.player.getName().getString();
+                            if (!name.equalsIgnoreCase(myName) && markedPlayers.contains(name.toLowerCase()))
+                                mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§d✦ " + name + (s.contains("joined") ? " joined" : " left")));
+                        }
+                    }
                 }
             });
         }
@@ -68,6 +92,11 @@ public class PegasusParty extends BaseConstellation {
             hud.register(new HudWidget("pegasus-carry", "Carry",
                 () -> carryLedger.isEmpty() ? null : "§6💰 " + carryLedger.size() + " paid",
                 HudPosition.of(2, 126), cfg.carryMode));
+        }
+        if (cfg.readyChecker) {
+            hud.register(new HudWidget("pegasus-ready", "Ready",
+                () -> readyPlayers.isEmpty() ? null : "§a✔ Ready: " + readyPlayers.size(),
+                HudPosition.of(2, 134), cfg.readyChecker));
         }
     }
 
@@ -102,5 +131,25 @@ public class PegasusParty extends BaseConstellation {
                     }
                     return 1;
                 }));
+        dispatcher.register(
+            LiteralArgumentBuilder.<FabricClientCommandSource>literal("mark")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> {
+                        String name = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player");
+                        markedPlayers.add(name.toLowerCase());
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§d✦ Marked §f" + name));
+                        return 1;
+                    })));
+        dispatcher.register(
+            LiteralArgumentBuilder.<FabricClientCommandSource>literal("unmark")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> {
+                        String name = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player");
+                        markedPlayers.remove(name.toLowerCase());
+                        var mc = Minecraft.getInstance();
+                        if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§7Unmarked §f" + name));
+                        return 1;
+                    })));
     }
 }
