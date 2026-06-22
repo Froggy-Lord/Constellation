@@ -92,7 +92,6 @@ public class ApolloHud extends BaseConstellation {
                 if (com.froggylord.constellation.core.ActionBar.hasData()) {
                     double pct = com.froggylord.constellation.core.ActionBar.healthFraction();
                     String col = pct < 0.2 ? "§4" : pct < 0.5 ? "§c" : pct < 0.75 ? "§e" : "§a";
-                    // visual bar: ████████░░ style, 10-wide (like skyblocker)
                     int filled = (int) (pct * 10);
                     String bar = "§8[" + col + "█".repeat(Math.max(0, filled)) + "§7░".repeat(10 - filled) + "§8]";
                     return col + compact(com.froggylord.constellation.core.ActionBar.health())
@@ -116,7 +115,6 @@ public class ApolloHud extends BaseConstellation {
                         + " " + mbar + " §7" + (int)(mpct * 100) + "%";
                 }
                 return "?";
-            },
             },
             toPos(cfg.mana), cfg.mana.visible));
 
