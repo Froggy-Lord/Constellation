@@ -127,6 +127,28 @@ public class LyraEconomy extends BaseConstellation {
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        if (cfg != null && cfg.profileCommand) {
+            dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("profile")
+                .executes(ctx -> {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player == null || !ConstellationClient.loc().onHypixel()) return 0;
+                    mc.player.sendSystemMessage(Component.literal("§6=== Profile Summary ==="));
+                    // purse
+                    long purse = currentPurse;
+                    mc.player.sendSystemMessage(Component.literal("§6Purse: §f" + compact(purse)));
+                    // bits from sidebar
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Bits")) mc.player.sendSystemMessage(Component.literal("§bBits: §f" + line.substring(line.indexOf(":") + 1).trim()));
+                    }
+                    // stats from action bar
+                    if (com.froggylord.constellation.core.ActionBar.hasData()) {
+                        mc.player.sendSystemMessage(Component.literal("§cHP: §f" + compact(com.froggylord.constellation.core.ActionBar.health()) + " §7/ " + compact(com.froggylord.constellation.core.ActionBar.maxHealth())));
+                        mc.player.sendSystemMessage(Component.literal("§bMana: §f" + compact(com.froggylord.constellation.core.ActionBar.mana()) + " §7/ " + compact(com.froggylord.constellation.core.ActionBar.maxMana())));
+                        mc.player.sendSystemMessage(Component.literal("§aDefense: §f" + compact(com.froggylord.constellation.core.ActionBar.defense())));
+                    }
+                    return 1;
+                }));
+        }
         // /coinsreset — reset the session baseline to the current purse
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("coinsreset")
             .executes(ctx -> {

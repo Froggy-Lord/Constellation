@@ -30,4 +30,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean backpackPreview = true; // shift-hover shows contents
     public boolean tooltipAttributes = true; // show item attributes (Mana Pool, Breeze, etc.)
     public boolean tooltipSalvageable = true; // mark museum-donated items safe to salvage
+    public boolean profileCommand = true; // /profile shows quick stats summary
 }
