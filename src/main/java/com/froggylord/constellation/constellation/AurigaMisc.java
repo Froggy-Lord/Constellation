@@ -109,5 +109,16 @@ public class AurigaMisc extends BaseConstellation {
                 },
                 HudPosition.of(50, 110), cfg.powerStoneDisplay));
         }
+        if (cfg.chocolateFactoryHelper) {
+            hud.register(new HudWidget("auriga-chocfactory", "ChocFactory",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Chocolate") || line.contains("Factory")) return "§6🍫 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 118), cfg.chocolateFactoryHelper));
+        }
     }
 }

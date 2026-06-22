@@ -38,4 +38,6 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean bazaarBookmarks = true; // save + recall favourite bazaar items
     public boolean tooltipItemQuality = true; // show item quality (50/50, etc.) — cmp. Firmament
     public boolean accessoryDisplay = true;   // show accessory bag slots from sidebar (cmp. Skyblocker)
+    public boolean bazaarPriceHistory = true; // track bazaar price trends (cmp. Skyblocker BazaarTracker)
+    public boolean auctionPriceCompare = true; // compare AH prices against bazaar (cmp. Skyblocker)
 }
