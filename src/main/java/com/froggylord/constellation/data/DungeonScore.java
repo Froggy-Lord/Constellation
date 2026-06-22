@@ -159,11 +159,20 @@ public final class DungeonScore {
             || msg.equals("A Prince falls. +1 Bonus Score")) { princeKilled = true; return; }
         if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodDone = true; bloodAt = System.currentTimeMillis(); return; }
         if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) { inBoss = true; bossAt = System.currentTimeMillis(); }
+        // m7 phase from the exact boss dialogue (real hypixel lines)
+        if (msg.startsWith("[BOSS] Maxor: WELL! WELL! WELL!")) m7Phase = "P1 Maxor";
+        else if (msg.startsWith("[BOSS] Storm: Pathetic Maxor")) m7Phase = "P2 Storm";
+        else if (msg.startsWith("[BOSS] Goldor: Who dares trespass")) m7Phase = "P3 Goldor";
+        else if (msg.startsWith("[BOSS] Necron: You went further")) m7Phase = "P4 Necron";
+        else if (msg.startsWith("[BOSS] Necron: All this, for nothing")) m7Phase = "P5 Dragons";
     }
+
+    private static String m7Phase = "";
+    public static String m7Phase() { return m7Phase; }
 
     public static void reset() {
         active = false; deaths = 0; mimicKilled = false; princeKilled = false;
-        bloodDone = false; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0;
+        bloodDone = false; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0; m7Phase = "";
         sent270 = false; sent300 = false; floorName = ""; mimicFloor = false;
     }
 

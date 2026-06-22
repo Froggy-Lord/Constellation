@@ -297,6 +297,14 @@ public class OrionDungeons extends BaseConstellation {
                 () -> !scoreReady() ? null : com.froggylord.constellation.data.DungeonScore.secretPercent() + "%",
                 HudPosition.of(6, 66), cfg.secretsHud));
         }
+        if (cfg.m7DragonMarkers) {
+            hud.register(new HudWidget("orion-m7phase", "M7Phase",
+                () -> {
+                    String p = com.froggylord.constellation.data.DungeonScore.m7Phase();
+                    return p.isEmpty() ? null : "§5☠ " + p;
+                },
+                HudPosition.of(6, 42), cfg.m7DragonMarkers));
+        }
         if (cfg.cryptsHud) {
             hud.register(new HudWidget("orion-crypts", "Crypts",
                 () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.crypts()),
