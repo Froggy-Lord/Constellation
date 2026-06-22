@@ -26,6 +26,8 @@ public class AndromedaRift extends BaseConstellation {
 
     private static int enigmaSouls = 0;
     private static int effigies = 0;
+    private static long motesSession = 0;
+    private static final java.util.regex.Pattern MOTES = java.util.regex.Pattern.compile("([\\d,.]+) Motes");
     private static long lowTimeAt = 0;
 
     @Override
@@ -46,6 +48,15 @@ public class AndromedaRift extends BaseConstellation {
                     mc.gui.hud.resetTitleTimes();
                     mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§5✦ Enigma Soul!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.8f, 1.0f);
+                }
+            }
+            // motes — rift currency, real line is "+<n> Motes" on pickup/sell
+            if (cfg.moteProfitTracker) {
+                var mm = MOTES.matcher(net.minecraft.ChatFormatting.stripFormatting(s));
+                if (mm.find() && s.contains("+")) {
+                    long got = (long) Double.parseDouble(mm.group(1).replace(",", ""));
+                    motesSession += got;
+                    com.froggylord.constellation.core.StatStore.add("andromeda.motes", got);
                 }
             }
         });
@@ -187,7 +198,10 @@ public class AndromedaRift extends BaseConstellation {
     private static String motesLine() {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = MOTES.matcher(line);
-            if (m.find()) return "§b" + compact(m.group(1));
+            if (m.find()) {
+                String bal = "§b" + compact(m.group(1));
+                return motesSession > 0 ? bal + " §7(+" + compact(Long.toString(motesSession)) + ")" : bal;
+            }
         }
         return null;
     }
