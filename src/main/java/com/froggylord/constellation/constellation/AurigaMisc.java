@@ -58,6 +58,8 @@ public class AurigaMisc extends BaseConstellation {
         cfg = (AurigaConfig) getConfig();
         // experiment-table slot solvers (Ultrasequencer / Superpairs)
         AurigaExperiments.init(cfg);
+        // anvil helper — show combine cost
+        AurigaHelpers.init(cfg);
     }
 
     @Override

@@ -10,4 +10,5 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean superpairsSolver = true;
     public boolean bingoHelper = true;
     public boolean shCalcCommand = true; // /shcalc damage estimator
+    public boolean anvilHelper = true;    // show combine cost + optimal path (cmp. Skyblocker AnvilHelper)
 }
