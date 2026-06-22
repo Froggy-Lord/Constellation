@@ -135,6 +135,17 @@ public class LyraTooltips {
                     lines.add(Component.literal("§7Missing: §c" + list));
                 }
             }
+            // true hex for dyes — color tag stored in ExtraAttributes
+            if (cfg.trueHexDisplay && sbId.contains("DYE")) {
+                String colorTag = extra.getStringOr("color", "");
+                if (!colorTag.isEmpty()) lines.add(Component.literal("§d# §7#" + colorTag));
+            }
+            // exotic armor — non-standard dyed leather
+            if (cfg.exoticArmorIdentifier && sbId.startsWith("LEATHER_")) {
+                int clr = extra.getIntOr("color", -1);
+                if (clr >= 0 && clr != 0xA06540) // default leather = #A06540
+                    lines.add(Component.literal("§5✦ Exotic! §7#" + Integer.toHexString(clr)));
+            }
         });
     }
 
