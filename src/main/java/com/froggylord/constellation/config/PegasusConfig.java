@@ -21,5 +21,7 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean dungeonReadyOverlay = true;     
     public boolean friendJoinLeaveAlert = true;    
     public boolean nicknameReplacer = true;        
-    public boolean offlineMemberIndicator = true;  
+    public boolean offlineMemberIndicator = true;
+    public boolean partyTransferHelper = true;
+    public boolean partyKickConfirm = true;
 }
