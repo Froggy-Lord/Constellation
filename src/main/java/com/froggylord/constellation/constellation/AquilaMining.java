@@ -364,30 +364,52 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 186), cfg.metalDetectorHelper));
-        // all crystal statuses are in the tab "Crystals:" section, not sidebar (live scrape confirmed)
         if (cfg.rubyCrystalTracker) {
             hud.register(new HudWidget("aquila-ruby", "Ruby",
-                () -> inMining() ? crystalStatus("Ruby") : null,
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Ruby") && (line.contains("Crystal") || line.contains("Found"))) return "§c♦ " + line.trim();
+                    return null;
+                },
                 HudPosition.of(2, 194), cfg.rubyCrystalTracker));
         }
         if (cfg.sapphireCrystalTracker) {
             hud.register(new HudWidget("aquila-sapphire", "Sapphire",
-                () -> inMining() ? crystalStatus("Sapphire") : null,
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Sapphire") && (line.contains("Crystal") || line.contains("Found"))) return "§b♦ " + line.trim();
+                    return null;
+                },
                 HudPosition.of(2, 202), cfg.sapphireCrystalTracker));
-        }
         if (cfg.amethystCrystalTracker) {
             hud.register(new HudWidget("aquila-amethyst", "Amethyst",
-                () -> inMining() ? crystalStatus("Amethyst") : null,
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Amethyst") && (line.contains("Crystal") || line.contains("Found"))) return "§5♦ " + line.trim();
+                    return null;
+                },
                 HudPosition.of(2, 210), cfg.amethystCrystalTracker));
         }
         if (cfg.amberCrystalTracker) {
             hud.register(new HudWidget("aquila-amber", "Amber",
-                () -> inMining() ? crystalStatus("Amber") : null,
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Amber") && (line.contains("Crystal") || line.contains("Found"))) return "§6♦ " + line.trim();
+                    return null;
+                },
                 HudPosition.of(2, 218), cfg.amberCrystalTracker));
-        }
         if (cfg.jadeCrystalTracker) {
             hud.register(new HudWidget("aquila-jade", "Jade",
-                () -> inMining() ? crystalStatus("Jade") : null,
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Jade") && (line.contains("Crystal") || line.contains("Found"))) return "§a♦ " + line.trim();
+                    return null;
+                },
                 HudPosition.of(2, 226), cfg.jadeCrystalTracker));
         }
         if (cfg.crystalHollowsMapHelper) {
@@ -528,15 +550,6 @@ public class AquilaMining extends BaseConstellation {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = FUEL.matcher(line);
             if (m.find()) return "§2⛏ Fuel §f" + m.group(1) + "/" + m.group(2) + "k";
-        }
-        return null;
-    }
-
-    // live tab data: "Crystals:" section → "Jade: ✖ Not Found" etc
-    private static String crystalStatus(String name) {
-        for (String line : TabList.lines()) {
-            if (line.contains(name) && (line.contains("✔") || line.contains("✖")))
-                return line.trim();
         }
         return null;
     }
