@@ -381,6 +381,26 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 202), cfg.sapphireCrystalTracker));
+        if (cfg.amethystCrystalTracker) {
+            hud.register(new HudWidget("aquila-amethyst", "Amethyst",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Amethyst") && (line.contains("Crystal") || line.contains("Found"))) return "§5♦ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 210), cfg.amethystCrystalTracker));
+        }
+        if (cfg.amberCrystalTracker) {
+            hud.register(new HudWidget("aquila-amber", "Amber",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Amber") && (line.contains("Crystal") || line.contains("Found"))) return "§6♦ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 218), cfg.amberCrystalTracker));
+        }
         }
         }
         if (cfg.crystalNucleusWaypoints) {
