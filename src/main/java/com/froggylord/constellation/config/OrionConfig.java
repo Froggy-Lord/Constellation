@@ -117,5 +117,4 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean arrowAlignSolver = true;    
     public boolean targetPracticeSolver = true;
     public boolean terminalSimulator = true;
-    public boolean melodyTerminalHelper = true;
 }
