@@ -53,7 +53,9 @@ public final class CombatEsp {
             if (e.distanceToSqr(me) > r2) continue;
 
             if (cfg.secretBats && e instanceof Bat) {
-                ctx.outline(e.getBoundingBox().inflate(0.05), BAT_COLOUR, false);
+                // ignore bats that are part of wither/blood door animations — real secret
+                // bats are never right next to a door block
+                if (!nearDoorBlock(e)) ctx.outline(e.getBoundingBox().inflate(0.05), BAT_COLOUR, false);
                 continue;
             }
             if (cfg.starredMobs && isStarred(e)) {
@@ -63,11 +65,32 @@ public final class CombatEsp {
     }
 
     private static boolean isStarred(Entity e) {
-        Component name = e.getCustomName();
-        if (name == null) return false;
-        String s = name.getString();
-        // ✯ marks a starred (objective) mob; ✦ shows on some too
-        return s.indexOf('✯') >= 0 || s.indexOf('✦') >= 0;
+        // the star can live in the custom name, the display name, or the plain entity name
+        for (var name : new Component[]{e.getCustomName(), e.getDisplayName(), e.getName()}) {
+            if (name == null) continue;
+            String s = name.getString();
+            if (s.isEmpty()) continue;
+            if (s.indexOf('✯') >= 0 || s.indexOf('✦') >= 0 || s.contains("✯") || s.contains("✦"))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean nearDoorBlock(Entity bat) {
+        var mc = Minecraft.getInstance();
+        if (mc.level == null) return false;
+        // scan a 2-block radius around the bat for door-building blocks
+        var center = bat.blockPosition();
+        for (int dx = -2; dx <= 2; dx++)
+            for (int dy = -2; dy <= 2; dy++)
+                for (int dz = -2; dz <= 2; dz++) {
+                    var bs = mc.level.getBlockState(center.offset(dx, dy, dz));
+                    String id = bs.getBlock().getDescriptionId();
+                    // coal blocks, red clay, black clay are the door cues
+                    if (id.contains("coal_block") || id.contains("stained_clay") || id.contains("terracotta"))
+                        return true;
+                }
+        return false;
     }
 
     /** Box for an arbitrary entity (used by teammate boxes etc.). */

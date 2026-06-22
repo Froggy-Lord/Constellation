@@ -66,6 +66,16 @@ public class ConfigScreen extends Screen {
 
     // ---- layout ----
     // never exceed the actual scaled screen — clamp the minimum to what fits
+    private static String autoLabel(String camel) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < camel.length(); i++) {
+            char c = camel.charAt(i);
+            if (i > 0 && Character.isUpperCase(c)) sb.append(' ');
+            sb.append(i == 0 ? Character.toUpperCase(c) : Character.toLowerCase(c));
+        }
+        return sb.toString().trim();
+    }
+
     private int panelW(int w) { return Math.min(w - 20, Math.max(Math.min(460, w - 20), w * 68 / 100)); }
     private int panelH(int h) { return Math.min(h - 20, Math.max(Math.min(300, h - 20), h * 78 / 100)); }
     private int sideW(int w) { return Math.max(70, Math.min(100, panelW(w) * 18 / 100)); }
@@ -245,6 +255,26 @@ public class ConfigScreen extends Screen {
                     () -> c.autoRequeue, v -> { c.autoRequeue = v; ConstellationClient.saveConfig(); })
                     .b("Safe mode", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); })
                     .b("Confirm first", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); }));
+            }
+            // generic auto-builder for every other constellation — scans the config fields and
+            // builds modules from every boolean toggle, grouped loosely by name
+            default -> {
+                BaseConfigGroup c = cfg.getSubConfig(constellationId);
+                if (c != null) {
+                    cats = new String[]{"Features"};
+                    for (var field : c.getClass().getFields()) {
+                        String n = field.getName();
+                        if (n.equals("enabled") || n.equals("version")) continue;
+                        if (field.getType() != boolean.class) continue;
+                        try {
+                            boolean val = field.getBoolean(c);
+                            String label = autoLabel(n);
+                            modules.add(new Module(n, label, "Features",
+                                () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
+                                v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} }));
+                        } catch (Exception ignored) {}
+                    }
+                }
             }
         }
         // guard: a constellation with no modules gets a placeholder category so the screen never crashes

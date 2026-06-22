@@ -16,11 +16,13 @@ public final class ActionBar {
 
     private ActionBar() {}
 
-    private static final Pattern HEALTH = Pattern.compile("(\\d[\\d,]*)/(\\d[\\d,]*)❤");
-    private static final Pattern MANA = Pattern.compile("(\\d[\\d,]*)/(\\d[\\d,]*)✎");
-    private static final Pattern OVERFLOW = Pattern.compile("(\\d[\\d,]*)ʬ");
-    private static final Pattern DEFENSE = Pattern.compile("(\\d[\\d,]*)❈");
-    private static final Pattern SKILL = Pattern.compile("\\+([\\d,.]+) (\\w+) \\(([\\d.]+)%\\)");
+    // Hypixel shortens large numbers with k/M suffixes on the action bar — the groups need to
+    // swallow dots and the suffix so num() can expand them back to ints.
+    private static final Pattern HEALTH = Pattern.compile("([\\d.,]+[kKmMbB]?)/([\\d.,]+[kKmMbB]?)❤");
+    private static final Pattern MANA = Pattern.compile("([\\d.,]+[kKmMbB]?)/([\\d.,]+[kKmMbB]?)✎");
+    private static final Pattern OVERFLOW = Pattern.compile("([\\d.,]+[kKmMbB]?)ʬ");
+    private static final Pattern DEFENSE = Pattern.compile("([\\d.,]+[kKmMbB]?)❈");
+    private static final Pattern SKILL = Pattern.compile("\\+([\\d,.]+[kKmMbB]?) (\\w+) \\(([\\d.]+)%\\)");
 
     private static int health, maxHealth, mana, maxMana, defense, overflowMana;
     private static String skillName = "";
@@ -54,7 +56,15 @@ public final class ActionBar {
     }
 
     private static int num(String g) {
-        try { return Integer.parseInt(g.replace(",", "")); } catch (NumberFormatException e) { return 0; }
+        if (g == null || g.isEmpty()) return 0;
+        g = g.replace(",", "").replace("_", "").trim();
+        double mult = 1.0;
+        char last = g.charAt(g.length() - 1);
+        if (last == 'k' || last == 'K') { mult = 1000.0; g = g.substring(0, g.length() - 1); }
+        else if (last == 'm' || last == 'M') { mult = 1_000_000.0; g = g.substring(0, g.length() - 1); }
+        else if (last == 'b' || last == 'B') { mult = 1_000_000_000.0; g = g.substring(0, g.length() - 1); }
+        try { return (int) Math.round(Double.parseDouble(g) * mult); }
+        catch (NumberFormatException e) { return 0; }
     }
 
     /** 0..1, or 1 if we haven't seen health yet (don't false-alarm). */

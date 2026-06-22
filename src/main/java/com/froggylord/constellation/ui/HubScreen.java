@@ -3,6 +3,7 @@ package com.froggylord.constellation.ui;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.NebulaTheme;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -14,6 +15,10 @@ public class HubScreen extends Screen {
 
     private final Screen parent;
     private long openTime;
+    private int scrollOff = 0;
+    private int maxScroll = 0;
+    private boolean scrolling = false;
+    private int scrollGrabY = 0, scrollGrabOff = 0;
 
     public HubScreen(Screen parent) {
         super(Component.literal("Constellation"));
@@ -21,46 +26,91 @@ public class HubScreen extends Screen {
     }
 
     @Override
-    protected void init() {
-        this.openTime = System.currentTimeMillis();
-    }
+    protected void init() { this.openTime = System.currentTimeMillis(); }
 
-    @Override
-    public boolean isPauseScreen() { return false; }
+    @Override public boolean isPauseScreen() { return false; }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
         Minecraft mc = Minecraft.getInstance();
         int w = mc.getWindow().getGuiScaledWidth();
         int h = mc.getWindow().getGuiScaledHeight();
-        var font = mc.font;
+        Font font = mc.font;
 
         g.fill(0, 0, w, h, NebulaTheme.BG_DEEP);
-
-        int panelW = (int) (w * 0.72);
-        g.fill(0, 0, panelW, h, NebulaTheme.BG_PANEL);
-        g.fill(panelW, 0, panelW + 1, h, NebulaTheme.ACCENT_DIM);
 
         String title = "✧ Constellation ✧";
         g.text(font, title, w / 2 - font.width(title) / 2, 6, NebulaTheme.ACCENT_GOLD, false);
 
-        int cardY = 20;
+        // grid of constellation cards
+        int cols = Math.max(1, Math.min(4, (w - 20) / 220));
+        int cardW = ((w - 20) - (cols - 1) * 6) / cols;
+        int cardH = 54;
+        int gapX = 6, gapY = 4;
+        int gridX = 10, gridY = 22;
+
         var allIds = ConstellationClient.featureManager().getAllIds();
+
+        int row = 0, col = 0;
         for (String id : allIds) {
-            var c = ConstellationClient.featureManager().get(id);
-            if (c.isEmpty()) continue;
+            var opt = ConstellationClient.featureManager().get(id);
+            if (opt.isEmpty()) continue;
+            var c = opt.get();
+            int cx = gridX + col * (cardW + gapX);
+            int cy = gridY + row * (cardH + gapY) - scrollOff;
 
-            boolean enabled = c.get().isEnabled();
-            String name = (enabled ? "✦ " : "✧ ") + c.get().displayName();
-            int cardH = 22;
-            boolean hover = mx >= 10 && mx <= 170 && my >= cardY && my < cardY + cardH;
+            // only draw cards that are on screen
+            if (cy + cardH > 0 && cy < h - 50) {
+                boolean enabled = c.isEnabled();
+                boolean hover = mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + cardH;
+                int bg = hover ? 0xFF2A2A3A : 0xFF1A1A28;
+                g.fill(cx, cy, cx + cardW, cy + cardH, bg);
+                if (hover || enabled) g.fill(cx, cy, cx + 3, cy + cardH, enabled ? NebulaTheme.ACCENT_GOLD : NebulaTheme.ACCENT_DIM);
 
-            g.fill(10, cardY, 170, cardY + cardH, hover ? 0xFF2A2A3A : 0xFF1A1A28);
-            if (hover) g.fill(10, cardY, 13, cardY + cardH, NebulaTheme.ACCENT_GOLD);
-            g.text(font, name, 18, cardY + 6,
-                enabled ? (hover ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE)
-                        : NebulaTheme.STAR_MUTED, false);
-            cardY += 26;
+                String name = c.displayName();
+                g.text(font, enabled ? "✦ " + name : "✧ " + name, cx + 8, cy + 5,
+                    enabled ? NebulaTheme.STAR_WHITE : NebulaTheme.STAR_MUTED, false);
+
+                String desc = c.description();
+                // wrap the description to fit inside the card
+                int textW = cardW - 16;
+                if (font.width(desc) > textW) {
+                    for (String part : desc.split(" — ")) {
+                        String trimmed = part.trim();
+                        if (trimmed.isEmpty()) continue;
+                        if (font.width(trimmed) > textW) trimmed = font.plainSubstrByWidth(trimmed, textW);
+                        g.text(font, trimmed, cx + 8, cy + 20, NebulaTheme.STAR_MUTED, false);
+                        break; // one line is enough
+                    }
+                } else {
+                    g.text(font, desc, cx + 8, cy + 20, NebulaTheme.STAR_MUTED, false);
+                }
+
+                // toggle switch on the right
+                int sw = 16, sh = 10, sx = cx + cardW - sw - 10, sy = cy + cardH - sh - 6;
+                int swCol = enabled ? NebulaTheme.ACCENT_GOLD : 0xFF444466;
+                g.fill(sx, sy, sx + sw, sy + sh, swCol);
+                int knobX = enabled ? sx + sw - 6 : sx + 1;
+                g.fill(knobX, sy + 1, knobX + 5, sy + sh - 1, 0xFFFFFFFF);
+            }
+
+            col++;
+            if (col >= cols) { col = 0; row++; }
+        }
+
+        int totalRows = (int) Math.ceil((double) allIds.size() / cols);
+        maxScroll = Math.max(0, totalRows * (cardH + gapY) - (h - 60));
+        if (scrollOff > maxScroll) scrollOff = maxScroll;
+        if (scrollOff < 0) scrollOff = 0;
+
+        // scrollbar
+        if (maxScroll > 0) {
+            int sbX = w - 6, sbH = h - 56, sbY = gridY;
+            g.fill(sbX, sbY, sbX + 4, sbY + sbH, 0xFF2A2A3A);
+            float ratio = (float) sbH / (sbH + maxScroll);
+            int thumbH = Math.max(20, (int) (sbH * ratio));
+            int thumbY = sbY + (int) ((float) scrollOff / maxScroll * (sbH - thumbH));
+            g.fill(sbX, thumbY, sbX + 4, thumbY + thumbH, NebulaTheme.ACCENT_DIM);
         }
 
         // hud editor button
@@ -94,7 +144,6 @@ public class HubScreen extends Screen {
 
         int btnW = 120, hudBtnY = h - 58, setBtnY = h - 32, btnX = w / 2 - btnW / 2;
 
-        // settings button
         if (mx >= btnX && mx <= btnX + btnW && my >= setBtnY && my <= setBtnY + 22) {
             var ids = ConstellationClient.featureManager().getLoadedIds();
             String first = ids.isEmpty() ? "apollo" : ids.iterator().next();
@@ -102,28 +151,68 @@ public class HubScreen extends Screen {
             return true;
         }
 
-        // hud editor button
         if (mx >= btnX && mx <= btnX + btnW && my >= hudBtnY && my <= hudBtnY + 22) {
             mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this)));
             return true;
         }
 
-        // constellation cards — toggle on click (deferred to next tick)
-        int cardY = 20;
-        for (String id : ConstellationClient.featureManager().getAllIds()) {
-            if (mx >= 10 && mx <= 170 && my >= cardY && my < cardY + 22) {
-                mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(id, parent)));
+        // grid click — find which card
+        int cols = Math.max(1, Math.min(4, (w - 20) / 220));
+        int cardW = ((w - 20) - (cols - 1) * 6) / cols;
+        int cardH = 54;
+        int gapX = 6, gapY = 4;
+        int gridX = 10, gridY = 22;
+
+        var allIds = ConstellationClient.featureManager().getAllIds();
+        int col = 0, row = 0, idx = 0;
+        for (String id : allIds) {
+            int cx = gridX + col * (cardW + gapX);
+            int cy = gridY + row * (cardH + gapY) - scrollOff;
+            if (mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + cardH) {
+                final String fid = id;
+                mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(fid, parent)));
                 return true;
             }
-            cardY += 26;
+            idx++;
+            col = idx % cols;
+            row = idx / cols;
         }
 
+        // scrollbar drag
+        if (maxScroll > 0 && mx >= w - 6) {
+            scrolling = true;
+            scrollGrabY = my;
+            scrollGrabOff = scrollOff;
+            return true;
+        }
         return super.mouseClicked(event, dbl);
     }
 
     @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (scrolling) {
+            int my = (int) event.y();
+            float pct = (float) (my - scrollGrabY) / (Minecraft.getInstance().getWindow().getGuiScaledHeight() - 80);
+            scrollOff = Math.clamp(scrollGrabOff + (int) (pct * maxScroll), 0, maxScroll);
+            return true;
+        }
+        return super.mouseDragged(event, dx, dy);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        scrolling = false;
+        return super.mouseReleased(event);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
+        scrollOff = Math.clamp(scrollOff - (int) (scrollY * 20), 0, maxScroll);
+        return true;
+    }
+
+    @Override
     public boolean keyPressed(KeyEvent event) {
-        // ignore escape for the first 400ms — prevents chat-close from insta-closing us
         if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             if (System.currentTimeMillis() - openTime < 400) return true;
             onClose();

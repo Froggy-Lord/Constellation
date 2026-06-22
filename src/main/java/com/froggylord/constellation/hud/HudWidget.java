@@ -17,6 +17,7 @@ public class HudWidget implements HudElement {
     private final Supplier<String> value;
     private HudPosition position;
     private boolean enabled;
+    private java.util.function.Consumer<HudPosition> onMove;
 
     public HudWidget(String id, String label, Supplier<String> value, HudPosition position, boolean enabled) {
         this.id = id;
@@ -25,6 +26,9 @@ public class HudWidget implements HudElement {
         this.position = position;
         this.enabled = enabled;
     }
+
+    /** call this callback every time the element is dragged, so the config gets written back. */
+    public HudWidget onMove(java.util.function.Consumer<HudPosition> cb) { this.onMove = cb; return this; }
 
     private String currentValue() {
         try { return value.get(); } catch (Exception e) { return null; }

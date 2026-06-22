@@ -71,7 +71,7 @@ public class PhoenixQol extends BaseConstellation {
                 // you land on top of the block; it needs two air blocks above to be valid
                 boolean valid = mc.level.getBlockState(pos.above()).isAir()
                     && mc.level.getBlockState(pos.above(2)).isAir();
-                wctx.outline(new AABB(pos), valid ? 0xFFAA00FF : 0xFFFF4040, true);
+                wctx.highlight(new AABB(pos), valid ? 0x80AA00FF : 0x80FF4040, true);
             });
         }
         if (cfg.hideLightning) {

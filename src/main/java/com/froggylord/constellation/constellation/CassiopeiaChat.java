@@ -122,21 +122,20 @@ public class CassiopeiaChat extends BaseConstellation {
 
         // ---- MODIFY_GAME: shorten coin amounts in chat ----
         if (cfg.shortenCoins) {
-            // compact 1,234,567 → 1.2M in chat using Matcher.replaceAll
             var COIN = java.util.regex.Pattern.compile("[\\d,]{4,}");
             pipeline.modify(msg -> {
                 String s = msg.getString();
                 if (s.length() < 10) return msg;
-                return net.minecraft.network.chat.Component.literal(
-                    COIN.matcher(s).replaceAll(mr -> {
-                        try {
-                            long n = Long.parseLong(mr.group().replace(",", ""));
-                            if (n < 10000) return mr.group();
-                            if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
-                            return String.format("%.2fM", n / 1_000_000.0);
-                        } catch (Exception e) { return mr.group(); }
-                    })
-                );
+                String rep = COIN.matcher(s).replaceAll(mr -> {
+                    try {
+                        long n = Long.parseLong(mr.group().replace(",", ""));
+                        if (n < 10000) return mr.group();
+                        if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
+                        return String.format("%.2fM", n / 1_000_000.0);
+                    } catch (Exception e) { return mr.group(); }
+                });
+                // only recreate if something actually changed; preserves formatting on everything else
+                return rep.equals(s) ? msg : net.minecraft.network.chat.Component.literal(rep);
             });
         }
 
