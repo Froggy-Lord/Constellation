@@ -267,8 +267,9 @@ public class DracoCrimson extends BaseConstellation {
         return ConstellationClient.loc().area() == SkyblockArea.CRIMSON_ISLE;
     }
 
+    // all crimson isle faction/dojo/vanq info is in the tab list, not sidebar
     private static String repLine() {
-        for (String line : ConstellationClient.loc().getSidebarLines()) {
+        for (String line : com.froggylord.constellation.data.TabList.lines()) {
             Matcher m = REP.matcher(line);
             if (m.find()) return "§c" + m.group(1) + " §f" + m.group(2)
                 + " §7(" + vanqLine() + ")";
@@ -277,7 +278,7 @@ public class DracoCrimson extends BaseConstellation {
     }
 
     private static String dojoLine() {
-        for (String line : ConstellationClient.loc().getSidebarLines()) {
+        for (String line : com.froggylord.constellation.data.TabList.lines()) {
             Matcher m = DOJO.matcher(line);
             if (m.find()) return "§eDojo §f" + m.group(1);
         }
@@ -285,6 +286,10 @@ public class DracoCrimson extends BaseConstellation {
     }
 
     private static String vanqLine() {
+        for (String line : com.froggylord.constellation.data.TabList.lines()) {
+            Matcher m = VANQ.matcher(line);
+            if (m.find()) return m.group(1) + " kills";
+        }
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = VANQ.matcher(line);
             if (m.find()) return m.group(1) + " kills";
