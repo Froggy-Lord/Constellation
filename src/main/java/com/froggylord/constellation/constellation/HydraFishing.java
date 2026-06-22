@@ -302,6 +302,26 @@ public class HydraFishing extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 158), cfg.hotspotRadarGuesser));
+        if (cfg.chumBucketTimer) {
+            hud.register(new HudWidget("hydra-chum", "Chum",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Chum") || line.contains("Bucket")) return "§b🪣 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, 166), cfg.chumBucketTimer));
+        }
+        if (cfg.seaCreatureRarityDisplay) {
+            hud.register(new HudWidget("hydra-scrarity", "SCRarity",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Rarity") || line.contains("Tier")) return "§d🏷 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, 174), cfg.seaCreatureRarityDisplay));
+        }
         }
         }
         }
