@@ -106,6 +106,24 @@ public class AquilaMining extends BaseConstellation {
             }
         });
 
+        // Treasure chest ESP — highlight chests in Crystal Hollows
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.treasureChestEsp || !inMining()) return;
+            var mc2 = net.minecraft.client.Minecraft.getInstance();
+            if (mc2.level == null || mc2.player == null) return;
+            var pp = mc2.player.position();
+            for (var e : mc2.level.entitiesForRendering()) {
+                if (e.distanceToSqr(pp) > 1600) continue; // 40-block range
+                var name = e.getCustomName();
+                if (name == null) continue;
+                String nm = name.getString().toLowerCase(java.util.Locale.ROOT);
+                if (nm.contains("chest") || nm.contains("treasure") || nm.contains("loot")) {
+                    wctx.highlight(e.getBoundingBox().inflate(0.3), 0x80FFAA00, true);
+                    wctx.label(e.position().add(0, e.getBbHeight() + 0.4, 0), "Treasure", 0xFFFFAA00, true);
+                }
+            }
+        });
+
         // Pickobulus prediction — highlight the break zone of the targeted block
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.pickobulusPreview || !inMining()) return;

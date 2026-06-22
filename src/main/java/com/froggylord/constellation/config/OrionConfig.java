@@ -101,4 +101,5 @@ public class OrionConfig extends BaseConfigGroup {
     // miniboss highlights + rare room alerts
     public boolean minibossHighlights = true;
     public boolean rareRoomAlerts = true;
+    public boolean mageBeamCleaner = true; // clean line instead of firework particles (cmp. Skyblocker MageBeamRenderer)
 }

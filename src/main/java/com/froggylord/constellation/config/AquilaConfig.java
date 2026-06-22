@@ -17,4 +17,5 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean puzzlerSolver = true;     // Puzzler block answers (cmp. Skyblocker PuzzlerSolver)
     public boolean scathaAlert = true;       // Scatha spawn alert (cmp. Skyblocker ScathaTracker)
     public boolean pickobulusPreview = true; // highlight break area (cmp. Skyblocker PickobulusPredictor)
+    public boolean treasureChestEsp = true;   // highlight chests in Crystal Hollows (cmp. Skyblocker ChestHighlighter)
 }

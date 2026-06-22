@@ -38,6 +38,23 @@ public final class CombatEsp {
         Vec3 me = mc.player.position();
         double r2 = RANGE * RANGE;
 
+        // mage beam cleaner — replace firework particles with a clean line
+        if (cfg.mageBeamCleaner) {
+            var stack = mc.player.getMainHandItem();
+            if (!stack.isEmpty()) {
+                String id = stack.getItem().getDescriptionId();
+                // detect mage weapons by their id pattern
+                if (id.contains("wither_impact") || id.contains("hyperion") || id.contains("sceptre")
+                    || id.contains("midas_staff") || id.contains("yeti_sword")
+                    || id.contains("spirit_sceptre") || id.contains("bonzo_staff")
+                    || id.contains("frozen_scythe") || id.contains("jerry_chine")) {
+                    Vec3 eye = mc.player.getEyePosition(1f);
+                    Vec3 end = eye.add(mc.player.getViewVector(1f).scale(30.0));
+                    ctx.line(eye, end, 0xFF55FFFF, false);
+                }
+            }
+        }
+
         // teammates — box the other (real) players in the run
         if (cfg.teammateBoxes) {
             for (var p : mc.level.players()) {
