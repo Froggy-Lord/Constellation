@@ -15,4 +15,7 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean customNameReplacer = false;  // replace player names with nicknames (cmp. Skyblocker)
     public boolean partyTriggerSystem = true;   // !warp !join !ptme bot commands (cmp. Skyblocker)
     public boolean streamerModeParty = false;    // hide party members' names in screenshots
+    public boolean readyCheckPing = true;        // sound when all party members ready (cmp. Skyblocker)
+    public boolean friendListHud = true;          // show online friends count (cmp. Skyblocker)
+    public boolean partyMute = false;             // mute party chat temporarily (cmp. Skyblocker)
 }
