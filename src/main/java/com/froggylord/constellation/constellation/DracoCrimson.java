@@ -226,6 +226,26 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 2), cfg.heavyPearlsTracker));
+        if (cfg.kuudraSupplyCounter) {
+            hud.register(new HudWidget("draco-supplycount", "SupplyCount",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Supply") || line.contains("Pile")) return "§c📦 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, -4), cfg.kuudraSupplyCounter));
+        }
+        if (cfg.freshToolsPing) {
+            hud.register(new HudWidget("draco-freshtools-ping", "FreshPing",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Fresh") || line.contains("Tools")) return "§a🛠 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, -10), cfg.freshToolsPing));
+        }
         }
         }
         }
