@@ -156,6 +156,17 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 90), cfg.bitsHud));
         }
+        if (cfg.accessoryDisplay) {
+            hud.register(new HudWidget("lyra-accessories", "Accessories",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Accessor")) return "§d💍 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 98), cfg.accessoryDisplay));
+        }
     }
 
     @Override
