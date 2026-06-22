@@ -167,6 +167,28 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, 38), cfg.trophyFishingHud));
         }
+        if (cfg.freshToolsTimer) {
+            hud.register(new HudWidget("draco-freshtools", "FreshTools",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Fresh") || line.contains("Tools")) return "§a🛠 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 32), cfg.freshToolsTimer));
+        }
+        if (cfg.supplyObjectiveHud) {
+            hud.register(new HudWidget("draco-supply", "Supplies",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Supply") || line.contains("Pile") || line.contains("Fuel Cell")) return "§c📦 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 26), cfg.supplyObjectiveHud));
+        }
     }
 
     private static boolean inCrimson() {

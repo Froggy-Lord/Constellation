@@ -16,4 +16,7 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean factionQuestHud = true; // show active faction quests (cmp. Skyblocker)
     public boolean dojoChallengeHelper = true; // show Dojo challenge type + tips (cmp. Skyblocker)
     public boolean trophyFishingHud = true;    // crimson isle trophy fishing stats (cmp. Skyblocker)
+    public boolean freshToolsTimer = true;     // countdown for fresh tools buff (cmp. Skyblocker)
+    public boolean dangerWarningHud = true;    // warn when danger imminent in Kuudra (cmp. Skyblocker)
+    public boolean supplyObjectiveHud = true;  // show Kuudra supply objectives (cmp. Skyblocker)
 }
