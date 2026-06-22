@@ -93,6 +93,16 @@ public class PegasusParty extends BaseConstellation {
             hud.register(new HudWidget("pegasus-ready", "Ready",
                 () -> readyPlayers.isEmpty() ? null : "§a✔ Ready: " + readyPlayers.size(),
                 HudPosition.of(2, 134), cfg.readyChecker));
+        if (cfg.friendListHud) {
+            hud.register(new HudWidget("pegasus-friends", "Friends",
+                () -> {
+                    var mc = Minecraft.getInstance();
+                    if (mc.getConnection() == null) return null;
+                    int n = mc.getConnection().getOnlinePlayers().size();
+                    return n > 0 ? "§a👥 " + n + " online" : null;
+                },
+                HudPosition.of(2, 142), cfg.friendListHud));
+        }
         }
     }
 
