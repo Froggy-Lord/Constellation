@@ -31,7 +31,7 @@ public final class ArrowAlignSolver {
                     var facing = bs.getValue(BlockStateProperties.FACING);
                     // draw a line in the direction the arrow points
                     Vec3 center = Vec3.atCenterOf(bp);
-                    Vec3 dir = Vec3.atLowerCornerOf(facing.getNormal()).scale(0.6);
+                    Vec3 dir = new Vec3(facing.getStepX(), facing.getStepY(), facing.getStepZ()).scale(0.6);
                     ctx.line(center, center.add(dir), 0x60FFAA00, true);
                 }
     }
