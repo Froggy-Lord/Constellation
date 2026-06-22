@@ -237,6 +237,28 @@ public class LyraEconomy extends BaseConstellation {
                     return "§a+" + compact(bazaarSold) + " §c-" + compact(bazaarSpent);
                 },
                 HudPosition.of(2, 130), cfg.bazaarUndercutAlert));
+        if (cfg.museumDonationStatus) {
+            hud.register(new HudWidget("lyra-museum", "Museum",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Museum") && (line.contains("Donat") || line.contains("Value"))) return "§6🏛 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 138), cfg.museumDonationStatus));
+        }
+        if (cfg.missingAccessoryHelper) {
+            hud.register(new HudWidget("lyra-accessory-helper", "MissingAcc",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Accessor") && (line.contains("miss") || line.contains("need"))) return "§d💍 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 146), cfg.missingAccessoryHelper));
+        }
         }
     }
 
