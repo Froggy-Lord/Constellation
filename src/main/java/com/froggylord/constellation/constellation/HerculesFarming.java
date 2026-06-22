@@ -91,6 +91,16 @@ public class HerculesFarming extends BaseConstellation {
             });
         }
 
+        // dicer filter — suppress verbose dicer roll messages
+        if (cfg.dicerFilter) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return true;
+                String s = msg.getString();
+                if (s.contains("Dicer") || s.contains("dicer")) return false;
+                return true;
+            });
+        }
+
         // pest watch — the scoreboard shows a live "Pests: N" while any are loose in your plots
         ConstellationClient.tick().every(20, "hercules-pests", () -> {
             if (cfg == null || !cfg.pestAlert || !inGarden()) return;

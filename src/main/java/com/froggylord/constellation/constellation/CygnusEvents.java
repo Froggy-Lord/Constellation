@@ -194,6 +194,20 @@ public class CygnusEvents extends BaseConstellation {
                 },
                 HudPosition.of(2, 154), cfg.jerryTimer));
         }
+        if (cfg.seasonDisplay) {
+            hud.register(new HudWidget("cygnus-season", "Season",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Spring") || line.contains("Summer") || line.contains("Autumn") || line.contains("Winter")) {
+                            if (line.contains("Early") || line.contains("Late") || line.matches(".*\\d+(st|nd|rd|th).*"))
+                                return "§a🌤 " + line.trim();
+                        }
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 162), cfg.seasonDisplay));
+        }
     }
 
     private static String calendarLine() {

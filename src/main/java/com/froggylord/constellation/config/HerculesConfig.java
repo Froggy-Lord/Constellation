@@ -16,4 +16,5 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean spaceFarmer = false; // hold space to auto-farm (cmp. SkyHanni)
     public boolean plotBorders = true; // render garden plot borders (cmp. SkyHanni)
     public boolean sweepOverlay = true; // show farming tool harvest range (cmp. SkyHanni)
+    public boolean dicerFilter = true;  // suppress verbose dicer messages (cmp. SkyHanni)
 }

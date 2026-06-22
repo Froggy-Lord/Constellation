@@ -15,4 +15,5 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean carnivalHelper = true; // Catch a Fish / Zombie Shootout hints
     public boolean newYearCakeTracker = true; // show collected cake years
     public boolean jerryTimer = true; // show time until next Jerry event
+    public boolean seasonDisplay = true; // show current SkyBlock season + upcoming
 }
