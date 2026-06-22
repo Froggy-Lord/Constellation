@@ -183,7 +183,10 @@ public class AquilaMining extends BaseConstellation {
                 }
             }
             if (s.contains("Scatha")) {
-                if (s.contains("killed") || s.contains("slain") || s.contains("defeated")) scathaKills++;
+                if (s.contains("killed") || s.contains("slain") || s.contains("defeated")) {
+                    scathaKills++;
+                    com.froggylord.constellation.core.StatStore.add("aquila.scatha.kills", 1);
+                }
                 else if (cfg.scathaAlert && (s.contains("spawned") || s.contains("found") || s.contains("worm"))) {
                     var mc = net.minecraft.client.Minecraft.getInstance();
                     if (mc.player != null) {
@@ -292,7 +295,12 @@ public class AquilaMining extends BaseConstellation {
         }
         if (cfg.scathaCounter) {
             hud.register(new HudWidget("aquila-scatha", "Scatha",
-                () -> scathaKills > 0 ? "§6🐛 Scatha: " + scathaKills + " kills" : null,
+                () -> {
+                    if (scathaKills == 0) return null;
+                    boolean life = ConstellationClient.cfg() != null && ConstellationClient.cfg().lifetimeStats;
+                    long n = life ? com.froggylord.constellation.core.StatStore.getLong("aquila.scatha.kills", scathaKills) : scathaKills;
+                    return "§6🐛 Scatha: " + n + " kills" + (life ? " §8(all-time)" : "");
+                },
                 HudPosition.of(2, 146), cfg.scathaCounter));
         }
     }

@@ -138,8 +138,10 @@ public class HydraFishing extends BaseConstellation {
             if (s.contains("Sea Creature") || s.contains("sea creature")) seaCreatures++;
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
             // shark kills — count them
-            if (cfg != null && cfg.sharkCounter && (s.contains("Shark") || s.contains("shark")) && (s.contains("killed") || s.contains("slain")))
+            if (cfg != null && cfg.sharkCounter && (s.contains("Shark") || s.contains("shark")) && (s.contains("killed") || s.contains("slain"))) {
                 sharkKills++;
+                com.froggylord.constellation.core.StatStore.add("hydra.shark.kills", 1);
+            }
             // totem timer — track when placed
             if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("placed") || s.contains("activated")))
                 totemPlacedAt = System.currentTimeMillis();
