@@ -2,7 +2,9 @@ package com.froggylord.constellation.config;
 
 public class HerculesConfig extends BaseConfigGroup {
 
-    @Override public int currentVersion() { return 0; }
+    @Override public int currentVersion() { return 0;     public boolean cropProfitTracker = true;
+    public boolean farmingXpDisplay = true;
+}
 
     public boolean contestHud = true;
     public boolean visitorsHud = false;
@@ -26,4 +28,6 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean cropGrowthDisplay = true;   
     public boolean plotEfficiencyHud = true;  // show yaw/pitch accuracy for fa...
     public boolean farmingContestTimer = true; 
+    public boolean cropProfitTracker = true;
+    public boolean farmingXpDisplay = true;
 }
