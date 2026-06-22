@@ -176,6 +176,14 @@ public class PhoenixQol extends BaseConstellation {
             }
         }
 
+        if (cfg.hotbarLock) {
+            final int[] lockedSlot = {Minecraft.getInstance().player != null ? Minecraft.getInstance().player.getInventory().selected : 0};
+            ConstellationClient.tick().every(1, "phoenix-hotbarlock", () -> {
+                var mc2 = Minecraft.getInstance();
+                if (mc2.player != null && mc2.player.getInventory().selected != lockedSlot[0])
+                    mc2.player.getInventory().selected = lockedSlot[0];
+            });
+        }
         if (cfg.signCalculator) {
             // evaluate simple math on signs ...
             
