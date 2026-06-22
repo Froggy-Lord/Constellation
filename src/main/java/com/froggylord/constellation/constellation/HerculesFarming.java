@@ -59,6 +59,28 @@ public class HerculesFarming extends BaseConstellation {
                 }
             }
         });
+        // sweep overlay — highlight the harvest area when holding a farming tool
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.sweepOverlay || !inGarden()) return;
+            var mc2 = net.minecraft.client.Minecraft.getInstance();
+            if (mc2.player == null) return;
+            var stack = mc2.player.getMainHandItem();
+            if (stack.isEmpty()) return;
+            String id = stack.getItem().getDescriptionId();
+            if (!id.contains("hoe") && !id.contains("axe") && !id.contains("shears")) return;
+            var look = mc2.player.getViewVector(1f);
+            var eye = mc2.player.getEyePosition(1f);
+            // 5 blocks in front, 2 to each side
+            for (int d = 1; d <= 5; d++) {
+                var center = eye.add(look.scale(d));
+                for (int x = -2; x <= 2; x++)
+                    for (int z = -2; z <= 2; z++) {
+                        var bp = net.minecraft.core.BlockPos.containing(center.x + x, center.y, center.z + z);
+                        wctx.highlight(new net.minecraft.world.phys.AABB(bp), 0x40AAFF00, false);
+                    }
+            }
+        });
+
         // space farmer — auto-hold space for farming rows
         if (cfg.spaceFarmer) {
             ConstellationClient.tick().every(2, "hercules-space", () -> {
