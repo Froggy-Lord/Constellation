@@ -293,6 +293,17 @@ public class CygnusEvents extends BaseConstellation {
                 () -> ConstellationClient.loc().onHypixel() ? "§b🎁 Winter Gifts" : null,
                 HudPosition.of(2, 202), cfg.winterGiftTracker));
         }
+        if (cfg.harvestFestivalHelper) {
+            hud.register(new HudWidget("cygnus-harvest", "Harvest",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Harvest") && (line.contains("Feast") || line.contains("Harbinger"))) return "§6🌾 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 210), cfg.harvestFestivalHelper));
+        }
         }
     }
 
