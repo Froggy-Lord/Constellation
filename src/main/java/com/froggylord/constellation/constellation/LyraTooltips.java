@@ -17,6 +17,18 @@ public class LyraTooltips {
 
     private static LyraConfig cfg;
 
+    // the enchant keys Hypixel uses on items — checked against what's already applied
+    private static final String[] COMMON_ENCHANTS = {
+        "growth", "protection", "feather_falling", "rejuvenate", "respite",
+        "sharpness", "critical", "execute", "first_strike", "giant_killer",
+        "ender_slayer", "smite", "bane_of_arthropods", "cubism", "impaling",
+        "syphon", "life_steal", "mana_steal", "vampirism",
+        "luck", "looting", "scavenger", "experience",
+        "efficiency", "fortune", "silk_touch", "pristine",
+        "overload", "soul_eater", "power", "snipe", "dragon_hunter",
+        "ultimate_wise", "legion", "wisdom", "last_stand", "no_pain_no_gain"
+    };
+
     public static void init(LyraConfig config) {
         cfg = config;
         ItemTooltipCallback.EVENT.register((stack, ctx, flag, lines) -> {
@@ -68,6 +80,19 @@ public class LyraTooltips {
             if (cfg.tooltipSkyblockId) {
                 String id = extra.getStringOr("id", "");
                 if (!id.isEmpty()) lines.add(Component.literal("§8" + id));
+            }
+            if (cfg.tooltipMissingEnchants) {
+                String id = extra.getStringOr("id", "");
+                CompoundTag ench = extra.getCompoundOrEmpty("enchantments");
+                java.util.Set<String> current = ench.keySet();
+                java.util.List<String> missing = new java.util.ArrayList<>();
+                for (String want : COMMON_ENCHANTS) {
+                    if (!current.contains(want)) missing.add(want);
+                }
+                if (!missing.isEmpty()) {
+                    String list = String.join(", ", missing.subList(0, Math.min(3, missing.size())));
+                    lines.add(Component.literal("§7Missing: §c" + list));
+                }
             }
         });
     }

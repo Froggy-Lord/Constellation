@@ -26,4 +26,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipStars = true;
     public boolean tooltipEnchantCount = true;
     public boolean tooltipRecomb = true;
+    public boolean tooltipMissingEnchants = true;
 }
