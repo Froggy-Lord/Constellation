@@ -8,4 +8,5 @@ public class AurigaConfig extends BaseConfigGroup {
     // experiment-table solvers — highlight only
     public boolean ultrasequencerSolver = true;
     public boolean superpairsSolver = true;
+    public boolean bingoHelper = true;
 }

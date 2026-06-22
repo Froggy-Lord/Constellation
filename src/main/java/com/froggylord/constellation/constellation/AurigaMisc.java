@@ -38,5 +38,16 @@ public class AurigaMisc extends BaseConstellation {
                 () -> ConstellationClient.loc().onHypixel() ? "§e🧪" : null,
                 HudPosition.of(50, 94), cfg.experimentHelper));
         }
+        if (cfg.bingoHelper) {
+            hud.register(new HudWidget("auriga-bingo", "Bingo",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Bingo") || line.contains("Card")) return "§a🎯 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 102), cfg.bingoHelper));
+        }
     }
 }
