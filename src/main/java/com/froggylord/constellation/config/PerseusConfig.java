@@ -26,4 +26,6 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean damageIndicatorHud = true;
     public boolean autoSlayerHelper = true;
     public boolean bossBarImprovement = true;
+    public boolean slayerLevelDisplay = true;
+    public boolean bossDamageTracker = true;
 }
