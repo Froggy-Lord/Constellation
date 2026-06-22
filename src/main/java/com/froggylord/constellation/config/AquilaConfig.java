@@ -28,4 +28,8 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean jadeCrystalTracker = true;  // track Jade Crystal location hint (cmp. Skyblocker)
     public boolean coleweightHud = true;         // show Coleweight/mining event status (cmp. Skyblocker)
     public boolean fossilHelper = true;          // Glacite fossil solver hint (cmp. Skyblocker)
+    public boolean crystalNucleusWaypoints = true; // render waypoints for all crystal types (cmp. Skyblocker)
+    public boolean metalDetectorHelper = true;    // show treasure direction from detector (cmp. Skyblocker)
+    public boolean gemstoneMixtureHelper = true;  // optimal mixture combination solver (cmp. Skyblocker)
+    public boolean mineshaftPityDisplay = true;  // show pity counter for mineshaft entry (cmp. Skyblocker)
 }
