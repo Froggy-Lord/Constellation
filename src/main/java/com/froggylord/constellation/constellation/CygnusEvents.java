@@ -50,9 +50,22 @@ public class CygnusEvents extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (CygnusConfig) getConfig();
+        // event-starting ping — skyhanni-style title+sound when an event opens
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
-            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
-            String s = msg.getString();
+            if (overlay || !ConstellationClient.loc().onHypixel()) return;
+            String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
+            if (cfg.eventNotificationHud && (s.contains("EVENT") || s.contains("is about to start") || s.contains("is starting") || s.contains("has started"))) {
+                if (s.contains("NEW YEAR") || s.contains("SPOOKY") || s.contains("JERRY") || s.contains("DIANA") || s.contains("MINING FIESTA") || s.contains("DARK AUCTION")) {
+                    var mcc = net.minecraft.client.Minecraft.getInstance();
+                    if (mcc.player != null) {
+                        mcc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1.5f);
+                        mcc.gui.hud.resetTitleTimes();
+                        mcc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§e⏰ Event! §7" + s.trim()));
+                    }
+                }
+            }
+            if (cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            String s2 = msg.getString();
 
             
             
