@@ -183,6 +183,17 @@ public class CygnusEvents extends BaseConstellation {
                 },
                 HudPosition.of(2, 146), cfg.newYearCakeTracker));
         }
+        if (cfg.jerryTimer) {
+            hud.register(new HudWidget("cygnus-jerry", "Jerry",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Jerry") || line.contains("Winter") && line.contains(":")) return "§b⛄ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 154), cfg.jerryTimer));
+        }
     }
 
     private static String calendarLine() {
