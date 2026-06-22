@@ -356,6 +356,27 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 178), cfg.gemstoneMixtureHelper));
         }
+        if (cfg.crystalNucleusWaypoints) {
+            // Crystal Nucleus waypoints — highlight crystal structures in Crystal Hollows
+            ConstellationClient.world().register(wctx -> {
+                if (!inMining()) return;
+                var mc2 = net.minecraft.client.Minecraft.getInstance();
+                if (mc2.level == null || mc2.player == null) return;
+                var pp = mc2.player.blockPosition();
+                for (int dx = -40; dx <= 40; dx++)
+                    for (int dz = -40; dz <= 40; dz++)
+                        for (int dy = -10; dy <= 10; dy++) {
+                            var bp = pp.offset(dx, dy, dz);
+                            var bs = mc2.level.getBlockState(bp);
+                            String id = bs.getBlock().getDescriptionId();
+                            if (id.contains("amethyst") || id.contains("jade") || id.contains("amber")
+                                || id.contains("sapphire") || id.contains("topaz")) {
+                                wctx.highlight(new net.minecraft.world.phys.AABB(bp), 0x60FF55FF, true);
+                                wctx.beam(bp.getX()+0.5, bp.getY()+1, bp.getZ()+0.5, 0xFFFF55FF, 8, true);
+                            }
+                        }
+            });
+        }
     }
 
     private static boolean inMining() {
