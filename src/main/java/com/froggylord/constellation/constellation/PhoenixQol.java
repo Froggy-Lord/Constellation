@@ -124,13 +124,22 @@ public class PhoenixQol extends BaseConstellation {
                 if (mc.options != null) mc.options.screenEffectScale().set(0.0);
             });
         }
-        // auto-save reminder — ping ever...
+        // auto-save reminder — ping every 5 min on Hypixel, track last save time
         if (cfg.autoSaveReminder) {
+            // detect saves from chat (warping/flipping islands)
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
+                if (s.contains("Sending to server") || s.contains("You are now in") || s.contains("Warping") || s.contains("Welcome to SkyBlock"))
+                    lastSaveAt = System.currentTimeMillis();
+            });
             ConstellationClient.tick().every(6000, "phoenix-autosave", () -> {
                 if (!ConstellationClient.loc().onHypixel()) return;
                 var mc = Minecraft.getInstance();
                 if (mc.player != null) {
-                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a⏰ Auto-save reminder — type /is or /hub to save!"));
+                    long since = lastSaveAt > 0 ? (System.currentTimeMillis() - lastSaveAt) / 60000 : -1;
+                    String extra = since >= 0 ? " §7(last saved " + since + "min ago)" : "";
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§a⏰ Auto-save reminder — type /is or /hub to save!" + extra));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 0.5f, 1.0f);
                 }
             });
@@ -192,6 +201,8 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
     }
+
+    private static long lastSaveAt = 0;
 
     private static void evaluateSign(String expr) {
         
