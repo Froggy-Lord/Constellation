@@ -23,4 +23,6 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean vampireSlayerRiftHelper = true;
     public boolean wyldWoodsSoulHelper = true;
     public boolean dreadfarmEnigmaHelper = true;
+    public boolean colosseumScoreHud = true;
+    public boolean stillgoreChateauTimer = true;
 }
