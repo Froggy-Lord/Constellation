@@ -488,14 +488,14 @@ public class CassiopeiaChat extends BaseConstellation {
     private static void sendCmd(String cmd) {
         var mc = Minecraft.getInstance();
         if (mc.player == null) return;
-        
         String expanded = cmd
             .replace("%myname%", mc.player.getName().getString())
             .replace("%x%", String.valueOf((int)mc.player.getX()))
             .replace("%y%", String.valueOf((int)mc.player.getY()))
             .replace("%z%", String.valueOf((int)mc.player.getZ()))
             .replace("%pos%", (int)mc.player.getX() + " " + (int)mc.player.getY() + " " + (int)mc.player.getZ());
-        mc.player.connection.sendCommand(expanded);
+        // send via chat with / prefix to avoid fabric client-command recursion
+        mc.player.connection.sendChat(expanded.startsWith("/") ? expanded : "/" + expanded);
     }
 
     private static double eval(String expr) {
