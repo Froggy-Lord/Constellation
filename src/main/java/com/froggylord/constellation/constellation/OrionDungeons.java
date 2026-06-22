@@ -81,6 +81,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(IceFillHelper::draw);
         // Boulder solver — box the boulder and goal, draw direction hint
         ConstellationClient.world().register(BoulderSolver::draw);
+        // Silverfish solver — highlight fish + nearest pressure plate path
+        ConstellationClient.world().register(SilverfishSolver::draw);
         // F5/M5 Livid finder — hide wrong clones, box the real one
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
