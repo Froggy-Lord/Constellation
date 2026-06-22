@@ -147,6 +147,22 @@ public class PhoenixQol extends BaseConstellation {
                 }
             });
         }
+        if (cfg.wardrobeKeybinds) {
+            // register keybinds that send /wd <n> — instant armor set swap.
+            // default keys: none assigned (prevents accidental sends); user binds in controls.
+            var kr = com.froggylord.constellation.ConstellationClient.instance().keys();
+            for (int i = 1; i <= 9; i++) {
+                final int slot = i;
+                var kb = kr.register("wardrobe" + i, -1); // -1 = unbound
+                com.froggylord.constellation.ConstellationClient.tick().every(2, "wardrobe-bind-" + i, () -> {
+                    while (kb.consumeClick()) {
+                        var m = Minecraft.getInstance();
+                        if (m.player != null) m.player.connection.sendCommand("wd " + slot);
+                    }
+                });
+            }
+        }
+
         if (cfg.signCalculator) {
             // evaluate simple math on signs — on Hypixel this is mostly bazaar/auction
             // pricing, so having the answer in chat saves a mental calculation
