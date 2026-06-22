@@ -102,6 +102,11 @@ public class PegasusParty extends BaseConstellation {
                     return n > 0 ? "§a👥 " + n + " online" : null;
                 },
                 HudPosition.of(2, 142), cfg.friendListHud));
+        if (cfg.partyMute) {
+            hud.register(new HudWidget("pegasus-mute", "Muted",
+                () -> ConstellationClient.loc().onHypixel() ? "§c🔇 Party Muted" : null,
+                HudPosition.of(2, 150), cfg.partyMute));
+        }
         }
         }
     }
