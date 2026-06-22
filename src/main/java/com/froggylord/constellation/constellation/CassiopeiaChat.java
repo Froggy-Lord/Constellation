@@ -356,6 +356,12 @@ public class CassiopeiaChat extends BaseConstellation {
                 if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§eMouse locked to window"));
                 return 1;
             }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("gfs")
+            .executes(ctx -> { sendCmd("gfs"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sacks")
+            .executes(ctx -> { sendCmd("sacks"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("potionbag")
+            .executes(ctx -> { sendCmd("potionbag"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
             .executes(ctx -> { sendCmd("storage"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("bz")
