@@ -79,6 +79,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(WaterPuzzleHelper::draw);
         // Ice Fill helper — highlight unfilled vs filled ice blocks
         ConstellationClient.world().register(IceFillHelper::draw);
+        // Boulder solver — box the boulder and goal, draw direction hint
+        ConstellationClient.world().register(BoulderSolver::draw);
         // F5/M5 Livid finder — hide wrong clones, box the real one
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
