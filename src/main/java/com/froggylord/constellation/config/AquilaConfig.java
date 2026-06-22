@@ -32,4 +32,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean gemstoneMixtureHelper = true;  
     public boolean mineshaftPityDisplay = true;
     public boolean crystalHollowsMapHelper = true;
+    public boolean rubyCrystalTracker = true;
+    public boolean sapphireCrystalTracker = true;
 }
