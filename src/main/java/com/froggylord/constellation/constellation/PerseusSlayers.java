@@ -24,6 +24,7 @@ public class PerseusSlayers extends BaseConstellation {
     private static final Pattern SLAYER_XP = Pattern.compile("Slayer XP:?\\s*([\\d,]+)");
     private static final Pattern RNG = Pattern.compile("RNG Meter.*?([\\d.]+)%");
     private static final Pattern ZEALOT = Pattern.compile("Zealot.*?(\\d+)");
+    private static final Pattern PROTECTOR = Pattern.compile("Protector:?\\s*(\\d+)%");
     private static int zealotKills = 0;
     private static int zealotSinceEye = 0;
     private static int summoningEyes = 0;
@@ -89,6 +90,15 @@ public class PerseusSlayers extends BaseConstellation {
                     return s;
                 },
                 HudPosition.of(50, 94), cfg.xpBar));
+            hud.register(new HudWidget("perseus-protector", "Protector",
+                () -> {
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        Matcher m = PROTECTOR.matcher(line);
+                        if (m.find()) return "§5Protector §f" + m.group(1) + "%";
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 102), cfg.xpBar));
         }
     }
 

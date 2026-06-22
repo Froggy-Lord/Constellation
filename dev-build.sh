@@ -104,7 +104,7 @@ if ./gradlew build --console=plain; then
 
     # upload to share server for laptop download link
     SHARE_URL=""
-    if curl -fsS --max-time 30 -F "file=@$OUT" -F "expire=1440" \
+    if curl -fsS --max-time 30 -F "file=@$OUT" -F "expire=360" \
       https://home.zadenzeus.dev/share/upload -o /tmp/cn-share.json 2>/dev/null; then
       SHARE_URL=$(python3 -c "import json; print(json.load(open('/tmp/cn-share.json'))['url'])" 2>/dev/null)
       [ -n "$SHARE_URL" ] && echo ">> share: $SHARE_URL"

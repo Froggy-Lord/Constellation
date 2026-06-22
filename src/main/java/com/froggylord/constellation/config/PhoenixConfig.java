@@ -28,5 +28,5 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean hideAttachedArrows = true;
     public boolean itemProtection = true;
     public boolean preventDroppingValuable = true;
-    public boolean increasedChatHistory = true;
+    public boolean hotbarScrollLock = false;
 }

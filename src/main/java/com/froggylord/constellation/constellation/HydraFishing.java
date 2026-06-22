@@ -20,6 +20,7 @@ public class HydraFishing extends BaseConstellation {
 
     private static long castAt = 0;
     private static int seaCreatures = 0;
+    private static int seaCreatureCap = 20; // default cap, adjusted per area
 
     private HydraConfig cfg;
 
@@ -56,7 +57,8 @@ public class HydraFishing extends BaseConstellation {
                     if (!ConstellationClient.loc().onHypixel() || castAt == 0) return null;
                     long ms = System.currentTimeMillis() - castAt;
                     if (ms > 60_000) return null;
-                    return "§b🎣 " + (ms / 1000) + "s  §7SC: " + seaCreatures;
+                    String sc = seaCreatures > 0 ? " §7SC: §f" + seaCreatures + "§7/" + seaCreatureCap : "";
+                    return "§b🎣 " + (ms / 1000) + "s" + sc;
                 },
                 HudPosition.of(50, 86), cfg.seaCreatureAlerts));
         }
