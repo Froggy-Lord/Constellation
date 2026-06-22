@@ -13,4 +13,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean anvilHelper = true;    // show combine cost + optimal path (cmp. Skyblocker AnvilHelper)
     public boolean powerStoneDisplay = true; // show active power stone from sidebar
     public boolean clockReminder = true;     // enchanted clock event reminders (cmp. Skyblocker)
+    public boolean essenceShopHelper = true; // show essence costs + upgrades (cmp. Skyblocker)
+    public boolean reforgeHelper = true;     // show reforge stats comparison (cmp. Skyblocker)
 }

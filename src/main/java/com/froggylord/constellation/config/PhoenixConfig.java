@@ -31,4 +31,6 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean hotbarScrollLock = false;
     public boolean wardrobeKeybinds = false; // press keys to instant-swap armor sets
     public boolean autoSaveReminder = true;   // ping every 5 min to /is the lobby
+    public boolean scrollableTooltips = true; // scroll through long item lore (cmp. Skyblocker)
+    public boolean hotbarLock = false;         // lock hotbar slots from being moved
 }
