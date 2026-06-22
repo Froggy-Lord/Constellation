@@ -149,17 +149,39 @@ public class AndromedaRift extends BaseConstellation {
         }
         if (cfg.livingCaveHelper) {
             hud.register(new HudWidget("andromeda-cave", "LivingCave",
-                () -> inRift() ? "§a🕷 Living Cave — spooders" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    var mc2 = net.minecraft.client.Minecraft.getInstance();
+                    if (mc2.level == null || mc2.player == null) return null;
+                    int spiders = 0, blobs = 0;
+                    for (var e : mc2.level.entitiesForRendering()) {
+                        if (e.distanceToSqr(mc2.player.position()) > 400) continue;
+                        String nm = e.getName().getString().toLowerCase();
+                        if (nm.contains("spider") || nm.contains("cave")) spiders++;
+                        else if (nm.contains("blobbercyst")) blobs++;
+                    }
+                    return "§a🕷 " + spiders + " spiders §8| §a🫧 " + blobs + " blobs";
+                },
                 HudPosition.of(2, 190), cfg.livingCaveHelper));
         }
         if (cfg.mountainTopHelper) {
             hud.register(new HudWidget("andromeda-mountain", "MountainTop",
-                () -> inRift() ? "§f🏔 Mountain Top" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Mountain") || line.contains("Top")) return "§f🏔 " + line.trim();
+                    return "§f🏔 Mountain Top";
+                },
                 HudPosition.of(2, 198), cfg.mountainTopHelper));
         }
         if (cfg.stillgoreHelper) {
             hud.register(new HudWidget("andromeda-stillgore", "Stillgore",
-                () -> inRift() ? "§8🏰 Stillgore Chateau" : null,
+                () -> {
+                    if (!inRift()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Chateau") || line.contains("Stillgore")) return "§8🏰 " + line.trim();
+                    return "§8🏰 Stillgore";
+                },
                 HudPosition.of(2, 206), cfg.stillgoreHelper));
         }
         if (cfg.colosseumHelper) {
