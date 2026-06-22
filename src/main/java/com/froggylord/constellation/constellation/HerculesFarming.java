@@ -180,15 +180,14 @@ public class HerculesFarming extends BaseConstellation {
                     if (!inGarden()) return null;
                     var tab = com.froggylord.constellation.data.TabList.lines();
                     boolean inSection = false;
-                    StringBuilder sb = new StringBuilder();
                     for (String line : tab) {
-                        if (line.contains("Visitor")) { inSection = true; continue; }
+                        String clean = net.minecraft.ChatFormatting.stripFormatting(line);
+                        if (clean.contains("Visitor") && clean.contains("wants")) { inSection = true; continue; }
                         if (!inSection) continue;
-                        if (line.length() < 5) break;
-                        sb.append("§e").append(line.trim());
-                        break;
+                        if (clean.length() < 3) break;
+                        return "§e👤 " + clean.trim();
                     }
-                    return sb.length() > 0 ? sb.toString() : null;
+                    return null;
                 },
                 HudPosition.of(2, 150), cfg.visitorRequirements));
         }
@@ -236,8 +235,9 @@ public class HerculesFarming extends BaseConstellation {
             hud.register(new HudWidget("hercules-growth", "Growth",
                 () -> {
                     if (!inGarden()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Growth") || line.contains("Stage")) return "§a🌱 " + line.trim();
+                    // crop growth is in tab, not sidebar — SkyHanni reads it from the crop menu
+                    for (String line : com.froggylord.constellation.data.TabList.lines()) {
+                        if (line.contains("Growth") && line.contains("%")) return "§a🌱 " + line.trim();
                     }
                     return null;
                 },
@@ -247,7 +247,8 @@ public class HerculesFarming extends BaseConstellation {
             hud.register(new HudWidget("hercules-contest-timer", "ContestTimer",
                 () -> {
                     if (!inGarden()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                    // garden contest status is in the tab list, not sidebar
+                    for (String line : com.froggylord.constellation.data.TabList.lines()) {
                         if (line.contains("Contest") || line.contains("Jacob")) return "§e🏆 " + line.trim();
                     }
                     return null;
