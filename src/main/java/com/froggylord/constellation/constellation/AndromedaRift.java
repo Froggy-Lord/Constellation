@@ -119,9 +119,15 @@ public class AndromedaRift extends BaseConstellation {
                     long total = life ? com.froggylord.constellation.core.StatStore.getLong("andromeda.enigmaSouls", enigmaSouls) : enigmaSouls;
                     long session = enigmaSouls;
                     // skyhanni-style: show session count, total as secondary
-                    String line = "§5✦ " + session + " this session";
-                    if (life && total > session) line += " §8(" + total + " all-time)";
-                    return line;
+                    // check tab for fraction like "Enigma Souls: 30/52" (live scrape confirmed)
+                    String tabFraction = "";
+                    for (String tl : com.froggylord.constellation.data.TabList.lines()) {
+                        if (tl.contains("Enigma Souls")) {
+                            tabFraction = " §8[" + net.minecraft.ChatFormatting.stripFormatting(tl).replace("Enigma Souls:", "").trim() + "]";
+                            break;
+                        }
+                    }
+                    return "§5✦ " + session + " this session" + (life && total > session ? " §8(" + total + " total)" : "") + tabFraction;
                 },
                 HudPosition.of(2, 160), cfg.enigmaSoulTracker));
         }
@@ -308,6 +314,7 @@ public class AndromedaRift extends BaseConstellation {
     private static int maxRiftSecs = 0;
 
     private static String timeLine() {
+        // primary: sidebar mm:ss (live during play)
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = RIFT_TIME.matcher(line);
             if (m.find()) {
@@ -315,10 +322,16 @@ public class AndromedaRift extends BaseConstellation {
                 int secs = Integer.parseInt(m.group(2));
                 int total = mins * 60 + secs;
                 if (total > maxRiftSecs) maxRiftSecs = total;
-                // colour by urgency — red < 60s, yellow < 5min, cyan otherwise (like skyhanni)
                 String col = total < 60 ? "§c" : total < 300 ? "§e" : "§b";
                 String pct = maxRiftSecs > 0 ? " §7(" + (total * 100 / maxRiftSecs) + "%)" : "";
                 return col + String.format("%d:%02d", mins, secs) + pct;
+            }
+        }
+        // fallback: tab shows "Rift Time Left: 43m" (live scrape confirmed)
+        for (String line : com.froggylord.constellation.data.TabList.lines()) {
+            if (line.contains("Rift Time Left")) {
+                String stripped = net.minecraft.ChatFormatting.stripFormatting(line);
+                return "§b" + stripped.replace("Rift Time Left:", "").trim();
             }
         }
         return null;
