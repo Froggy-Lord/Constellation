@@ -13,4 +13,6 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean thunderHighlight = true;   // box the Thunder boss (cmp. Skyblocker)
     public boolean odgerWaypoint = true;      // waypoint to Odger (cmp. SkyHanni)
     public boolean wormholeLocator = true;    // wormhole chat hints (cmp. Skyblocker)
+    public boolean sharkCounter = true;        // track shark kills (cmp. Skyblocker)
+    public boolean totemTimer = true;          // show time since totem placed (cmp. Skyblocker)
 }

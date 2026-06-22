@@ -27,6 +27,8 @@ public class HydraFishing extends BaseConstellation {
     private static int tBronze = 0, tSilver = 0, tGold = 0, tDiamond = 0;
     private static long goldenFishAt = 0;
     private static long barnOpenAt = 0, barnCloseAt = 0;
+    private static int sharkKills = 0;
+    private static long totemPlacedAt = 0;
 
     // the catches worth stopping for — their names are distinct enough to spot in a chat line
     private static final String[] RARE = {
@@ -106,6 +108,14 @@ public class HydraFishing extends BaseConstellation {
             String s = msg.getString();
             if (s.contains("Sea Creature") || s.contains("sea creature")) seaCreatures++;
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
+            // shark kills — count them
+            if (cfg != null && cfg.sharkCounter && (s.contains("Shark") || s.contains("shark")) && (s.contains("killed") || s.contains("slain")))
+                sharkKills++;
+            // totem timer — track when placed
+            if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("placed") || s.contains("activated")))
+                totemPlacedAt = System.currentTimeMillis();
+            if (cfg != null && cfg.totemTimer && s.contains("Totem") && (s.contains("expired") || s.contains("wore off")))
+                totemPlacedAt = 0;
             // golden fish spawn — start a 60s timer
             if (cfg != null && cfg.goldenFishTimer && s.contains("Golden Fish")) {
                 if (s.contains("appeared") || s.contains("spawned")) goldenFishAt = System.currentTimeMillis();
@@ -201,6 +211,20 @@ public class HydraFishing extends BaseConstellation {
                     return "§c🏚 Barn " + min + ":" + String.format("%02d", sec);
                 },
                 HudPosition.of(50, 110), cfg.barnTimer));
+        }
+        if (cfg.sharkCounter) {
+            hud.register(new HudWidget("hydra-shark", "Sharks",
+                () -> sharkKills > 0 ? "§b🦈 " + sharkKills : null,
+                HudPosition.of(50, 118), cfg.sharkCounter));
+        }
+        if (cfg.totemTimer) {
+            hud.register(new HudWidget("hydra-totem", "Totem",
+                () -> {
+                    if (totemPlacedAt == 0) return null;
+                    long elapsed = System.currentTimeMillis() - totemPlacedAt;
+                    return "§5⏱ Totem " + (elapsed / 60000) + "m ago";
+                },
+                HudPosition.of(50, 126), cfg.totemTimer));
         }
     }
 }
