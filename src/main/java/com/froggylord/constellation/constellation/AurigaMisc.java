@@ -75,7 +75,24 @@ public class AurigaMisc extends BaseConstellation {
         if (cfg.chocolateFactoryHelper) {
             ConstellationClient.tick().every(10, "auriga-choc", AurigaMisc::readChocolate);
         }
+
+        // reforge confirm — real hypixel line on the anvil reforge
+        if (cfg.reforgeHelper) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
+                if (REFORGE.matcher(s).find()) {
+                    reforges++;
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null) mc.player.playSound(net.minecraft.sounds.SoundEvents.ANVIL_USE, 0.4f, 1.4f);
+                }
+            });
+        }
     }
+
+    private static int reforges = 0;
+    private static final java.util.regex.Pattern REFORGE =
+        java.util.regex.Pattern.compile("You reforged your .+ into an? .+!|You applied an? .+ to your .+!");
 
     private static String chocPerSec = null;
     private static final java.util.regex.Pattern CPS =
@@ -106,6 +123,11 @@ public class AurigaMisc extends BaseConstellation {
             hud.register(new HudWidget("auriga-exp", "Experiments",
                 () -> ConstellationClient.loc().onHypixel() ? "§e🧪" : null,
                 HudPosition.of(50, 94), cfg.experimentHelper));
+        }
+        if (cfg.reforgeHelper) {
+            hud.register(new HudWidget("auriga-reforge", "Reforges",
+                () -> reforges == 0 ? null : "§5⚒ " + reforges + " reforged",
+                HudPosition.of(50, 102), cfg.reforgeHelper));
         }
         if (cfg.bingoHelper) {
             hud.register(new HudWidget("auriga-bingo", "Bingo",
