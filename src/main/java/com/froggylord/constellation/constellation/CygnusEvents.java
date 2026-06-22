@@ -36,6 +36,10 @@ public class CygnusEvents extends BaseConstellation {
         java.util.regex.Pattern.compile("at Coords (-?\\d+) (-?\\d+) (-?\\d+)");
     private static double inqX = Double.NaN, inqY, inqZ;
     private static long inqSetAt = 0;
+    private static final java.util.regex.Pattern BURROW_CHAIN =
+        java.util.regex.Pattern.compile("(?:dug out a Griffin Burrow|finished the Griffin burrow chain)!? \\((\\d+)/(\\d+)\\)");
+    private static int chainIdx = 0, chainLen = 0;
+    private static long chainAt = 0;
     
     private static final String[] MYTHOS = {
         "Griffin Feather", "Crown of Greed", "Washed-up Souvenir", "Daedalus Stick",
@@ -88,6 +92,9 @@ public class CygnusEvents extends BaseConstellation {
             if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
                 for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; com.froggylord.constellation.core.StatStore.add("cygnus.diana.drops", 1); break; } }
             }
+            // burrow chain x/y — real hypixel line gives the running count
+            var bc = BURROW_CHAIN.matcher(s);
+            if (bc.find()) { chainIdx = Integer.parseInt(bc.group(1)); chainLen = Integer.parseInt(bc.group(2)); chainAt = System.currentTimeMillis(); }
             
             if (cfg.dianaBurrowWaypoints && s.contains("The Spade points")) {
                 String low = s.toLowerCase(java.util.Locale.ROOT);
@@ -199,6 +206,14 @@ public class CygnusEvents extends BaseConstellation {
                     return "§5⚔ " + inq + " §7| §6drops §f" + drops + (life ? " §8(all-time)" : "");
                 },
                 HudPosition.of(2, 138), cfg.dianaDropTracker));
+        }
+        if (cfg.dianaBurrowGuesser) {
+            hud.register(new HudWidget("cygnus-chain", "Chain",
+                () -> {
+                    if (chainLen == 0 || System.currentTimeMillis() - chainAt > 30_000) return null;
+                    return "§6🔗 burrow " + chainIdx + "/" + chainLen;
+                },
+                HudPosition.of(2, 130), cfg.dianaBurrowGuesser));
         }
         if (cfg.newYearCakeTracker) {
             hud.register(new HudWidget("cygnus-cake", "NewYear",
