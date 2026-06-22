@@ -193,6 +193,18 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 106), cfg.inventoryValueHud));
         }
+        if (cfg.essenceShopHelper) {
+            hud.register(new HudWidget("lyra-essence", "Essence",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Essence") || line.contains("Wither Essence") || line.contains("Undead Essence"))
+                            return "§d✦ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 114), cfg.essenceShopHelper));
+        }
     }
 
     @Override
