@@ -237,6 +237,28 @@ public class HerculesFarming extends BaseConstellation {
                 () -> inGarden() ? "§a🌿 Greenhouse active" : null,
                 HudPosition.of(2, 184), cfg.greenhouseHelper));
         }
+        if (cfg.cropGrowthDisplay) {
+            hud.register(new HudWidget("hercules-growth", "Growth",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Growth") || line.contains("Stage")) return "§a🌱 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 192), cfg.cropGrowthDisplay));
+        }
+        if (cfg.farmingContestTimer) {
+            hud.register(new HudWidget("hercules-contest-timer", "ContestTimer",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Contest") || line.contains("Jacob")) return "§e🏆 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 200), cfg.farmingContestTimer));
+        }
     }
 
     private static boolean inGarden() {

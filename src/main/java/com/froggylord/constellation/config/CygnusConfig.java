@@ -26,4 +26,7 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean eventNotificationHud = true;   // upcoming event countdown (cmp. Skyblocker)
     public boolean carnivalScoreTracker = true;   // track carnival minigame scores (cmp. Skyblocker)
     public boolean lobbySeasonalDecorations = true; // lobby event waypoints (cmp. Skyblocker)
+    public boolean spookyCandyHelper = true;      // highlight best candy spots (cmp. Skyblocker)
+    public boolean winterGiftTracker = true;       // track winter gifts opened (cmp. Skyblocker)
+    public boolean harvestFestivalHelper = true;   // Harvest Festival farming hints (cmp. Skyblocker)
 }

@@ -23,4 +23,7 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean fishingRodTimerHud = true;   // colour-change at 20s mark (cmp. Skyblocker)
     public boolean baitWarningsHud = true;       // warn when bait is low/wrong (cmp. Skyblocker)
     public boolean lavaFishingTimer = true;       // timer since last lava cast (cmp. Skyblocker)
+    public boolean seaCreatureHealthOverlay = true; // show SC health bar in world (cmp. Skyblocker)
+    public boolean fishingAchievementsHelper = true; // track fishing achievements (cmp. Skyblocker)
+    public boolean hotspotRadarGuesser = true;    // guess hotspot from nearby players (cmp. Skyblocker)
 }
