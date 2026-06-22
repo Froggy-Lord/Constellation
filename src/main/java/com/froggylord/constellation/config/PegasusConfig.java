@@ -6,4 +6,5 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean autoRejoin = true;
     public boolean trackParty = true;
     public boolean partyMembersHud = false;
+    public boolean carryMode = false; // track !paid commands + carry ledger
 }

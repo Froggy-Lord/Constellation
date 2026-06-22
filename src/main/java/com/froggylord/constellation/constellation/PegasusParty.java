@@ -24,10 +24,23 @@ public class PegasusParty extends BaseConstellation {
 
     private PegasusConfig cfg;
 
+    private static final java.util.Map<String, Integer> carryLedger = new java.util.LinkedHashMap<>();
+
     @Override
     public void init(InitContext ctx) {
         cfg = (PegasusConfig) getConfig();
         if (cfg != null && cfg.trackParty) PartyTracker.init();
+        if (cfg != null && cfg.carryMode) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                // "!paid" or "!paid <player>" or "/pc !paid <name>"
+                if (s.contains("!paid") || s.contains("paid")) {
+                    var m = java.util.regex.Pattern.compile("!?paid\\s+(\\w{2,16})").matcher(s);
+                    if (m.find()) carryLedger.merge(m.group(1), 1, Integer::sum);
+                }
+            });
+        }
     }
 
     @Override
@@ -51,6 +64,11 @@ public class PegasusParty extends BaseConstellation {
                 },
                 HudPosition.of(2, 118), cfg.partyMembersHud));
         }
+        if (cfg.carryMode) {
+            hud.register(new HudWidget("pegasus-carry", "Carry",
+                () -> carryLedger.isEmpty() ? null : "§6💰 " + carryLedger.size() + " paid",
+                HudPosition.of(2, 126), cfg.carryMode));
+        }
     }
 
     @Override
@@ -68,6 +86,20 @@ public class PegasusParty extends BaseConstellation {
                 .executes(ctx -> {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) mc.player.connection.sendCommand("p list");
+                    return 1;
+                }));
+        dispatcher.register(
+            LiteralArgumentBuilder.<FabricClientCommandSource>literal("carry")
+                .executes(ctx -> {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player == null) return 0;
+                    if (carryLedger.isEmpty()) {
+                        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§7No carry payments recorded"));
+                    } else {
+                        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§6=== Carry Ledger ==="));
+                        for (var e : carryLedger.entrySet())
+                            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e" + e.getKey() + " §7- §6" + e.getValue() + "m"));
+                    }
                     return 1;
                 }));
     }
