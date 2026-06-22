@@ -171,9 +171,8 @@ public class OrionDungeons extends BaseConstellation {
             if (cfg == null || !cfg.dungeonCopilot || !ConstellationClient.loc().inDungeons()) return;
             var mc2 = Minecraft.getInstance();
             if (mc2.player == null) return;
-            var score = com.froggylord.constellation.data.DungeonScore;
-            int s = score.score();
-            String grade = score.grade();
+            int s = com.froggylord.constellation.data.DungeonScore.score();
+            String grade = com.froggylord.constellation.data.DungeonScore.grade();
             if (s >= 270) mc2.player.sendSystemMessage(Component.literal("§a✦ Copilot: Score is " + s + " (" + grade + ") — looking good!"));
             else if (s >= 230) mc2.player.sendSystemMessage(Component.literal("§e✦ Copilot: " + s + " — find more secrets for S+"));
             else mc2.player.sendSystemMessage(Component.literal("§c✦ Copilot: " + s + " — need secrets + crypts for higher score"));

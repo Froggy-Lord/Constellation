@@ -16,4 +16,6 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean vampireHelper = true;          // Vampire Slayer boss hints (cmp. Skyblocker)
     public boolean endermanHelper = true;          // Enderman Slayer beacon/laser hints (cmp. Skyblocker)
     public boolean blazeHelper = true;             // Blaze Slayer attunement hints (cmp. Skyblocker)
+    public boolean spawnAlertTitle = true;          // title ping on boss spawn (cmp. SBA)
+    public boolean minibossFlash = true;            // flash screen on miniboss spawn (cmp. SBA)
 }

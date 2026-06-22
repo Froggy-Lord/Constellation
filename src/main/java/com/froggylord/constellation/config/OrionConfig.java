@@ -108,6 +108,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
     public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
     public boolean m7DragonMarkers = true;    // highlight M7 dragon priority (cmp. Skyblocker M7Dragons)
-    public boolean dungeonCopilot = true;     // suggest next action in dungeon run (cmp. Skyblocker DungeonCopilot)
     public boolean secretChimeCustom = true;  // custom sound on secret collection (cmp. Skyblocker)
 }

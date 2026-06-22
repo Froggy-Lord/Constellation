@@ -95,7 +95,13 @@ public class PerseusSlayers extends BaseConstellation {
             // Mini-boss spawn
             if (s.contains(" spawned") && (s.contains("Revenant") || s.contains("Tarantula") || s.contains("Sven") || s.contains("Voidgloom") || s.contains("Inferno"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
-                if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss! " + s.trim()));
+                if (mc.player != null) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss! " + s.trim()));
+                    if (cfg.minibossFlash) {
+                        mc.gui.hud.resetTitleTimes();
+                        mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss!"));
+                    }
+                }
             }
             // Skill level-up — title ping
             if (cfg.skillLevelUpAlert && (s.contains("LEVEL UP") || s.contains("level up") || s.contains("Skill Level Up"))) {
