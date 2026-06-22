@@ -7,4 +7,6 @@ public class HerculesConfig extends BaseConfigGroup {
 
     public boolean contestHud = true;
     public boolean visitorsHud = false;
+    public boolean pestHud = true;
+    public boolean pestAlert = true;
 }
