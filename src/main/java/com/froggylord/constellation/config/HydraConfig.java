@@ -10,4 +10,7 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean trophyFishTracker = true;
     public boolean goldenFishTimer = true;  // timer since last golden fish (cmp. Skyblocker)
     public boolean barnTimer = true;         // barn fishing timer (cmp. Skyblocker)
+    public boolean thunderHighlight = true;   // box the Thunder boss (cmp. Skyblocker)
+    public boolean odgerWaypoint = true;      // waypoint to Odger (cmp. SkyHanni)
+    public boolean wormholeLocator = true;    // wormhole chat hints (cmp. Skyblocker)
 }

@@ -58,6 +58,20 @@ public class HydraFishing extends BaseConstellation {
                     && h.getPlayerOwner() != mc.player) h.setInvisible(true);
             }
         });
+        // Thunder entity highlight — rare SC, box it in the water
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.thunderHighlight || !ConstellationClient.loc().onHypixel()) return;
+            var mc = Minecraft.getInstance();
+            if (mc.level == null) return;
+            for (var e : mc.level.entitiesForRendering()) {
+                var name = e.getCustomName();
+                if (name != null && name.getString().contains("Thunder")) {
+                    wctx.outline(e.getBoundingBox().inflate(0.3), 0xFFFFFF00, true);
+                    wctx.label(e.position().add(0, e.getBbHeight() + 0.5, 0), "⚡ Thunder", 0xFFFFFF00, true);
+                }
+            }
+        });
+
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || !ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
