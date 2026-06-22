@@ -20,7 +20,7 @@ public class AndromedaRift extends BaseConstellation {
 
     @Override public String id() { return "andromeda"; }
     @Override public String displayName() { return "Andromeda"; }
-    @Override public String description() { return "The Rift — time tracker, enigma souls, effigies"; }
+    @Override public String description() { return "rift hud"; }
 
     // "Rift Time: 12:34" or just "Time: 12:34" on rift islands
     private static final Pattern RIFT_TIME = Pattern.compile("(?:Rift|⏣ )Time:?\\s*(\\d+):(\\d+)");

@@ -21,7 +21,7 @@ public class HerculesFarming extends BaseConstellation {
 
     @Override public String id() { return "hercules"; }
     @Override public String displayName() { return "Hercules"; }
-    @Override public String description() { return "Farming — contests, visitors, garden helpers"; }
+    @Override public String description() { return "farming/garden hud"; }
 
     private static final Pattern CONTEST = Pattern.compile("(?<crop>[A-Za-z ]+):?\\s*(?<pct>\\d+(?:\\.\\d+)?%|DONE)");
     private static final Pattern VISITORS = Pattern.compile("Visitors:?\\s*(\\d+)");

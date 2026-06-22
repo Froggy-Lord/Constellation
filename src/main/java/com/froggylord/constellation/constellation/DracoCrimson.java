@@ -20,7 +20,7 @@ public class DracoCrimson extends BaseConstellation {
 
     @Override public String id() { return "draco"; }
     @Override public String displayName() { return "Draco"; }
-    @Override public String description() { return "Crimson Isle — reputation, Kuudra, Dojo"; }
+    @Override public String description() { return "crimson isle stuff"; }
 
     private static final Pattern REP = Pattern.compile("(Barbarian|Mage) Reputation:?\\s*([\\d,]+)");
     private static final Pattern DOJO = Pattern.compile("Dojo:.*?(\\d+).*");

@@ -20,7 +20,7 @@ public class CygnusEvents extends BaseConstellation {
 
     @Override public String id() { return "cygnus"; }
     @Override public String displayName() { return "Cygnus"; }
-    @Override public String description() { return "Events — calendar, Diana, mayor, seasonal"; }
+    @Override public String description() { return "event calendar and diana"; }
 
     private static final Pattern DATE = Pattern.compile("((?:Early|Late) )?(Spring|Summer|Autumn|Winter) (\\d+)(?:st|nd|rd|th)");
     private static final Pattern TIME = Pattern.compile("(\\d{1,2}:\\d{2})(am|pm)");

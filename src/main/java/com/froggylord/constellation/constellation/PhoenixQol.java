@@ -14,7 +14,7 @@ public class PhoenixQol extends BaseConstellation {
 
     @Override public String id() { return "phoenix"; }
     @Override public String displayName() { return "Phoenix"; }
-    @Override public String description() { return "Quality of Life — fullbright, hide annoyances, smooth gameplay"; }
+    @Override public String description() { return "qol tweaks"; }
 
     @Override
     public void init(InitContext ctx) {

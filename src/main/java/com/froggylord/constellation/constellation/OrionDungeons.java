@@ -19,7 +19,7 @@ public class OrionDungeons extends BaseConstellation {
 
     @Override public String id() { return "orion"; }
     @Override public String displayName() { return "Orion"; }
-    @Override public String description() { return "Dungeons — room detection, HUD, secrets, map, routes"; }
+    @Override public String description() { return "dungeon stuff"; }
 
     private OrionConfig cfg;
     private boolean wasInDungeon = false;
@@ -57,11 +57,11 @@ public class OrionDungeons extends BaseConstellation {
         // F5/M5 Livid finder — hide wrong clones, box real one by HP
         LividFinder.init();
 
-        // secret waypoints — colour-coded boxes for the current room's secrets
+        // waypoint renderer
         ConstellationClient.world().register(SecretWaypoints::draw);
-        // secret routes — walk path + typed action markers (takes over waypoints in routed rooms)
+        // routes, takes over waypoints
         ConstellationClient.world().register(Routes::draw);
-        // combat esp — starred mobs + secret bats (depth-tested)
+        // combat highlights
         ConstellationClient.world().register(CombatEsp::draw);
         // F3/M3 blaze puzzle — mark lowest + highest health blaze
         ConstellationClient.world().register(BlazeSolver::draw);
@@ -87,7 +87,7 @@ public class OrionDungeons extends BaseConstellation {
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
 
-        // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
+        // score chat reader. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
             if (!overlay && ConstellationClient.loc().inDungeons()) {

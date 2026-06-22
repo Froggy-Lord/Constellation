@@ -14,14 +14,14 @@ public class ApolloHud extends BaseConstellation {
 
     @Override public String id() { return "apollo"; }
     @Override public String displayName() { return "Apollo"; }
-    @Override public String description() { return "Core HUD — info overlays, scoreboard, tab list"; }
+    @Override public String description() { return "hud overlay stuff"; }
 
     private static int tps = 20;
     private static long lastReal = 0, lastGameTime = 0;
 
     @Override
     public void init(InitContext ctx) {
-        // compact damage numbers — strip trailing zeros from chat damage lines
+        // make dmg numbers smaller
         ApolloConfig cfg2 = (ApolloConfig) getConfig();
         if (cfg2 != null && cfg2.compactDamage) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
@@ -35,7 +35,7 @@ public class ApolloHud extends BaseConstellation {
                 return message;
             });
         }
-        // estimate server TPS: how fast world game-time advances against the wall clock
+        // tps guesser
         ConstellationClient.tick().every(20, "apollo-tps", () -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.level == null) { lastReal = 0; return; }

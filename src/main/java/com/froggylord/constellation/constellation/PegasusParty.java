@@ -20,7 +20,7 @@ public class PegasusParty extends BaseConstellation {
 
     @Override public String id() { return "pegasus"; }
     @Override public String displayName() { return "Pegasus"; }
-    @Override public String description() { return "Party — /rp reparty, triggers, carry mode"; }
+    @Override public String description() { return "party commands"; }
 
     private PegasusConfig cfg;
 

@@ -24,7 +24,7 @@ public class AquilaMining extends BaseConstellation {
 
     @Override public String id() { return "aquila"; }
     @Override public String displayName() { return "Aquila"; }
-    @Override public String description() { return "Mining — powder, commissions, Crystal Hollows"; }
+    @Override public String description() { return "mining hud"; }
 
     private static final Pattern POWDER = Pattern.compile("(Mithril|Gemstone|Glacite) Powder:?\\s*([\\d,]+)");
     private static final Pattern COMMISSION = Pattern.compile("(?<name>[A-Za-z ]+?): (?<val>\\d+(?:\\.\\d+)?%|DONE)");
@@ -385,7 +385,7 @@ public class AquilaMining extends BaseConstellation {
             || a == SkyblockArea.GLACITE_TUNNELS || a == SkyblockArea.GLACITE_MINESHAFT;
     }
 
-    /** All powder types from the sidebar. */
+    /** powder from sidebar. */
     private static String powderLine() {
         String mithril = null, gemstone = null, glacite = null;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
@@ -406,7 +406,7 @@ public class AquilaMining extends BaseConstellation {
         return sb.toString();
     }
 
-    /** Active commissions + progress from the tab list. */
+    /** commissions from tab. */
     private static String commissionLine() {
         List<String> tab = TabList.lines();
         boolean inSection = false;

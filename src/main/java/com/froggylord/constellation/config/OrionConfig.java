@@ -64,41 +64,41 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean streamerMode = false;
     public boolean rareDropAlerts = true;
 
-    // terminal solvers (F7/M7 phase 3) — highlight only, never auto-click
+    // f7/m7 term solvers, highlight only
     public boolean terminalSolvers = true;
     public boolean terminalNumbers = true;
     public boolean blockWrongTerminalClicks = false;
 
-    // F3/M3 blaze puzzle — box lowest + highest HP blaze, number the rest
+    // blaze room
     public boolean blazeSolver = true;
 
-    // dungeon blessings picked up this run
+    // blessing levels
     public boolean blessingDisplay = true;
     public boolean spiritLeapHelperMenu = true;
 
-    // box useful dropped items on the floor (spirit leap, decoy, training weights...)
+    // drop items on floor
     public boolean dropEsp = true;
 
-    // puzzle solvers — Simon Says, Three Weirdos, Trivia, Creeper Beams
+    // puzzle solvers
     public boolean simonSaysSolver = true;
     public boolean threeWeirdosSolver = true;
     public boolean triviaSolver = true;
     public boolean creeperBeamsSolver = true;
 
-    // F5/M5 Livid fight — show only the real clone, hide the 8 fakes
+    // livid fight (f5/m5)
     public boolean lividFinder = true;
 
-    // TicTacToe solver (F7/M7) — minimax best move
+    // ttt solver
     public boolean ticTacToeSolver = true;
 
-    // Fire Freeze staff cooldown timer (shows 5.7s countdown)
+    // ff staff timer
     public boolean fireFreezeTimer = true;
 
-    // F3/M3 Guardian health display and Shadow Assassin warning
+    // guardian hp + sa warn
     public boolean guardianHealth = true;
     public boolean shadowAssassinAlert = true;
 
-    // miniboss highlights + rare room alerts
+    // miniboss boxes + rare rooms
     public boolean minibossHighlights = true;
     public boolean rareRoomAlerts = true;
     public boolean mageBeamCleaner = true; // clean line instead of firework particles (cmp. Skyblocker MageBeamRenderer)
@@ -108,12 +108,12 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
     public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
     public boolean m7DragonMarkers = true;    // highlight M7 dragon priority (cmp. Skyblocker M7Dragons)
-    public boolean secretChimeCustom = true;  // custom sound on secret collection (cmp. Skyblocker)
+    public boolean secretChimeCustom = true;  // custom secret chime (cmp. Skyblocker)
     public boolean waterboardSolver = true;    // highlight water puzzle gates (cmp. Odin waterSolutions)
     public boolean iceFillSolver = true;       // show ice fill path (cmp. Odin iceFillFloors)
     public boolean teleportMazeSolver = true;  // highlight correct teleport pad (cmp. Skyblocker)
     public boolean silverfishSolver = true;    // highlight silverfish BFS path (cmp. Skyblocker)
-    public boolean lightsOnSolver = true;     // Lights On puzzle highlight (cmp. Skyblocker)
-    public boolean arrowAlignSolver = true;    // Arrow Align direction hint (cmp. Skyblocker)
-    public boolean targetPracticeSolver = true; // Target Practice shot guide (cmp. Skyblocker)
+    public boolean lightsOnSolver = true;     // lights on puzzle (cmp. Skyblocker)
+    public boolean arrowAlignSolver = true;    // arrow align (cmp. Skyblocker)
+    public boolean targetPracticeSolver = true; // target practice (cmp. Skyblocker)
 }

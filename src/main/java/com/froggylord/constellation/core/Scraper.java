@@ -27,12 +27,7 @@ import java.time.Instant;
 import java.util.*;
 
 /**
- * On-demand data scrapers that dump game state to JSON files. Run one before/after
- * entering a room, opening a GUI, or triggering a chat event, and the captured data
- * shows exactly what the mod sees — sidebar patterns, tab layouts, entity names,
- * GUI slot contents, map pixels etc.
- *
- * Usage: /cn scrape <mode>
+ * // /cn scrape <mode> dumps game data to json files for debugging
  *   sidebar   — current sidebar lines
  *   tab       — current tab list lines
  *   entities  — all entities within 50 blocks (name, type, pos, hp, bb)
@@ -66,12 +61,12 @@ public final class Scraper {
 
     public static void init() {
         try { Files.createDirectories(DIR); } catch (Exception ignored) {}
-        // chat recorder — feeds from GAME events while recording is active
+        // record chat for /cn scrape chat
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!recording) return;
             chatBuffer.add((overlay ? "[overlay] " : "") + msg.getString());
         });
-        // auto-scrape: log ALL chat to a running file
+        // log all chat to a file
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!autoScrape) return;
             try {
@@ -81,7 +76,7 @@ public final class Scraper {
                 chatLogWriter.flush();
             } catch (Exception ignored) {}
         });
-        // auto-scrape: dump sidebar on change
+        // dump sidebar when it changes
         ConstellationClient.tick().every(100, "autoscrape-sidebar", () -> {
             if (!autoScrape) return;
             if (!ConstellationClient.loc().onHypixel()) return;
@@ -101,7 +96,7 @@ public final class Scraper {
                 }
             }
         });
-        // auto-scrape: dump GUI on open
+        // dump gui slots on open
         ConstellationClient.tick().every(10, "autoscrape-gui", () -> {
             if (!autoScrape) return;
             var mc = Minecraft.getInstance();
@@ -115,7 +110,7 @@ public final class Scraper {
                 lastGuiTitle = "";
             }
         });
-        // auto-scrape: dump action bar on significant change
+        // dump actionbar when hp/mana changes a lot
         ConstellationClient.tick().every(40, "autoscrape-actionbar", () -> {
             if (!autoScrape) return;
             int h = ActionBar.health(), m = ActionBar.mana();

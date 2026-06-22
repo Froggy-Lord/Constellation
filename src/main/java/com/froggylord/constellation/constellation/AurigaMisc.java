@@ -17,7 +17,7 @@ public class AurigaMisc extends BaseConstellation {
 
     @Override public String id() { return "auriga"; }
     @Override public String displayName() { return "Auriga"; }
-    @Override public String description() { return "Experiments — helpers, enchanting, minions"; }
+    @Override public String description() { return "experiments n stuff"; }
 
     @Override
     public void registerCommands(com.mojang.brigadier.CommandDispatcher<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource> dispatcher) {

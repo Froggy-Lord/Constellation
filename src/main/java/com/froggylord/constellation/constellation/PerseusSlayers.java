@@ -19,7 +19,7 @@ public class PerseusSlayers extends BaseConstellation {
 
     @Override public String id() { return "perseus"; }
     @Override public String displayName() { return "Perseus"; }
-    @Override public String description() { return "Slayers — XP bar, boss timer (TBD)"; }
+    @Override public String description() { return "slayer hud and alerts"; }
 
     private static final Pattern SLAYER_XP = Pattern.compile("Slayer XP:?\\s*([\\d,]+)");
     private static final Pattern RNG = Pattern.compile("RNG Meter.*?([\\d.]+)%");

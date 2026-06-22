@@ -18,7 +18,7 @@ public class HydraFishing extends BaseConstellation {
 
     @Override public String id() { return "hydra"; }
     @Override public String displayName() { return "Hydra"; }
-    @Override public String description() { return "Fishing — sea creatures, cast timer, trophy fish"; }
+    @Override public String description() { return "fishing alerts + timers"; }
 
     private static long castAt = 0;
     private static int seaCreatures = 0;

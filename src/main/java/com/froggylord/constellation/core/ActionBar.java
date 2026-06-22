@@ -7,10 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parses the SkyBlock action bar (health / mana / defense). On Hypixel the vanilla health bar
- * is meaningless — the real numbers live in the action bar overlay text — so anything that
- * needs your actual health reads it from here. Shared across constellations (dungeon low-health
- * alerts, the Apollo stat bars, etc).
+ * // reads hp/mana/defense from the action bar overlay
  */
 public final class ActionBar {
 
@@ -81,7 +78,7 @@ public final class ActionBar {
     public static int defense() { return defense; }
     public static int overflowMana() { return overflowMana; }
 
-    /** health scaled by defense — the hits you can actually eat. */
+    /** // ehp = hp * (1 + def/100) */
     public static int effectiveHealth() { return (int) Math.round(health * (1.0 + defense / 100.0)); }
 
     public static boolean hasSkill() { return !skillName.isEmpty() && System.currentTimeMillis() - lastSkillAt < 4000; }

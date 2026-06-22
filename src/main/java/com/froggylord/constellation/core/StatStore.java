@@ -11,10 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * A tiny persistent key/number store that survives across sessions and profiles. Trackers that
- * want a lifetime total (slayer PB, kill counts, profit) write here instead of (or alongside) an
- * in-memory session counter. Backed by config/constellation-stats.json, flushed on a debounce so
- * a busy counter doesn't hammer the disk.
+ * // saves stuff to config/constellation-stats.json so it survives restarts
  */
 public final class StatStore {
 
@@ -29,7 +26,7 @@ public final class StatStore {
 
     public static void init() {
         load();
-        // flush every 5s if something changed, and once more on the way out
+        // save every 5s + on shutdown
         ConstellationClient.tick().every(100, "statstore-flush", StatStore::flush);
         Runtime.getRuntime().addShutdownHook(new Thread(StatStore::saveNow, "constellation-stats-save"));
     }
@@ -86,7 +83,7 @@ public final class StatStore {
         dirty = true;
     }
 
-    /** add delta to a running total, returns the new value. */
+    /** // add to a counter. */
     public static synchronized long add(String key, long delta) {
         long v = getLong(key, 0) + delta;
         putLong(key, v);
@@ -99,14 +96,14 @@ public final class StatStore {
         return v;
     }
 
-    /** keep the smallest value seen (best time). returns the stored best. */
+    /** // keep the best (smallest). */
     public static synchronized long recordBest(String key, long candidate) {
         long cur = getLong(key, Long.MAX_VALUE);
         if (candidate < cur) { putLong(key, candidate); return candidate; }
         return cur;
     }
 
-    /** keep the largest value seen (high score). returns the stored max. */
+    /** // keep highest score. */
     public static synchronized long recordMax(String key, long candidate) {
         long cur = getLong(key, Long.MIN_VALUE);
         if (candidate > cur) { putLong(key, candidate); return candidate; }

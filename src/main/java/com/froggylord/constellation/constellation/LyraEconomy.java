@@ -25,7 +25,7 @@ public class LyraEconomy extends BaseConstellation {
 
     @Override public String id() { return "lyra"; }
     @Override public String displayName() { return "Lyra"; }
-    @Override public String description() { return "Economy — purse, coin tracker, bits"; }
+    @Override public String description() { return "coin/purse stuff"; }
 
     private static final Pattern PURSE = Pattern.compile("(?:Purse|Piggy):\\s*([\\d,]+)");
     private static final Pattern BITS = Pattern.compile("Bits:\\s*([\\d,]+)");
