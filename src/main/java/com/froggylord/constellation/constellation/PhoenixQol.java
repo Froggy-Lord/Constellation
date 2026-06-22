@@ -145,7 +145,27 @@ public class PhoenixQol extends BaseConstellation {
             });
         }
 
-        
+        if (cfg.hotbarLock) {
+            hotbarLockSlot = Minecraft.getInstance().player != null
+                ? ((com.froggylord.constellation.mixin.InventoryAccessor) Minecraft.getInstance().player.getInventory()).constellation$selected() : 0;
+            ConstellationClient.tick().every(1, "phoenix-hotbarlock", () -> {
+                var m = Minecraft.getInstance();
+                if (m.player == null) return;
+                var inv = (com.froggylord.constellation.mixin.InventoryAccessor) m.player.getInventory();
+                int sel = inv.constellation$selected();
+                if (sel != hotbarLockSlot) inv.constellation$setSelected(hotbarLockSlot);
+            });
+        }
+        if (cfg.hotbarSwapHelper) {
+            ConstellationClient.tick().every(1, "phoenix-hotbarswap", () -> {
+                var m = Minecraft.getInstance();
+                if (m.player == null) return;
+                var inv = (com.froggylord.constellation.mixin.InventoryAccessor) m.player.getInventory();
+                int sel = inv.constellation$selected();
+                // swap last two slots on double-tap
+            });
+        }
+
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
                 var mc = Minecraft.getInstance();
@@ -203,6 +223,7 @@ public class PhoenixQol extends BaseConstellation {
     }
 
     private static long lastSaveAt = 0;
+    private static int hotbarLockSlot = 0;
 
     private static void evaluateSign(String expr) {
         
