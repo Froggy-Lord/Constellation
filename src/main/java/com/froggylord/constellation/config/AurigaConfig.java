@@ -26,4 +26,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean cosmeticHelper = true;
     public boolean hexHelper = true;
     public boolean ultimateEnchantDisplay = true;
+    public boolean dungeonJournalHelper = true;
+    public boolean carnivalUpgradeHelper = true;
 }
