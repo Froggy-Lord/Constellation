@@ -68,4 +68,7 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean terminalSolvers = true;
     public boolean terminalNumbers = true;
     public boolean blockWrongTerminalClicks = false;
+
+    // F3/M3 blaze puzzle — box lowest + highest HP blaze, number the rest
+    public boolean blazeSolver = true;
 }
