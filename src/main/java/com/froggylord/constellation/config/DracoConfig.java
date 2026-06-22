@@ -22,5 +22,7 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean heavyPearlsTracker = true;  
     public boolean magmafishCounter = true;     
     public boolean trophyBestDisplay = true;    
-    public boolean bladeVolcanoTimer = true;    
+    public boolean bladeVolcanoTimer = true;
+    public boolean trophyDetailHud = true;
+    public boolean kuudraStunHelper = true;
 }
