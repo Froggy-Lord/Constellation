@@ -24,5 +24,7 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean lavaFishingTimer = true;       
     public boolean seaCreatureHealthOverlay = true; 
     public boolean fishingAchievementsHelper = true; 
-    public boolean hotspotRadarGuesser = true;    // hotspot guess (cmp. skyblocker)
+    public boolean hotspotRadarGuesser = true;
+    public boolean chumBucketTimer = true;
+    public boolean seaCreatureRarityDisplay = true;
 }
