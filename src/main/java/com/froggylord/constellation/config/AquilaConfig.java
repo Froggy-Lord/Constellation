@@ -7,4 +7,7 @@ public class AquilaConfig extends BaseConfigGroup {
 
     public boolean powderHud = true;
     public boolean commissionHud = true;
+    public boolean coldWarning = true;   // title pings at cold thresholds (no vignette)
+    public boolean coldHud = true;
+    public boolean mineshaftAlert = true;
 }
