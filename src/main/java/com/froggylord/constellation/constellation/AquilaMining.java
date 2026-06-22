@@ -20,9 +20,11 @@ public class AquilaMining extends BaseConstellation {
     @Override public String displayName() { return "Aquila"; }
     @Override public String description() { return "mining hud"; }
 
-    private static final Pattern POWDER = Pattern.compile("(Mithril|Gemstone|Glacite) Powder:?\\s*([\\d,]+)");
+    // live tab data: "Mithril: 2,684,037" — no "Powder" word between
+    private static final Pattern POWDER = Pattern.compile("(Mithril|Gemstone|Glacite):?\\s*([\\d,]+)");
     private static final Pattern COMMISSION = Pattern.compile("(?<name>[A-Za-z ]+?): (?<val>\\d+(?:\\.\\d+)?%|DONE)");
-    private static final Pattern FORGE = Pattern.compile("(?<slot>\\d+)\\. (?<item>.+): (?<time>\\d+h|\\d+m|\\d+s|Ready!)");
+    // live tab data: "1) EMPTY" — parens not dot
+    private static final Pattern FORGE = Pattern.compile("(?<slot>\\d+)\\)\\s*(?<item>.+):\\s*(?<time>\\d+h|\\d+m|\\d+s|Ready!)");
     private static final Pattern COMPASS = Pattern.compile("Wishing Compass:?\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)");
     private static final Pattern FUEL = Pattern.compile("Fuel:?\\s*(\\d+\\.?\\d*)/(\\d+\\.?\\d*)k?");
     private static final Pattern COLD = Pattern.compile("Cold:?\\s*-?(\\d+)");
@@ -462,11 +464,17 @@ public class AquilaMining extends BaseConstellation {
             || a == SkyblockArea.GLACITE_TUNNELS || a == SkyblockArea.GLACITE_MINESHAFT;
     }
 
+    // live tab data: "Powders:" section → "Mithril: 2,684,037" etc
     private static String powderLine() {
+        var tab = TabList.lines();
+        boolean inSection = false;
         String mithril = null, gemstone = null, glacite = null;
-        for (String line : ConstellationClient.loc().getSidebarLines()) {
+        for (String line : tab) {
+            if (line.startsWith("Powders")) { inSection = true; continue; }
+            if (!inSection) continue;
+            if (line.length() < 3) break;
             Matcher m = POWDER.matcher(line);
-            if (!m.find()) continue;
+            if (!m.find()) break;
             switch (m.group(1)) {
                 case "Mithril" -> mithril = m.group(2);
                 case "Gemstone" -> gemstone = m.group(2);
