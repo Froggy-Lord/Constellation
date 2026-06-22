@@ -362,6 +362,15 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("sacks"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("potionbag")
             .executes(ctx -> { sendCmd("potionbag"); return 1; }));
+        // NoFrills-style sack filler commands
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getpearls")
+            .executes(ctx -> { sendCmd("gfs ender_pearl 16"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getleaps")
+            .executes(ctx -> { sendCmd("gfs spirit_leap 16"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getboom")
+            .executes(ctx -> { sendCmd("gfs superboom_tnt 16"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getdraft")
+            .executes(ctx -> { sendCmd("gfs architects_draft 1"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
             .executes(ctx -> { sendCmd("storage"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("bz")
