@@ -29,6 +29,7 @@ public class AndromedaRift extends BaseConstellation {
     private AndromedaConfig cfg;
 
     private static int enigmaSouls = 0;
+    private static int effigies = 0;
     private static long lowTimeAt = 0;
 
     @Override
@@ -40,6 +41,10 @@ public class AndromedaRift extends BaseConstellation {
             if (cfg.enigmaSoulTracker && s.contains("SOUL!") && s.contains("Enigma Soul")) {
                 enigmaSouls++;
                 com.froggylord.constellation.core.StatStore.add("andromeda.enigmaSouls", 1);
+            }
+            if (cfg.effigyTracker && s.contains("Effigy") && (s.contains("found") || s.contains("collected"))) {
+                effigies++;
+                com.froggylord.constellation.core.StatStore.add("andromeda.effigies", 1);
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
@@ -90,6 +95,11 @@ public class AndromedaRift extends BaseConstellation {
                     return n > 0 ? "§5✦ " + n + " souls" + (life ? " §8(all-time)" : "") : null;
                 },
                 HudPosition.of(2, 160), cfg.enigmaSoulTracker));
+        }
+        if (cfg.effigyTracker) {
+            hud.register(new HudWidget("andromeda-effigy", "Effigies",
+                () -> (inRift() && effigies > 0) ? "§4☠ " + effigies + " effigies" : null,
+                HudPosition.of(2, 170), cfg.effigyTracker));
         }
     }
 

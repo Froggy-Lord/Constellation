@@ -6,4 +6,5 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean timeHud = true;
     public boolean enigmaSoulTracker = true;
     public boolean riftLowTimeAlert = true;
+    public boolean effigyTracker = true; // count effigies found
 }
