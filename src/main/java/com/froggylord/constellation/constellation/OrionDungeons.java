@@ -24,6 +24,7 @@ public class OrionDungeons extends BaseConstellation {
     private OrionConfig cfg;
     private boolean wasInDungeon = false;
     private int doorsOpened = 0;
+    private static long fireFreezeMs = 0;
 
     @Override
     public void init(InitContext ctx) {
@@ -75,6 +76,12 @@ public class OrionDungeons extends BaseConstellation {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
                 }
+                // Fire Freeze staff cooldown — chat says "Fire Freeze Staff is now ready!"
+                if (cfg.fireFreezeTimer && s.contains("Fire Freeze")) {
+                    if (s.contains("ready")) fireFreezeMs = 0;
+                    else fireFreezeMs = System.currentTimeMillis() + 5700;
+                }
+
                 // key pickup alerts — also count them
                 if (s.contains("Wither Key") || s.contains("Blood Key")) {
                     if (s.contains("picked up")) {
@@ -163,6 +170,15 @@ public class OrionDungeons extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         // all dungeon HUD widgets return null (= hidden) unless in an active dungeon run
+        if (cfg.fireFreezeTimer) {
+            hud.register(new HudWidget("orion-freeze", "Freeze",
+                () -> {
+                    long left = fireFreezeMs - System.currentTimeMillis();
+                    if (left <= 0) return null;
+                    return "§b❄ " + String.format("%.1fs", left / 1000.0);
+                },
+                HudPosition.of(6, 40), cfg.fireFreezeTimer));
+        }
         if (cfg.blessingDisplay) {
             hud.register(new HudWidget("orion-blessings", "Blessings",
                 () -> ConstellationClient.loc().inDungeons() ? OrionBlessings.display() : null,

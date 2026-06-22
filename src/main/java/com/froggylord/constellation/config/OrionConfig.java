@@ -90,4 +90,7 @@ public class OrionConfig extends BaseConfigGroup {
 
     // TicTacToe solver (F7/M7) — minimax best move
     public boolean ticTacToeSolver = true;
+
+    // Fire Freeze staff cooldown timer (shows 5.7s countdown)
+    public boolean fireFreezeTimer = true;
 }
