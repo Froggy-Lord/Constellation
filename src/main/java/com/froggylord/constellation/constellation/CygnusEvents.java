@@ -279,8 +279,9 @@ public class CygnusEvents extends BaseConstellation {
             hud.register(new HudWidget("cygnus-mayor-perks", "MayorPerks",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Perk") || line.contains("Mayor")) return "§6🏛 " + line.trim();
+                    // mayor perks are in the tab footer, not sidebar (matching SkyHanni)
+                    for (String line : com.froggylord.constellation.data.TabList.lines()) {
+                        if (line.contains("Perk") && (line.contains("Mayor") || line.contains("Minister"))) return "§6🏛 " + line.trim();
                     }
                     return null;
                 },
