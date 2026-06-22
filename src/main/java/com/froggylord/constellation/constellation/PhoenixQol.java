@@ -52,17 +52,26 @@ public class PhoenixQol extends BaseConstellation {
         if (cfg.etherwarpOverlay) {
             ConstellationClient.world().register(wctx -> {
                 Minecraft mc = Minecraft.getInstance();
-                if (mc.player == null || mc.hitResult == null) return;
-                if (mc.hitResult.getType() != HitResult.Type.BLOCK) return;
+                if (mc.player == null || mc.level == null) return;
+                // etherwarp only fires while sneaking with an Aspect of the Void in hand
+                if (!mc.player.isShiftKeyDown()) return;
                 var stack = mc.player.getMainHandItem();
                 if (stack.isEmpty()) return;
-                String name = stack.getItem().getDescriptionId();
-                if (!name.contains("aspect_of_the_end") && !name.contains("aspect_of_the_void")
-                    && !name.contains("ender_pearl"))
-                    return;
-                var hit = (BlockHitResult) mc.hitResult;
-                AABB box = new AABB(hit.getBlockPos());
-                wctx.outline(box, 0xFFAA00FF, true);
+                String name = stack.getHoverName().getString();
+                if (!name.contains("Aspect of the Void") && !name.contains("Aspect of the End")) return;
+                // the vanilla hitResult only reaches ~5 blocks, but etherwarp travels ~57, so
+                // cast our own ray out to full range
+                var eye = mc.player.getEyePosition(1f);
+                var end = eye.add(mc.player.getViewVector(1f).scale(61.0));
+                var clip = mc.level.clip(new net.minecraft.world.level.ClipContext(eye, end,
+                    net.minecraft.world.level.ClipContext.Block.OUTLINE,
+                    net.minecraft.world.level.ClipContext.Fluid.NONE, mc.player));
+                if (clip.getType() != HitResult.Type.BLOCK) return;
+                var pos = clip.getBlockPos();
+                // you land on top of the block; it needs two air blocks above to be valid
+                boolean valid = mc.level.getBlockState(pos.above()).isAir()
+                    && mc.level.getBlockState(pos.above(2)).isAir();
+                wctx.outline(new AABB(pos), valid ? 0xFFAA00FF : 0xFFFF4040, true);
             });
         }
         if (cfg.hideLightning) {
