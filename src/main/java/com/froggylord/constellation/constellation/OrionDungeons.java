@@ -35,6 +35,8 @@ public class OrionDungeons extends BaseConstellation {
 
         // phase-3 terminal solvers — highlight-only hints over the open chest
         OrionTerminals.init(cfg);
+        // spirit-leap menu — class tags on teammate heads
+        OrionSpiritLeap.init(cfg);
 
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
