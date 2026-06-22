@@ -155,6 +155,17 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 150), cfg.attributeShardHelper));
+        if (cfg.minionHopperTracker) {
+            hud.register(new HudWidget("auriga-minion", "Minion",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Minion") || line.contains("Hopper")) return "§7🤖 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 158), cfg.minionHopperTracker));
+        }
         }
         }
         }
