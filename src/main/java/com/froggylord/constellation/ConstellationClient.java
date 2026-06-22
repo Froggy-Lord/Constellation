@@ -55,6 +55,7 @@ public class ConstellationClient implements ClientModInitializer {
         locationManager.init();
         com.froggylord.constellation.core.ActionBar.init();
         com.froggylord.constellation.core.StatStore.init();
+        com.froggylord.constellation.core.Scraper.init();
 
         // world renderer hooked before features init so they can register draw callbacks
         worldRenderer = new WorldRenderer();
@@ -98,6 +99,15 @@ public class ConstellationClient implements ClientModInitializer {
                             mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(first, null)));
                             return 1;
                         }))
+                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
+                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("scrape")
+                        .then(com.mojang.brigadier.builder.RequiredArgumentBuilder
+                            .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource, String>argument("mode", com.mojang.brigadier.arguments.StringArgumentType.word())
+                            .executes(ctx -> {
+                                String mode = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "mode");
+                                com.froggylord.constellation.core.Scraper.scrape(mode);
+                                return 1;
+                            })))
             );
             featureManager.registerCommands(dispatcher);
         });
