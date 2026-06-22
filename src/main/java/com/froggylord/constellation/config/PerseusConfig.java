@@ -18,4 +18,6 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean blazeHelper = true;             // Blaze Slayer attunement hints (cmp. Skyblocker)
     public boolean spawnAlertTitle = true;          // title ping on boss spawn (cmp. SBA)
     public boolean minibossFlash = true;            // flash screen on miniboss spawn (cmp. SBA)
+    public boolean bestiaryMilestoneAlert = true;   // ping on bestiary milestone reached (cmp. Skyblocker)
+    public boolean slayerBossSpawnCustomSound = true; // custom dragon growl on boss spawn (cmp. Skyblocker)
 }

@@ -18,4 +18,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean chocolateFactoryHelper = true; // Chocolate Factory event tracker (cmp. Skyblocker)
     public boolean minionHopperTracker = true;   // show minion hopper contents (cmp. Skyblocker)
     public boolean evolvingItemTimer = true;       // show evolving item time remaining (cmp. Skyblocker)
+    public boolean attributeShardHelper = true;    // show attribute shard combine costs (cmp. Skyblocker)
+    public boolean enchantTableHelper = true;       // show cheapest enchant path (cmp. Skyblocker)
 }
