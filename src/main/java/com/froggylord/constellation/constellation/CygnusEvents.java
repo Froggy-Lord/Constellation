@@ -208,6 +208,17 @@ public class CygnusEvents extends BaseConstellation {
                 },
                 HudPosition.of(2, 162), cfg.seasonDisplay));
         }
+        if (cfg.spookyEventTracker) {
+            hud.register(new HudWidget("cygnus-spooky", "Spooky",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Candy") || line.contains("Spooky")) return "§6🎃 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 170), cfg.spookyEventTracker));
+        }
     }
 
     private static String calendarLine() {

@@ -133,6 +133,17 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, 56), cfg.abiphoneHud));
         }
+        if (cfg.factionQuestHud) {
+            hud.register(new HudWidget("draco-faction", "Quest",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Quest") || line.contains("Barbarian") || line.contains("Mage")) return "§c⚔ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 50), cfg.factionQuestHud));
+        }
     }
 
     private static boolean inCrimson() {

@@ -9,4 +9,5 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean xpBar = true;
     public boolean slayerTimer = true; // live kill timer + session best
     public boolean brokenHyperionAlert = true; // warn when wither blade runs out of charges (cmp. Skyblocker)
+    public boolean skillLevelUpAlert = true;   // title ping on skill level-up (cmp. Skyblocker)
 }

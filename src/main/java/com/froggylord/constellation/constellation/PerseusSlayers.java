@@ -95,6 +95,15 @@ public class PerseusSlayers extends BaseConstellation {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss! " + s.trim()));
             }
+            // Skill level-up — title ping
+            if (cfg.skillLevelUpAlert && (s.contains("LEVEL UP") || s.contains("level up") || s.contains("Skill Level Up"))) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§e⬆ LEVEL UP!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.PLAYER_LEVELUP, 1f, 1.0f);
+                }
+            }
             // Broken Hyperion / wither blade alert — title ping
             if (cfg.brokenHyperionAlert && (s.contains("out of charges") || s.contains("no more charges") || s.contains("ran out of"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();

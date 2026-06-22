@@ -13,4 +13,5 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean dojoScoreHud = true;  // live Dojo minigame score
     public boolean abiphoneHud = true;   // show who's calling (cmp. Skyblocker AbiphoneHud)
     public boolean crimsonFogBoost = true; // increase fog radius on Crimson Isle (cmp. Skyblocker)
+    public boolean factionQuestHud = true; // show active faction quests (cmp. Skyblocker)
 }
