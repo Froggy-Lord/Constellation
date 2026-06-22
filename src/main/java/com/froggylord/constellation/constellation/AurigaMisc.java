@@ -68,8 +68,33 @@ public class AurigaMisc extends BaseConstellation {
 
         
         AurigaExperiments.init(cfg);
-        
+
         AurigaHelpers.init(cfg);
+
+        // chocolate factory shows cps in the menu lore, not the sidebar — read it off the open screen
+        if (cfg.chocolateFactoryHelper) {
+            ConstellationClient.tick().every(10, "auriga-choc", AurigaMisc::readChocolate);
+        }
+    }
+
+    private static String chocPerSec = null;
+    private static final java.util.regex.Pattern CPS =
+        java.util.regex.Pattern.compile("([\\d,.]+) Chocolate per second");
+
+    private static void readChocolate() {
+        var mc = net.minecraft.client.Minecraft.getInstance();
+        if (!(mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?> cs)) { chocPerSec = null; return; }
+        if (!cs.getTitle().getString().contains("Chocolate Factory")) { chocPerSec = null; return; }
+        for (var slot : cs.getMenu().slots) {
+            var st = slot.getItem();
+            if (st.isEmpty()) continue;
+            var lore = st.get(net.minecraft.core.component.DataComponents.LORE);
+            if (lore == null) continue;
+            for (var ln : lore.lines()) {
+                var m = CPS.matcher(net.minecraft.ChatFormatting.stripFormatting(ln.getString()));
+                if (m.find()) { chocPerSec = m.group(1); return; }
+            }
+        }
     }
 
     @Override
@@ -106,13 +131,7 @@ public class AurigaMisc extends BaseConstellation {
         }
         if (cfg.chocolateFactoryHelper) {
             hud.register(new HudWidget("auriga-chocfactory", "ChocFactory",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Chocolate") || line.contains("Factory")) return "§6🍫 " + line.trim();
-                    }
-                    return null;
-                },
+                () -> chocPerSec == null ? null : "§6🍫 " + chocPerSec + "/s",
                 HudPosition.of(50, 118), cfg.chocolateFactoryHelper));
         }
         if (cfg.godPotDisplay) {
