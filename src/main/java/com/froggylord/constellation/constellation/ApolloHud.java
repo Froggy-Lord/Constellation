@@ -176,6 +176,7 @@ public class ApolloHud extends BaseConstellation {
                 return null;
             },
             HudPosition.of(2, 74), true));
+    }
 
     private static HudPosition toPos(ApolloConfig.HudEntry e) {
         return new HudPosition(e.x, e.y);
