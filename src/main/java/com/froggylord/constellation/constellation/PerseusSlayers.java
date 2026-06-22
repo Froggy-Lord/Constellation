@@ -30,6 +30,9 @@ public class PerseusSlayers extends BaseConstellation {
     private static String lastBoss = "";
     private static long lastBossAt = 0;
 
+    private static final java.util.regex.Pattern BOSS_NAME =
+        java.util.regex.Pattern.compile("(Revenant Horror|Tarantula Broodfather|Sven Packmaster|Voidgloom Seraph|Inferno Demonlord|Riftstalker Bloodfiend)\\b");
+
     private static long slayerStartAt = 0;
     private static long slayerLastMs = 0;
     private static long slayerBestMs = 0;
@@ -60,7 +63,16 @@ public class PerseusSlayers extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         cfg = (PerseusConfig) getConfig();
-        
+
+        // scan sidebar for boss name so the title shows "⚔ Revenant Horror" not "⚔ "
+        ConstellationClient.tick().every(20, "perseus-bossname", () -> {
+            if (!ConstellationClient.loc().onHypixel()) return;
+            for (String line : ConstellationClient.loc().getSidebarLines()) {
+                var m = BOSS_NAME.matcher(line);
+                if (m.find()) lastBoss = m.group(1);
+            }
+        });
+
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.xpBar) return;
             if (ConstellationClient.loc().area() != com.froggylord.constellation.core.LocationManager.SkyblockArea.SPIDER_DEN) return;
@@ -89,8 +101,8 @@ public class PerseusSlayers extends BaseConstellation {
             
             if (s.contains("Zealot") && !s.contains("Bruiser")) { zealotKills++; zealotSinceEye++; }
             
+            // real literal: "SLAYER QUEST STARTED!" — lastBoss set from previous sidebar parse
             if (s.contains("SLAYER") && s.contains("SPAWN")) {
-                lastBoss = s.trim();
                 lastBossAt = System.currentTimeMillis();
                 slayerStartAt = System.currentTimeMillis();
                 var mc = net.minecraft.client.Minecraft.getInstance();

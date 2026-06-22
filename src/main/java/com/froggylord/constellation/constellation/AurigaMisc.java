@@ -93,6 +93,9 @@ public class AurigaMisc extends BaseConstellation {
     private static int reforges = 0;
     private static final java.util.regex.Pattern REFORGE =
         java.util.regex.Pattern.compile("You reforged your .+ into an? .+!|You applied an? .+ to your .+!");
+    private static final java.util.regex.Pattern GOD_POT =
+        java.util.regex.Pattern.compile("God Potion:?\\s*(.+)");
+
 
     private static String chocPerSec = null;
     private static final java.util.regex.Pattern CPS =
@@ -160,8 +163,10 @@ public class AurigaMisc extends BaseConstellation {
             hud.register(new HudWidget("auriga-godpot", "GodPot",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("God Pot") || line.contains("Active Effects")) return "§d🧪 " + line.trim();
+                    // real line is "God Potion: <time>" in the tab footer, not sidebar
+                    for (String line : com.froggylord.constellation.data.TabList.lines()) {
+                        var m = GOD_POT.matcher(net.minecraft.ChatFormatting.stripFormatting(line));
+                        if (m.find()) return "§d🧪 " + m.group(1);
                     }
                     return null;
                 },
