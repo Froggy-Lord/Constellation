@@ -107,4 +107,5 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean saVanishTimer = true;    // SA vanish countdown (cmp. Skyblocker BossManager)
     public boolean dungeonPotionsHud = true; // active dungeon potion levels (cmp. Skyblocker)
     public boolean chestProfitCalc = true;    // show dungeon chest total value (cmp. Skyblocker ChestValue)
+    public boolean m7DragonMarkers = true;    // highlight M7 dragon priority (cmp. Skyblocker M7Dragons)
 }

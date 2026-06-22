@@ -23,4 +23,5 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean templePearlHelper = true; // pearl clip waypoint for temple skip
     public boolean scathaCounter = true;      // track scatha worm kills (cmp. Skyblocker ScathaTracker)
     public boolean yolkarSpeedup = true;       // skip King Yolkar dialogue (cmp. Skyblocker)
+    public boolean goldenGoblinAlert = true;   // Golden Goblin spawn alert (cmp. Skyblocker)
 }

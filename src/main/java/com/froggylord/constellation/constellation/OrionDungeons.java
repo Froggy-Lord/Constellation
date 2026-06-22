@@ -71,6 +71,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(DoorHighlighter::draw);
         // creeper beams — draw links between sea lanterns
         ConstellationClient.world().register(OrionPuzzles::drawBeams);
+        // M7 dragon markers — highlight priority dragon
+        ConstellationClient.world().register(M7Dragons::draw);
         // F5/M5 Livid finder — hide wrong clones, box the real one
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
