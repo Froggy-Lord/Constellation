@@ -205,7 +205,7 @@ public class AquilaMining extends BaseConstellation {
     private static int readCold() {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = COLD.matcher(line);
-            if (m.find()) return Integer.parseInt(m.group(1));
+            if (m.find()) return Math.abs(Integer.parseInt(m.group(1))); // skyhanni takes absolute
         }
         return 0;
     }
@@ -240,8 +240,10 @@ public class AquilaMining extends BaseConstellation {
                     if (!inMining()) return null;
                     int c = readCold();
                     if (c <= 0) return null;
-                    String col = c >= 90 ? "§c" : c >= 50 ? "§b" : "§7";
-                    return col + "❄ " + c + "/100";
+                    String col = c >= 90 ? "§c" : c >= 50 ? "§e" : "§b";
+                    int filled = c / 10;
+                    String bar = "§8[" + col + "█".repeat(Math.max(0, filled)) + "§7░".repeat(10 - filled) + "§8]";
+                    return col + "❄ " + c + "/100 " + bar + " §7" + c + "%";
                 },
                 HudPosition.of(2, 106), cfg.coldHud));
         }
