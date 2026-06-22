@@ -8,4 +8,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean purseHud = true;
     public boolean coinSession = true;
     public boolean bitsHud = false;
+    public boolean quiverHud = false;
 }

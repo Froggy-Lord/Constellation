@@ -89,6 +89,23 @@ public class LyraEconomy extends BaseConstellation {
             },
             HudPosition.of(50, 86), true));
 
+        if (cfg.quiverHud) {
+            hud.register(new HudWidget("lyra-quiver", "Quiver",
+                () -> {
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player == null) return null;
+                    // check for arrows in the quiver (offhand or arrow slot)
+                    for (var stack : mc.player.getInventory().items) {
+                        if (stack.isEmpty()) continue;
+                        String id = stack.getItem().getDescriptionId();
+                        if (id.contains("arrow") || id.contains("arrow")) {
+                            return "§f🏹 " + stack.getCount() + " " + stack.getHoverName().getString();
+                        }
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 94), cfg.quiverHud));
+        }
         if (cfg.bitsHud) {
             hud.register(new HudWidget("lyra-bits", "Bits",
                 () -> {

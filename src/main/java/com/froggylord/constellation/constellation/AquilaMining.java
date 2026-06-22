@@ -30,6 +30,7 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern COMMISSION = Pattern.compile("(?<name>[A-Za-z ]+?): (?<val>\\d+(?:\\.\\d+)?%|DONE)");
     private static final Pattern FORGE = Pattern.compile("(?<slot>\\d+)\\. (?<item>.+): (?<time>\\d+h|\\d+m|\\d+s|Ready!)");
     private static final Pattern COMPASS = Pattern.compile("Wishing Compass:?\\s*(\\d+)\\s*(\\d+)\\s*(\\d+)");
+    private static final Pattern FUEL = Pattern.compile("Fuel:?\\s*(\\d+\\.?\\d*)/(\\d+\\.?\\d*)k?");
 
     private AquilaConfig cfg;
 
@@ -58,6 +59,9 @@ public class AquilaMining extends BaseConstellation {
             hud.register(new HudWidget("aquila-compass", "Compass",
                 () -> inMining() ? compassLine() : null,
                 HudPosition.of(2, 90), cfg.commissionHud));
+            hud.register(new HudWidget("aquila-fuel", "Fuel",
+                () -> inMining() ? fuelLine() : null,
+                HudPosition.of(2, 98), cfg.commissionHud));
         }
     }
 
@@ -128,6 +132,14 @@ public class AquilaMining extends BaseConstellation {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = COMPASS.matcher(line);
             if (m.find()) return "§6🧭 " + m.group(1) + " " + m.group(2) + " " + m.group(3);
+        }
+        return null;
+    }
+
+    private static String fuelLine() {
+        for (String line : ConstellationClient.loc().getSidebarLines()) {
+            Matcher m = FUEL.matcher(line);
+            if (m.find()) return "§2⛏ Fuel §f" + m.group(1) + "/" + m.group(2) + "k";
         }
         return null;
     }

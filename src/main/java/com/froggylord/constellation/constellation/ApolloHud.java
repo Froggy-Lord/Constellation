@@ -163,7 +163,19 @@ public class ApolloHud extends BaseConstellation {
                 return null;
             },
             HudPosition.of(2, 66), true));
-    }
+
+        hud.register(new HudWidget("apollo-pet", "Pet",
+            () -> {
+                for (String line : ConstellationClient.loc().getSidebarLines()) {
+                    if (line.startsWith("Pet:") || line.contains("Pet: ")) {
+                        String pet = line.substring(line.indexOf(":") + 1).trim();
+                        if (pet.isEmpty()) return null;
+                        return "§d" + pet;
+                    }
+                }
+                return null;
+            },
+            HudPosition.of(2, 74), true));
 
     private static HudPosition toPos(ApolloConfig.HudEntry e) {
         return new HudPosition(e.x, e.y);
