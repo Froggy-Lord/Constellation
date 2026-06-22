@@ -23,4 +23,6 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean sosFlareDisplay = true;       // show SOS flare from other players (cmp. Skyblocker)
     public boolean slayerProfitTracker = true;   // track coins gained per slayer session (cmp. Skyblocker)
     public boolean tarantulaInvincMark = true;   // mark invincible tarantulas in spider slayer (cmp. Skyblocker)
+    public boolean hideIrrelevantMobs = true;      // hide non-slayer mobs during quests (cmp. Skyblocker)
+    public boolean damageIndicatorHud = true;       // show DPS/hits/time on boss (cmp. Skyblocker)
 }

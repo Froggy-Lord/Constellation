@@ -21,4 +21,6 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean partyChatCommands = true;       // !warp !join !ptme !rules shortcuts (cmp. Skyblocker)
     public boolean dungeonReadyOverlay = true;     // overlay when party is ready for dungeon (cmp. Skyblocker)
     public boolean friendJoinLeaveAlert = true;    // notify when friends join/leave SkyBlock (cmp. Skyblocker)
+    public boolean nicknameReplacer = true;        // custom names for party members (cmp. Skyblocker)
+    public boolean offlineMemberIndicator = true;  // show who's offline in party list (cmp. Skyblocker)
 }

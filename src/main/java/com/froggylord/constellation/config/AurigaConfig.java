@@ -23,4 +23,6 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean brewHelper = true;              // show potion recipes + best upgrades (cmp. Skyblocker)
     public boolean godPotDisplay = true;            // show active god pot + remaining time (cmp. Skyblocker)
     public boolean teleportPadHelper = true;        // highlight teleport pad destinations (cmp. Skyblocker)
+    public boolean pathfindUtil = true;             // /pathfind to nearest waypoint (cmp. Skyblocker)
+    public boolean cosmeticHelper = true;            // show cosmetic unlock status (cmp. Skyblocker)
 }
