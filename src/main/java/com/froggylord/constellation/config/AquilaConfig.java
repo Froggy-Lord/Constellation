@@ -30,5 +30,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean crystalNucleusWaypoints = true; // crystal waypoints (cmp. skyblocker)
     public boolean metalDetectorHelper = true;    // metal detector (cmp. skyblocker)
     public boolean gemstoneMixtureHelper = true;  
-    public boolean mineshaftPityDisplay = true;  
+    public boolean mineshaftPityDisplay = true;
+    public boolean crystalHollowsMapHelper = true;
 }
