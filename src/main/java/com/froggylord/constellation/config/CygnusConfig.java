@@ -12,4 +12,5 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean dianaInquisitorShare = false; // shout coords to party chat
     public boolean dianaDropTracker = true;
     public boolean dianaBurrowWaypoints = true; // triangulate burrow from spade directions
+    public boolean carnivalHelper = true; // Catch a Fish / Zombie Shootout hints
 }

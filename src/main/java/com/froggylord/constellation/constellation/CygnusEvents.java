@@ -94,6 +94,23 @@ public class CygnusEvents extends BaseConstellation {
             }
         });
 
+        // Carnival helpers — chat-based hints
+        if (cfg.carnivalHelper) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString().toLowerCase(java.util.Locale.ROOT);
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player == null) return;
+                if (s.contains("catch a fish") || s.contains("fishing game")) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§b🎣 Carnival: Catch a Fish — aim for the bubbles!"));
+                } else if (s.contains("zombie shootout") || s.contains("shootout")) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c🎯 Carnival: Zombie Shootout — aim for the heads!"));
+                } else if (s.contains("chivalrous") || s.contains("carnival")) {
+                    mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e🎪 Carnival game starting!"));
+                }
+            });
+        }
+
         // world render — burrow waypoint
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.dianaBurrowWaypoints) return;
