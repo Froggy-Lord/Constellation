@@ -102,8 +102,8 @@ public class CygnusEvents extends BaseConstellation {
                 }
             }
             
-            // live data shows mythos drops use "You found a <X>!" too, not just "You dug out"
-            if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("You found a") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
+            // only count when the message names an actual mythos item — "You dug out" / rare drop lines
+            if (cfg.dianaDropTracker && (s.contains("You dug out") || s.contains("RARE DROP") || s.contains("PET DROP"))) {
                 for (String d : MYTHOS) { if (s.contains(d)) { mythosDrops++; com.froggylord.constellation.core.StatStore.add("cygnus.diana.drops", 1); break; } }
             }
             // burrow chain x/y — real hypixel line gives the running count
