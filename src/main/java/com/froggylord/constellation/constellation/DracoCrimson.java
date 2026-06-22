@@ -30,6 +30,7 @@ public class DracoCrimson extends BaseConstellation {
 
     private static String kuudraPhase = "";
     private static long kuudraPhaseAt = 0;
+    private static long ashfangFrozenUntil = 0;
 
     @Override
     public void init(InitContext ctx) {
@@ -55,6 +56,12 @@ public class DracoCrimson extends BaseConstellation {
             if (cfg.kuudraPhaseHud) {
                 String ph = kuudraPhaseOf(s);
                 if (ph != null) { kuudraPhase = ph; kuudraPhaseAt = System.currentTimeMillis(); }
+            }
+            // Ashfang freeze — you're locked for a few seconds, show the countdown
+            if (cfg.ashfangFreezeTimer && s.contains("Ashfang") && s.contains("freezes you")) {
+                ashfangFrozenUntil = System.currentTimeMillis() + 5000;
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) mc.player.playSound(net.minecraft.sounds.SoundEvents.GLASS_BREAK, 0.8f, 0.6f);
             }
         });
     }
@@ -89,6 +96,15 @@ public class DracoCrimson extends BaseConstellation {
                     return "§6Kuudra: §f" + kuudraPhase;
                 },
                 HudPosition.of(50, 80), cfg.kuudraPhaseHud));
+        }
+        if (cfg.ashfangFreezeTimer) {
+            hud.register(new HudWidget("draco-ashfang", "Frozen",
+                () -> {
+                    long left = ashfangFrozenUntil - System.currentTimeMillis();
+                    if (left <= 0) return null;
+                    return "§b❄ Frozen " + String.format("%.1fs", left / 1000.0);
+                },
+                HudPosition.of(50, 72), cfg.ashfangFreezeTimer));
         }
     }
 

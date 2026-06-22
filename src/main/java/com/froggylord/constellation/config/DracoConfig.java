@@ -9,4 +9,5 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean vanquisherAlert = true;
     public boolean vanquisherShare = false; // shout coords to party
     public boolean kuudraPhaseHud = true;
+    public boolean ashfangFreezeTimer = true;
 }
