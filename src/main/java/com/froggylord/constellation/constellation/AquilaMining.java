@@ -274,6 +274,18 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 130), cfg.pickonimbusHud));
         }
+        if (cfg.nucleusHelper) {
+            hud.register(new HudWidget("aquila-nucleus", "Nucleus",
+                () -> {
+                    if (!inMining()) return null;
+                    int found = 0;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Crystal") && (line.contains("✓") || line.contains("✔"))) found++;
+                    }
+                    return found > 0 ? "§d💎 Nucleus: " + found + "/5" : null;
+                },
+                HudPosition.of(2, 138), cfg.nucleusHelper));
+        }
     }
 
     private static boolean inMining() {
