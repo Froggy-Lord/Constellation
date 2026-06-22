@@ -124,6 +124,7 @@ public class PhoenixQol extends BaseConstellation {
                 if (mc.options != null) mc.options.screenEffectScale().set(0.0);
             });
         }
+        // hideStatusEffects — needs particle-rendering mixin; deferred to avoid stripping actual effects
         if (cfg.noDeathAnimation) {
             ConstellationClient.tick().every(1, "phoenix-nodeath", () -> {
                 var mc = Minecraft.getInstance();
