@@ -167,6 +167,32 @@ public class LyraEconomy extends BaseConstellation {
                 },
                 HudPosition.of(2, 98), cfg.accessoryDisplay));
         }
+        if (cfg.inventoryValueHud) {
+            hud.register(new HudWidget("lyra-invvalue", "InvValue",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    var mc = Minecraft.getInstance();
+                    if (mc.player == null) return null;
+                    com.froggylord.constellation.api.BazaarApi.ensureFresh();
+                    double total = 0;
+                    int count = 0;
+                    var inv = mc.player.getInventory();
+                    for (int i = 0; i < inv.getContainerSize(); i++) {
+                        var stack = inv.getItem(i);
+                        if (stack.isEmpty()) continue;
+                        var cd = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+                        if (cd == null) continue;
+                        var extra = cd.copyTag().getCompoundOrEmpty("ExtraAttributes");
+                        if (extra.isEmpty()) continue;
+                        String id = extra.getStringOr("id", "");
+                        if (id.isEmpty()) continue;
+                        double[] bz = com.froggylord.constellation.api.BazaarApi.get(id);
+                        if (bz != null && bz[1] > 0) { total += bz[1] * stack.getCount(); count++; }
+                    }
+                    return count > 0 ? "§6💰 " + compact((long) total) + " §7(" + count + " items)" : null;
+                },
+                HudPosition.of(2, 106), cfg.inventoryValueHud));
+        }
     }
 
     @Override
