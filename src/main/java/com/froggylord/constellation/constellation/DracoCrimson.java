@@ -217,6 +217,16 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 8), cfg.bladeVolcanoTimer));
+        if (cfg.heavyPearlsTracker) {
+            hud.register(new HudWidget("draco-pearls", "HeavyPearls",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Heavy") || line.contains("Pearl")) return "§b🫧 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(50, 2), cfg.heavyPearlsTracker));
+        }
         }
         }
         }
