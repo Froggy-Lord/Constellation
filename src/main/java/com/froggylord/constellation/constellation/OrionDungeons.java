@@ -84,6 +84,7 @@ public class OrionDungeons extends BaseConstellation {
         // silverfish solver — highlight ...
         ConstellationClient.world().register(SilverfishSolver::draw);
         ConstellationClient.world().register(LightsOnSolver::draw);
+        ConstellationClient.world().register(ArrowAlignSolver::draw);
 
         LividFinder.init();
         ConstellationClient.world().register(LividFinder::draw);
