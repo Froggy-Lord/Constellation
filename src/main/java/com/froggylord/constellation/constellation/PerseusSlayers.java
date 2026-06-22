@@ -205,6 +205,15 @@ public class PerseusSlayers extends BaseConstellation {
     public void registerHud(HudManager hud) {
         cfg = (PerseusConfig) getConfig();
         if (cfg == null) return;
+        if (cfg.bossTimer) {
+            hud.register(new HudWidget("perseus-bosstimer", "Boss",
+                () -> {
+                    if (slayerStartAt == 0) return null;
+                    long elapsed = (System.currentTimeMillis() - slayerStartAt) / 1000;
+                    return "§c⚔ " + fmt(elapsed * 1000);
+                },
+                HudPosition.of(50, 54), cfg.bossTimer));
+        }
 
         if (cfg.slayerTimer) {
             hud.register(new HudWidget("perseus-timer", "Slayer",
