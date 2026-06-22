@@ -145,6 +145,17 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 142), cfg.enchantTableHelper));
+        if (cfg.attributeShardHelper) {
+            hud.register(new HudWidget("auriga-attrib", "Attrib",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Attribute") || line.contains("Shard")) return "§d💎 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 150), cfg.attributeShardHelper));
+        }
         }
         }
         }
