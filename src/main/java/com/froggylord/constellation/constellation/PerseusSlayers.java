@@ -23,6 +23,10 @@ public class PerseusSlayers extends BaseConstellation {
 
     private static final Pattern SLAYER_XP = Pattern.compile("Slayer XP:?\\s*([\\d,]+)");
     private static final Pattern RNG = Pattern.compile("RNG Meter.*?([\\d.]+)%");
+    private static final Pattern ZEALOT = Pattern.compile("Zealot.*?(\\d+)");
+    private static int zealotKills = 0;
+    private static int zealotSinceEye = 0;
+    private static int summoningEyes = 0;
 
     private PerseusConfig cfg;
 
@@ -35,7 +39,17 @@ public class PerseusSlayers extends BaseConstellation {
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (!ConstellationClient.loc().onHypixel()) return;
             String s = msg.getString();
-            // Slayer boss spawn: "SLAYER BOSS SPAWNED!" or "A {boss} has spawned!"
+            // Endstone Protector spawn
+            if (s.contains("The Endstone Protector") || s.contains("Protector") && s.contains("spawn"))
+                zealotKills = 0; // reset zealot count after protector spawn
+            // Summoning Eye drop
+            if (s.contains("SUMMONING EYE") || s.contains("Summoning Eye")) {
+                summoningEyes++;
+                zealotSinceEye = 0;
+            }
+            // Zealot kill (from bestiary or kill combo — rough tracking)
+            if (s.contains("Zealot") && !s.contains("Bruiser")) { zealotKills++; zealotSinceEye++; }
+            // Slayer boss spawn
             if (s.contains("SLAYER") && s.contains("SPAWN")) {
                 lastBoss = s.trim();
                 lastBossAt = System.currentTimeMillis();
@@ -66,6 +80,15 @@ public class PerseusSlayers extends BaseConstellation {
             hud.register(new HudWidget("perseus-rng", "RNG",
                 () -> ConstellationClient.loc().onHypixel() ? rngLine() : null,
                 HudPosition.of(50, 86), cfg.xpBar));
+            hud.register(new HudWidget("perseus-zealot", "Zealot",
+                () -> {
+                    if (zealotKills == 0) return null;
+                    String s = "§d⏣ " + zealotKills + " kills";
+                    if (summoningEyes > 0) s += " §eEyes: " + summoningEyes;
+                    if (zealotSinceEye > 0) s += " §7(since: " + zealotSinceEye + ")";
+                    return s;
+                },
+                HudPosition.of(50, 94), cfg.xpBar));
         }
     }
 
