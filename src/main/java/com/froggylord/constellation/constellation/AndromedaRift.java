@@ -199,8 +199,6 @@ public class AndromedaRift extends BaseConstellation {
     private static int maxRiftSecs = 0;
 
     private static String timeLine() {
-        // mirrorverse freezes rift time — hide so we dont show stale data
-        if (ConstellationClient.loc().area() == SkyblockArea.MIRRORVERSE) return null;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = RIFT_TIME.matcher(line);
             if (m.find()) {
