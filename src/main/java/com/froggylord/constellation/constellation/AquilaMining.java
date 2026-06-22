@@ -334,6 +334,28 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 162), cfg.fossilHelper));
         }
+        if (cfg.mineshaftPityDisplay) {
+            hud.register(new HudWidget("aquila-pity", "Pity",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Pity") || line.contains("Mineshaft")) return "§8⛏ " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 170), cfg.mineshaftPityDisplay));
+        }
+        if (cfg.gemstoneMixtureHelper) {
+            hud.register(new HudWidget("aquila-mixture", "Mixture",
+                () -> {
+                    if (!inMining()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Mixture") || line.contains("Recipe")) return "§d🔮 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(2, 178), cfg.gemstoneMixtureHelper));
+        }
     }
 
     private static boolean inMining() {
