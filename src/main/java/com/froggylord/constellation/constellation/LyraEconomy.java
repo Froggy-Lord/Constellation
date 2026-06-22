@@ -43,6 +43,21 @@ public class LyraEconomy extends BaseConstellation {
         cfg = (LyraConfig) getConfig();
         // refresh the parsed purse each second
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
+        // bazaar undercut alerts
+        if (cfg.bazaarUndercutAlert) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                if ((s.contains("undercut") || s.contains("undercut")) && (s.contains("Bazaar") || s.contains("order"))) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) {
+                        mc.player.sendSystemMessage(Component.literal("§6⚠ Bazaar undercut! §7" + s));
+                        mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.6f);
+                    }
+                }
+            });
+        }
+
         // auction alerts — outbid, sold, expired
         if (cfg.auctionOutbidAlert || cfg.auctionSoldAlert) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
