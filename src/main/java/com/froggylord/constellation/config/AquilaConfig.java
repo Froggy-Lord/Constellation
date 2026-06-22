@@ -15,4 +15,5 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean pickonimbusHud = true;    // Pickonimbus durability (Skyblocker: MiningHud)
     public boolean fetchurSolver = true;     // Fetchur item hints (cmp. Skyblocker FetchurSolver)
     public boolean puzzlerSolver = true;     // Puzzler block answers (cmp. Skyblocker PuzzlerSolver)
+    public boolean scathaAlert = true;       // Scatha spawn alert (cmp. Skyblocker ScathaTracker)
 }

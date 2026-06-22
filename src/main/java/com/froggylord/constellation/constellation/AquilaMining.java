@@ -106,16 +106,25 @@ public class AquilaMining extends BaseConstellation {
             }
         });
 
-        // mineshaft entry — the rare portal everyone wants to know they hit
+        // mineshaft entry + scatha — rare events worth a title ping
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
-            if (overlay || cfg == null || !cfg.mineshaftAlert || !ConstellationClient.loc().onHypixel()) return;
+            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            if (!cfg.mineshaftAlert && !cfg.scathaAlert) return;
             String s = msg.getString();
-            if (s.contains("You have entered a Glacite Mineshaft") || s.contains("found a Glacite Mineshaft")) {
+            if (cfg.mineshaftAlert && (s.contains("You have entered a Glacite Mineshaft") || s.contains("found a Glacite Mineshaft"))) {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) {
                     mc.gui.hud.resetTitleTimes();
                     mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§b⛏ Mineshaft!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.9f, 1.0f);
+                }
+            }
+            if (cfg.scathaAlert && s.contains("Scatha") && (s.contains("spawned") || s.contains("found") || s.contains("worm"))) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§6🐛 SCATHA!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.9f, 1.1f);
                 }
             }
         });
