@@ -58,6 +58,35 @@ public class HydraFishing extends BaseConstellation {
                     && h.getPlayerOwner() != mc.player) h.setInvisible(true);
             }
         });
+        // Odger waypoint — find the NPC by scanning for his ArmorStand
+        ConstellationClient.world().register(wctx -> {
+            if (cfg == null || !cfg.odgerWaypoint || !ConstellationClient.loc().onHypixel()) return;
+            var mc3 = Minecraft.getInstance();
+            if (mc3.level == null || mc3.player == null) return;
+            var pp2 = mc3.player.position();
+            for (var e : mc3.level.entitiesForRendering()) {
+                if (e.distanceToSqr(pp2) > 2500) continue; // 50-block scan
+                var name = e.getCustomName();
+                if (name != null && name.getString().contains("Odger")) {
+                    wctx.highlight(e.getBoundingBox().inflate(0.5), 0x80FFAA00, true);
+                    wctx.label(e.position().add(0, e.getBbHeight() + 0.5, 0), "Odger", 0xFFFFAA00, true);
+                }
+            }
+        });
+
+        // Wormhole locator — chat announces wormhole spawns near you
+        if (cfg.wormholeLocator) {
+            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+                if (overlay || !ConstellationClient.loc().onHypixel()) return;
+                String s = msg.getString();
+                if (s.contains("Wormhole") || s.contains("wormhole")) {
+                    var mc4 = Minecraft.getInstance();
+                    if (mc4.player != null)
+                        mc4.player.sendSystemMessage(Component.literal("§5🌀 Wormhole nearby! Check your surroundings."));
+                }
+            });
+        }
+
         // Thunder entity highlight — rare SC, box it in the water
         ConstellationClient.world().register(wctx -> {
             if (cfg == null || !cfg.thunderHighlight || !ConstellationClient.loc().onHypixel()) return;

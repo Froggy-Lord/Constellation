@@ -78,6 +78,23 @@ public class LyraTooltips {
                 CompoundTag ench = extra.getCompoundOrEmpty("enchantments");
                 if (!ench.isEmpty()) lines.add(Component.literal("§7Enchants: §b" + ench.size()));
             }
+            if (cfg.tooltipSalvageable && extra.getIntOr("donated_museum", 0) > 0)
+                lines.add(Component.literal("§a✔ Museum donated — safe to salvage"));
+            if (cfg.tooltipAttributes) {
+                CompoundTag attrs = extra.getCompoundOrEmpty("attributes");
+                if (!attrs.isEmpty()) {
+                    StringBuilder sb = new StringBuilder("§d⚚ ");
+                    int shown = 0;
+                    for (String key : attrs.keySet()) {
+                        if (shown++ > 0) sb.append(" §8| ");
+                        int lvl = attrs.getCompoundOrEmpty(key).getIntOr("level", 0);
+                        sb.append("§d").append(prettyAttr(key)).append(lvl > 1 ? " " + lvl : "");
+                        if (shown >= 3) break;
+                    }
+                    lines.add(Component.literal(sb.toString()));
+                }
+            }
+
             if (cfg.tooltipSkyblockId) {
                 String id = extra.getStringOr("id", "");
                 if (!id.isEmpty()) lines.add(Component.literal("§8" + id));
@@ -122,6 +139,12 @@ public class LyraTooltips {
         if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
         if (n < 1_000_000_000) return String.format("%.2fM", n / 1_000_000.0);
         return String.format("%.2fB", n / 1_000_000_000.0);
+    }
+
+    private static String prettyAttr(String key) {
+        if (key.isEmpty()) return key;
+        String s = key.replace('_', ' ');
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
     private static String cap(String s) {
