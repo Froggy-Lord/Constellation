@@ -184,6 +184,28 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 26), cfg.supplyObjectiveHud));
+        if (cfg.magmafishCounter) {
+            hud.register(new HudWidget("draco-magmafish", "Magmafish",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Magmafish") || line.contains("Magma")) return "§c🐟 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 20), cfg.magmafishCounter));
+        }
+        if (cfg.trophyBestDisplay) {
+            hud.register(new HudWidget("draco-trophybest", "TrophyBest",
+                () -> {
+                    if (!ConstellationClient.loc().onHypixel()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines()) {
+                        if (line.contains("Trophy") || line.contains("Best")) return "§6🏆 " + line.trim();
+                    }
+                    return null;
+                },
+                HudPosition.of(50, 14), cfg.trophyBestDisplay));
+        }
         }
     }
 
