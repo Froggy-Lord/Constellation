@@ -10,6 +10,12 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean bitsHud = false;
     public boolean quiverHud = false;
 
+    // compact text drawn on the item itself in inventories
+    public boolean slotText = true;
+    public boolean slotTextPetLevel = true;
+    public boolean slotTextStars = true;
+    public boolean slotTextCakeYear = true;
+
     // item tooltips (read straight off the item's hidden SkyBlock data, no API needed)
     public boolean tooltipSkyblockId = true;
     public boolean tooltipReforge = true;

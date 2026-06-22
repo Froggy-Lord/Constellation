@@ -45,6 +45,8 @@ public class LyraEconomy extends BaseConstellation {
         ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
         // extra item tooltip lines (reforge, stars, hpb, recomb, sb id)
         LyraTooltips.init(cfg);
+        // compact slot markers (pet level, stars, cake year)
+        LyraSlotText.init(cfg);
     }
 
     private static void readPurse() {
