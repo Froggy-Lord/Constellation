@@ -66,6 +66,15 @@ public class PerseusSlayers extends BaseConstellation {
                 var mc = net.minecraft.client.Minecraft.getInstance();
                 if (mc.player != null) mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c⚡ Miniboss! " + s.trim()));
             }
+            // Brood Mother spawn alert (SBA feature)
+            if (s.contains("Brood Mother") && s.contains("hatched")) {
+                var mc = net.minecraft.client.Minecraft.getInstance();
+                if (mc.player != null) {
+                    mc.gui.hud.resetTitleTimes();
+                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§4🕷 Brood Mother!"));
+                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.3f);
+                }
+            }
         });
     }
 

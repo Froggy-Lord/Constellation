@@ -371,6 +371,25 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("gfs superboom_tnt 16"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getdraft")
             .executes(ctx -> { sendCmd("gfs architects_draft 1"); return 1; }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sendcoords")
+            .executes(ctx -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    int x = (int)mc.player.getX(), y = (int)mc.player.getY(), z = (int)mc.player.getZ();
+                    mc.player.connection.sendCommand("pc " + x + " " + y + " " + z);
+                }
+                return 1;
+            }));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("copycoords")
+            .executes(ctx -> {
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    int x = (int)mc.player.getX(), y = (int)mc.player.getY(), z = (int)mc.player.getZ();
+                    mc.keyboardHandler.setClipboard(x + " " + y + " " + z);
+                    mc.player.sendSystemMessage(Component.literal("§eCoords copied: §f" + x + " " + y + " " + z));
+                }
+                return 1;
+            }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storage")
             .executes(ctx -> { sendCmd("storage"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("bz")
