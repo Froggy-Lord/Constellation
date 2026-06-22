@@ -249,6 +249,16 @@ public class CygnusEvents extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 186), cfg.raffleHelper));
+        if (cfg.spookyCandyHelper) {
+            hud.register(new HudWidget("cygnus-spooky-candy", "Candy",
+                () -> ConstellationClient.loc().onHypixel() ? "§6🍬 Spooky Candy" : null,
+                HudPosition.of(2, 194), cfg.spookyCandyHelper));
+        }
+        if (cfg.winterGiftTracker) {
+            hud.register(new HudWidget("cygnus-winter", "WinterGift",
+                () -> ConstellationClient.loc().onHypixel() ? "§b🎁 Winter Gifts" : null,
+                HudPosition.of(2, 202), cfg.winterGiftTracker));
+        }
         }
     }
 
