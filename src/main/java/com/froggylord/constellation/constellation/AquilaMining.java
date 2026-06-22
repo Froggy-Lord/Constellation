@@ -35,6 +35,23 @@ public class AquilaMining extends BaseConstellation {
     private static final Pattern HOTM = Pattern.compile("HOTM:?\\s*(\\d+)");
     private static final Pattern DRILL_FUEL = Pattern.compile("(?:⛏\\s*)?(?:Drill\\s*)?Fuel:?\\s*([\\d,\\.]+[kKmM]?)\\s*/?\\s*([\\d,\\.]+[kKmM]?)?");
     private static final Pattern PICKONIMBUS = Pattern.compile("Pickonimbus:?\\s*([\\d,]+)\\s*/?\\s*([\\d,]+)");
+
+    // Fetchur item hints → correct item name (Skyblocker FetchurSolver mapping)
+    private static final java.util.Map<String, String> FETCHUR = new java.util.HashMap<>();
+    static {
+        FETCHUR.put("hot stuff", "Lava Bucket");
+        FETCHUR.put("yellow rock", "Gold Ore");
+        FETCHUR.put("white stone", "Diorite");
+        FETCHUR.put("red stone", "Redstone");
+        FETCHUR.put("shiny rock", "Mithril");
+        FETCHUR.put("blue gem", "Lapis Lazuli");
+        FETCHUR.put("black rock", "Coal");
+        FETCHUR.put("green rock", "Emerald");
+        FETCHUR.put("clear rock", "Diamond");
+        FETCHUR.put("expensive rock", "Diamond Block");
+        FETCHUR.put("iron rock", "Iron Ore");
+        FETCHUR.put("hard rock", "Obsidian");
+    }
     private static final int[] COLD_STEPS = {25, 50, 75, 90, 95, 99};
 
     private AquilaConfig cfg;
@@ -60,6 +77,35 @@ public class AquilaMining extends BaseConstellation {
             }
             lastColdStep = step;
         });
+        // Fetchur / Puzzler chat hints
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
+            String s = msg.getString();
+            // Fetchur: "[NPC] Fetchur: hot stuff" → match to item
+            if (cfg.fetchurSolver && s.contains("Fetchur")) {
+                String low = s.toLowerCase(java.util.Locale.ROOT);
+                String hint = low.substring(low.indexOf("fetchur") + 7).trim().replace(":", "").trim();
+                for (var e : FETCHUR.entrySet()) {
+                    if (hint.contains(e.getKey())) {
+                        var mc = net.minecraft.client.Minecraft.getInstance();
+                        if (mc.player != null)
+                            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[Fetchur] §fWants: §6" + e.getValue()));
+                        break;
+                    }
+                }
+            }
+            // Puzzler: "[NPC] Puzzler: <question>" → known answers
+            if (cfg.puzzlerSolver && s.contains("Puzzler")) {
+                String low = s.toLowerCase(java.util.Locale.ROOT);
+                String block = puzzlerAnswer(low);
+                if (block != null) {
+                    var mc = net.minecraft.client.Minecraft.getInstance();
+                    if (mc.player != null)
+                        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§e[Puzzler] §fAnswer: §6" + block));
+                }
+            }
+        });
+
         // mineshaft entry — the rare portal everyone wants to know they hit
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
             if (overlay || cfg == null || !cfg.mineshaftAlert || !ConstellationClient.loc().onHypixel()) return;
@@ -227,6 +273,20 @@ public class AquilaMining extends BaseConstellation {
             Matcher m = COMPASS.matcher(line);
             if (m.find()) return "§6🧭 " + m.group(1) + " " + m.group(2) + " " + m.group(3);
         }
+        return null;
+    }
+
+    private static String puzzlerAnswer(String q) {
+        if (q.contains("light") && q.contains("blue")) return "Lapis Block";
+        if (q.contains("gold") || q.contains("yellow")) return "Gold Block";
+        if (q.contains("diamond")) return "Diamond Block";
+        if (q.contains("emerald") || q.contains("green")) return "Emerald Block";
+        if (q.contains("redstone") || q.contains("red")) return "Redstone Block";
+        if (q.contains("coal") || q.contains("black")) return "Coal Block";
+        if (q.contains("iron") || q.contains("white") && q.contains("grey")) return "Iron Block";
+        if (q.contains("obsidian") || q.contains("dark")) return "Obsidian";
+        if (q.contains("snow") || q.contains("cold")) return "Snow Block";
+        if (q.contains("pumpkin") || q.contains("orange")) return "Pumpkin";
         return null;
     }
 
