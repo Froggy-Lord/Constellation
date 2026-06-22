@@ -78,4 +78,10 @@ public class OrionConfig extends BaseConfigGroup {
 
     // box useful dropped items on the floor (spirit leap, decoy, training weights...)
     public boolean dropEsp = true;
+
+    // puzzle solvers — Simon Says, Three Weirdos, Trivia, Creeper Beams
+    public boolean simonSaysSolver = true;
+    public boolean threeWeirdosSolver = true;
+    public boolean triviaSolver = true;
+    public boolean creeperBeamsSolver = true;
 }

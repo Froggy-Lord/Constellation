@@ -39,6 +39,8 @@ public class OrionDungeons extends BaseConstellation {
         OrionSpiritLeap.init(cfg);
         // door/key highlighter — beam over dropped keys + door status
         DoorHighlighter.init();
+        // puzzle solvers — Simon Says, Three Weirdos, Trivia (chat + screen) + Creeper Beams
+        OrionPuzzles.init(cfg);
 
         // secret waypoints — colour-coded boxes for the current room's secrets
         ConstellationClient.world().register(SecretWaypoints::draw);
@@ -52,6 +54,8 @@ public class OrionDungeons extends BaseConstellation {
         ConstellationClient.world().register(DropEsp::draw);
         // door/key highlighter — beam over keys + door status (red/green)
         ConstellationClient.world().register(DoorHighlighter::draw);
+        // creeper beams — draw links between sea lanterns
+        ConstellationClient.world().register(OrionPuzzles::drawBeams);
 
         // read death/mimic/prince/watcher lines for the score. read-only (always allow) so it
         // sees boss dialogue even if the chat cleaner would later hide it.
