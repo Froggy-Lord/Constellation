@@ -31,6 +31,8 @@ public class DracoCrimson extends BaseConstellation {
     private static String kuudraPhase = "";
     private static long kuudraPhaseAt = 0;
     private static long ashfangFrozenUntil = 0;
+    private static String abiphoneCaller = "";
+    private static long abiphoneCallAt = 0;
 
     @Override
     public void init(InitContext ctx) {
@@ -56,6 +58,11 @@ public class DracoCrimson extends BaseConstellation {
             if (cfg.kuudraPhaseHud) {
                 String ph = kuudraPhaseOf(s);
                 if (ph != null) { kuudraPhase = ph; kuudraPhaseAt = System.currentTimeMillis(); }
+            }
+            // Abiphone call — track who's calling
+            if (cfg.abiphoneHud && s.contains("Abiphone") && (s.contains("calling") || s.contains("ringing"))) {
+                String name = s.replaceAll(".*?:\\s*", "").replace("is calling", "").replace("is ringing", "").trim();
+                if (!name.isEmpty() && name.length() < 30) { abiphoneCaller = name; abiphoneCallAt = System.currentTimeMillis(); }
             }
             // Ashfang freeze — you're locked for a few seconds, show the countdown
             if (cfg.ashfangFreezeTimer && s.contains("Ashfang") && s.contains("freezes you")) {
@@ -117,6 +124,14 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 64), cfg.dojoScoreHud));
+        }
+        if (cfg.abiphoneHud) {
+            hud.register(new HudWidget("draco-abiphone", "Abiphone",
+                () -> {
+                    if (abiphoneCaller.isEmpty() || System.currentTimeMillis() - abiphoneCallAt > 15_000) return null;
+                    return "§d📞 " + abiphoneCaller;
+                },
+                HudPosition.of(50, 56), cfg.abiphoneHud));
         }
     }
 

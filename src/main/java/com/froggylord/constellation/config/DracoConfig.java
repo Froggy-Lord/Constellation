@@ -11,4 +11,5 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean kuudraPhaseHud = true;
     public boolean ashfangFreezeTimer = true;
     public boolean dojoScoreHud = true;  // live Dojo minigame score
+    public boolean abiphoneHud = true;   // show who's calling (cmp. Skyblocker AbiphoneHud)
 }
