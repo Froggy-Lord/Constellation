@@ -11,4 +11,6 @@ public class PegasusConfig extends BaseConfigGroup {
     public boolean partyTriggers = true;   // !warp !join !dt commands (cmp. Skyblocker)
     public boolean discordRpc = false;     // show dungeon status on Discord (cmp. Skyblocker)
     public boolean markedPlayers = true;   // notify when marked friends join (cmp. Skyblocker)
+    public boolean deathHighlightFrames = true; // red frame on dead party members (cmp. Skyblocker)
+    public boolean customNameReplacer = false;  // replace player names with nicknames (cmp. Skyblocker)
 }
