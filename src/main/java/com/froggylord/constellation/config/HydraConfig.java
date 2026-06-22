@@ -7,4 +7,5 @@ public class HydraConfig extends BaseConfigGroup {
     public boolean rareSeaCreatureAlert = true;
     public boolean rareSeaCreaturePartyPing = false;
     public boolean hideOtherHooks = false;
+    public boolean trophyFishTracker = true;
 }

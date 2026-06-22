@@ -24,6 +24,7 @@ public class HydraFishing extends BaseConstellation {
     private static int seaCreatures = 0;
     private static int seaCreatureCap = 20;
     private static long lastRareAt = 0;
+    private static int tBronze = 0, tSilver = 0, tGold = 0, tDiamond = 0;
 
     // the catches worth stopping for — their names are distinct enough to spot in a chat line
     private static final String[] RARE = {
@@ -60,6 +61,13 @@ public class HydraFishing extends BaseConstellation {
             String s = msg.getString();
             if (s.contains("Sea Creature") || s.contains("sea creature")) seaCreatures++;
             if (cfg != null && cfg.rareSeaCreatureAlert) checkRare(s);
+            // trophy fish — the catch line names the tier
+            if (cfg != null && cfg.trophyFishTracker && (s.contains("TROPHY FISH") || s.contains("You caught"))) {
+                if (s.contains("Diamond")) tDiamond++;
+                else if (s.contains("Gold")) tGold++;
+                else if (s.contains("Silver")) tSilver++;
+                else if (s.contains("Bronze")) tBronze++;
+            }
         });
     }
 
@@ -99,6 +107,14 @@ public class HydraFishing extends BaseConstellation {
                     return "§b🎣 " + (ms / 1000) + "s" + sc;
                 },
                 HudPosition.of(50, 86), cfg.seaCreatureAlerts));
+        }
+        if (cfg.trophyFishTracker) {
+            hud.register(new HudWidget("hydra-trophy", "Trophy",
+                () -> {
+                    if (tBronze + tSilver + tGold + tDiamond == 0) return null;
+                    return "§c⬤" + tBronze + " §7⬤" + tSilver + " §6⬤" + tGold + " §b⬤" + tDiamond;
+                },
+                HudPosition.of(50, 94), cfg.trophyFishTracker));
         }
     }
 }
