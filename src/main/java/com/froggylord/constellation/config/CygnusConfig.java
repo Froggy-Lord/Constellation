@@ -20,4 +20,7 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean raffleHelper = true;        // raffle event task highlighter (cmp. Skyblocker)
     public boolean mayorPerksDisplay = true;    // show active mayor + perks (cmp. Skyblocker)
     public boolean dianaBurrowGuesser = true;   // estimate burrow location from spade (cmp. Skyblocker)
+    public boolean chimeraAlert = true;          // alert when Chimera book drops (cmp. Skyblocker)
+    public boolean daedalusAlert = true;         // alert when Daedalus Stick drops (cmp. Skyblocker)
+    public boolean mayorElectionHud = true;      // upcoming election info (cmp. Skyblocker)
 }
