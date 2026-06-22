@@ -34,4 +34,6 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean crystalHollowsMapHelper = true;
     public boolean rubyCrystalTracker = true;
     public boolean sapphireCrystalTracker = true;
+    public boolean amethystCrystalTracker = true;
+    public boolean amberCrystalTracker = true;
 }
