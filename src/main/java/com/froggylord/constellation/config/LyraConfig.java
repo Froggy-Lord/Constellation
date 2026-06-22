@@ -33,4 +33,5 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileCommand = true; // /profile shows quick stats summary
     public boolean auctionOutbidAlert = true; // highlight outbid messages (cmp. Skyblocker)
     public boolean auctionSoldAlert = true;   // highlight sold/expired messages (cmp. Skyblocker)
+    public boolean tooltipAttributeShards = true; // show attribute shard details (cmp. Skyblocker)
 }
