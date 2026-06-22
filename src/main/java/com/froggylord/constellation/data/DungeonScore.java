@@ -28,10 +28,11 @@ public final class DungeonScore {
     private static int deaths;
     private static boolean mimicKilled;
     private static boolean princeKilled;
-    private static boolean bloodDone;
     private static boolean inBoss;
-    private static long bloodAt; 
-    private static long bossAt;  
+    private static long bloodAt; // set when watcher says pass
+    private static long bossAt;
+    // 5.2s delay after watcher pass before blood room counts as "done" (matches skyblocker)
+    private static boolean bloodDone() { return bloodAt > 0 && System.currentTimeMillis() - bloodAt > 5200; }
     private static boolean mayorPaul; 
     private static boolean sent270;
     private static boolean sent300;
@@ -143,7 +144,7 @@ public final class DungeonScore {
     
     // settles sooner instead of jump...
     private static int extraRooms(boolean entrance) {
-        if (!bloodDone) return entrance ? 1 : 2;
+        if (!bloodDone()) return entrance ? 1 : 2;
         if (!inBoss && !entrance) return 1;
         return 0;
     }
@@ -154,10 +155,12 @@ public final class DungeonScore {
 
     public static void onChat(String msg) {
         if (DEATH.matcher(msg).matches()) { deaths++; return; }
-        if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!")) { mimicKilled = true; return; }
+        // skytils compat: $SKYTILS-DUNGEON-SCORE-MIMIC$ plus the raw hypixel lines
+        if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!") || msg.contains("SKYTILS-DUNGEON-SCORE-MIMIC")) { mimicKilled = true; return; }
         if (msg.endsWith("Prince dead!") || msg.endsWith("Prince Killed!")
             || msg.equals("A Prince falls. +1 Bonus Score")) { princeKilled = true; return; }
-        if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodDone = true; bloodAt = System.currentTimeMillis(); return; }
+        // watcher says pass — blood is done but score needs +1 room, delay 5.2s like skyblocker does
+        if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodAt = System.currentTimeMillis(); return; }
         if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) { inBoss = true; bossAt = System.currentTimeMillis(); }
         // m7 phase from the exact boss dialogue (real hypixel lines)
         if (msg.startsWith("[BOSS] Maxor: WELL! WELL! WELL!")) m7Phase = "P1 Maxor";
@@ -172,7 +175,7 @@ public final class DungeonScore {
 
     public static void reset() {
         active = false; deaths = 0; mimicKilled = false; princeKilled = false;
-        bloodDone = false; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0; m7Phase = "";
+        bloodAt = 0; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0; m7Phase = "";
         sent270 = false; sent300 = false; floorName = ""; mimicFloor = false;
     }
 
