@@ -55,6 +55,15 @@ public final class Scraper {
     private static boolean recording = false;
     private static long recordUntil = 0;
 
+    // ---- auto-scrape (passive, always-on capture - runs while player plays) ----
+    private static boolean autoScrape = true; // on by default
+    private static String lastSidebarHash = "";
+    private static String lastArea = "";
+    private static String lastGuiTitle = "";
+    private static int lastHealth = -1, lastMana = -1;
+    private static Path chatLogFile;
+    private static Writer chatLogWriter;
+
     public static void init() {
         try { Files.createDirectories(DIR); } catch (Exception ignored) {}
         // chat recorder — feeds from GAME events while recording is active
@@ -62,6 +71,80 @@ public final class Scraper {
             if (!recording) return;
             chatBuffer.add((overlay ? "[overlay] " : "") + msg.getString());
         });
+        // auto-scrape: log ALL chat to a running file
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
+            if (!autoScrape) return;
+            try {
+                if (chatLogWriter == null) openChatLog();
+                String prefix = overlay ? "[overlay] " : "[game] ";
+                chatLogWriter.write(prefix + msg.getString() + "\n");
+                chatLogWriter.flush();
+            } catch (Exception ignored) {}
+        });
+        // auto-scrape: dump sidebar on change
+        ConstellationClient.tick().every(100, "autoscrape-sidebar", () -> {
+            if (!autoScrape) return;
+            if (!ConstellationClient.loc().onHypixel()) return;
+            var lines = ConstellationClient.loc().getSidebarLines();
+            String hash = String.valueOf(lines.hashCode());
+            if (!hash.equals(lastSidebarHash)) {
+                lastSidebarHash = hash;
+                save("auto-sidebar", scrapeSidebar());
+            }
+            String area = String.valueOf(ConstellationClient.loc().area());
+            if (!area.equals(lastArea)) {
+                lastArea = area;
+                var mc = Minecraft.getInstance();
+                if (mc.player != null) {
+                    save("auto-entities-" + sanitize(area), scrapeEntities(mc));
+                    save("auto-location", scrapeLocation());
+                }
+            }
+        });
+        // auto-scrape: dump GUI on open
+        ConstellationClient.tick().every(10, "autoscrape-gui", () -> {
+            if (!autoScrape) return;
+            var mc = Minecraft.getInstance();
+            if (mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.AbstractContainerScreen<?> cs) {
+                String title = cs.getTitle().getString();
+                if (!title.equals(lastGuiTitle)) {
+                    lastGuiTitle = title;
+                    save("auto-gui-" + sanitize(title), scrapeGui(mc));
+                }
+            } else {
+                lastGuiTitle = "";
+            }
+        });
+        // auto-scrape: dump action bar on significant change
+        ConstellationClient.tick().every(40, "autoscrape-actionbar", () -> {
+            if (!autoScrape) return;
+            int h = ActionBar.health(), m = ActionBar.mana();
+            if (Math.abs(h - lastHealth) > (lastHealth / 5) || Math.abs(m - lastMana) > (lastMana / 5)) {
+                lastHealth = h; lastMana = m;
+                save("auto-actionbar", scrapeActionBar());
+            }
+        });
+    }
+
+    private static void openChatLog() {
+        try {
+            chatLogFile = DIR.resolve("chat-log-" + Instant.now().toString().replace(':', '-').substring(0, 19) + ".txt");
+            chatLogWriter = Files.newBufferedWriter(chatLogFile);
+        } catch (Exception e) { chatLogWriter = null; }
+    }
+
+    private static String sanitize(String s) {
+        return s.replaceAll("[^a-zA-Z0-9_-]", "_").replaceAll("_+", "_");
+    }
+
+    public static void setAutoScrape(boolean on) {
+        autoScrape = on;
+        reply(on ? "§aAuto-scraper ON — capturing sidebar, entities, GUI, chat, actionbar passively" : "§7Auto-scraper OFF");
+        if (on && chatLogWriter == null) openChatLog();
+        else if (!on && chatLogWriter != null) {
+            try { chatLogWriter.close(); } catch (Exception ignored) {}
+            chatLogWriter = null;
+        }
     }
 
     // -- dispatcher --

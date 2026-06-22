@@ -108,6 +108,15 @@ public class ConstellationClient implements ClientModInitializer {
                                 com.froggylord.constellation.core.Scraper.scrape(mode);
                                 return 1;
                             })))
+                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
+                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("autoscrape")
+                        .then(com.mojang.brigadier.builder.RequiredArgumentBuilder
+                            .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource, String>argument("onoff", com.mojang.brigadier.arguments.StringArgumentType.word())
+                            .executes(ctx -> {
+                                String val = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "onoff");
+                                com.froggylord.constellation.core.Scraper.setAutoScrape(val.equalsIgnoreCase("on"));
+                                return 1;
+                            })))
             );
             featureManager.registerCommands(dispatcher);
         });
