@@ -275,6 +275,26 @@ public class HerculesFarming extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 216), cfg.cropProfitTracker));
+        if (cfg.pestRepellentTimer) {
+            hud.register(new HudWidget("hercules-repellent", "Repellent",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Repellent") || line.contains("Spray")) return "§a🪲 " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 224), cfg.pestRepellentTimer));
+        }
+        if (cfg.cropUpgradeHelper) {
+            hud.register(new HudWidget("hercules-upgrade", "CropUpgrade",
+                () -> {
+                    if (!inGarden()) return null;
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Upgrade") || line.contains("Crop")) return "§e⬆ " + line.trim();
+                    return null;
+                },
+                HudPosition.of(2, 232), cfg.cropUpgradeHelper));
+        }
         }
         }
     }
