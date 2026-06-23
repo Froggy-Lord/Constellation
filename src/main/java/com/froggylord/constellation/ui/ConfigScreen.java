@@ -429,6 +429,11 @@ public class ConfigScreen extends Screen {
         g.fill(0, h - 1, w, h, ConstellationTheme.ACCENT_DIM);
         g.fill(0, 0, 1, h, ConstellationTheme.ACCENT_DIM);
         g.fill(w - 1, 0, w, h, ConstellationTheme.ACCENT_DIM);
+
+        // subtle pulsing dot — matches HubScreen
+        long dotPulse = (System.currentTimeMillis() / 2000) % 2;
+        int dotAlpha = dotPulse == 0 ? 100 : 50;
+        g.fill(w + (fullW - w) / 2 - 4, fullH - 10, w + (fullW - w) / 2, fullH - 6, (dotAlpha << 24) | ConstellationTheme.ACCENT);
         g.pose().popMatrix();
     }
 
