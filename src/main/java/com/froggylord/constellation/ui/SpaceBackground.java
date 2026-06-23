@@ -19,6 +19,10 @@ public final class SpaceBackground {
     private static final Identifier BG_ALT =
         Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");  // helix
 
+    // animation frames at assets/constellation/textures/gui/anim/ — 8 subtle wave-distorted variants
+    // blit has no alpha blending so we can't overlay them cleanly. the drift+zoom+shooting stars
+    // provide the animation. frames kept as assets for future use when blit supports alpha.
+
     private static long nextShootingStar = 0;
     private static float shootX, shootY, shootDX, shootDY, shootLen;
     private static long shootAt;
@@ -50,9 +54,8 @@ public final class SpaceBackground {
             0, 0, Math.clamp(srcX, 0, texSize - srcW), Math.clamp(srcY, 0, texSize - srcH),
             w, h, srcW, srcH);
 
-        // subtle dark overlay so ui is readable
-        int overlayAlpha = 120;
-        g.fill(0, 0, w, h, (overlayAlpha << 24) | 0x0A0A18);
+        // dark overlay so ui is readable over the nebula
+        g.fill(0, 0, w, h, 0x90080814);
 
         // rare shooting star — tiny streak across the photo
         if (now > nextShootingStar) {
