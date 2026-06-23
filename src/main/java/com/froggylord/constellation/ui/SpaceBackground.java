@@ -61,6 +61,29 @@ public final class SpaceBackground {
             if (i % 13 == 0 && twinkle > 0.85)
                 g.fill(sx - 1, sy - 1, sx + s + 1, sy + s + 1, 0xFFFFEEDD);
         }
+
+        // constellation lines — connect bright stars into recognisable patterns
+        float conAlpha = 0.3f + 0.15f * (float) Math.sin(now / 4000.0); // slow pulse
+        int lineCol = ((int) (conAlpha * 80) << 24) | 0xFFDDBB;
+        int[][] cons = {{7,20},{20,33},{33,46},{46,59},{59,72},{72,85},{85,98},{98,7},
+                        {3,16},{16,29},{29,42},{42,55},{55,68},{68,81},{81,94},{94,3},
+                        {11,24},{24,37},{37,50},{50,63},{63,76},{76,89},{89,102},{102,11}};
+        for (int[] pair : cons) {
+            int a = pair[0] % STAR_COUNT, b = pair[1] % STAR_COUNT;
+            int ax = (int) (starX[a] * w), ay = (int) (starY[a] * h);
+            int bx = (int) (starX[b] * w), by = (int) (starY[b] * h);
+            // only draw if both endpoints are visible and reasonably bright
+            float ta = (float) (0.4 + 0.6 * Math.sin((now + starPhase[a]) / 800.0));
+            float tb = (float) (0.4 + 0.6 * Math.sin((now + starPhase[b]) / 800.0));
+            if (ta < 0.5 || tb < 0.5) continue;
+            // simple bresenham-ish line — just draw segments
+            int steps = Math.max(Math.abs(bx - ax), Math.abs(by - ay)) / 4 + 2;
+            for (int s = 0; s < steps; s++) {
+                int lx = ax + (bx - ax) * s / steps;
+                int ly = ay + (by - ay) * s / steps;
+                g.fill(lx, ly, lx + 1, ly + 1, lineCol);
+            }
+        }
     }
 
     private static int lerp(int a, int b, float t) {
