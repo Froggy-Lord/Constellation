@@ -43,12 +43,12 @@ public class HudWidget implements HudElement {
     @Override
     public int width() {
         String v = currentValue();
-        return Minecraft.getInstance().font.width(label + ": " + (v == null ? "" : v)) + 6;
+        return Minecraft.getInstance().font.width(v == null ? label : v) + 10;
     }
 
     @Override
     public int height() {
-        return Minecraft.getInstance().font.lineHeight + 2;
+        return Minecraft.getInstance().font.lineHeight + 6;
     }
 
     @Override
@@ -56,11 +56,16 @@ public class HudWidget implements HudElement {
         String v = currentValue();
         if (v == null) return;
         var font = Minecraft.getInstance().font;
-        String text = label + ": " + v;
+        String text = v; // just the value, no label prefix
         int w = font.width(text);
-        
-        g.fill(px, py - 2, px + w + 6, py - 1, NebulaTheme.HUD_ACCENT);
-        g.text(font, text, px + 3, py + 1, NebulaTheme.STAR_WHITE, true);
+        int pad = 4;
+
+        // subtle dark background panel so text is readable over game world
+        g.fill(px, py, px + w + pad * 2, py + font.lineHeight + pad, 0x88101018);
+        // thin accent line along the top edge
+        g.fill(px, py, px + w + pad * 2, py + 1, NebulaTheme.HUD_ACCENT);
+        // value text — white with shadow for readability
+        g.text(font, text, px + pad, py + pad - 1, NebulaTheme.STAR_WHITE, true);
     }
 
     @Override
