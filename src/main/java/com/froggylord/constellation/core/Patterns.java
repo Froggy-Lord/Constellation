@@ -162,6 +162,30 @@ public final class Patterns {
         // --- tab: drill fuel ---
         register("tab.drill_fuel", "(?:⛏\\s*)?(?:Drill\\s*)?Fuel:?\\s*([\\d,\\.]+[kKmM]?)\\s*/?\\s*([\\d,\\.]+[kKmM]?)?",
             List.of("⛏ Drill Fuel: 2.5k/3k", "Fuel: 1500/3000"));
+
+        // --- dungeon: chat patterns ---
+        register("chat.mimic", null,
+            List.of("Mimic dead!", "Mimic Killed!", "$SKYTILS-DUNGEON-SCORE-MIMIC$"));
+        register("chat.prince", null,
+            List.of("Prince dead!", "Prince Killed!", "A Prince falls. +1 Bonus Score"));
+        register("chat.watcher_pass", null,
+            List.of("[BOSS] The Watcher: You have proven yourself. You may pass."));
+        register("chat.m7.maxor", null,
+            List.of("[BOSS] Maxor: WELL! WELL! WELL! LOOK WHO'S HERE!"));
+        register("chat.m7.storm", null,
+            List.of("[BOSS] Storm: Pathetic Maxor, just like expected."));
+        register("chat.m7.goldor", null,
+            List.of("[BOSS] Goldor: Who dares trespass into my domain?"));
+        register("chat.m7.necron", null,
+            List.of("[BOSS] Necron: You went further than any human before, congratulations."));
+
+        // --- chat: blessing ---
+        register("chat.blessing", "Blessing of (Power|Time|Wisdom|Life|Stone|Healing)\\b.*?\\b([IVXLC]+)\\b",
+            List.of("Blessing of Power I", "Blessing of Time II"));
+
+        // --- chat: spirit leap ---
+        register("chat.spirit_leap", null,
+            List.of("spirit leap to", "used a Spirit Leap on"));
     }
 
     // ---- api ----

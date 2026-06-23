@@ -35,7 +35,7 @@ class PatternsTest {
 
     @Test
     void patternCountSanity() {
-        assertTrue(Patterns.all().size() >= 38, "should have at least 38 registered patterns");
+        assertTrue(Patterns.all().size() >= 48, "should have at least 48 registered patterns");
     }
 
     @Test
