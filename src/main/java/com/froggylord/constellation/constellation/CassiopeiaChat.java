@@ -112,59 +112,7 @@ public class CassiopeiaChat extends BaseConstellation {
         });
 
         
-        if (cfg.compactPotionMessages) {
-            pipeline.modify(msg -> {
-                String s = msg.getString();
-                if (s.contains("Potion effects") || s.contains("Your active")) return null; 
-                return msg;
-            });
-        }
-
-        
-        if (cfg.shortenCoins) {
-            var COIN = java.util.regex.Pattern.compile("[\\d,]{4,}");
-            pipeline.modify(msg -> {
-                String s = msg.getString();
-                if (s.length() < 10) return msg;
-                String rep = COIN.matcher(s).replaceAll(mr -> {
-                    try {
-                        long n = Long.parseLong(mr.group().replace(",", ""));
-                        if (n < 10000) return mr.group();
-                        if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
-                        return String.format("%.2fM", n / 1_000_000.0);
-                    } catch (Exception e) { return mr.group(); }
-                });
-                
-                return rep.equals(s) ? msg : net.minecraft.network.chat.Component.literal(rep);
-            });
-        }
-
-        // ---- modify_game: compact best...
-        if (cfg.compactBestiary) {
-            pipeline.modify(msg -> {
-                String s = msg.getString();
-                if (s.contains("Bestiary") && (s.contains("+") || s.contains("%"))) return null;
-                return msg;
-            });
-        }
-        if (cfg.compactJacobClaim) {
-            pipeline.modify(msg -> {
-                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
-                // "You claimed your rewards from the Jacob's Contest!" → compact
-                if (s.contains("Jacob") && s.contains("Contest") && (s.contains("claimed") || s.contains("reward")))
-                    return Component.literal("§e🏆 Jacob's Contest rewards claimed!");
-                return msg;
-            });
-        }
-        if (cfg.rareDropFormat) {
-            pipeline.modify(msg -> {
-                String s = msg.getString();
-                // give rare drops a cleaner prefix
-                if (s.contains("RARE DROP") || s.contains("CRAZY RARE DROP") || s.contains("PET DROP"))
-                    return Component.literal("§5§l★ §r" + s);
-                return msg;
-            });
-        }
+        CassiopeiaCompact.init(cfg, pipeline);
 
         // ---- game: mention alerts ----
         if (cfg.mentionAlert) {
