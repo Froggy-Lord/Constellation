@@ -370,8 +370,8 @@ public class ConfigScreen extends Screen {
         }
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
-        g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT_DIM);
-        g.text(mc.font, "✧ " + constellationId, 12, 10, ConstellationTheme.ACCENT, false);
+        g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT);
+        g.text(mc.font, "✧ " + constellationId, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
         String esc = "esc to close  ·  right-click for settings";
         g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
 
