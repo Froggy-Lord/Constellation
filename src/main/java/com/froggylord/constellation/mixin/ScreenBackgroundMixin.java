@@ -26,25 +26,41 @@ public class ScreenBackgroundMixin {
         Screen self = (Screen) (Object) this;
         String className = self.getClass().getName();
 
-        // skip our own themed screens — they render SpaceBackground themselves
+        // skip our own themed screens
         if (className.startsWith("com.froggylord.constellation.ui.")) return;
         if (className.startsWith("com.froggylord.constellation.hud.")) return;
-
-        // skip non-game screens (realms, social interactions, etc. — their own styling)
         if (className.contains("Realms")) return;
         if (className.contains("SocialInteractions")) return;
+
+        // only full-screen menus get the space background — overlays (inventory, chat, etc.)
+        // show the game world behind them, just styled panels
+        boolean fullScreen = className.contains("TitleScreen")
+            || className.contains("SelectWorld")
+            || className.contains("Multiplayer")
+            || className.contains("Options")
+            || className.contains("Language")
+            || className.contains("Controls")
+            || className.contains("Video")
+            || className.contains("Sound")
+            || className.contains("Chat")
+            || className.contains("CreateWorld")
+            || className.contains("EditWorld")
+            || className.contains("LevelLoading")
+            || className.contains("Progress")
+            || className.contains("GenericMessage")
+            || className.contains("Disconnected")
+            || className.contains("Death");
+
+        if (!fullScreen) return; // let game world show behind inventory/overlay screens
 
         Minecraft mc = Minecraft.getInstance();
         int w = mc.getWindow().getGuiScaledWidth();
         int h = mc.getWindow().getGuiScaledHeight();
 
-        // dim the game world so the space bg + ui is readable
+        // dim + nasa background
         g.fill(0, 0, w, h, 0x99080814);
-
-        // render space background behind the vanilla content
         SpaceBackground.render(g, w, h, delta);
 
-        // fade-in on first open
         if (constellation$openTime == 0) constellation$openTime = System.currentTimeMillis();
         SpaceBackground.fadeIn(g, w, h, constellation$openTime);
     }

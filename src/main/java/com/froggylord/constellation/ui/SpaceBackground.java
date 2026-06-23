@@ -32,8 +32,8 @@ public final class SpaceBackground {
     }
 
     static void renderWith(GuiGraphicsExtractor g, int w, int h, float delta, Identifier bg) {
-        // nasa nebula fills the screen
-        g.blitSprite(RenderPipelines.GUI_TEXTURED, bg, 0, 0, w, h);
+        // nasa nebula fills the screen — render full texture stretched
+        g.blit(RenderPipelines.GUI_TEXTURED, bg, 0, 0, 0, 0, w, h, 512, 512);
 
         long now = System.currentTimeMillis();
 
