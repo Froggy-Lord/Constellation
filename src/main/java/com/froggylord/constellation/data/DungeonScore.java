@@ -90,6 +90,7 @@ public final class DungeonScore {
     private static void checkMilestones() {
         var cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.scorePings) return;
+        ConstellationClient.verifyLog("orion-score", score > 0, "score=" + score);
         if (!sent270 && score >= 270 && score < 300) { ping(cfg, "§e270 §6S §7(crypts: " + crypts + ")", 0.7f); sent270 = true; }
         if (!sent300 && score >= 300) { ping(cfg, "§b300 §3S+ §7(crypts: " + crypts + ")", 1.0f); sent300 = true; }
     }
