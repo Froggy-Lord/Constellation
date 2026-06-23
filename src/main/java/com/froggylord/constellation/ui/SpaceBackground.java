@@ -34,18 +34,21 @@ public final class SpaceBackground {
     static void renderWith(GuiGraphicsExtractor g, int w, int h, float delta, Identifier bg) {
         long now = System.currentTimeMillis();
 
-        // slow drift — pan across the 1024px nebula texture over ~3 minutes
-        // so the background is never static but movement is barely noticeable
-        int texSize = 1024;
-        float panSpeed = texSize / 180_000f; // px per ms — full pan in 3 min
-        int viewW = Math.min(texSize, (int)(w * 1.2f)); // show slightly more than screen
-        int viewH = Math.min(texSize, (int)(h * 1.2f));
-        float u0 = ((now * panSpeed) % (texSize - viewW));
-        float v0 = (float) Math.sin(now / 30000.0) * 20 + (texSize - viewH) / 2f;
+        // smooth drift animation across the 2048px nebula
+        int texSize = 2048;
+        long driftMs = 240_000; // full horizontal pan over 4 minutes
+        float u0 = (float) ((now % driftMs) / (double) driftMs) * (texSize - w);
+        float v0 = (float) (Math.sin(now / 25000.0) * 40 + (texSize - h) / 2.0);
+        // breathing zoom — subtle 5% scale oscillation over ~8 seconds
+        float zoom = 1.0f + (float) Math.sin(now / 8000.0) * 0.03f;
+        int srcW = (int) (w / zoom);
+        int srcH = (int) (h / zoom);
+        int srcX = (int) u0 + (w - srcW) / 2;
+        int srcY = (int) v0 + (h - srcH) / 2;
 
-        // render the drifting window of the nebula
         g.blit(RenderPipelines.GUI_TEXTURED, bg,
-            0, 0, (int)u0, (int)v0, w, h, viewW, viewH);
+            0, 0, Math.clamp(srcX, 0, texSize - srcW), Math.clamp(srcY, 0, texSize - srcH),
+            w, h, srcW, srcH);
 
         // subtle dark overlay so ui is readable
         int overlayAlpha = 120;
