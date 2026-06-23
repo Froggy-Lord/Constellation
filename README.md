@@ -4,7 +4,9 @@ a skyblock mod for fabric 1.21.5 (mc 26.2). does pretty much everything — dung
 
 ## why
 
-other mods are split across like 5 different things you gotta install. skyblocker does a lot but its gpl and kinda heavy. skyhanni is cool but needs like 3 dependencies. i just wanted one mod that has everything in it without needing a degree to set up.
+skyblocker does alot but you still need like 3 other mods alongside it for the stuff it misses. skyhanni needs a million dependencies and its own config system on top of whatever else ur running. then theres a seperate mod for dungeon solvers and another one for fishing and another one for farming and now youve got 7 mods all fighting over the same hud space with different config menus and different keybinds and nothing works together.
+
+this is just one jar. one config file. one hud editor. everythings in the same place with the same toggles and the same keybinds. and if you dont want a feature you just turn off that constellation — no need to remove the whole mod because it has one thing you hate. also its mit and doesnt need 4 libraries to launch.
 
 ## what it does
 
