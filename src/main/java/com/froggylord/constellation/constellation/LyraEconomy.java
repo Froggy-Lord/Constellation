@@ -81,8 +81,10 @@ public class LyraEconomy extends BaseConstellation {
                 changeAt = System.currentTimeMillis();
             }
             lastPurse = prev;
+            ConstellationClient.verifyLog("lyra-purse", true, line);
             return;
         }
+        ConstellationClient.verifyLog("lyra-purse", false, "no sidebar purse line");
     }
 
     @Override

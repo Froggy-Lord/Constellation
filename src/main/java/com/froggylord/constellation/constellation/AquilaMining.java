@@ -482,7 +482,11 @@ public class AquilaMining extends BaseConstellation {
                 default -> { }
             }
         }
-        if (mithril == null && gemstone == null && glacite == null) return null;
+        if (mithril == null && gemstone == null && glacite == null) {
+            ConstellationClient.verifyLog("aquila-powder", false, "no powder section in tab");
+            return null;
+        }
+        ConstellationClient.verifyLog("aquila-powder", true, "M:" + mithril + " G:" + gemstone + " Gl:" + glacite);
         StringBuilder sb = new StringBuilder();
         if (mithril != null) sb.append("§2").append(mithril).append("m");
         if (gemstone != null) sb.append(sb.length() > 0 ? "  " : "").append("§d").append(gemstone).append("g");
