@@ -2,6 +2,7 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.api.BazaarApi;
+import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -48,9 +49,9 @@ public final class ChestProfitCalc {
             if (extra.isEmpty()) continue;
             String id = extra.getStringOr("id", "");
             if (id.isEmpty()) continue;
-            double[] bz = BazaarApi.get(id);
-            if (bz == null || bz[1] <= 0) continue; 
-            total += bz[1] * stack.getCount();
+            double val = PriceProvider.value(id);
+            if (val <= 0) continue;
+            total += val * stack.getCount();
             count++;
         }
         if (count == 0) return;

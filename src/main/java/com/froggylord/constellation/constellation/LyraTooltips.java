@@ -39,13 +39,18 @@ public class LyraTooltips {
 
             String sbId = extra.getStringOr("id", "");
             if (cfg.tooltipBazaar && !sbId.isEmpty()) {
+                com.froggylord.constellation.api.AuctionApi.prefetch(sbId); // fire-and-forget LBIN prefetch
                 com.froggylord.constellation.api.BazaarApi.ensureFresh();
+                // combined valuation: LBIN > Bazaar > NPC (via PriceProvider)
+                double val = com.froggylord.constellation.api.PriceProvider.value(sbId);
                 double[] bz = com.froggylord.constellation.api.BazaarApi.get(sbId);
+                if (val > 0) {
+                    lines.add(Component.literal("§6Value: §f" + money(val)));
+                    int count = stack.getCount();
+                    if (count > 1) lines.add(Component.literal("§7Stack (" + count + "): §6" + money(val * count)));
+                }
                 if (bz != null && (bz[0] > 0 || bz[1] > 0)) {
                     lines.add(Component.literal("§7Bazaar: §6" + money(bz[0]) + " §7buy §8| §6" + money(bz[1]) + " §7sell"));
-                    int count = stack.getCount();
-                    if (count > 1 && bz[1] > 0)
-                        lines.add(Component.literal("§7Stack (" + count + "): §6" + money(bz[1] * count)));
                 }
             }
 
