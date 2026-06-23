@@ -22,7 +22,7 @@ public final class SpaceBackground {
     private static final int ANIM_FRAMES = 50;
     private static final int ANIM_FPS = 5;
     private static final int FRAME_W = 256;
-    private static final int FRAME_H = 188;
+    private static final int FRAME_H = 256;
 
     static Identifier animFrame(int idx) {
         return Identifier.fromNamespaceAndPath("constellation",
