@@ -22,51 +22,21 @@ public class LyraEconomy extends BaseConstellation {
     @Override public String displayName() { return "Lyra"; }
     @Override public String description() { return "coin/purse stuff"; }
 
-    private static final Pattern PURSE = Pattern.compile("(?:Purse|Piggy):\\s*([\\d,]+)");
+    static final Pattern PURSE = Pattern.compile("(?:Purse|Piggy):\\s*([\\d,]+)");
     private static final Pattern BITS = Pattern.compile("Bits:\\s*([\\d,]+)");
 
-    private static long sessionStart = Long.MIN_VALUE;
-    private static long currentPurse = 0;
+    static long sessionStart = Long.MIN_VALUE;
+    static long currentPurse = 0;
     private static long lastPurse = 0;
-    private static long changeAt = 0;
-    private static long changeAmount = 0;
+    static long changeAt = 0;
+    static long changeAmount = 0;
 
     private LyraConfig cfg;
 
     @Override
     public void init(InitContext ctx) {
         cfg = (LyraConfig) getConfig();
-        // refresh the parsed purse each second
-        ConstellationClient.tick().every(20, "lyra-purse", LyraEconomy::readPurse);
-        
-        // essence gain — real hypixel line is "<Type> Essence x<n>", count it this session
-        if (cfg.essenceShopHelper) {
-            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
-                if (overlay || !ConstellationClient.loc().onHypixel()) return;
-                var em = ESSENCE.matcher(net.minecraft.ChatFormatting.stripFormatting(msg.getString()));
-                if (em.find()) {
-                    int amt = em.group(2) == null ? 1 : Integer.parseInt(em.group(2));
-                    essenceType = em.group(1);
-                    essenceSession += amt;
-                    essenceAt = System.currentTimeMillis();
-                }
-            });
-        }
-
-        if (cfg.bazaarUndercutAlert) {
-            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
-                if (overlay || !ConstellationClient.loc().onHypixel()) return;
-                String s = net.minecraft.ChatFormatting.stripFormatting(msg.getString());
-                // real bazaar line: "[Bazaar] (Bought|Sold|Order Flipped!) Nx <item> for <coins> coins"
-                var bm = BAZAAR.matcher(s);
-                if (bm.find()) {
-                    long coins = (long) Double.parseDouble(bm.group(2).replace(",", ""));
-                    if (bm.group(1).startsWith("Sold")) bazaarSold += coins;
-                    else if (bm.group(1).startsWith("Bought")) bazaarSpent += coins;
-                    bazaarAt = System.currentTimeMillis();
-                }
-            });
-        }
+        LyraTracker.init(cfg, this); // purse reader + essence + bazaar tx logger
 
         
         if (cfg.auctionOutbidAlert || cfg.auctionSoldAlert) {
@@ -93,31 +63,26 @@ public class LyraEconomy extends BaseConstellation {
         LyraSlotText.init(cfg);
     }
 
-    private static final Pattern ESSENCE = Pattern.compile("([A-Za-z]+) Essence(?: x(\\d+))?");
-    private static final Pattern BAZAAR = Pattern.compile("\\[Bazaar] (Bought|Sold|Order Flipped!)[^f]*for ([\\d,.]+) coins");
-    private static long bazaarSold = 0, bazaarSpent = 0, bazaarAt = 0;
-    private static String essenceType = "";
-    private static int essenceSession = 0;
-    private static long essenceAt = 0;
+    // accessed by LyraTracker via package-private
+    static long bazaarSold = 0, bazaarSpent = 0, bazaarAt = 0;
+    static String essenceType = "";
+    static int essenceSession = 0;
+    static long essenceAt = 0;
 
-    private static void readPurse() {
+    void readPurse() { // package-private for LyraTracker method ref
         long prev = currentPurse;
-        boolean matched = false;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = PURSE.matcher(line);
             if (!m.find()) continue;
             currentPurse = parse(m.group(1));
-            matched = true;
             if (sessionStart == Long.MIN_VALUE) sessionStart = currentPurse;
             if (prev > 0 && currentPurse != prev) {
                 changeAmount = currentPurse - prev;
                 changeAt = System.currentTimeMillis();
             }
             lastPurse = prev;
-            ConstellationClient.verifyLog("lyra-purse", true, line);
             return;
         }
-        ConstellationClient.verifyLog("lyra-purse", false, "no sidebar purse line");
     }
 
     @Override
