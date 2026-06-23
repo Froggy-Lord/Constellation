@@ -4,60 +4,64 @@ import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
+import java.util.Random;
 
 /**
- * renders the nasa carina nebula as a screen background (public domain).
- * 26.2 uses blitSprite with RenderPipelines.GUI_TEXTURED for texture blits.
- *
- * all the twinkling stars and constellation lines? those are in the
- * actual nasa photo — the real thing looks better than anything procedural.
+ * animated space background — AI-generated nebula video from Pika/Runway,
+ * converted to 80-frame sequence at 8fps (10-second seamless loop).
+ * nasa carina + helix stills kept as fallback assets.
  */
 public final class SpaceBackground {
 
     private static final Identifier BG =
-        Identifier.fromNamespaceAndPath("constellation", "textures/gui/background.png"); // carina
+        Identifier.fromNamespaceAndPath("constellation", "textures/gui/background.png");
     private static final Identifier BG_ALT =
-        Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");  // helix
+        Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");
 
-    // animation frames at assets/constellation/textures/gui/anim/ — 8 subtle wave-distorted variants
-    // blit has no alpha blending so we can't overlay them cleanly. the drift+zoom+shooting stars
-    // provide the animation. frames kept as assets for future use when blit supports alpha.
+    // AI-generated animated frames
+    private static final int ANIM_FRAMES = 80;
+    private static final int ANIM_FPS = 8;
+    private static final int FRAME_W = 512;
+    private static final int FRAME_H = 376;
 
+    static Identifier animFrame(int idx) {
+        return Identifier.fromNamespaceAndPath("constellation",
+            "textures/gui/anim/frame_" + String.format("%03d", idx) + ".jpg");
+    }
+
+    // shooting stars
     private static long nextShootingStar = 0;
     private static float shootX, shootY, shootDX, shootDY, shootLen;
     private static long shootAt;
-    private static final java.util.Random RNG = new java.util.Random(42);
+    private static final Random RNG = new Random(42);
 
     public static void render(GuiGraphicsExtractor g, int w, int h, float delta) {
-        renderWith(g, w, h, delta, BG);
-    }
-    public static void renderConfig(GuiGraphicsExtractor g, int w, int h, float delta) {
-        renderWith(g, w, h, delta, BG_ALT);
+        renderAnimated(g, w, h, delta);
     }
 
-    static void renderWith(GuiGraphicsExtractor g, int w, int h, float delta, Identifier bg) {
+    public static void renderConfig(GuiGraphicsExtractor g, int w, int h, float delta) {
+        // config uses the static helix bg for variety — replace with anim later
+        g.blit(RenderPipelines.GUI_TEXTURED, BG_ALT, 0, 0, 0, 0, w, h, 2048, 2048);
+        g.fill(0, 0, w, h, 0xAA080814);
+        shootStars(g, w, h);
+    }
+
+    static void renderAnimated(GuiGraphicsExtractor g, int w, int h, float delta) {
         long now = System.currentTimeMillis();
 
-        // smooth drift animation across the 2048px nebula
-        int texSize = 2048;
-        long driftMs = 240_000; // full horizontal pan over 4 minutes
-        float u0 = (float) ((now % driftMs) / (double) driftMs) * (texSize - w);
-        float v0 = (float) (Math.sin(now / 25000.0) * 40 + (texSize - h) / 2.0);
-        // breathing zoom — subtle 5% scale oscillation over ~8 seconds
-        float zoom = 1.0f + (float) Math.sin(now / 8000.0) * 0.03f;
-        int srcW = (int) (w / zoom);
-        int srcH = (int) (h / zoom);
-        int srcX = (int) u0 + (w - srcW) / 2;
-        int srcY = (int) v0 + (h - srcH) / 2;
+        // cycle through 80 AI-generated frames at 8fps — smooth nebula animation
+        int frameIdx = (int) ((now / (1000 / ANIM_FPS)) % ANIM_FRAMES);
+        g.blit(RenderPipelines.GUI_TEXTURED, animFrame(frameIdx),
+            0, 0, 0, 0, w, h, FRAME_W, FRAME_H);
 
-        g.blit(RenderPipelines.GUI_TEXTURED, bg,
-            0, 0, Math.clamp(srcX, 0, texSize - srcW), Math.clamp(srcY, 0, texSize - srcH),
-            w, h, srcW, srcH);
+        // dark overlay for readability
+        g.fill(0, 0, w, h, 0x99080814);
 
-        // dark overlay so ui is readable over the nebula
-        g.fill(0, 0, w, h, 0x90080814);
+        shootStars(g, w, h);
+    }
 
-        // rare shooting star — tiny streak across the photo
+    private static void shootStars(GuiGraphicsExtractor g, int w, int h) {
+        long now = System.currentTimeMillis();
         if (now > nextShootingStar) {
             shootX = RNG.nextFloat() * 0.8f;
             shootY = RNG.nextFloat() * 0.5f;
@@ -73,7 +77,6 @@ public final class SpaceBackground {
             int sx = (int) (shootX * w + shootDX * shootAge * 0.3f);
             int sy = (int) (shootY * h + shootDY * shootAge * 0.3f);
             int alpha = (int) (fade * 160);
-            int col = (alpha << 24) | 0xFFFFEECC;
             for (int si = 0; si < shootLen; si++) {
                 int sa = (int) ((1f - (float) si / shootLen) * alpha);
                 int px = sx - (int) (shootDX * si * 0.2f);
@@ -84,7 +87,6 @@ public final class SpaceBackground {
         }
     }
 
-    /** fade-in overlay — black→clear over ~400ms */
     public static void fadeIn(GuiGraphicsExtractor g, int w, int h, long openTime) {
         long age = System.currentTimeMillis() - openTime;
         if (age >= 400) return;
