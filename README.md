@@ -65,6 +65,14 @@ inspired by skyblocker, skyhanni, odin, and basically every skyblock mod. the du
 
 dungeon data and waypoint coordinates come from hypixel's public game data.
 
+## fair play
+
+all solvers are **advisory only** — they highlight, box, and draw lines to help you solve puzzles, but they never click anything for you. no auto-click, no auto-solve, no packet manipulation. everything this mod does is visual overlay on top of the game. if you can see it, the mod can too, and nothing more.
+
+this isnt some legal disclaimer to cover my arse — its how the mod actually works. the superpairs experiment solver used to auto-flip cards and i removed that specifically because it crossed the line from helper to automation.
+
+if you want something that plays the game for you this is the wrong mod.
+
 ## license
 
 mit. do whatever you want with it, just dont blame me if it breaks.
