@@ -141,6 +141,8 @@ public class HubScreen extends Screen {
         String hint = "right shift · esc to close · scroll to browse";
         g.text(font, hint, w / 2 - font.width(hint) / 2, h - 2 - font.lineHeight,
             ConstellationTheme.TEXT_FAINT, false);
+
+        SpaceBackground.fadeIn(g, w, h, openTime);
     }
 
     // ---- input (unchanged logic) ----

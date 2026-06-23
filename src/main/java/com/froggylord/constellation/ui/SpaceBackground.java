@@ -18,6 +18,11 @@ public final class SpaceBackground {
     private static final long[] starPhase = new long[STAR_COUNT];
     private static final Random RNG = new Random(42);
 
+    // shooting stars — appear rarely, streak across, then gone
+    private static long nextShootingStar = 0;
+    private static float shootX, shootY, shootDX, shootDY, shootLen;
+    private static long shootAt;
+
     static {
         for (int i = 0; i < STAR_COUNT; i++) {
             starX[i] = RNG.nextFloat();
@@ -62,8 +67,34 @@ public final class SpaceBackground {
                 g.fill(sx - 1, sy - 1, sx + s + 1, sy + s + 1, 0xFFFFEEDD);
         }
 
+        // shooting star — rare streak across the sky
+        if (now > nextShootingStar) {
+            shootX = RNG.nextFloat() * 0.8f;
+            shootY = RNG.nextFloat() * 0.5f;
+            shootDX = (RNG.nextFloat() - 0.2f) * w / 200f;
+            shootDY = (RNG.nextFloat() * 0.6f + 0.3f) * h / 120f;
+            shootLen = 40 + RNG.nextFloat() * 60;
+            shootAt = now;
+            nextShootingStar = now + 8000 + RNG.nextInt(20000); // every 8-28 seconds
+        }
+        long shootAge = now - shootAt;
+        if (shootAge < 1200) {
+            float fade = 1f - (float) shootAge / 1200f; // fades out over 1.2 seconds
+            int sx = (int) (shootX * w + shootDX * shootAge * 0.3f);
+            int sy = (int) (shootY * h + shootDY * shootAge * 0.3f);
+            int shootAlpha = (int) (fade * 180);
+            int shootCol = (shootAlpha << 24) | 0xFFFFEECC;
+            for (int si = 0; si < shootLen; si++) {
+                int siAlpha = (int) ((1f - (float) si / shootLen) * shootAlpha);
+                int px = sx - (int) (shootDX * si * 0.2f);
+                int py = sy - (int) (shootDY * si * 0.2f);
+                if (px > 0 && px < w && py > 0 && py < h && siAlpha > 5)
+                    g.fill(px, py, px + 1 + (int)(fade * 2), py + 1, (siAlpha << 24) | 0xFFFFEECC);
+            }
+        }
+
         // constellation lines — connect bright stars into recognisable patterns
-        float conAlpha = 0.3f + 0.15f * (float) Math.sin(now / 4000.0); // slow pulse
+        float conAlpha = 0.3f + 0.15f * (float) Math.sin(now / 4000.0);
         int lineCol = ((int) (conAlpha * 80) << 24) | 0xFFDDBB;
         int[][] cons = {{7,20},{20,33},{33,46},{46,59},{59,72},{72,85},{85,98},{98,7},
                         {3,16},{16,29},{29,42},{42,55},{55,68},{68,81},{81,94},{94,3},
@@ -84,6 +115,15 @@ public final class SpaceBackground {
                 g.fill(lx, ly, lx + 1, ly + 1, lineCol);
             }
         }
+    }
+
+    /** fade-in overlay — call at end of screen render, fades over ~400ms */
+    public static void fadeIn(GuiGraphicsExtractor g, int w, int h, long openTime) {
+        long age = System.currentTimeMillis() - openTime;
+        if (age >= 400) return;
+        float alpha = 1f - (float) age / 400f;
+        int col = ((int) (alpha * 255) << 24) | 0x000000;
+        g.fill(0, 0, w, h, col);
     }
 
     private static int lerp(int a, int b, float t) {
