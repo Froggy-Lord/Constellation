@@ -45,6 +45,11 @@ public class HudEditScreen extends Screen {
 
             try { el.render(g, px, py); } catch (Exception ignored) {}
 
+            // dragged element gets a subtle glow behind it
+            if (dragging == el) {
+                g.fill(px - 4, py - 4, px + w + 4, py + h + 4, 0x18FFCC33);
+            }
+
             int border = (dragging == el) ? ConstellationTheme.ACCENT : 0x55FFFFFF;
             g.fill(px - 2, py - 2, px + w + 2, py - 1, border);
             g.fill(px - 2, py + h + 1, px + w + 2, py + h + 2, border);

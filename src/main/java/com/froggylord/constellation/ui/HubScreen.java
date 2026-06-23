@@ -157,6 +157,11 @@ public class HubScreen extends Screen {
             ConstellationTheme.TEXT_FAINT, false);
 
         SpaceBackground.fadeIn(g, w, h, openTime);
+
+        // subtle pulsing indicator dot — shows the overlay is active
+        long dotPulse = (System.currentTimeMillis() / 2000) % 2;
+        int dotAlpha = dotPulse == 0 ? 120 : 60;
+        g.fill(6, h - 8, 10, h - 4, (dotAlpha << 24) | ConstellationTheme.ACCENT);
     }
 
     // ---- input (unchanged logic) ----
