@@ -21,6 +21,13 @@ dependencies {
 
     // ModMenu for config button integration
     implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+
+    // test deps — patterns test doesn't touch minecraft, just pure java
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 loom {

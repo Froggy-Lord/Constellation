@@ -258,17 +258,11 @@ public class AndromedaRift extends BaseConstellation {
             hud.register(new HudWidget("andromeda-vampslayer", "VampSlayer",
                 () -> {
                     if (!inRift()) return null;
-                    // real boss is "Riftstalker Bloodfiend" + " X/15 Kills" line (live scrape confirmed)
-                    String boss = null, kills = null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Riftstalker") || line.contains("Bloodfiend")) boss = line.trim();
-                        else if (line.contains("Kills")) kills = line.trim();
-                    }
-                    if (boss == null) return null;
-                    return "§4🧛 " + boss + (kills != null ? " §7(" + kills + ")" : "");
+                    for (String line : ConstellationClient.loc().getSidebarLines())
+                        if (line.contains("Vampire") || line.contains("Slayer")) return "§4🧛 " + line.trim();
+                    return "§4🧛 Vampire Slayer";
                 },
                 HudPosition.of(2, 278), cfg.vampireSlayerRiftHelper));
-        }
         if (cfg.wyldWoodsSoulHelper) {
             hud.register(new HudWidget("andromeda-soulswyld", "WyldSouls",
                 () -> {
@@ -288,7 +282,6 @@ public class AndromedaRift extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 294), cfg.dreadfarmEnigmaHelper));
-        }
         if (cfg.colosseumScoreHud) {
             hud.register(new HudWidget("andromeda-colscore", "ColoScore",
                 () -> {
@@ -308,6 +301,9 @@ public class AndromedaRift extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 310), cfg.stillgoreChateauTimer));
+        }
+        }
+        }
         }
     }
 
