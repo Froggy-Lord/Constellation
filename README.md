@@ -73,6 +73,22 @@ this isnt some legal disclaimer to cover my arse — its how the mod actually wo
 
 if you want something that plays the game for you this is the wrong mod.
 
+## verified areas
+
+the sidebar/tab/gui patterns that read data from hypixel need to match exactly or the widget just never shows anything. these areas have been checked against live scrapes and confirmed working:
+
+- ✅ hub (purse, bits, calendar, area)
+- ✅ garden (copper, sowdust, pests, visitors, contest — all from tab)
+- ✅ catacombs (time elapsed, cleared %, score)
+- ✅ crimson isle (reputation, dojo, vanquisher — tab only, sidebar has none of this)
+- ✅ dwarven mines (powders, commissions, forges, daily quests — all from tab)
+- ✅ crystal hollows (crystals, purse, bits)
+- ✅ rift (motes, enigma souls, time left — time is tab-only, motes on sidebar)
+- ❌ kuudra — needs live scrape
+- ❌ glacite tunnels — no data yet
+
+the ones marked ❌ are guesses at the hypixel format and probly dont fire. turn on `/cn verify` in those areas and check the log for NO-MATCH lines.
+
 ## license
 
 mit. do whatever you want with it, just dont blame me if it breaks.
