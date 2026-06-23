@@ -15,10 +15,16 @@ public class HubScreen extends Screen {
 
     private final Screen parent;
     private long openTime;
-    private int scrollOff = 0;
+    private float scrollOff = 0;
+    private float scrollTarget = 0;
     private int maxScroll = 0;
     private boolean scrolling = false;
-    private int scrollGrabY = 0, scrollGrabOff = 0;
+    private int scrollGrabY = 0;
+    private float scrollGrabOff = 0;
+    private float scrollVelocity = 0;
+
+    private static final java.util.Map<String, Float> toggleAnim = new java.util.HashMap<>();
+    private static final java.util.Map<String, Float> cardHover = new java.util.HashMap<>();
 
     public HubScreen(Screen parent) {
         super(Component.literal("Constellation"));
@@ -60,12 +66,19 @@ public class HubScreen extends Screen {
             var c = opt.get();
             int col = idx % cols, row = idx / cols;
             int cx = gridX + col * (cardW + 8);
-            int cy = gridY + row * (cardH + 6) - scrollOff;
+            int cy = gridY + row * (cardH + 6) - (int) scrollOff;
 
             if (cy + cardH > headerH && cy < h - 80) {
                 boolean enabled = c.isEnabled();
                 boolean hover = mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + cardH;
                 ConstellationTheme.card(g, cx, cy, cardW, cardH, enabled || hover);
+
+                // hover glow fade
+                float hGlow = cardHover.getOrDefault(id, 0f);
+                hGlow += (hover ? 0.15f : -0.08f);
+                hGlow = Math.clamp(hGlow, 0f, 1f);
+                cardHover.put(id, hGlow);
+                if (hGlow > 0.01f) ConstellationTheme.glow(g, cx, cy, cardW, cardH, hGlow);
 
                 String name = c.displayName();
                 g.text(font, name, cx + 6, cy + 6,
@@ -76,17 +89,23 @@ public class HubScreen extends Screen {
                 if (font.width(desc) > maxW) desc = font.plainSubstrByWidth(desc, maxW - 6) + "…";
                 g.text(font, desc, cx + 6, cy + 22, ConstellationTheme.TEXT_MUTED, false);
 
-                // toggle indicator
+                // toggle indicator with smooth animation
                 int tx = cx + cardW - 32, ty = cy + 6;
-                ConstellationTheme.toggle(g, tx, ty, enabled);
+                float target = enabled ? 1f : 0f;
+                float cur = toggleAnim.getOrDefault(id, target);
+                cur += (target - cur) * 0.18f; // smooth lerp
+                if (Math.abs(cur - target) < 0.01f) cur = target;
+                toggleAnim.put(id, cur);
+                ConstellationTheme.toggle(g, tx, ty, cur);
             }
             idx++;
         }
 
         int totalRows = (int) Math.ceil((double) idx / cols);
         maxScroll = Math.max(0, totalRows * (cardH + 6) - (h - headerH - 90));
-        if (scrollOff > maxScroll) scrollOff = maxScroll;
-        if (scrollOff < 0) scrollOff = 0;
+        scrollTarget = Math.clamp(scrollTarget, 0, maxScroll);
+        scrollOff += (scrollTarget - scrollOff) * 0.2f; // smooth lerp
+        if (Math.abs(scrollOff - scrollTarget) < 0.5f) scrollOff = scrollTarget;
 
         // ---- scrollbar ----
         if (maxScroll > 0) {
@@ -94,7 +113,7 @@ public class HubScreen extends Screen {
             g.fill(sbX, sbY, sbX + 4, sbY + sbH, ConstellationTheme.BORDER);
             float ratio = (float) sbH / (sbH + maxScroll);
             int thumbH = Math.max(20, (int) (sbH * ratio));
-            int thumbY = sbY + (int) ((float) scrollOff / maxScroll * (sbH - thumbH));
+            int thumbY = sbY + (int) (scrollOff / maxScroll * (sbH - thumbH));
             g.fill(sbX, thumbY, sbX + 4, thumbY + thumbH, ConstellationTheme.ACCENT);
         }
 
@@ -151,7 +170,7 @@ public class HubScreen extends Screen {
         for (String id : allIds) {
             int col = idx % cols, row = idx / cols;
             int cx = 10 + col * (cardW + 8);
-            int cy = 46 + row * 56 - scrollOff;
+            int cy = 46 + row * 56 - (int) scrollTarget;
             var opt = ConstellationClient.featureManager().get(id);
             if (opt.isEmpty()) continue;
             if (mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + 50) {
@@ -161,7 +180,7 @@ public class HubScreen extends Screen {
             }
             idx++;
         }
-        if (maxScroll > 0 && mx >= w - 6) { scrolling = true; scrollGrabY = my; scrollGrabOff = scrollOff; return true; }
+        if (maxScroll > 0 && mx >= w - 6) { scrolling = true; scrollGrabY = my; scrollGrabOff = scrollTarget; return true; }
         return super.mouseClicked(event, dbl);
     }
 
@@ -169,7 +188,8 @@ public class HubScreen extends Screen {
         if (scrolling) {
             int my = (int) event.y();
             float pct = (float) (my - scrollGrabY) / (Minecraft.getInstance().getWindow().getGuiScaledHeight() - 80);
-            scrollOff = Math.clamp(scrollGrabOff + (int) (pct * maxScroll), 0, maxScroll);
+            scrollTarget = Math.clamp(scrollGrabOff + pct * maxScroll, 0, maxScroll);
+            scrollOff = scrollTarget; // snap on drag
             return true;
         }
         return super.mouseDragged(event, dx, dy);
@@ -177,7 +197,7 @@ public class HubScreen extends Screen {
 
     @Override public boolean mouseReleased(MouseButtonEvent event) { scrolling = false; return super.mouseReleased(event); }
     @Override public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
-        scrollOff = Math.clamp(scrollOff - (int) (scrollY * 20), 0, maxScroll);
+        scrollTarget = Math.clamp(scrollTarget - (float) (scrollY * 24), 0, maxScroll);
         return true;
     }
 

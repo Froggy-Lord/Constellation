@@ -57,11 +57,30 @@ public final class ConstellationTheme {
         }
     }
 
-    /** small toggle switch */
+    /** small toggle switch — use progress 0..1 for smooth animation */
     public static void toggle(GuiGraphicsExtractor g, int x, int y, boolean on) {
-        g.fill(x, y, x + 26, y + 14, on ? ACCENT : 0xFF333350);
-        int knobX = on ? x + 14 : x + 2;
+        toggle(g, x, y, on ? 1f : 0f);
+    }
+    public static void toggle(GuiGraphicsExtractor g, int x, int y, float progress) {
+        // track background fades between off(333350) and on(ACCENT)
+        int offCol = 0xFF333350;
+        int track = lerpCol(offCol, ACCENT, progress);
+        g.fill(x, y, x + 26, y + 14, track);
+        // knob slides
+        int knobX = Math.round(x + 2 + progress * 12);
+        // knob gets a subtle glow when on
+        if (progress > 0.5f) {
+            int glow = lerpCol(0x00000000, 0x40FFD070, (progress - 0.5f) * 2f);
+            g.fill(knobX - 1, y + 1, knobX + 11, y + 13, glow);
+        }
         g.fill(knobX, y + 2, knobX + 10, y + 12, TEXT);
+    }
+
+    /** glow rectangle — used for card hover effects */
+    public static void glow(GuiGraphicsExtractor g, int x, int y, int w, int h, float strength) {
+        if (strength <= 0) return;
+        int alpha = (int) (strength * 40);
+        g.fill(x, y, x + w, y + h, (alpha << 24) | 0xFFCC33);
     }
 
     /** title text in the panel header area */
@@ -77,5 +96,15 @@ public final class ConstellationTheme {
     /** dim hint text */
     public static void hint(GuiGraphicsExtractor g, Font font, String text, int x, int y) {
         g.text(font, text, x, y, TEXT_MUTED, false);
+    }
+
+    static int lerpCol(int a, int b, float t) {
+        t = Math.clamp(t, 0f, 1f);
+        int ar = (a >> 16) & 0xFF, ag = (a >> 8) & 0xFF, ab = a & 0xFF, aa = (a >> 24) & 0xFF;
+        int br = (b >> 16) & 0xFF, bg = (b >> 8) & 0xFF, bb = b & 0xFF, ba = (b >> 24) & 0xFF;
+        return (Math.round(aa + (ba - aa) * t) << 24)
+             | (Math.round(ar + (br - ar) * t) << 16)
+             | (Math.round(ag + (bg - ag) * t) << 8)
+             | Math.round(ab + (bb - ab) * t);
     }
 }
