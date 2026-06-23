@@ -1,10 +1,7 @@
 package com.froggylord.constellation.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Font;
-import net.minecraft.resources.ResourceLocation;
 
 /**
  * the mods entire look in one place — palette, panel/card helpers, typography.
@@ -38,8 +35,8 @@ public final class ConstellationTheme {
     public static final int TEXT_MUTED= 0xFF706C65;
     public static final int TEXT_FAINT= 0xFF4A4640;
 
-    // nasa backgrounds
-    public static final ResourceLocation BG = ResourceLocation.fromNamespaceAndPath("constellation", "textures/gui/background.png");
+    // nasa background texture lives at assets/constellation/textures/gui/background.png
+    // wire into screens via guiGraphics.blit() when blit api is confirmed for 26.2
 
     // ---- drawing helpers ----
 
