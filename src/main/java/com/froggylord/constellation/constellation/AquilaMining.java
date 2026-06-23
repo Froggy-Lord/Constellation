@@ -509,7 +509,12 @@ public class AquilaMining extends BaseConstellation {
             sb.append("§f").append(m.group("name").trim()).append(" §b").append(val);
             if (shown >= 2) break;
         }
-        return sb.length() == 0 ? null : sb.toString();
+        if (sb.length() == 0) {
+            ConstellationClient.verifyLog("aquila-commission", false, "no commissions in tab");
+            return null;
+        }
+        ConstellationClient.verifyLog("aquila-commission", true, sb.toString());
+        return sb.toString();
     }
 
     private static String forgeLine() {
@@ -525,7 +530,12 @@ public class AquilaMining extends BaseConstellation {
             String time = m.group("time");
             sb.append("§f").append(m.group("item").trim()).append(" §7").append(time);
         }
-        return sb.length() == 0 ? null : "§6" + sb.toString();
+        if (sb.length() == 0) {
+            ConstellationClient.verifyLog("aquila-forge", false, "no active forges");
+            return null;
+        }
+        ConstellationClient.verifyLog("aquila-forge", true, sb.toString());
+        return "§6" + sb.toString();
     }
 
     private static String compassLine() {
