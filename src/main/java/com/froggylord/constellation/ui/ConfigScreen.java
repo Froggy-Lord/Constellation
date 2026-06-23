@@ -2,7 +2,7 @@ package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.*;
-import com.froggylord.constellation.render.NebulaTheme;
+import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -359,21 +359,21 @@ public class ConfigScreen extends Screen {
 
         int sw = sideW(w), navY0 = TB + 4;
         g.fill(0, 0, sw, h, 0xFF0E0E1A);
-        g.fill(sw - 1, 0, sw, h, NebulaTheme.ACCENT_DIM);
+        g.fill(sw - 1, 0, sw, h, ConstellationTheme.ACCENT_DIM);
         for (int i = 0; i < cats.length; i++) {
             int y = navY0 + i * 24;
             boolean sel = i == selectedCat, hov = mx >= 0 && mx < sw && my >= y && my < y + 24;
             if (sel) g.fill(0, y, sw, y + 24, 0xFF1A1A28);
             else if (hov) g.fill(0, y, sw, y + 24, 0xFF252535);
-            if (sel) g.fill(0, y, 3, y + 24, NebulaTheme.ACCENT_GOLD);
-            g.text(mc.font, cats[i], 12, y + 7, sel ? NebulaTheme.ACCENT_BRIGHT : (hov ? NebulaTheme.STAR_WHITE : NebulaTheme.STAR_MUTED), false);
+            if (sel) g.fill(0, y, 3, y + 24, ConstellationTheme.ACCENT);
+            g.text(mc.font, cats[i], 12, y + 7, sel ? ConstellationTheme.ACCENT_BRIGHT : (hov ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED), false);
         }
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
-        g.fill(0, TB - 1, w, TB, NebulaTheme.ACCENT_DIM);
-        g.text(mc.font, "✧ " + constellationId, 12, 10, NebulaTheme.ACCENT_GOLD, false);
+        g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT_DIM);
+        g.text(mc.font, "✧ " + constellationId, 12, 10, ConstellationTheme.ACCENT, false);
         String esc = "esc to close  ·  right-click for settings";
-        g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, NebulaTheme.STAR_MUTED, false);
+        g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
 
         var vis = visibleModules();
         int cols = cols(w), cardW = cardW(w);
@@ -386,8 +386,8 @@ public class ConfigScreen extends Screen {
         scrollF += (scrollTarget - scrollF) * Math.min(1, dt * 16);
         if (Math.abs(scrollF - scrollTarget) < 0.5f) scrollF = scrollTarget;
 
-        g.text(mc.font, cats[selectedCat], gridX(w), TB + 8, NebulaTheme.STAR_WHITE, false);
-        g.text(mc.font, vis.size() + " modules", gridX(w) + mc.font.width(cats[selectedCat]) + 10, TB + 9, NebulaTheme.STAR_MUTED, false);
+        g.text(mc.font, cats[selectedCat], gridX(w), TB + 8, ConstellationTheme.TEXT, false);
+        g.text(mc.font, vis.size() + " modules", gridX(w) + mc.font.width(cats[selectedCat]) + 10, TB + 9, ConstellationTheme.TEXT_MUTED, false);
 
         g.enableScissor(sw, gridTop(), w, h);
         int gx = gridX(w), gTop = gridTop(), sc = Math.round(scrollF);
@@ -404,7 +404,7 @@ public class ConfigScreen extends Screen {
         if (maxScroll > 0) {
             int tx = w - 5, barH = Math.max(20, viewH * viewH / contentH);
             g.fill(tx, gTop, tx + 3, gTop + viewH, 0xFF15111f);
-            g.fill(tx, gTop + (int)((viewH - barH) * (scrollF / maxScroll)), tx + 3, gTop + (int)((viewH - barH) * (scrollF / maxScroll)) + barH, NebulaTheme.ACCENT_DIM);
+            g.fill(tx, gTop + (int)((viewH - barH) * (scrollF / maxScroll)), tx + 3, gTop + (int)((viewH - barH) * (scrollF / maxScroll)) + barH, ConstellationTheme.ACCENT_DIM);
         }
 
         
@@ -413,22 +413,22 @@ public class ConfigScreen extends Screen {
         if (modalAnim > 0.01f && openModule != null) {
             int mx2 = w/2 - 180, my2 = h/2 - 120;
             g.fill(mx2, my2, mx2 + 360, my2 + 240, 0xF21A1A28);
-            g.fill(mx2, my2, mx2 + 360, my2 + 3, NebulaTheme.ACCENT_GOLD);
-            g.text(mc.font, openModule.name.replaceAll("([A-Z])", " $1").trim(), mx2 + 10, my2 + 10, NebulaTheme.ACCENT_BRIGHT, false);
-            g.text(mc.font, openModule.desc, mx2 + 10, my2 + 24, NebulaTheme.STAR_MUTED, false);
+            g.fill(mx2, my2, mx2 + 360, my2 + 3, ConstellationTheme.ACCENT);
+            g.text(mc.font, openModule.name.replaceAll("([A-Z])", " $1").trim(), mx2 + 10, my2 + 10, ConstellationTheme.ACCENT_BRIGHT, false);
+            g.text(mc.font, openModule.desc, mx2 + 10, my2 + 24, ConstellationTheme.TEXT_MUTED, false);
             int oy = my2 + 44;
             for (var sub : openModule.subs) {
                 boolean on = sub.get.getAsBoolean();
-                g.text(mc.font, (on ? "✦ " : "  ") + sub.label, mx2 + 10, oy, on ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_MUTED, false);
+                g.text(mc.font, (on ? "✦ " : "  ") + sub.label, mx2 + 10, oy, on ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_MUTED, false);
                 oy += 18;
             }
-            g.text(mc.font, "click to close", mx2 + 360 - mc.font.width("click to close") - 10, my2 + 230, NebulaTheme.STAR_MUTED, false);
+            g.text(mc.font, "click to close", mx2 + 360 - mc.font.width("click to close") - 10, my2 + 230, ConstellationTheme.TEXT_MUTED, false);
         }
 
-        g.fill(0, 0, w, 1, NebulaTheme.ACCENT_GOLD);
-        g.fill(0, h - 1, w, h, NebulaTheme.ACCENT_DIM);
-        g.fill(0, 0, 1, h, NebulaTheme.ACCENT_DIM);
-        g.fill(w - 1, 0, w, h, NebulaTheme.ACCENT_DIM);
+        g.fill(0, 0, w, 1, ConstellationTheme.ACCENT);
+        g.fill(0, h - 1, w, h, ConstellationTheme.ACCENT_DIM);
+        g.fill(0, 0, 1, h, ConstellationTheme.ACCENT_DIM);
+        g.fill(w - 1, 0, w, h, ConstellationTheme.ACCENT_DIM);
         g.pose().popMatrix();
     }
 
@@ -437,18 +437,18 @@ public class ConfigScreen extends Screen {
         m.knob += ((on ? 1f : 0f) - m.knob) * Math.min(1, dt * 16);
         m.hover += ((hov ? 1f : 0f) - m.hover) * Math.min(1, dt * 14);
         g.fill(cx, cy, cx + cardW, cy + CARD_H, on ? 0xFF222240 : (hov ? 0xFF252535 : 0xFF1A1A28));
-        int knobCol = lerp(0xFF333333, NebulaTheme.ACCENT_GOLD, m.knob);
+        int knobCol = lerp(0xFF333333, ConstellationTheme.ACCENT, m.knob);
         g.fill(cx, cy, cx + cardW, cy + 3, knobCol);
         String name = m.name.replaceAll("([A-Z])", " $1").trim();
         if (!name.isEmpty()) name = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (name.length() > 18) name = name.substring(0, 17) + "…";
         Minecraft mc = Minecraft.getInstance();
-        g.text(mc.font, name, cx + 5, cy + 8, m.knob > 0.5f ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_WHITE, false);
-        g.text(mc.font, m.desc, cx + 5, cy + 22, NebulaTheme.STAR_MUTED, false);
+        g.text(mc.font, name, cx + 5, cy + 8, m.knob > 0.5f ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
+        g.text(mc.font, m.desc, cx + 5, cy + 22, ConstellationTheme.TEXT_MUTED, false);
         
         if (!m.subs.isEmpty()) {
             String badge = m.subs.size() + " opts";
-            g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 32, NebulaTheme.ACCENT_DIM, false);
+            g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 32, ConstellationTheme.ACCENT_DIM, false);
         }
     }
 

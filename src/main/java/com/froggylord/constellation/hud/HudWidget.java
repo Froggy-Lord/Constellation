@@ -1,6 +1,6 @@
 package com.froggylord.constellation.hud;
 
-import com.froggylord.constellation.render.NebulaTheme;
+import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
@@ -61,11 +61,11 @@ public class HudWidget implements HudElement {
         int pad = 4;
 
         // subtle dark background panel so text is readable over game world
-        g.fill(px, py, px + w + pad * 2, py + font.lineHeight + pad, 0x88101018);
-        // thin accent line along the top edge
-        g.fill(px, py, px + w + pad * 2, py + 1, NebulaTheme.HUD_ACCENT);
+        g.fill(px, py, px + w + pad * 2, py + font.lineHeight + pad, 0xCC101018);
+        // thin gold accent line along the top edge
+        g.fill(px, py, px + w + pad * 2, py + 1, ConstellationTheme.ACCENT);
         // value text — white with shadow for readability
-        g.text(font, text, px + pad, py + pad - 1, NebulaTheme.STAR_WHITE, true);
+        g.text(font, text, px + pad, py + pad - 1, ConstellationTheme.TEXT, true);
     }
 
     @Override

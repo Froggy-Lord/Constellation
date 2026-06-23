@@ -1,7 +1,7 @@
 package com.froggylord.constellation.hud;
 
 import com.froggylord.constellation.ConstellationClient;
-import com.froggylord.constellation.render.NebulaTheme;
+import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -30,31 +30,35 @@ public class HudEditScreen extends Screen {
         com.froggylord.constellation.ui.SpaceBackground.render(g, width, height, delta);
         Font font = Minecraft.getInstance().font;
 
+        // header
+        ConstellationTheme.panel(g, 0, 0, width, 32);
+        String title = "HUD Editor";
+        g.text(font, title, 12, 9, ConstellationTheme.ACCENT_BRIGHT, false);
+        String sub = "drag to reposition — esc to save";
+        g.text(font, sub, 14 + font.width(title), 13, ConstellationTheme.TEXT_MUTED, false);
+
         var editable = ConstellationClient.hudManager().getEditable();
         for (HudElement el : editable) {
             int px = el.position().x() * width / 100;
             int py = el.position().y() * height / 100;
             int w = Math.max(el.width(), 12), h = Math.max(el.height(), 8);
 
-            
             try { el.render(g, px, py); } catch (Exception ignored) {}
 
-            
-            int border = (dragging == el) ? NebulaTheme.ACCENT_GOLD : 0x55FFFFFF;
+            int border = (dragging == el) ? ConstellationTheme.ACCENT : 0x55FFFFFF;
             g.fill(px - 2, py - 2, px + w + 2, py - 1, border);
             g.fill(px - 2, py + h + 1, px + w + 2, py + h + 2, border);
             g.fill(px - 2, py - 2, px - 1, py + h + 2, border);
             g.fill(px + w + 1, py - 2, px + w + 2, py + h + 2, border);
 
-            
             String tag = el.editorLabel();
-            g.text(font, tag, px, py - 11, dragging == el ? NebulaTheme.ACCENT_BRIGHT : NebulaTheme.STAR_MUTED, true);
+            g.text(font, tag, px, py - 11, dragging == el ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_MUTED, true);
         }
 
         String hint = editable.isEmpty()
-            ? "No HUD elements visible right now — they appear here when on-screen (e.g. in a dungeon)"
-            : "Drag elements to reposition  |  Esc to save & close";
-        g.text(font, hint, width / 2 - font.width(hint) / 2, height - 12, 0xCCFFFFFF, true);
+            ? "No HUD elements visible — go in-game (dungeon, mining, etc) to see them"
+            : "drag to reposition  ·  esc to save & close";
+        g.text(font, hint, width / 2 - font.width(hint) / 2, height - 12, ConstellationTheme.TEXT_FAINT, false);
     }
 
     @Override

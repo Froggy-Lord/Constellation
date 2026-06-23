@@ -168,7 +168,7 @@ public class DungeonMap {
         int x = ox + (screenSize() - w) / 2;
         int y = oy + 2;
         g.fill(x - 2, y - 1, x + w + 2, y + mc.font.lineHeight, 0xC00A0A14);
-        g.text(mc.font, pretty, x, y, NebulaTheme.ACCENT_GOLD, true);
+        g.text(mc.font, pretty, x, y, ConstellationTheme.ACCENT, true);
     }
 
     private static int clamp(int v) { return v < 0 ? 0 : Math.min(v, MAP - 1); }
