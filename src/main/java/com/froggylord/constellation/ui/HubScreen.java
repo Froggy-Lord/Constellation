@@ -22,6 +22,7 @@ public class HubScreen extends Screen {
     private int scrollGrabY = 0;
     private float scrollGrabOff = 0;
     private float scrollVelocity = 0;
+    private long hudFlashAt = 0, cfgFlashAt = 0; // brief flash on button click
 
     private static final java.util.Map<String, Float> toggleAnim = new java.util.HashMap<>();
     private static final java.util.Map<String, Float> cardHover = new java.util.HashMap<>();
@@ -127,12 +128,17 @@ public class HubScreen extends Screen {
 
         ConstellationTheme.panel(g, hudX, btnY, btnW, btnH);
         if (hoverHud) g.fill(hudX, btnY, hudX + 3, btnY + btnH, ConstellationTheme.ACCENT);
+        // click flash
+        long hudAge = System.currentTimeMillis() - hudFlashAt;
+        if (hudAge < 200) g.fill(hudX, btnY, hudX + btnW, btnY + btnH, ((int)((1f-hudAge/200f)*40) << 24) | 0xFFCC33);
         String hudLabel = "HUD Editor";
         g.text(font, hudLabel, hudX + btnW / 2 - font.width(hudLabel) / 2, btnY + 7,
             hoverHud ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
         ConstellationTheme.panel(g, cfgX, btnY, btnW, btnH);
         if (hoverCfg) g.fill(cfgX, btnY, cfgX + 3, btnY + btnH, ConstellationTheme.ACCENT);
+        long cfgAge = System.currentTimeMillis() - cfgFlashAt;
+        if (cfgAge < 200) g.fill(cfgX, btnY, cfgX + btnW, btnY + btnH, ((int)((1f-cfgAge/200f)*40) << 24) | 0xFFCC33);
         String cfgLabel = "Config";
         g.text(font, cfgLabel, cfgX + btnW / 2 - font.width(cfgLabel) / 2, btnY + 7,
             hoverCfg ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
@@ -155,12 +161,14 @@ public class HubScreen extends Screen {
         int hudX = w / 2 - btnW - btnGap / 2, cfgX = w / 2 + btnGap / 2, btnY = h - btnH - 10;
 
         if (mx >= cfgX && mx <= cfgX + btnW && my >= btnY && my <= btnY + btnH) {
+            cfgFlashAt = System.currentTimeMillis();
             var ids = ConstellationClient.featureManager().getLoadedIds();
             String first = ids.isEmpty() ? "apollo" : ids.iterator().next();
             mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(first, this)));
             return true;
         }
         if (mx >= hudX && mx <= hudX + btnW && my >= btnY && my <= btnY + btnH) {
+            hudFlashAt = System.currentTimeMillis();
             mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this)));
             return true;
         }
