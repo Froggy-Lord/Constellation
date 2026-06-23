@@ -271,9 +271,13 @@ public class DracoCrimson extends BaseConstellation {
     private static String repLine() {
         for (String line : com.froggylord.constellation.data.TabList.lines()) {
             Matcher m = REP.matcher(line);
-            if (m.find()) return "§c" + m.group(1) + " §f" + m.group(2)
-                + " §7(" + vanqLine() + ")";
+            if (m.find()) {
+                ConstellationClient.verifyLog("draco-rep", true, line.trim());
+                return "§c" + m.group(1) + " §f" + m.group(2)
+                    + " §7(" + vanqLine() + ")";
+            }
         }
+        ConstellationClient.verifyLog("draco-rep", false, "no reputation in tab");
         return null;
     }
 

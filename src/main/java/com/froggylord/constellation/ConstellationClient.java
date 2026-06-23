@@ -24,6 +24,8 @@ public class ConstellationClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Constellation");
 
     private static ConstellationClient instance;
+    private static boolean verifyMode = false;
+    public static boolean verify() { return verifyMode; }
 
     private EventBus eventBus;
     private FeatureManager featureManager;
@@ -117,6 +119,15 @@ public class ConstellationClient implements ClientModInitializer {
                                 com.froggylord.constellation.core.Scraper.setAutoScrape(val.equalsIgnoreCase("on"));
                                 return 1;
                             })))
+                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
+                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("verify")
+                        .executes(ctx -> {
+                            verifyMode = !verifyMode;
+                            if (mc.player != null)
+                                mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
+                                    verifyMode ? "§a/cn verify ON — logging match/no-match per feature" : "§7/cn verify OFF"));
+                            return 1;
+                        }))
             );
             featureManager.registerCommands(dispatcher);
         });
@@ -148,4 +159,10 @@ public class ConstellationClient implements ClientModInitializer {
     public static FeatureManager featureManager() { return instance.featureManager; }
     public static WorldRenderer world() { return instance.worldRenderer; }
     public static void saveConfig() { instance.configManager.save(); }
+
+    /** log whether a feature matched its data source. call from sidebar/GUI-reading widgets when verify mode is on */
+    public static void verifyLog(String feature, boolean matched, String source) {
+        if (!verifyMode) return;
+        LOGGER.info("[verify] {} {} — {}", matched ? "MATCHED " : "NO-MATCH", feature, source);
+    }
 }

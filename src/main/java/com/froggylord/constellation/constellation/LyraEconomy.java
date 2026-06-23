@@ -102,18 +102,22 @@ public class LyraEconomy extends BaseConstellation {
 
     private static void readPurse() {
         long prev = currentPurse;
+        boolean matched = false;
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = PURSE.matcher(line);
             if (!m.find()) continue;
             currentPurse = parse(m.group(1));
+            matched = true;
             if (sessionStart == Long.MIN_VALUE) sessionStart = currentPurse;
             if (prev > 0 && currentPurse != prev) {
                 changeAmount = currentPurse - prev;
                 changeAt = System.currentTimeMillis();
             }
             lastPurse = prev;
+            ConstellationClient.verifyLog("lyra-purse", true, line);
             return;
         }
+        ConstellationClient.verifyLog("lyra-purse", false, "no sidebar purse line");
     }
 
     @Override
