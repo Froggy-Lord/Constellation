@@ -129,6 +129,39 @@ public final class Patterns {
         // --- tab: commissions ---
         register("tab.commissions", "(?<name>[A-Za-z ]+?):\\s*(?<val>\\d+(?:\\.\\d+)?%|DONE)",
             List.of("Onyx Gemstone Collector: 1.8%", "Mineshaft Explorer: DONE"));
+
+        // --- tab: forges ---
+        register("tab.forge", "(?<slot>\\d+)\\)\\s*(?<item>.+):\\s*(?<time>\\d+h|\\d+m|\\d+s|Ready!)",
+            List.of("1) Refined Mithril: 4h", "2) EMPTY"));
+
+        // --- tab: faction quests ---
+        register("tab.faction", "\\u2716\\s*(.+)",
+            List.of("✖ Ashfang", "✖ Kill Kuudra Basic Tier"));
+
+        // --- tab: volcano status ---
+        register("tab.volcano", "Volcano:\\s*(.+)",
+            List.of("Volcano: INACTIVE", "Volcano: ACTIVE"));
+
+        // --- chat: sea creature spawn ---
+        register("chat.sea_creature_spawn", null,
+            List.of("A Sea Walker has spawned!", "You caught a Sea Walker!",
+                    "A legendary Sea Creature has spawned!"));
+
+        // --- chat: vanquisher spawn ---
+        register("chat.vanquisher", null,
+            List.of("A Vanquisher is spawning nearby!"));
+
+        // --- chat: golden fish ---
+        register("chat.golden_fish", null,
+            List.of("GOLDEN FISH!", "You caught a Golden Fish!"));
+
+        // --- tab: glacite / cold ---
+        register("tab.cold", "Cold:\\s*(\\d+)",
+            List.of("Cold: 25", "Cold: 99"));
+
+        // --- tab: drill fuel ---
+        register("tab.drill_fuel", "(?:⛏\\s*)?(?:Drill\\s*)?Fuel:?\\s*([\\d,\\.]+[kKmM]?)\\s*/?\\s*([\\d,\\.]+[kKmM]?)?",
+            List.of("⛏ Drill Fuel: 2.5k/3k", "Fuel: 1500/3000"));
     }
 
     // ---- api ----

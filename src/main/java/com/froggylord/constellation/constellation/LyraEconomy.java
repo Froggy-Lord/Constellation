@@ -195,9 +195,7 @@ public class LyraEconomy extends BaseConstellation {
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
                     for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Salvage") || line.contains("Museum")) {
-                            ConstellationClient.verifyLog("lyra-salvage", true, line.trim());
-                            return "§8♻ " + line.trim();
+                        if (line.contains("Salvage") || line.contains("Museum")) return "§8♻ " + line.trim();
                     }
                     return null;
                 },
