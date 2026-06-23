@@ -84,6 +84,51 @@ public final class Patterns {
             List.of("§5§lVERY RARE DROP! §r§7(§r§9Bane of Arthropods VI§r§7) §r§b(+137% ✯ Magic Find)"));
         register("chat.pet_drop", null,
             List.of("§d§lPET DROP! §r§7(§r§5Ender Dragon§r§7) §r§b(+200% ✯ Magic Find)"));
+
+        // --- chat: kuudra phases ---
+        register("chat.kuudra.down", null,
+            List.of("§.\\s*(?:§.)*KUUDRA DOWN!", "KUUDRA DOWN!"));
+        register("chat.kuudra.stun", null,
+            List.of("Kuudra has been stunned!", "and stun him"));
+
+        // --- chat: fishing ---
+        register("chat.sea_creature", null,
+            List.of("A Sea Walker has spawned!",
+                    "A Sea Archer has spawned!",
+                    "You caught a Sea Walker!"));
+
+        // --- chat: garden/visitor ---
+        register("chat.visitor", null,
+            List.of("A new visitor has arrived at your garden!",
+                    "New Visitor: Jacob"));
+
+        // --- sidebar: garden ---
+        register("sidebar.garden.copper", "Copper:\\s*([\\d,]+)",
+            List.of("Copper: 1,131"));
+        register("sidebar.garden.sowdust", "Sowdust:\\s*([\\d,]+)",
+            List.of("Sowdust: 101,687,009"));
+
+        // --- tab: rift timer ---
+        register("tab.rift.time", "Rift Time Left:\\s*(.+)",
+            List.of("Rift Time Left: 43m", "Rift Time Left: 20m"));
+        register("tab.rift.souls", "Enigma Souls:\\s*(\\d+)/(\\d+)",
+            List.of("Enigma Souls: 30/52"));
+
+        // --- chat: inquisitor ---
+        register("chat.diana.inquis", "at Coords (-?\\d+) (-?\\d+) (-?\\d+)",
+            List.of("A MINOS INQUISITOR has spawned near [Stillgore Chateau] at Coords 125 78 -340"));
+
+        // --- tab: crystals ---
+        register("tab.crystals", "(Jade|Amber|Sapphire|Amethyst|Ruby|Topaz):\\s*(.+)",
+            List.of("Jade: ✖ Not Found", "Amber: ✖ Not Found", "Jade: ✔ Found"));
+
+        // --- sidebar: cold (glacite) ---
+        register("sidebar.mining.cold", "Cold:?\\s*-?(\\d+)",
+            List.of("Cold: 25", "Cold: -99"));
+
+        // --- tab: commissions ---
+        register("tab.commissions", "(?<name>[A-Za-z ]+?):\\s*(?<val>\\d+(?:\\.\\d+)?%|DONE)",
+            List.of("Onyx Gemstone Collector: 1.8%", "Mineshaft Explorer: DONE"));
     }
 
     // ---- api ----
