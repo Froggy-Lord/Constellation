@@ -27,7 +27,7 @@ public class HudEditScreen extends Screen {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
-        g.fill(0, 0, width, height, 0x8812121F);
+        com.froggylord.constellation.ui.SpaceBackground.render(g, width, height, delta);
         Font font = Minecraft.getInstance().font;
 
         var editable = ConstellationClient.hudManager().getEditable();

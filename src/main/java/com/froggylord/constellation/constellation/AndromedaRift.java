@@ -230,21 +230,21 @@ public class AndromedaRift extends BaseConstellation {
                 },
                 HudPosition.of(2, 238), cfg.wyldWoodsHelper));
         }
-        if (cfg.deadgehogCounter) {
+        if (false && cfg.deadgehogCounter) {
             hud.register(new HudWidget("andromeda-deadgehog", "Deadgehog",
                 () -> inRift() ? "§7🦔 Deadgehogs" : null,
                 HudPosition.of(2, 246), cfg.deadgehogCounter));
         }
-        if (cfg.shyFarmHelper) {
+        if (false && cfg.shyFarmHelper) {
             hud.register(new HudWidget("andromeda-shyfarm", "ShyFarm",
                 () -> inRift() ? "§a🌾 Shy Farm" : null,
                 HudPosition.of(2, 254), cfg.shyFarmHelper));
         }
-        if (cfg.cruxCounter) {
+        if (false && cfg.cruxCounter) {
             hud.register(new HudWidget("andromeda-crux", "Crux",
                 () -> inRift() ? "§d✦ Crux tracker" : null,
                 HudPosition.of(2, 262), cfg.cruxCounter));
-        if (cfg.bluetoothRingHelper) {
+        if (false && cfg.bluetoothRingHelper) {
             hud.register(new HudWidget("andromeda-bluetooth", "Bluetooth",
                 () -> {
                     if (!inRift()) return null;
@@ -254,7 +254,7 @@ public class AndromedaRift extends BaseConstellation {
                 },
                 HudPosition.of(2, 270), cfg.bluetoothRingHelper));
         }
-        if (cfg.vampireSlayerRiftHelper) {
+        if (false && cfg.vampireSlayerRiftHelper) {
             hud.register(new HudWidget("andromeda-vampslayer", "VampSlayer",
                 () -> {
                     if (!inRift()) return null;
@@ -263,7 +263,7 @@ public class AndromedaRift extends BaseConstellation {
                     return "§4🧛 Vampire Slayer";
                 },
                 HudPosition.of(2, 278), cfg.vampireSlayerRiftHelper));
-        if (cfg.wyldWoodsSoulHelper) {
+        if (false && cfg.wyldWoodsSoulHelper) {
             hud.register(new HudWidget("andromeda-soulswyld", "WyldSouls",
                 () -> {
                     if (!inRift()) return null;
@@ -273,7 +273,7 @@ public class AndromedaRift extends BaseConstellation {
                 },
                 HudPosition.of(2, 286), cfg.wyldWoodsSoulHelper));
         }
-        if (cfg.dreadfarmEnigmaHelper) {
+        if (false && cfg.dreadfarmEnigmaHelper) {
             hud.register(new HudWidget("andromeda-dreadenigma", "DreadEnigma",
                 () -> {
                     if (!inRift()) return null;

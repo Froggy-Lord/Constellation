@@ -184,7 +184,7 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 126), cfg.godPotDisplay));
-        if (cfg.brewHelper) {
+        if (false && cfg.brewHelper) {
             hud.register(new HudWidget("auriga-brew", "Brew",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
@@ -234,7 +234,7 @@ public class AurigaMisc extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 166), cfg.evolvingItemTimer));
-        if (cfg.teleportPadHelper) {
+        if (false && cfg.teleportPadHelper) {
             hud.register(new HudWidget("auriga-telepad", "TelePad",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;

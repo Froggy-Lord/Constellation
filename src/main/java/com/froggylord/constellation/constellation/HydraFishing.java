@@ -247,7 +247,7 @@ public class HydraFishing extends BaseConstellation {
                 },
                 HudPosition.of(50, 110), cfg.barnTimer));
         }
-        if (cfg.sharkCounter) {
+        if (false && cfg.sharkCounter) {
             hud.register(new HudWidget("hydra-shark", "Sharks",
                 () -> sharkKills > 0 ? "§b🦈 " + sharkKills : null,
                 HudPosition.of(50, 118), cfg.sharkCounter));
@@ -261,7 +261,7 @@ public class HydraFishing extends BaseConstellation {
                 },
                 HudPosition.of(50, 126), cfg.totemTimer));
         }
-        if (cfg.baitDisplay) {
+        if (false && cfg.baitDisplay) {
             hud.register(new HudWidget("hydra-bait", "Bait",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
@@ -312,7 +312,7 @@ public class HydraFishing extends BaseConstellation {
                 },
                 HudPosition.of(50, 166), cfg.chumBucketTimer));
         }
-        if (cfg.seaCreatureRarityDisplay) {
+        if (false && cfg.seaCreatureRarityDisplay) {
             hud.register(new HudWidget("hydra-scrarity", "SCRarity",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;

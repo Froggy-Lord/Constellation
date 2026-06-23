@@ -274,7 +274,7 @@ public class PerseusSlayers extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 102), cfg.xpBar));
-        if (cfg.damageIndicatorHud) {
+        if (false && cfg.damageIndicatorHud) {
             hud.register(new HudWidget("perseus-damage", "DMG",
                 () -> ConstellationClient.loc().onHypixel() ? "§c⚔ Damage HUD" : null,
                 HudPosition.of(50, 38), cfg.damageIndicatorHud));

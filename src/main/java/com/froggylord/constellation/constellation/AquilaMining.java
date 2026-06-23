@@ -310,7 +310,7 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 146), cfg.scathaCounter));
         }
-        if (cfg.coleweightHud) {
+        if (false && cfg.coleweightHud) {
             hud.register(new HudWidget("aquila-coleweight", "Coleweight",
                 () -> {
                     if (!inMining()) return null;
@@ -321,7 +321,7 @@ public class AquilaMining extends BaseConstellation {
                 },
                 HudPosition.of(2, 154), cfg.coleweightHud));
         }
-        if (cfg.fossilHelper) {
+        if (false && cfg.fossilHelper) {
             hud.register(new HudWidget("aquila-fossil", "Fossil",
                 () -> {
                     if (!inMining()) return null;
@@ -421,7 +421,7 @@ public class AquilaMining extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(2, 234), cfg.crystalHollowsMapHelper));
-        if (cfg.templePearlHelper) {
+        if (false && cfg.templePearlHelper) {
             hud.register(new HudWidget("aquila-templepearl", "TemplePearl",
                 () -> {
                     if (!inMining()) return null;

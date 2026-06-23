@@ -226,7 +226,7 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, 2), cfg.heavyPearlsTracker));
-        if (cfg.kuudraSupplyCounter) {
+        if (false && cfg.kuudraSupplyCounter) {
             hud.register(new HudWidget("draco-supplycount", "SupplyCount",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
@@ -236,7 +236,7 @@ public class DracoCrimson extends BaseConstellation {
                 },
                 HudPosition.of(50, -4), cfg.kuudraSupplyCounter));
         }
-        if (cfg.freshToolsPing) {
+        if (false && cfg.freshToolsPing) {
             hud.register(new HudWidget("draco-freshtools-ping", "FreshPing",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;
@@ -245,7 +245,7 @@ public class DracoCrimson extends BaseConstellation {
                     return null;
                 },
                 HudPosition.of(50, -10), cfg.freshToolsPing));
-        if (cfg.trophyDetailHud) {
+        if (false && cfg.trophyDetailHud) {
             hud.register(new HudWidget("draco-trophy-detail", "TrophyDetail",
                 () -> {
                     if (!ConstellationClient.loc().onHypixel()) return null;

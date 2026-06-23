@@ -343,6 +343,7 @@ public class ConfigScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor g, int mx, int my, float delta) {
         Minecraft mc = Minecraft.getInstance();
         int fullW = mc.getWindow().getGuiScaledWidth(), fullH = mc.getWindow().getGuiScaledHeight();
+        SpaceBackground.render(g, fullW, fullH, delta);
         int w = panelW(fullW), h = panelH(fullH);
         int px = (fullW - w) / 2, py = (fullH - h) / 2;
         long now = System.nanoTime();

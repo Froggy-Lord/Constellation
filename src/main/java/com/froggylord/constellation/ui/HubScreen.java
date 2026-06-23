@@ -35,6 +35,7 @@ public class HubScreen extends Screen {
         Minecraft mc = Minecraft.getInstance();
         int w = mc.getWindow().getGuiScaledWidth();
         int h = mc.getWindow().getGuiScaledHeight();
+        SpaceBackground.render(g, w, h, delta);
         Font font = mc.font;
 
         g.fill(0, 0, w, h, NebulaTheme.BG_DEEP);

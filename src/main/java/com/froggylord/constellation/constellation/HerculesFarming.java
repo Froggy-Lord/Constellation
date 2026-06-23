@@ -215,7 +215,7 @@ public class HerculesFarming extends BaseConstellation {
                 },
                 HudPosition.of(2, 168), cfg.speedHud));
         }
-        if (cfg.moongladeBeacon) {
+        if (false && cfg.moongladeBeacon) {
             hud.register(new HudWidget("hercules-beacon", "Beacon",
                 () -> {
                     if (!inGarden()) return null;
@@ -226,7 +226,7 @@ public class HerculesFarming extends BaseConstellation {
                 },
                 HudPosition.of(2, 176), cfg.moongladeBeacon));
         }
-        if (cfg.greenhouseHelper) {
+        if (false && cfg.greenhouseHelper) {
             hud.register(new HudWidget("hercules-greenhouse", "Greenhouse",
                 () -> inGarden() ? "§a🌿 Greenhouse active" : null,
                 HudPosition.of(2, 184), cfg.greenhouseHelper));
