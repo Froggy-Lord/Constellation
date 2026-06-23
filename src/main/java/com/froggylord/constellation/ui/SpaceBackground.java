@@ -19,14 +19,14 @@ public final class SpaceBackground {
         Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");
 
     // AI-generated animated frames
-    private static final int ANIM_FRAMES = 80;
-    private static final int ANIM_FPS = 8;
-    private static final int FRAME_W = 512;
-    private static final int FRAME_H = 376;
+    private static final int ANIM_FRAMES = 50;
+    private static final int ANIM_FPS = 5;
+    private static final int FRAME_W = 256;
+    private static final int FRAME_H = 188;
 
     static Identifier animFrame(int idx) {
         return Identifier.fromNamespaceAndPath("constellation",
-            "textures/gui/anim/frame_" + String.format("%03d", idx) + ".jpg");
+            "textures/gui/anim/frame_" + String.format("%03d", idx) + ".png");
     }
 
     // shooting stars
