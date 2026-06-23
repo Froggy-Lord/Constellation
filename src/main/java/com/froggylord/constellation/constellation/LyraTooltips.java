@@ -148,8 +148,13 @@ public class LyraTooltips {
             // exotic armor — non-standard dyed leather
             if (cfg.exoticArmorIdentifier && sbId.startsWith("LEATHER_")) {
                 int clr = extra.getIntOr("color", -1);
-                if (clr >= 0 && clr != 0xA06540) // default leather = #A06540
+                if (clr >= 0 && clr != 0xA06540)
                     lines.add(Component.literal("§5✦ Exotic! §7#" + Integer.toHexString(clr)));
+            }
+            // total estimated value (all components)
+            if (cfg.inventoryValueHud && !sbId.isEmpty()) {
+                double val = com.froggylord.constellation.api.ItemValueCalculator.value(stack);
+                if (val > 0) lines.add(Component.literal("§6Estimated: §f" + money(val)));
             }
         });
     }
