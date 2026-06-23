@@ -1,5 +1,6 @@
 package com.froggylord.constellation.core;
 
+import com.froggylord.constellation.ConstellationClient;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.minecraft.ChatFormatting;
 
@@ -47,6 +48,9 @@ public final class ActionBar {
             lastSkillAt = System.currentTimeMillis();
         }
         lastUpdate = System.currentTimeMillis();
+        // post to event bus so constellations can read health/mana without polling
+        ConstellationClient.bus().post(new com.froggylord.constellation.core.GameEvents.ActionBarUpdate(
+            health, maxHealth, mana, maxMana, defense));
     }
 
     private static int num(String g) {

@@ -71,10 +71,13 @@ public final class Scraper {
             if (!hash.equals(lastSidebarHash)) {
                 lastSidebarHash = hash;
                 save("auto-sidebar", scrapeSidebar());
+                // post to event bus so constellations can react without re-scanning
+                ConstellationClient.bus().post(new com.froggylord.constellation.core.GameEvents.SidebarUpdate(lines));
             }
             String area = String.valueOf(ConstellationClient.loc().area());
             if (!area.equals(lastArea)) {
                 lastArea = area;
+                ConstellationClient.bus().post(new com.froggylord.constellation.core.GameEvents.AreaChange(ConstellationClient.loc().area()));
                 var mc = Minecraft.getInstance();
                 if (mc.player != null) {
                     save("auto-entities-" + sanitize(area), scrapeEntities(mc));
