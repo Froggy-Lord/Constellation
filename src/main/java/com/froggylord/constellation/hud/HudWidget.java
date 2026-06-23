@@ -14,6 +14,8 @@ public class HudWidget implements HudElement {
     private HudPosition position;
     private boolean enabled;
     private java.util.function.Consumer<HudPosition> onMove;
+    private String lastValue = null;
+    private long lastChangedAt = 0;
 
     public HudWidget(String id, String label, Supplier<String> value, HudPosition position, boolean enabled) {
         this.id = id;
@@ -55,13 +57,29 @@ public class HudWidget implements HudElement {
     public void render(GuiGraphicsExtractor g, int px, int py) {
         String v = currentValue();
         if (v == null) return;
+
+        // track value changes for pulse animation
+        if (!v.equals(lastValue)) {
+            lastValue = v;
+            lastChangedAt = System.currentTimeMillis();
+        }
+
         var font = Minecraft.getInstance().font;
-        String text = v; // just the value, no label prefix
+        String text = v;
         int w = font.width(text);
         int pad = 4;
 
-        // subtle dark background panel so text is readable over game world
+        // subtle dark background panel
         g.fill(px, py, px + w + pad * 2, py + font.lineHeight + pad, 0xCC101018);
+
+        // pulse glow when value just changed — fades over 800ms
+        long age = System.currentTimeMillis() - lastChangedAt;
+        if (age < 800) {
+            float pulse = 1f - (float) age / 800f;
+            int glowAlpha = (int) (pulse * 50);
+            g.fill(px, py, px + w + pad * 2, py + font.lineHeight + pad, (glowAlpha << 24) | 0xFFCC33);
+        }
+
         // thin gold accent line along the top edge
         g.fill(px, py, px + w + pad * 2, py + 1, ConstellationTheme.ACCENT);
         // value text — white with shadow for readability

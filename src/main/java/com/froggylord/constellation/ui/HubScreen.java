@@ -69,6 +69,14 @@ public class HubScreen extends Screen {
             int cx = gridX + col * (cardW + 8);
             int cy = gridY + row * (cardH + 6) - (int) scrollOff;
 
+            // staggered entrance — cards slide up from slightly below on first open
+            long openAge = System.currentTimeMillis() - openTime;
+            if (openAge < 600) {
+                int stagger = idx * 40; // each card delayed by 40ms
+                float slide = Math.clamp((openAge - stagger) / 300f, 0f, 1f);
+                cy += (int) ((1f - slide) * 20); // slide up 20px
+            }
+
             if (cy + cardH > headerH && cy < h - 80) {
                 boolean enabled = c.isEnabled();
                 boolean hover = mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + cardH;

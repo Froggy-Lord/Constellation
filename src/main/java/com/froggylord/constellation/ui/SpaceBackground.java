@@ -15,7 +15,9 @@ import net.minecraft.resources.Identifier;
 public final class SpaceBackground {
 
     private static final Identifier BG =
-        Identifier.fromNamespaceAndPath("constellation", "textures/gui/background.png");
+        Identifier.fromNamespaceAndPath("constellation", "textures/gui/background.png"); // carina
+    private static final Identifier BG_ALT =
+        Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");  // helix
 
     private static long nextShootingStar = 0;
     private static float shootX, shootY, shootDX, shootDY, shootLen;
@@ -23,8 +25,15 @@ public final class SpaceBackground {
     private static final java.util.Random RNG = new java.util.Random(42);
 
     public static void render(GuiGraphicsExtractor g, int w, int h, float delta) {
-        // nasa carina nebula fills the screen
-        g.blitSprite(RenderPipelines.GUI_TEXTURED, BG, 0, 0, w, h);
+        renderWith(g, w, h, delta, BG);
+    }
+    public static void renderConfig(GuiGraphicsExtractor g, int w, int h, float delta) {
+        renderWith(g, w, h, delta, BG_ALT);
+    }
+
+    static void renderWith(GuiGraphicsExtractor g, int w, int h, float delta, Identifier bg) {
+        // nasa nebula fills the screen
+        g.blitSprite(RenderPipelines.GUI_TEXTURED, bg, 0, 0, w, h);
 
         long now = System.currentTimeMillis();
 
