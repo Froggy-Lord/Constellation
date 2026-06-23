@@ -32,12 +32,22 @@ public final class SpaceBackground {
     }
 
     static void renderWith(GuiGraphicsExtractor g, int w, int h, float delta, Identifier bg) {
-        // nasa nebula fills the screen — render full texture stretched
-        g.blit(RenderPipelines.GUI_TEXTURED, bg, 0, 0, 0, 0, w, h, 512, 512);
-
         long now = System.currentTimeMillis();
 
-        // subtle dark overlay so ui is readable over the bright nebula
+        // slow drift — pan across the 1024px nebula texture over ~3 minutes
+        // so the background is never static but movement is barely noticeable
+        int texSize = 1024;
+        float panSpeed = texSize / 180_000f; // px per ms — full pan in 3 min
+        int viewW = Math.min(texSize, (int)(w * 1.2f)); // show slightly more than screen
+        int viewH = Math.min(texSize, (int)(h * 1.2f));
+        float u0 = ((now * panSpeed) % (texSize - viewW));
+        float v0 = (float) Math.sin(now / 30000.0) * 20 + (texSize - viewH) / 2f;
+
+        // render the drifting window of the nebula
+        g.blit(RenderPipelines.GUI_TEXTURED, bg,
+            0, 0, (int)u0, (int)v0, w, h, viewW, viewH);
+
+        // subtle dark overlay so ui is readable
         int overlayAlpha = 120;
         g.fill(0, 0, w, h, (overlayAlpha << 24) | 0x0A0A18);
 

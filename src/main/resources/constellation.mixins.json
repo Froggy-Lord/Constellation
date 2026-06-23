@@ -11,7 +11,6 @@
         "HudRenderMixin",
         "InventoryAccessor",
         "PreventWeaponPlaceMixin",
-        "ScreenBackgroundMixin",
         "MapDataAccessor",
         "PlayerTabOverlayAccessor",
         "WarpShortenerMixin"
