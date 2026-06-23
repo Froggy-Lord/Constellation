@@ -316,7 +316,12 @@ public class HerculesFarming extends BaseConstellation {
             sb.append("§a").append(m.group("crop").trim()).append(" §f").append(m.group("pct"));
             break; 
         }
-        return sb.length() == 0 ? null : sb.toString();
+        if (sb.length() == 0) {
+            ConstellationClient.verifyLog("hercules-contest", false, "no contest in tab");
+            return null;
+        }
+        ConstellationClient.verifyLog("hercules-contest", true, sb.toString());
+        return sb.toString();
     }
 
     private static String visitorsLine() {
