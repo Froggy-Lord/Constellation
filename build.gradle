@@ -19,32 +19,37 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+    // ModMenu for config button integration
     implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
-    testImplementation platform('org.junit:junit-bom:5.13.4')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-console'
+    // test deps — patterns test doesn't touch minecraft, just pure java
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-console-standalone:1.12.1'
 }
 
 test {
     useJUnitPlatform()
-}
-
-tasks.named('test') {
     enabled = false
 }
 
-tasks.register('patternCheck', JavaExec) {
+tasks.register('unitTest', JavaExec) {
     group = 'verification'
-    description = 'Runs parser contract tests against captured Hypixel strings'
+    description = 'Runs tests through the JUnit console launcher.'
+    dependsOn testClasses
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'org.junit.platform.console.ConsoleLauncher'
-    args 'execute', '--select-class=com.froggylord.constellation.core.PatternsTest'
+    args 'execute', '--scan-classpath', '--fail-if-no-tests'
 }
 
-tasks.named('check') {
-    dependsOn 'patternCheck'
+tasks.register('roomCheck', JavaExec) {
+    group = 'verification'
+    description = 'Checks the bundled dungeon room fingerprints.'
+    dependsOn classes
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'com.froggylord.constellation.data.RoomCheck'
 }
+
+check.dependsOn unitTest
 
 loom {
     accessWidenerPath = file("src/main/resources/constellation.accesswidener")
@@ -78,6 +83,6 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archives_base_name}" }
+        rename { "${it}_${project.findProperty('archives_base_name')}" }
     }
 }
