@@ -131,8 +131,8 @@ public final class Patterns {
             List.of("Onyx Gemstone Collector: 1.8%", "Mineshaft Explorer: DONE"));
 
         // --- tab: forges ---
-        register("tab.forge", "(?<slot>\\d+)\\)\\s*(?<item>.+):\\s*(?<time>\\d+h|\\d+m|\\d+s|Ready!)",
-            List.of("1) Refined Mithril: 4h", "2) EMPTY"));
+        register("tab.forge", "(?<slot>\\d+)\\)\\s*(?:(?<item>.+):\\s*(?<time>\\d+h|\\d+m|\\d+s|Ready!)|EMPTY)",
+                List.of("1) Refined Mithril: 4h", "2) EMPTY"));
 
         // --- tab: faction quests ---
         register("tab.faction", "\\u2716\\s*(.+)",

@@ -29,7 +29,7 @@ class PatternsTest {
             }
         }
         if (failures.length() > 0) {
-            fail("Pattern mismatches — Hypixel likely changed a format:%n" + failures);
+            fail("Pattern mismatches; Hypixel likely changed a format:\n" + failures);
         }
     }
 

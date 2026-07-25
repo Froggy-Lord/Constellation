@@ -19,15 +19,31 @@ dependencies {
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    // ModMenu for config button integration
     implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 
-    // test deps — patterns test doesn't touch minecraft, just pure java
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-console'
 }
 
 test {
     useJUnitPlatform()
+}
+
+tasks.named('test') {
+    enabled = false
+}
+
+tasks.register('patternCheck', JavaExec) {
+    group = 'verification'
+    description = 'Runs parser contract tests against captured Hypixel strings'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'org.junit.platform.console.ConsoleLauncher'
+    args 'execute', '--select-class=com.froggylord.constellation.core.PatternsTest'
+}
+
+tasks.named('check') {
+    dependsOn 'patternCheck'
 }
 
 loom {
@@ -62,6 +78,6 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.archives_base_name}" }
     }
 }

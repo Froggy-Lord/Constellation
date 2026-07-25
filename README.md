@@ -1,94 +1,83 @@
+<img src="./src/main/resources/assets/constellation/icon.png" width="112" align="right" alt="Constellation icon">
+
 # Constellation
 
-a skyblock mod for fabric 1.21.5 (mc 26.2). does pretty much everything — dungeons, mining, farming, fishing, crimson isle, the rift, slayers, events, economy, qol. basically if it's in skyblock there's probly a feature for it.
+A modular Fabric client for Hypixel SkyBlock on Minecraft 26.2.
 
-## why
+[![Build](https://github.com/Froggy-Lord/Constellation/actions/workflows/ci.yml/badge.svg)](https://github.com/Froggy-Lord/Constellation/actions/workflows/ci.yml)
 
-skyblocker does alot but you still need like 3 other mods alongside it for the stuff it misses. skyhanni needs a million dependencies and its own config system on top of whatever else ur running. then theres a seperate mod for dungeon solvers and another one for fishing and another one for farming and now youve got 7 mods all fighting over the same hud space with different config menus and different keybinds and nothing works together.
+Constellation puts dungeon tools, skill trackers, event helpers and quality-of-life features behind one configuration system and one HUD editor. Each area of the game is a separate “constellation”, so broad modules and individual features can be disabled without rebuilding the rest of the client.
 
-this is just one jar. one config file. one hud editor. everythings in the same place with the same toggles and the same keybinds. and if you dont want a feature you just turn off that constellation — no need to remove the whole mod because it has one thing you hate. also its mit and doesnt need 4 libraries to launch.
+The project is still under active development. Treat releases as test builds and report server-format mismatches with the included scrape tools.
 
-## what it does
+## How it works
 
-14 constellations, each one handles a different part of the game:
+Hypixel exposes most useful state through text and ordinary client data rather than a stable mod API. Constellation turns scoreboard lines, the tab list, action-bar messages, chat, inventories and world entities into a shared state model. Feature modules consume that model instead of maintaining their own competing parsers.
 
-- **andromeda** — the rift. timer, enigma souls, mirrorverse waypoints, effigies, motes, area hints
-- **apollo** — hud. fps, ping, tps, coords, clock, health/mana/defense bars, speed, facing, potion timers
-- **aquila** — mining. powder tracker, commissions, forge, cold warning, wishing compass, crystal nucleus, fetchur/puzzler
-- **auriga** — experiments + misc. ultrasequencer, superpairs, chocolate factory, reforges, anvil helper, god pot timer, /shcalc
-- **cassiopeia** — chat. spam filters (60 categories), timestamps, clickable links, mention alerts, compact damage, 60+ shortcuts (/f1-/f7, /h, /i, /dh, /pi, /bz, /ah, etc)
-- **cygnus** — events + diana. calendar, mayor info, inquisitor waypoints, burrow chain, event pings, jerry timer, spooky/winter/harvest helpers
-- **draco** — crimson isle. kuudra phases, vanquisher alerts, reputation, dojo, ashfang freeze, abiphone, magmafish, trophy tracking
-- **hercules** — farming. contest hud, visitor requirements, pest counter, crop milestones, composter, speed display, plot helpers
-- **hydra** — fishing. sea creature alerts, trophy fish, golden fish timer, barn timer, bait warnings, hotspot radar, thunder highlight
-- **lyra** — economy. purse tracker, bazaar prices on tooltips, auction alerts, essence counter, inventory value, salvage helper, true hex for dyes, exotic armour
-- **orion** — dungeons. score hud, secret waypoints, ALL puzzle solvers (terminals, blaze, boulder, ice fill, waterboard, silverfish, tic tac toe, creeper beams, trivia, etc), combat esp (starred mobs, minibosses, livid finder), m7 phase tracking, spirit leap, blessings, chest profit, dungeon map
-- **pegasus** — party. /rp reparty, party triggers, carry mode, ready checker, friend list hud, marked players
-- **perseus** — slayers. boss timer, xp bar, miniboss alerts, bestiary milestones, broodmother, relics, rng meter
-- **phoenix** — qol. fullbright, auto sprint, etherwarp overlay, hide lightning/fire/falling blocks, instant sneak, wardrobe keybinds, auto save reminder, sign calculator, hotbar lock
+The repository is split around that flow:
 
-## install
+- `core` and `data` handle location, timing, pattern matching and run state.
+- `constellation` contains the game-facing modules.
+- `hud`, `render` and `ui` own screen and world presentation.
+- `config` keeps every module independently switchable.
+- `api` wraps external price and item data.
 
-1. get fabric loader 0.19.3+ for mc 26.2
-2. get fabric api 0.152.2+
-3. drop constellation-*.jar in your mods folder
-4. thats it
+The pattern test suite uses captured server strings as contracts. If a known Hypixel format stops matching, the build fails before the broken parser reaches a release.
 
-requires java 25. if your launcher is using java 21 it will crash.
+## Feature map
 
-## commands
+Fourteen modules cover the main SkyBlock areas:
 
-everything is under `/cn` or `/constellation`. the useful ones:
+| Module | Area |
+| --- | --- |
+| Andromeda | Rift timers, souls and waypoints |
+| Apollo | HUD, performance and player-state displays |
+| Aquila | Mining commissions, forge and Crystal Hollows helpers |
+| Auriga | Experiments and general utilities |
+| Cassiopeia | Chat filtering, alerts and shortcuts |
+| Cygnus | Calendar events and Diana |
+| Draco | Crimson Isle and Kuudra |
+| Hercules | Garden, farming contests and pests |
+| Hydra | Fishing, trophy fish and hotspots |
+| Lyra | Bazaar, auctions and inventory value |
+| Orion | Dungeons, puzzles, routes, score and map |
+| Pegasus | Party tools |
+| Perseus | Slayers |
+| Phoenix | Client-side quality of life |
 
-- `/cn toggle <constellation>` — turn a whole module on or off
-- `/cn hud` — opens the hud editor so u can drag stuff around
-- `/cn scrape <mode>` — dumps game data to json for debugging (sidebar, tab, entities, gui, etc)
-- `/cn config` — opens the config screen
+See [the feature reference](docs/features.md) for a more detailed inventory.
 
-also has a bunch of quality of life shortcuts like `/f7` for f7, `/h` for hub, `/bz` for bazaar, `/is` for island, etc. full list in the config.
+## Install
 
-## config
+1. Install Fabric Loader 0.19.3 or newer for Minecraft 26.2.
+2. Install Fabric API 0.152.2 or newer.
+3. Download the latest JAR from [Releases](https://github.com/Froggy-Lord/Constellation/releases).
+4. Place the JAR in the instance’s `mods` directory.
 
-everything's toggleable. hit right shift for the hub screen, or `/cn config` for the full settings. each constellation has its own section with toggles for every individual feature.
+Minecraft 26.2 requires Java 25. A launcher still configured for Java 21 will fail before the mod loads.
 
-hud elements are draggable — open `/cn hud` and move stuff where you want it. positions are saved per-element.
+Open the hub with <kbd>Right Shift</kbd>, or use `/cn config`. HUD elements can be moved with `/cn hud`.
 
-## scrapes
+## Build
 
-the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.
+```bash
+./gradlew build
+```
 
-can also manually trigger with `/cn scrape all` for a full dump.
+The release JAR is written to `build/libs/`. CI runs the same command on every push and pull request.
 
-## credits
+## Diagnostics
 
-inspired by skyblocker, skyhanni, odin, and basically every skyblock mod. the dungeon solvers are my own algorithms tho — the boulder/ice fill/silverfish/waterboard ones are clean-room implementations, not copied from anywhere.
+`/cn scrape all` records the client data seen by the parsers under `config/constellation-scrapes/`. Scrapes are intended for debugging format changes; check them for player or chat data before attaching them to an issue.
 
-dungeon data and waypoint coordinates come from hypixel's public game data.
+The live-test checklist is maintained in [TESTING.md](TESTING.md).
 
-## fair play
+## Fair play
 
-all solvers are **advisory only** — they highlight, box, and draw lines to help you solve puzzles, but they never click anything for you. no auto-click, no auto-solve, no packet manipulation. everything this mod does is visual overlay on top of the game. if you can see it, the mod can too, and nothing more.
+Puzzle and route features provide overlays, highlights and guidance. They do not click, send movement, manipulate packets or complete puzzles for the player.
 
-this isnt some legal disclaimer to cover my arse — its how the mod actually works. the superpairs experiment solver used to auto-flip cards and i removed that specifically because it crossed the line from helper to automation.
+## Credits and license
 
-if you want something that plays the game for you this is the wrong mod.
+Constellation combines original work with compatible open-source implementations and data from the SkyBlock modding community. Source-level attribution and bundled-data credits are listed in [CREDITS.md](CREDITS.md).
 
-## verified areas
-
-the sidebar/tab/gui patterns that read data from hypixel need to match exactly or the widget just never shows anything. these areas have been checked against live scrapes and confirmed working:
-
-- ✅ hub (purse, bits, calendar, area)
-- ✅ garden (copper, sowdust, pests, visitors, contest — all from tab)
-- ✅ catacombs (time elapsed, cleared %, score)
-- ✅ crimson isle (reputation, dojo, vanquisher — tab only, sidebar has none of this)
-- ✅ dwarven mines (powders, commissions, forges, daily quests — all from tab)
-- ✅ crystal hollows (crystals, purse, bits)
-- ✅ rift (motes, enigma souls, time left — time is tab-only, motes on sidebar)
-- ❌ kuudra — needs live scrape
-- ❌ glacite tunnels — no data yet
-
-the ones marked ❌ are guesses at the hypixel format and probly dont fire. turn on `/cn verify` in those areas and check the log for NO-MATCH lines.
-
-## license
-
-mit. do whatever you want with it, just dont blame me if it breaks.
+The project is distributed under [GPL-3.0-only](LICENSE).
