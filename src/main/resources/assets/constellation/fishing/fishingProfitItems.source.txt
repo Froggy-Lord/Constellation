@@ -1,0 +1,1 @@
+ported from SkyHanni (LGPL-3.0-or-later): repo/constants/FishingProfitItems.json
