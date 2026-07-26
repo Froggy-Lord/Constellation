@@ -89,7 +89,7 @@ public class FeatureManager {
                 
                 c.disable();
                 loaded.remove(id);
-                ConstellationClient.hudManager().getAll().removeIf(el -> el.id().startsWith(id + "-"));
+                ConstellationClient.hudManager().removeIf(el -> el.id().startsWith(id + "-"));
             } else {
                 
                 if (!c.isInitialized()) {
@@ -103,5 +103,12 @@ public class FeatureManager {
             c.getConfig().enabled = loaded.contains(id);
             ConstellationClient.saveConfig();
         });
+    }
+
+    public boolean setEnabled(String id, boolean enabled) {
+        Optional<BaseConstellation> found = get(id);
+        if (found.isEmpty()) return false;
+        if (loaded.contains(id) != enabled) toggle(id);
+        return true;
     }
 }
