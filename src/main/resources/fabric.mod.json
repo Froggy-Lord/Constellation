@@ -3,12 +3,11 @@
     "id": "constellation",
     "version": "${version}",
     "name": "Constellation",
-    "description": "A modular Hypixel SkyBlock client with shared configuration, HUD and game-state tooling.",
+    "description": "A unified Hypixel SkyBlock mod — one install, everything you need. Dungeons, mining, farming, fishing, slayers, events, rift, kuudra, inventory, chat, party, and more. All modular, all constellation-themed.",
     "authors": ["Froggy__Lord"],
     "contact": {
         "homepage": "https://github.com/Froggy-Lord/Constellation",
-        "sources": "https://github.com/Froggy-Lord/Constellation",
-        "issues": "https://github.com/Froggy-Lord/Constellation/issues"
+        "sources": "https://github.com/Froggy-Lord/Constellation"
     },
     "license": "GPL-3.0-only",
     "icon": "assets/constellation/icon.png",
