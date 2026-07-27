@@ -1,5 +1,6 @@
 package com.froggylord.constellation.core;
 
+import com.froggylord.constellation.ConstellationClient;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -53,6 +54,14 @@ public final class Patterns {
             List.of("Cleared: 0% (0)", "Cleared: 87% (12)"));
         register("dungeon.time",    "Time Elapsed: (?:(?<m>\\d+)m )?(?<s>\\d+)s",
             List.of("Time Elapsed: 03s", "Time Elapsed: 4m 12s"));
+        register("dungeon.floor", "The Catacombs \\((?<f>[^)]+)\\)",
+            List.of("The Catacombs (F7)", "The Catacombs (M7)"));
+        register("dungeon.deaths", "Deaths: (?<d>\\d+)",
+            List.of("Deaths: 2"));
+        register("dungeon.class", "Your Class: (?<class>Archer|Berserk|Healer|Mage|Tank)",
+            List.of("Your Class: Mage"));
+        register("dungeon.teammate", "^(?:\\[[^]]+] )?(?<name>[A-Za-z0-9_]{1,16}) \\((?<class>Archer|Berserk|Healer|Mage|Tank)(?: [IVX]+)?\\)$",
+            List.of("FroggyLord (Mage V)", "[30] Player123 (Tank)"));
 
         // --- chat: economy ---
         register("chat.bazaar", "\\[Bazaar] (Bought|Sold|Order Flipped!)[^f]*for ([\\d,.]+) coins",
@@ -132,7 +141,7 @@ public final class Patterns {
 
         // --- tab: forges ---
         register("tab.forge", "(?<slot>\\d+)\\)\\s*(?:(?<item>.+):\\s*(?<time>\\d+h|\\d+m|\\d+s|Ready!)|EMPTY)",
-                List.of("1) Refined Mithril: 4h", "2) EMPTY"));
+            List.of("1) Refined Mithril: 4h", "2) EMPTY"));
 
         // --- tab: faction quests ---
         register("tab.faction", "\\u2716\\s*(.+)",
@@ -178,6 +187,10 @@ public final class Patterns {
             List.of("[BOSS] Goldor: Who dares trespass into my domain?"));
         register("chat.m7.necron", null,
             List.of("[BOSS] Necron: You went further than any human before, congratulations."));
+        register("chat.dungeon.death", "^\\s*☠ (?<name>\\S+) .*$",
+            List.of(" ☠ Player123 was killed by Necron."));
+        register("chat.dungeon.complete", "^\\s*> EXTRA STATS <$|^\\s*Catacombs - .+ Stats$",
+            List.of(" > EXTRA STATS <", "Catacombs - Floor VII Stats"));
 
         // --- chat: blessing ---
         register("chat.blessing", "Blessing of (Power|Time|Wisdom|Life|Stone|Healing)\\b.*?\\b([IVXLC]+)\\b",
@@ -211,6 +224,7 @@ public final class Patterns {
             if (e.pattern() != null && e.pattern().matcher(line).find())
                 return Optional.of(e.name());
         }
+        ConstellationClient.verifyNoMatch("patterns unknown-format");
         return Optional.empty();
     }
 }
