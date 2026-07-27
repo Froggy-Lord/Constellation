@@ -15,7 +15,8 @@ public class LocationManager {
     public enum SkyblockArea {
         UNKNOWN, HUB, PRIVATE_ISLAND, DUNGEON_HUB,
         CATACOMBS, MASTER_MODE,
-        CRIMSON_ISLE, KUUDRA,
+        // ported from Feesh (Apache-2.0): utils/WorldUtils.kt
+        CRIMSON_ISLE, LOTUS_ATOLL, BACKWATER_BAYOU, GALATEA, JERRY_WORKSHOP, FARMING_ISLANDS, TORRHUS_CANYON, KUUDRA,
         DWARVEN_MINES, CRYSTAL_HOLLOWS, GLACITE_TUNNELS, GLACITE_MINESHAFT,
         GARDEN, THE_RIFT,
         SPIDER_DEN, BLAZING_FORTRESS, THE_END,
@@ -76,9 +77,18 @@ public class LocationManager {
             if (l.contains("the catacombs")) {
                 return l.contains("master") ? SkyblockArea.MASTER_MODE : SkyblockArea.CATACOMBS;
             }
+            if (l.contains("kuudra's hollow")) return SkyblockArea.KUUDRA;
+            if (l.contains("lotus atoll")) return SkyblockArea.LOTUS_ATOLL;
+            // ported from Feesh (Apache-2.0): utils/WorldUtils.kt
+            if (l.contains("backwater bayou")) return SkyblockArea.BACKWATER_BAYOU;
+            if (l.contains("galatea")) return SkyblockArea.GALATEA;
+            if (l.contains("jerry's workshop")) return SkyblockArea.JERRY_WORKSHOP;
+            if (l.contains("farming islands") || l.contains("mushroom desert")) return SkyblockArea.FARMING_ISLANDS;
+            if (l.contains("torrhus canyon")) return SkyblockArea.TORRHUS_CANYON;
             if (l.contains("crimson isle")) return SkyblockArea.CRIMSON_ISLE;
             if (l.contains("dwarven mines")) return SkyblockArea.DWARVEN_MINES;
             if (l.contains("crystal hollows")) return SkyblockArea.CRYSTAL_HOLLOWS;
+            if (l.contains("glacite mineshaft")) return SkyblockArea.GLACITE_MINESHAFT;
             if (l.contains("glacite")) return SkyblockArea.GLACITE_TUNNELS;
             if (l.contains("garden")) return SkyblockArea.GARDEN;
             if (l.contains("the rift")) return SkyblockArea.THE_RIFT;
