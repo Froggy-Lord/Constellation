@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.694 (2026-07-30) — Unique gifting
+
+- added profile-safe unique-recipient history from exact gift confirmations and Generow totals
+- added a movable count/goal/remaining HUD with holding-gift visibility
+- added configurable milestone chat, title and sound alerts
+- added optional advisory recipient highlights with range, color and include/exclude controls
+
 ## 0.9.693 (2026-07-30) — Gift profit tracker
 
 - added exact gift reward rarity, coins, item, skill XP and North Star tracking

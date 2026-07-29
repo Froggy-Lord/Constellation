@@ -148,6 +148,31 @@ public class CygnusConfig extends BaseConfigGroup {
     public java.util.Map<String,Double> giftRewardCustomPrices = new java.util.LinkedHashMap<>();
     public java.util.Map<String,Long> giftCoins = new java.util.LinkedHashMap<>();
     public java.util.Map<String,Long> giftNorthStars = new java.util.LinkedHashMap<>();
+    // ported from SkyHanni (LGPL-2.1): features/gifting/UniqueGiftCounter.kt
+    public boolean uniqueGiftCounter = true;
+    public boolean uniqueGiftHud = true;
+    public boolean uniqueGiftHoldingOnly = true;
+    public boolean uniqueGiftShowRemaining = true;
+    public boolean uniqueGiftMilestoneChat = true;
+    public boolean uniqueGiftMilestoneTitle = true;
+    public boolean uniqueGiftMilestoneSound = true;
+    public int uniqueGiftGoal = 600;
+    public int uniqueGiftColor = 0xFF55FF55;
+    public String uniqueGiftMilestones = "50,100,200,300,400,500,600";
+    public java.util.Map<String,java.util.Set<String>> uniqueGiftPlayers = new java.util.LinkedHashMap<>();
+    public java.util.Map<String,Integer> uniqueGiftAmounts = new java.util.LinkedHashMap<>();
+    // ported from SkyHanni (LGPL-2.1): features/gifting/UniqueGiftingOpportunitiesFeatures.kt
+    public boolean giftingOpportunities = false;
+    public boolean giftingOpportunitiesHoldingOnly = true;
+    public boolean giftingOpportunitiesBox = true;
+    public boolean giftingOpportunitiesLabel = false;
+    public boolean giftingOpportunitiesShowGifted = false;
+    public boolean giftingOpportunitiesThroughWalls = true;
+    public int giftingOpportunitiesRange = 32;
+    public int giftingOpportunityColor = 0xFF00AA00;
+    public int giftingAlreadyColor = 0xFFAA0000;
+    public String giftingOpportunityIncludes = "";
+    public String giftingOpportunityExcludes = "";
     public boolean harvestFestivalHelper = true;
     public boolean anniversaryEventHelper = true;
     public boolean yearOfThePigHelper = true;

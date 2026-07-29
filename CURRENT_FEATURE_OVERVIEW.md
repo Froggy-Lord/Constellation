@@ -87,6 +87,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Profile-safe unique-gift recipient names and authoritative Generow total synchronization
+- Movable unique-recipient goal/remaining HUD plus configurable milestone alerts
+- Optional advisory not-yet-gifted player boxes and labels with range and name filters
+- `/uniquegifts` history, correction, goal, milestone, filter, color and presentation controls
 - Profile-safe gift reward rarity, item, coin, skill XP and North Star tracking
 - Market value, manually accounted gift replacement cost, profit and session hourly rate
 - Holding-gift or recent-gifting-location HUD visibility with configurable reward breakdowns

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.693 Gift profit tracker.
+Last updated: 2026-07-30 for version 0.9.694 unique gifting.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.693`.
+- Current artifact version: `0.9.694`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1959,3 +1959,13 @@ Successful authoritative reforge/application chat increments session attempts an
 Version `0.9.688` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live Basic/Hex slot and lore behavior remains an explicit in-game checklist item because the title screen cannot supply those containers.
 
 The old `0.9.687` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-041108-0.9.688/`; only `constellation-0.9.688.jar` is live and its SHA-256 is `fe13f6252b9e3833408bc64579dd1453a57d94ec15a5369103ee5584d6541c8d`. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.694 unique gifting
+
+`CygnusUniqueGifts.java`, `CygnusConfig.java` and `CygnusEvents.java` port SkyHanni LGPL `features/gifting/UniqueGiftCounter.kt` and `UniqueGiftingOpportunitiesFeatures.kt`. The live profile enables unique counting but disables opportunity highlights, so those defaults are preserved.
+
+Exact `+1 Unique Gift given! To <player>!` confirmations build a case-insensitive, profile-safe name history. Generow slot 40 supplies the authoritative `Unique Players Gifted` total without deleting locally known names. The movable HUD supports total, goal, remaining count and holding-gift-only visibility. Configurable milestones provide independently selectable local chat, title and sound.
+
+The optional advisory overlay considers only live player entities present in the connection player list. It can show not-yet-gifted or already-gifted players with independent colors, boxes, labels, range, through-wall behavior and case-insensitive include/exclude filters. It never clicks, equips or uses a gift. `/uniquegifts` exposes history, manual corrections, goal, milestones, filters, colors and all presentation switches.
+
+Version `0.9.694` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report or fatal-error signatures. Live gift chat, Generow lore and opportunity rendering remain in-game checklist items.

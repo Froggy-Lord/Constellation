@@ -2,6 +2,27 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Unique gifting
+
+### Enable
+
+1. Enable Cygnus, Winter Gift Tracker, Unique Gift Counter and Unique Gift HUD.
+2. Keep Holding Only enabled if the counter should appear only while holding a gift.
+3. Leave Gifting Opportunities disabled until you want advisory world highlights.
+
+### Test
+
+- [ ] Give a gift to a player who has not received one from you. Expected: the count and recorded-name total each increase exactly once.
+- [ ] Give the same player another gift. Expected: neither unique total increases.
+- [ ] Open Generow. Expected: the profile total synchronizes from `Unique Players Gifted` without discarding recorded names.
+- [ ] Switch profiles. Expected: totals and recipient names remain isolated.
+- [ ] Set a small goal and milestones with `/uniquegifts goal` and `/uniquegifts milestones`. Expected: enabled alert channels fire once when a configured total is reached.
+- [ ] Run `/uniquegifts mark <player>`, `unmark <player>` and `amount <count>`. Expected: corrections persist for the active profile.
+- [ ] Enable Gifting Opportunities while holding a gift. Expected: real nearby tab-listed players not in history receive the configured advisory box/label.
+- [ ] Add include and exclude filters. Expected: exclusions win and matching is case-insensitive.
+- [ ] Disable Show Gifted. Expected: recorded recipients disappear from the overlay.
+- [ ] Gift normally. Expected: Constellation never clicks a player, uses a gift or sends an interaction.
+
 ## Gift profit tracker
 
 ### Enable
