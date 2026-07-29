@@ -34,6 +34,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Profile-safe Attribute Menu learning for tier, rarity, next-tier requirement and enabled state
+- Cheapest next-tier or max-tier ranking using selectable Bazaar price side and Hunting Box deductions
+- Hide-maxed, only-locked, current-inventory and unknown-price filters with complete summary totals
+- Optional tier slot text, disabled-attribute tinting, contextual tooltips and `/attributeoverlay` controls
 - Exact Hunting Box shard-region and `Owned` quantity parsing with both Bazaar value sides
 - Per-shard rows, complete totals, partial-price state, sorting and movable Hunting Box Value HUD
 - High-value slot overlays, contextual unit/total tooltips and `/huntingboxvalue` controls

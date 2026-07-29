@@ -211,4 +211,36 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int huntingBoxValueHighColor = 0x99FFAA00;
     public int huntingBoxValueMissingColor = 0x66FF5555;
     public String huntingBoxValueSort = "SELL_DESC";
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/inventory/AttributeShardsConfig.kt
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/{AttributeShardOverlay,AttributeShardsData,AttributesShardsInventory}.kt
+    public boolean attributeOverlay = true;
+    public boolean attributeOverlayHud = true;
+    public boolean attributeOverlayHideMaxed = true;
+    public boolean attributeOverlayOnlyNotUnlocked = false;
+    public boolean attributeOverlayIncludeHuntingBox = true;
+    public boolean attributeOverlayOnlyCurrentInventory = false;
+    public boolean attributeOverlayTierAsStackSize = false;
+    public boolean attributeOverlayHighlightDisabled = true;
+    public boolean attributeOverlayTooltips = true;
+    public boolean attributeOverlayShowTier = true;
+    public boolean attributeOverlayShowNeeded = true;
+    public boolean attributeOverlayShowPrice = true;
+    public boolean attributeOverlayShowBox = false;
+    public boolean attributeOverlayShowSummary = true;
+    public boolean attributeOverlayHideUnknownPrice = false;
+    public int attributeOverlayRows = 20;
+    public int attributeOverlayDisabledColor = 0x66FF5555;
+    public int attributeOverlayUnknownColor = 0xFFFF5555;
+    public int attributeOverlayNormalColor = 0xFFFFFF55;
+    public int attributeOverlayCompleteColor = 0xFF55FF55;
+    public String attributeOverlaySort = "PRICE_TO_MAXED";
+    public String attributeOverlayPriceSource = "SELL";
+    public Map<String,Integer> attributeOverlaySyphoned = new HashMap<>();
+    public Map<String,Integer> attributeOverlayTier = new HashMap<>();
+    public Map<String,Integer> attributeOverlayToNext = new HashMap<>();
+    public Map<String,Integer> attributeOverlayBox = new HashMap<>();
+    public Map<String,String> attributeOverlayRarity = new HashMap<>();
+    public Map<String,String> attributeOverlayNames = new HashMap<>();
+    public Map<String,Boolean> attributeOverlayEnabled = new HashMap<>();
 }

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.705 (2026-07-30) — Attribute Shard overlay
+
+- added profile-safe Attribute Menu tier, requirement, rarity and enabled-state learning
+- added cheapest next-tier or max-tier ranking with selectable Bazaar price source
+- added Hunting Box ownership deductions, inventory-only filtering and complete summary totals
+- added tier slot text, disabled-attribute highlights, contextual tooltips, movable HUD and `/attributeoverlay` controls
+
 ## 0.9.704 (2026-07-30) — Hunting Box value
 
 - added exact Hunting Box shard-region and `Owned` lore parsing

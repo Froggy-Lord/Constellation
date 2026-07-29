@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.704 Hunting Box value.
+Last updated: 2026-07-30 for version 0.9.705 Attribute Shard overlay.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.704`.
+- Current artifact version: `0.9.705`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2071,3 +2071,15 @@ The movable menu-only HUD supports per-shard amount, unit, sell and buy fields, 
 `/huntingboxvalue` exposes status, row limit, threshold, sorting and all presentation/overlay controls. A populated valid region with no parseable shard lore shows a warning rather than a false complete zero. The feature is read-only and never clicks or opens a menu.
 
 Version `0.9.704` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report or fatal-error signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Real Hunting Box layout/lore, current Bazaar IDs and per-side prices remain explicit in-game checklist items.
+
+## July 30 version 0.9.705 Attribute Shard overlay
+
+`ArtemisAttributeOverlay.java`, `AttributeOverlayHudWidget.java`, `ArtemisConfig.java`, `ArtemisHunting.java` and the shared inventory render/tooltip hook port the live-enabled SkyHanni LGPL `AttributeShardOverlay.kt`, `AttributeShardsData.kt`, `AttributesShardsInventory.kt` and their config. The five authoritative rarity progression tables come from NotEnoughUpdates-REPO MIT `constants/attribute_shards.json`.
+
+Opening exact `Attribute Menu` learns shard display name, tier, rarity, next-tier requirement and enabled state by SkyBlock profile. Opening exact `Hunting Box` synchronizes owned quantities. The port reconstructs total syphoned shards from the reference cumulative progression and deducts Hunting Box ownership from either the next-tier or max-tier target without changing the saved base progress.
+
+The menu-only movable HUD supports cheapest-first price-to-next or price-to-max ranking, Instant Buy or buy-order price sides, hide-maxed, only-not-unlocked, current-menu and unknown-price filters, one-to-100 rows and independent tier, requirement, box, price and summary fields. Summary counts are calculated before row filters so hiding maxed shards does not falsify maxed or level totals. Missing prices remain visibly partial and warm the shared provider.
+
+Optional tier slot text uses the reference's zero, low, high and max color bands. Optional disabled-attribute tinting trusts only exact `Enabled: No` lore. Contextual tooltips add tier, selected requirement, price and Hunting Box amount. `/attributeoverlay` exposes status, rows, sorting, price source and every main presentation control. The feature only observes menus and renders locally; it never clicks, toggles, syphons, buys or opens anything.
+
+Version `0.9.705` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Real Attribute Menu pagination, exact modern rarity lore and Bazaar name aliases remain explicit in-game checklist items.

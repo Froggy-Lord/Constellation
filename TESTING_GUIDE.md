@@ -2,6 +2,24 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Attribute Shard overlay
+
+Enable Artemis, Attribute Overlay and its HUD. The overlay is intentionally visible only while the exact `Attribute Menu` is open.
+
+- [ ] Open `/attributemenu` with Advanced Mode enabled and visit every page. Expected: shard tiers, rarity progression, next-tier requirements and enabled state are learned for the active SkyBlock profile.
+- [ ] Close and reopen the menu. Expected: learned rows persist for this profile and do not appear on another profile until that profile is scanned.
+- [ ] Use the default max-tier and sell-price settings. Expected: rows are ordered cheapest first by remaining Bazaar cost to tier 10.
+- [ ] Run `/attributeoverlay sort next`. Expected: requirements and ranking change to the next tier only.
+- [ ] Run `/attributeoverlay price buy`, then return to `sell`. Expected: every row and total consistently use the selected side.
+- [ ] Open Hunting Box, then return to Attribute Menu. Expected: owned shard amounts reduce requirements when Hunting Box inclusion is enabled.
+- [ ] Toggle Hunting Box inclusion off. Expected: the original full requirement returns without deleting saved box ownership.
+- [ ] Toggle Hide Maxed, Only Locked and Current Inventory independently. Expected: each filter affects rows while summary counts remain correct for the selected inventory scope.
+- [ ] Enable tier slot text. Expected: each Attribute Menu shard shows tier 0-10 with red, yellow, green or gold progress coloring.
+- [ ] Disable an attribute in the real menu. Expected: its slot receives only the configured disabled tint; enabled slots are unchanged.
+- [ ] Hover a learned shard. Expected: tier, selected requirement, price and optional Hunting Box ownership are added without replacing vanilla lore.
+- [ ] Remove Bazaar connectivity temporarily. Expected: unresolved rows and the total show partial pricing rather than a false complete value.
+- [ ] Run `/attributeoverlay rows 5` and each `/attributeoverlay option` control. Expected: settings save and only presentation changes; no menu click is generated.
+
 ## Hunting Box value
 
 ### Enable
