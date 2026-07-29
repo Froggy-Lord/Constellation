@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-29 for version 0.9.657 Garden custom plot icons.
+Last updated: 2026-07-29 for version 0.9.658 Garden crop locations.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.657`.
+- Current artifact version: `0.9.658`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1493,3 +1493,17 @@ The master, editor button, local feedback, tooltip help and per-profile scope ar
 Version `0.9.657` built with exactly 11 successful tests and zero failures. The headless boot reached healthy timeout exit 124, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `d6a5a1c575477811976e019e76b203523e4c04fd76168a4f8bba3e1b9d9fb1d8`.
 
 The old `0.9.656` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-233206-0.9.657/`; only `constellation-0.9.657.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.
+
+## July 29 version 0.9.658 Garden crop locations
+
+`HerculesCropLocations.java`, `HerculesGardenTracker.java`, `HerculesConfig.java`, and `HerculesFarming.java` implement the user's enabled Crop Start Location feature. Held-tool crop selection, manual start placement, first-valid-harvest auto-learning, last-farmed updates, the ten-block reveal threshold, Start/Last/Both modes and distinct start/last waypoint semantics port SkyHanni LGPL `features/garden/farming/GardenStartLocation.kt` and `config/features/garden/CropStartLocationConfig.kt`.
+
+The feature covers all 13 current crops and reuses `HerculesGardenTracker`'s already-validated local attack plus authoritative block-update harvest detection. A small listener surface prevents a second detector from double-counting or learning server-side changes. Auto-learning requires the matching crop tool and a non-Barn physical plot. Start points are written only when absent; last-farmed positions update continuously. Writes are coalesced to five seconds and flushed on disconnect. Corrupt/out-of-bounds saved positions fail closed. World/profile changes reset only transient visibility state.
+
+`/cropstart set` uses the held crop, while `/cropstart set <crop>` manually assigns the current block to any specific crop regardless of the held tool. Compact names such as `netherwart`, `sugarcane`, `wildrose` and `cocoa` are accepted. `clear`, `clearstart`, `clearlast`, `clearall` and `clearprofiles` provide crop, type, active-layout and all-profile scopes. Layouts can be profile-specific or global without deleting the inactive scope.
+
+Start/last boxes, start/last beams, line, labels, distance, start/last colors, start/last wall visibility, render range, box size, beam height and last-waypoint activation distance are independently saved. The live default remains Start mode: a white depth-tested start box/label, with Last and Both behavior available. Rendering is Garden-only, held-crop-specific, range-bounded and advisory.
+
+Version `0.9.658` built with exactly 11 successful tests and zero failures. The headless boot reached healthy timeout exit 124, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `550fe39cb6225d5ec168705e6d0cd4e8ecbc696563e18e972bd29345c04f90f1`.
+
+The old `0.9.657` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-234038-0.9.658/`; only `constellation-0.9.658.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.

@@ -99,6 +99,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Farming target speed per crop
 - Target yaw/pitch, current angles and tolerance display
 - Recent/session blocks per second and crop-session statistics
+- Profile-specific crop start and last-farmed waypoints with manual per-crop placement and configurable world rendering
 - Jacob contest crop, collection rate and projected total
 - Garden pest spawn title/chat/sound controls
 - Pest total and infested-plot HUD

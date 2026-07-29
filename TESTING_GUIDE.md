@@ -25,6 +25,41 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
+## Garden crop locations: test this release first
+
+### Enable
+
+1. Enable Hercules and `Crop Location Helper`.
+2. Keep mode `START`, auto-learn, start box, labels and per-profile storage enabled to match the live profile.
+3. Hold a crop-specific farming tool in the Garden.
+
+### Manual per-crop starts
+
+- [ ] Stand at the intended beginning of a farm and run `/cropstart set`. Expected: the held tool’s crop receives a start point at your current block.
+- [ ] Without changing tools, stand elsewhere and run `/cropstart set wheat`. Expected: Wheat receives that manually chosen location independently of the held tool.
+- [ ] Repeat with compact multi-word crop names such as `/cropstart set netherwart`, `sugarcane`, `wildrose` and `cocoa`. Expected: each specific crop is accepted.
+- [ ] Switch between those tools. Expected: only the held crop’s saved start waypoint is shown.
+- [ ] Run `/cropstart clearstart wheat`. Expected: only Wheat’s manual start is removed; its last-farmed position and other crops remain.
+
+### Learning and modes
+
+- [ ] Clear one crop, hold its matching tool and break a valid crop block outside the Barn. Expected: its first valid local harvest automatically saves a start point once.
+- [ ] Continue farming. Expected: the last-farmed point follows your position without repeatedly moving the original start.
+- [ ] Stop and walk at least ten blocks away, then select Last mode. Expected: a purple last-farmed waypoint appears with a beam.
+- [ ] Return to farming. Expected: the last waypoint hides while it is being continuously updated and reappears after you leave again.
+- [ ] Select Both mode. Expected: start and last-farmed points display together with distinct labels and colors.
+- [ ] Disable auto-learn. Expected: new start points are not created, but existing starts remain and last-farmed tracking still works.
+- [ ] Enter the Barn or break a crop without its matching tool. Expected: neither action learns a crop location.
+
+### Configuration and persistence
+
+- [ ] Toggle start/last boxes, start/last beams, line, labels, distance and wall visibility independently. Expected: only the selected primitive changes.
+- [ ] Change start/last colors, box size, beam height, render range and last-point activation distance through `/cropstart`. Expected: settings persist.
+- [ ] Restart and switch profiles. Expected: locations survive restart and remain separate per profile.
+- [ ] Disable per-profile storage. Expected: a separate global layout is selected without deleting profile layouts.
+- [ ] Run `clear`, `clearstart`, `clearlast`, `clearall` and `clearprofiles` deliberately. Expected: only the documented crop/scope is removed.
+- [ ] Leave the Garden. Expected: every crop-location waypoint disappears immediately.
+
 ## Garden custom plot icons: test this release first
 
 ### Enable

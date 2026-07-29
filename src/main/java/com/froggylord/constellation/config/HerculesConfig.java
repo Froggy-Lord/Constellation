@@ -269,6 +269,29 @@ public class HerculesConfig extends BaseConfigGroup {
     public boolean plotIconPerProfile = true;
     public Map<String, String> plotIconStacks = new HashMap<>();
 
+    public boolean cropLocationHelper = true;
+    public boolean cropLocationAutoLearn = true;
+    public boolean cropLocationAutoChat = true;
+    public boolean cropLocationPerProfile = true;
+    public boolean cropLocationStartBox = true;
+    public boolean cropLocationLastBox = true;
+    public boolean cropLocationStartBeam = false;
+    public boolean cropLocationLastBeam = true;
+    public boolean cropLocationLine = false;
+    public boolean cropLocationLabels = true;
+    public boolean cropLocationDistance = true;
+    public boolean cropLocationThroughWalls = true;
+    public boolean cropLocationStartThroughWalls = false;
+    public int cropLocationStartColor = 0xAAFFFFFF;
+    public int cropLocationLastColor = 0xAAFF55FF;
+    public int cropLocationRenderRange = 512;
+    public int cropLocationLastMinDistance = 10;
+    public int cropLocationBeamHeight = 12;
+    public int cropLocationBoxSizeTenths = 10;
+    public String cropLocationMode = "START";
+    public Map<String, String> cropStartLocations = new HashMap<>();
+    public Map<String, String> cropLastFarmedLocations = new HashMap<>();
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.658 (2026-07-29) — Garden crop locations
+
+- added profile-specific start and last-farmed waypoints for all 13 crops with Start, Last and Both modes
+- added first-valid-harvest auto-learning, continuously updated last-farmed positions and delayed last-position reveal after leaving a farm
+- added manual `/cropstart set <crop>` placement for any specific crop plus separate start/last/current-layout/all-profile clearing
+- added independent boxes, beams, lines, labels, distances, colors, wall visibility, range, size and activation-distance controls
+
 ## 0.9.657 (2026-07-29) — Garden custom plot icons
 
 - added a three-mode Configure Plots icon editor ported from SkyHanni, using the bottom-right wooden-axe control

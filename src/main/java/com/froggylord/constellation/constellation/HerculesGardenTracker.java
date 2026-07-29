@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 // ported from SkyHanni (LGPL-3.0-or-later): features/garden/GardenOptimalSpeed.kt
 // ported from SkyHanni (LGPL-3.0-or-later): features/garden/GardenOptimalAngles.kt
@@ -51,6 +53,7 @@ public final class HerculesGardenTracker {
                           float targetYaw, float targetPitch, float yawDifference, float pitchDifference) {}
     public record Rates(String crop, double instantBps, double averageBps, long blocks, long elapsedMillis) {}
     public record Contest(String crop, long collected, double cropsPerSecond, long elapsedMillis, long projectedTotal) {}
+    public record Harvest(Crop crop, BlockPos pos) {}
 
     private static final Pattern COLLECTED = Pattern.compile("^Collected\\s+(?<amount>[0-9][0-9,]*)$", Pattern.CASE_INSENSITIVE);
     private static final Pattern TIMER = Pattern.compile("(?:(?<minutes>[0-9]{1,2})m(?:in)?(?:utes?)?\\s*)?(?<seconds>[0-9]{1,2})s(?:ec)?(?:onds?)?|(?<clockMinutes>[0-9]{1,2}):(?<clockSeconds>[0-9]{2})", Pattern.CASE_INSENSITIVE);
@@ -75,6 +78,7 @@ public final class HerculesGardenTracker {
     private static long contestLastSeen;
     private static Object levelIdentity;
     private static final Map<BlockPos, Long> localAttacks = new HashMap<>();
+    private static final List<Consumer<Harvest>> harvestListeners = new CopyOnWriteArrayList<>();
 
     private HerculesGardenTracker() {}
 
@@ -131,6 +135,10 @@ public final class HerculesGardenTracker {
         lastCrop = crop;
         sessionBlocks++;
         breaksThisSecond++;
+        Harvest harvest = new Harvest(crop, update.pos());
+        for (Consumer<Harvest> listener : harvestListeners) {
+            try { listener.accept(harvest); } catch (Exception ignored) {}
+        }
     }
 
     private static void addSample(int value) {
@@ -217,6 +225,7 @@ public final class HerculesGardenTracker {
     public static boolean speedGood(Control c) { return c != null && Math.abs(c.speed() - c.targetSpeed()) <= Math.max(0, cfg.farmingSpeedTolerance); }
     public static boolean anglesGood(Control c) { return c != null && c.anglesVisible() && c.yawDifference() <= cfg.farmingAngleToleranceHundredths / 100f && c.pitchDifference() <= cfg.farmingAngleToleranceHundredths / 100f; }
     public static HerculesConfig config() { return cfg; }
+    public static void registerHarvestListener(Consumer<Harvest> listener) { if (listener != null) harvestListeners.add(listener); }
 
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("gardencontrol")
