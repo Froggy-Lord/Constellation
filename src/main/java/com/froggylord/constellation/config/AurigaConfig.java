@@ -58,4 +58,24 @@ public class AurigaConfig extends BaseConfigGroup {
     public int chocolateFactoryPrestigeColor = 0x8055FF55;
     public int chocolateFactoryStrayColor = 0x80FF55FF;
     public java.util.Map<String, Long> chocolateFactoryTimeTowerExpiry = new java.util.LinkedHashMap<>();
+
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/item/AnvilHelper.java
+    // ported from NoFrills (GPL-3.0-only): features/solvers/AnvilHelper.java
+    public boolean anvilHelper = true;
+    public boolean anvilHud = true;
+    public boolean anvilMismatchWarning = true;
+    public boolean anvilBlockMismatchOutput = true;
+    public boolean anvilControlBypass = true;
+    public boolean anvilMismatchSound = true;
+    public boolean anvilHighlightInputs = true;
+    public boolean anvilHighlightResult = true;
+    public boolean anvilFindMatchingBooks = true;
+    public boolean anvilMatchPlayerInventoryOnly = true;
+    public boolean anvilMatchExactLevel = true;
+    public boolean anvilShowTooltip = true;
+    public boolean anvilShowEnchantments = true;
+    public int anvilInputColor = 0x8055FFFF;
+    public int anvilMatchColor = 0x8055FF55;
+    public int anvilMismatchColor = 0x80FF5555;
+    public int anvilResultColor = 0x8055FF55;
 }

@@ -1867,3 +1867,17 @@ Manual crop-start placement requested during this release already exists as `/cr
 Version `0.9.685` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source and symbol audits pass. Live Chocolate Factory parsing remains an explicit in-game checklist item because the title screen cannot supply its container.
 
 The old `0.9.684` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-034723-0.9.685/`; only `constellation-0.9.685.jar` is live and its SHA-256 is `d640b68d12e5e37a40249f9e89a46b15b515c2eba1ae12b2e1987b34f174f00c`. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.686 Anvil Helper
+
+The active Froggy__Lord 26.1.2 Skyblocker configuration explicitly enables `enableAnvilHelper`; Constellation had no equivalent. `AurigaAnvilHelper.java`, `AnvilHelperHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and `ItemProtectionScreenMixin.java` port Skyblocker LGPL `skyblock/item/AnvilHelper.java` and NoFrills GPL `features/solvers/AnvilHelper.java`.
+
+The exact `Anvil` screen and authoritative slots 29, 33 and 13 gate all behavior. Skyblocker's unequal-enchantment result warning is made symmetric across both complete enchant maps, so extra left-side enchants cannot evade detection. Mismatched output can be guarded with a held-Control deliberate bypass; warning chat and sound are independent and latch once per mismatch transition.
+
+NoFrills matching-book discovery is expanded with exact-level or same-enchantment modes, player-inventory-only scope, configurable input/result/match overlays, contextual tooltips and complete enchant summaries. Both anvil input slots are always excluded from match counts. Empty, non-book and ambiguous multi-enchant market IDs fail closed.
+
+The movable HUD shows state, input names, matching inventory count and active bypass. `/anvilhelper` exposes status, toggle and every main option. Closing the menu clears all names, enchant maps, counts and warning latches. The helper never clicks, moves or combines an item.
+
+Version `0.9.686` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live Anvil slot behavior remains an explicit in-game checklist item because the title screen cannot supply its container.
+
+The old `0.9.685` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-035431-0.9.686/`; only `constellation-0.9.686.jar` is live and its SHA-256 is `bf8e6315e69182b2e04a521489ded73bff45f80774a837d0a447bd1e9b35e279`. Live Gather preferences were not rewritten.

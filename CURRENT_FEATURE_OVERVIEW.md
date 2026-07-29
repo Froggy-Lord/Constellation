@@ -59,7 +59,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Best and best-affordable highlights, affordability/payback tooltips and prestige guidance
 - Stray and Golden Rabbit alerts, Hitman status and a movable factory HUD
 - Profile-aware Time Tower persistence with configurable warning and expiry channels
-- Reforge, anvil, God Potion and calculator helpers remain scheduled for reconstruction
+- Exact Anvil screen state with complete enchanted-book enchant and level comparison
+- Optional mismatch warning, sound and output blocking with deliberate Control bypass
+- Matching-book discovery in player inventory, configurable slot overlays and tooltips
+- Movable Anvil state/input/match HUD and `/anvilhelper` controls
+- Reforge and God Potion helpers remain scheduled; calculator functionality is already implemented in Lyra
 
 ## Cassiopeia: chat
 

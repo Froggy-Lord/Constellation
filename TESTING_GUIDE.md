@@ -933,6 +933,16 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Run `/chocolatefactory`, `toggle`, `cleartower` and representative `option <name> <on|off>` commands. Expected: readable status and persistent independent settings.
 - [ ] Move and resize the Chocolate Factory HUD in `/cn hud`. Expected: it appears only while the menu or a saved active Time Tower is relevant, plus editor grace.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
+- [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
+- [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.
+- [ ] Use the same enchantment at different levels, then two different enchantments. Expected: both combinations read Mismatched books, warn once per transition and use the mismatch color.
+- [ ] Try to click output slot 13 during a mismatch. Expected: the optional guard blocks it and reports why; holding Control permits that deliberate click when bypass is enabled.
+- [ ] Remove one book while retaining the other. Expected: identical books in player inventory highlight and the HUD/tooltip match count updates immediately.
+- [ ] Toggle `exactlevel` off. Expected: matching discovery includes the same enchantment at other levels while mismatch comparison for two inserted books remains strict.
+- [ ] Toggle `playeronly` off. Expected: eligible matching books elsewhere in the container may highlight; input slots never count as matches.
+- [ ] Hover inputs, output and highlighted matches. Expected: contextual state, complete left/right enchant lists and match count appear only when configured.
+- [ ] Close and reopen the Anvil. Expected: parsed names, mismatch latch and match count clear rather than leaking from the prior menu.
+- [ ] Run `/anvilhelper`, `toggle` and every `/anvilhelper option <name> <on|off>` family. Expected: readable status and independent persistent controls.
 - [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
 - [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
 - [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.

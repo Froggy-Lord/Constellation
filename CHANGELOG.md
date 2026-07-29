@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.686 (2026-07-30) — Anvil Helper
+
+- added exact-screen Anvil state tracking for enchanted-book combinations
+- added symmetric enchant and level mismatch warnings with optional protected output
+- added player-inventory matching-book discovery, slot overlays and contextual tooltips
+- added a movable Anvil HUD, deliberate Control bypass and complete `/anvilhelper` options
+
 ## 0.9.685 (2026-07-30) — Chocolate Factory helper
 
 - added best and best-affordable upgrade ranking from live rabbit and coach production gains
