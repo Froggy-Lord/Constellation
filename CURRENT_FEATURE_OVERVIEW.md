@@ -93,7 +93,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Drill and Pickonimbus inventory durability bars plus per-item low-state chat, title and sound warnings
 - Glacite Mineshaft pity, cave-in and cold state
 - Corpse finder, corpse keys and corpse profit tracking
-- Fossil and mining-puzzle helpers
+- Complete Fossil Excavator solver covering all eight fossils and 404 initial placements
+- Safe and low-charge opening sequences, exact probability highlights, percentage text and movable solver HUD
+- Fossil pattern/type/charge/minimum tooltips, optional wrong-click protection and Fossil Muncher answers
 - Scatha, treasure and mining-event assistance
 - Own Golden and Diamond Goblin box, beam, line, label and distance guidance
 - Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks

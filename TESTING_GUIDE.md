@@ -1189,6 +1189,19 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 6. Test `hidefull`, the independent drill/Pickonimbus switches, mining-only scope, HUD row switches, `/miningtools barwidth 5-30`, and `/miningtools color good|warning|danger AARRGGBB`.
 7. Leave Hypixel or disable Aquila. The HUD and custom durability bars must disappear without affecting ordinary vanilla durability bars.
 
+### Fossil Excavator solver
+
+1. Enable Aquila, `Fossil Helper`, `Fossil Solver Suite`, and `Fossil Solver Hud`, then open an active `Fossil Excavator` board.
+2. With at least 18 starting charges, verify the first recommended tile is row 3, column 5. With fewer charges, the first tile is the same but subsequent misses follow the separate low-charge sequence.
+3. The recommended dirt should receive the green best highlight and its percentage. Other possible dirt should receive probability-scaled blue highlights when enabled.
+4. After uncovering a fossil tile, verify the recommendation changes from the opening sequence to evidence-based solving. Patterns, minimum remaining tiles, charges, possible fossil types and next probability must update without reopening the menu.
+5. Hover board tiles with tooltip hiding disabled. Dirt and fossil tooltips should show possible patterns, minimum tiles, tile probability and the fossil name once only one type remains.
+6. Test `Hide Dirt Tooltips` and `Hide All Tooltips` independently. Neither may hide tooltips outside the exact Fossil Excavator board.
+7. Enable `Fossil Protect Wrong Clicks`; a dirt tile other than the recommendation must be blocked. The recommendation must remain clickable, and holding either Control key must bypass protection when that option is enabled.
+8. Use `/fossilsolver option`, `/fossilsolver color best|probability|impossible AARRGGBB`, and `/fossilsolver reset` to verify every saved display, tooltip, protection, HUD and Muncher control.
+9. Trigger each Fossil Muncher riddle. The exact answer should appear locally; original replacement must follow `Fossil Muncher Replace Riddle`, and unknown text must pass through unchanged.
+10. Close the menu, leave Hypixel, or disable the suite. Board state, HUD, overlays and protection must clear immediately.
+
 ### Test
 
 - [ ] View commissions. Expected: names/progress match tab and destination guidance points to the selected commission.

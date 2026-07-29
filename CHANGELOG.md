@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.720 (2026-07-30) — Fossil Excavator Solver
+
+- replaced Aquila's dead fossil flag with all eight fossil shapes and 404 valid starting placements
+- added proven safe and low-charge opening sequences followed by exact evidence-based probability solving
+- added best/probability highlights, percentage text, movable status HUD, tooltips and optional wrong-click protection
+- added Fossil Muncher answers, independent presentation controls, colors and complete `/fossilsolver` options
+
 ## 0.9.719 (2026-07-30) — Mining Tool State
 
 - replaced Aquila's dead drill-fuel and Pickonimbus HUD flags with licensed metadata and lore parsing
