@@ -54,6 +54,7 @@ public class CygnusEvents extends BaseConstellation {
         cfg = (CygnusConfig) config;
         CygnusCarnival.init(cfg);
         CygnusDiana.init(cfg);
+        CygnusCalendar.init(cfg);
         registerRenderer(CygnusCarnival::draw);
         registerRenderer(CygnusDiana::draw);
     }
@@ -86,6 +87,8 @@ public class CygnusEvents extends BaseConstellation {
             HudPosition.of(76, 74), () -> cfg.enabled && cfg.dianaMobTracker && cfg.dianaMobHud));
         hud.register(new HudWidget("cygnus-diana-drops", "Diana Drops", CygnusDiana::dropHud,
             HudPosition.of(76, 80), () -> cfg.enabled && cfg.dianaDropTracker && cfg.dianaDropHud));
+        hud.register(new HudWidget("cygnus-calendar", "Events", CygnusCalendar::hudText,
+            HudPosition.of(76, 86), () -> cfg.enabled && cfg.eventCalendar && cfg.eventCalendarHud));
     }
 
     private static String calendarLine() {
@@ -144,5 +147,6 @@ public class CygnusEvents extends BaseConstellation {
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         CygnusCarnival.registerCommands(dispatcher);
         CygnusDiana.registerCommands(dispatcher);
+        CygnusCalendar.registerCommands(dispatcher);
     }
 }

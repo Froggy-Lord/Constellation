@@ -6,6 +6,25 @@ public class CygnusConfig extends BaseConfigGroup {
     @Override public int currentVersion() { return 0; }
 
     public boolean calendarHud = true;
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/events/EventNotifications.java
+    public boolean eventCalendar = true;
+    public boolean eventCalendarHud = true;
+    public boolean eventCalendarShowActive = true;
+    public boolean eventCalendarShowLocation = true;
+    public boolean eventCalendarShowSkyblockDate = true;
+    public boolean eventCalendarShowYear = true;
+    public boolean eventCalendarChat = true;
+    public boolean eventCalendarTitle = true;
+    public boolean eventCalendarSound = true;
+    public boolean eventCalendarOnlySkyblock = true;
+    public boolean eventCalendarShowFetchState = false;
+    public int eventCalendarRows = 3;
+    public int eventCalendarRefreshMinutes = 30;
+    public int eventCalendarColor = 0xFFFFAA00;
+    public int eventCalendarActiveColor = 0xFF55FF55;
+    public String eventCalendarReminderSeconds = "300,60";
+    public String eventCalendarIncludes = "";
+    public String eventCalendarExcludes = "Jacob's Farming Contest,Cult of the Fallen Star";
 
     
     public boolean dianaInquisitorAlert = true;

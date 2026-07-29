@@ -87,6 +87,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Live upcoming-event calendar with active/upcoming countdowns and locations
+- Offline last-good calendar cache plus deterministic SkyBlock season, day and year
+- Five-minute/one-minute reminders with independent chat, title and sound
+- Editable include/exclude filters, row count, active/date/year/location and fetch-state controls
+- `/events` status, refresh, reminder, filter and presentation commands
 - Exact server-particle detection for empirical Start, Mob and Treasure burrows
 - Configurable burrow boxes, beams, labels, distance, range, lifetime, colors and through-wall rendering
 - Persistent tracking for eleven mythological mobs, sixteen rare drops and dug coins

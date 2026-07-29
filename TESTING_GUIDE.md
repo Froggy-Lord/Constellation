@@ -2,6 +2,30 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Event calendar and reminders
+
+### Enable
+
+1. Enable Cygnus, Event Calendar and Event Calendar HUD.
+2. Enable Chat, Title and Sound notification channels as wanted.
+3. Join Hypixel SkyBlock and run `/events refresh`.
+
+### Test
+
+- [ ] Wait several seconds and run `/events status`. Expected: it reports a populated calendar and the next included event.
+- [ ] Inspect the Events HUD. Expected: the current SkyBlock season/day/year and up to three active/upcoming events appear with countdowns.
+- [ ] Compare the date to Hypixel's sidebar. Expected: season and day agree; the year row is derived from the SkyBlock epoch.
+- [ ] Run `/events rows 1`. Expected: only one event remains while the optional date row stays visible.
+- [ ] Run `/events exclude Spooky Festival,Cult of the Fallen Star`. Expected: matching event names disappear and cannot notify.
+- [ ] Run `/events include Spooky Festival`. Expected: only matching events pass the include filter, still subject to exclusions.
+- [ ] Clear filters with `/events clearfilters`. Expected: every feed event becomes eligible.
+- [ ] Run `/events reminders 300,60,0`. Expected: reminders are eligible at five minutes, one minute and event start without duplicates after refresh.
+- [ ] Cross a configured reminder threshold. Expected: each enabled chat, title and sound channel fires exactly once.
+- [ ] Run `/events refresh` repeatedly near a threshold. Expected: an already delivered reminder never replays.
+- [ ] Disable Active, Location, Date, Year and Fetch State independently. Expected: only that HUD information changes.
+- [ ] Temporarily disconnect after one successful fetch, then restart. Expected: the last-good cached schedule and deterministic date still render.
+- [ ] Test outside Hypixel with SkyBlock Only enabled. Expected: the event HUD and notifications stay hidden.
+
 ## Diana tracking suite
 
 ### Enable

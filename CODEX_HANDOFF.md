@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.690 Diana tracking suite.
+Last updated: 2026-07-30 for version 0.9.691 event calendar and reminders.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.690`.
+- Current artifact version: `0.9.691`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -309,6 +309,16 @@ Empirical burrows use Devonian's exact particle type/count/spread signatures and
 The tracker ports all eleven current Devonian mythological mobs and sixteen rare-drop names plus dug coins. Counts persist in Cygnus config when persistence is enabled and appear in independently movable compact or full mob/drop HUDs. Inquisitor coordinate messages provide an expiring beam/label; alerts are deduplicated, and optional party sharing occurs only for a locally identified coordinate source so teammate messages cannot echo. `/diana` exposes status, resets, waypoint clearing, range, lifetime, colors and all behavioral toggles.
 
 Build passed 11/11 and boot passed the expected exit 124 with 138 rooms, 14 constellations and no forbidden mixin/crash/fatal signatures. Next Cygnus candidate should be calendar/upcoming-event notifications using licensed authoritative event timing, since the current calendar fields remain advertised but unregistered.
+
+## July 30 event calendar and reminders
+
+Version `0.9.691` implements Cygnus's previously dead calendar and event-notification settings in `CygnusCalendar.java`. The event model, fixed `https://hysky.de/api/calendar` feed, threshold-crossing notification logic and live profile's five-minute/one-minute defaults are ported from Skyblocker LGPL `skyblock/events/EventNotifications.java`. SkyBlock date conversion uses SkyHanni LGPL `utils/SkyBlockTime.kt`.
+
+Fetching is asynchronous on one daemon executor with connection/request timeouts and no render-thread network work. A successful response is schema-checked, sorted and atomically replaces the runtime list, then writes `config/constellation-event-calendar.json`. Startup loads that last-good cache first, so outages preserve the previous future schedule; the deterministic SkyBlock season/day/year row requires no network. Event notifications are keyed by name, timestamp and reminder threshold, preventing a refresh from replaying an alert.
+
+The movable HUD supports active events, location, SkyBlock date/year, one-to-eight upcoming rows and optional fetch state. Editable case-insensitive substring include/exclude filters avoid noisy high-frequency events; defaults omit Jacob contests and Cult of the Fallen Star while leaving all larger events visible. Chat, title and sound alerts are independent. `/events` exposes status, manual refresh, rows, reminder seconds, filters and every boolean presentation channel.
+
+The first full boot wrote and parsed a 7,308-byte live calendar cache, in addition to passing exit 124 with 138 rooms, 14 constellations and zero crash/mixin/fatal signatures. Next Cygnus vertical should be mayor/minister/perk state, then select one still-advertised seasonal helper backed by licensed live behavior.
 
 ## July 21 party-message audit
 

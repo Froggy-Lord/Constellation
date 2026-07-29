@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.691 (2026-07-30) — Event calendar and reminders
+
+- added a live upcoming-event calendar with deterministic SkyBlock date and active-event countdowns
+- added five-minute/one-minute reminder defaults with independent chat, title and sound channels
+- added editable include/exclude filters, rows, location/date/year presentation and `/events` controls
+- added asynchronous refresh, threshold deduplication and an automatically maintained last-good offline cache
+
 ## 0.9.690 (2026-07-30) — Diana tracking suite
 
 - added exact empirical Start, Mob and Treasure burrow detection from server particles
