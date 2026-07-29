@@ -385,3 +385,16 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Shift-held ten-level tooltip projection bounded by each perk's actual maximum
 - Menu-only movable HUD for Whispers, tokens, allocated cost and perk completion
 - Full `/hotfhelper` status, design and presentation controls
+
+## Artemis: Foraging Tracker
+
+- Transaction-scoped Tree Gift parsing from the exact open/close separators
+- Independent Fig/Mangrove contributions and summed fractional whole-tree credit
+- Hover-derived actual items, Foraging XP, HOTF XP and Forest Whispers
+- Inventory-delta coverage for Fig/Mangrove logs, enchanted logs and Stretching Sticks
+- Compact replacement messages with independent uncommon, book, mob, booster, shard, rune and miscellaneous categories
+- Session-only live default plus optional profile persistence and profile clearing
+- All/Fig/Mangrove filters, row/sort controls and purchase or liquidation pricing
+- Profit, profit/hour, recent drops, uptime and configurable confirmed-value alerts
+- Axe-only visibility with a saved disappearance delay and movable HUD
+- Full `/foragingtracker` status, reset, warning, filter and presentation controls

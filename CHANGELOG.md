@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.709 (2026-07-30) — Foraging Tracker
+
+- added transaction-safe Fig and Mangrove Tree Gift tracking with contribution and whole-tree accounting
+- added actual hover-reward, XP, HOTF XP, Forest Whisper, log and Stretching Sticks tracking
+- added compact gift summaries with configurable bonus categories and confirmed high-value alerts
+- added session/profile history, tree filters, Bazaar valuation, profit/hour, movable HUD and full controls
+
 ## 0.9.708 (2026-07-30) — Heart of the Forest
 
 - added exact parsing for all 29 current HOTF perks, levels, states, tokens and Forest Whispers

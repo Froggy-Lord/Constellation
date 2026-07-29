@@ -1339,6 +1339,23 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Observe the movable HOTF HUD. Expected: it shows only while the exact menu is open and its Whispers, tokens, allocated, perk and maxed rows obey independent options.
 - [ ] Click a perk and wait for only its lore to change. Expected: state, highlights, level text, HUD totals and tooltip costs refresh without reopening the menu.
 - [ ] Close `/hotf` and open unrelated inventories. Expected: every HOTF overlay, tooltip addition and HUD row disappears.
+
+## Foraging Tracker
+
+- [ ] Enable Artemis and run `/foragingtracker` on Galatea. Expected: the tracker reports on, session mode is initially empty, and no data is created outside Galatea.
+- [ ] Hold a real axe, then switch away from it. Expected: the HUD appears while held and remains for the configured `/foragingtracker delay <0-60>` before disappearing.
+- [ ] Contribute to a Fig Tree Gift. Expected: exactly one Fig contribution is counted and whole-tree credit increases by the displayed percentage divided by 100.
+- [ ] Contribute to a Mangrove Tree Gift. Expected: Mangrove is tracked independently; `/foragingtracker tree fig`, `mangrove` and `all` filter every item and metric consistently.
+- [ ] Inspect a gift containing item rewards, Foraging Experience, HOTF Experience and Forest Whispers. Expected: actual hovered reward amounts enter the matching rows and metrics once.
+- [ ] Receive Fig/Mangrove logs, enchanted logs or Stretching Sticks while actively foraging. Expected: positive inventory deltas are counted; opening the world with existing stacks creates no gain.
+- [ ] With compact mode on, complete a gift. Expected: the multi-line original transaction is replaced by one contribution/reward summary plus only enabled bonus categories.
+- [ ] Toggle uncommon, books, mobs, boosters, shards, runes and misc with `/foragingtracker option`. Expected: each affects only its compact-summary category, not item accounting.
+- [ ] Verify profit with `/foragingtracker price purchase` and `sell`. Expected: the selected Bazaar side changes values and unresolved prices remain visibly partial.
+- [ ] Change sorting among value, amount, name and recent and set row count from one to 50. Expected: only item rows reorder/truncate; totals remain complete.
+- [ ] Enable recent, profit, per-hour, Foraging XP, HOTF XP, Whispers, whole trees, tree gifts and uptime independently. Expected: each HUD row follows its saved toggle.
+- [ ] Set `/foragingtracker warning chat 5` and `title 5`, then receive one confirmed reward worth at least five million coins. Expected: configured chat/title/sound channels fire once for the gain.
+- [ ] Run `/foragingtracker reset`. Expected: only the current session clears. Enable persistent mode, earn data, reconnect, then run `clearprofile`; expected: the active profile alone is removed.
+- [ ] Leave Galatea during an open or completed gift. Expected: the HUD hides, the parser stops, and unrelated chat or inventory changes never enter the tracker.
 - [ ] Toggle next, second, remaining, dim-wrong, labels, tooltip hiding, pair memory and pair highlights independently. Expected: each changes only its documented presentation or safeguard.
 - [ ] Toggle Hypixel-only and Private-Island-only scope. Expected: exact experiment screens outside selected scope remain untouched.
 - [ ] Close and reopen an experiment or run `/experiments reset`. Expected: sequence, pair and click state clears without affecting items.
