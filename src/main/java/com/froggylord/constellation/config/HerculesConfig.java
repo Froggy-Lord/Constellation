@@ -246,6 +246,22 @@ public class HerculesConfig extends BaseConfigGroup {
     public long fortunePestBonusExpiry = 0;
     public boolean fortunePestBonusNotified = true;
 
+    public boolean plotMenuHighlighting = true;
+    public boolean plotMenuCurrent = true;
+    public boolean plotMenuPests = true;
+    public boolean plotMenuSprays = true;
+    public boolean plotMenuLocked = true;
+    public boolean plotMenuPasting = false;
+    public boolean plotMenuStatusLetters = true;
+    public boolean plotMenuStatusCounts = true;
+    public boolean plotMenuTooltipStatus = true;
+    public int plotMenuCurrentColor = 0x9055FF55;
+    public int plotMenuPestColor = 0x90FF5555;
+    public int plotMenuSprayColor = 0x90FFAA00;
+    public int plotMenuLockedColor = 0x90555555;
+    public int plotMenuPastingColor = 0x90FFFF55;
+    public String plotMenuPriority = "current,pests,sprays,locked,pasting";
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

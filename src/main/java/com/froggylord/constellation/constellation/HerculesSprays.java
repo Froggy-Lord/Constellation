@@ -244,6 +244,14 @@ public final class HerculesSprays {
         Minecraft mc = Minecraft.getInstance();
         return mc.player == null ? null : HerculesPests.plotAt(mc.player.getX(), mc.player.getZ());
     }
+    static long remainingMillis(int plot) {
+        if (cfg == null || cfg.sprayExpiryTimes == null || cfg.sprayTypes == null) return 0;
+        if (!cfg.sprayTypes.containsKey(key(plot))) return 0;
+        return Math.max(0, cfg.sprayExpiryTimes.getOrDefault(key(plot), 0L) - System.currentTimeMillis());
+    }
+    static String sprayType(int plot) {
+        return remainingMillis(plot) > 0 ? cfg.sprayTypes.get(key(plot)) : null;
+    }
     private static boolean activeSpray(int plot) { return cfg.sprayExpiryTimes.getOrDefault(key(plot), 0L) > System.currentTimeMillis() && cfg.sprayTypes.containsKey(key(plot)); }
     private static String plotName(int plot) { for (var entry : cfg.pestPlotNames.entrySet()) if (Objects.equals(entry.getValue(), plot)) return pretty(entry.getKey()); return "Plot " + plot; }
     private static String pretty(String value) { StringBuilder out = new StringBuilder(); for (String word : value.split("\\s+")) { if (!out.isEmpty()) out.append(' '); out.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)); } return out.toString(); }

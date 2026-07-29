@@ -25,6 +25,30 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
+## Garden plot-menu status: test this release first
+
+### Enable
+
+1. Enable Hercules and `Plot Menu Highlighting`.
+2. Keep current, pests, sprays and locked enabled; pasting is available but disabled by default to match the live profile.
+3. Keep letters, counts and tooltip status enabled.
+4. In the Garden, open the Desk and then `Configure Plots`.
+
+### Status and priority
+
+- [ ] Inspect the plot you are physically standing in. Expected: its slot has the configured current-plot tint and `C` marker.
+- [ ] Open the menu while pests are known in one or more plots. Expected: affected slots use the pest tint and show `P` plus the tracked pest count.
+- [ ] Open the menu with active Sprayonator effects. Expected: affected slots use the spray tint and show `S` plus rounded-up minutes remaining.
+- [ ] Hover a highlighted plot. Expected: the tooltip states the selected status and active sprays include their type and precise remaining time.
+- [ ] Inspect an unpurchased plot. Expected: its lore-derived locked status uses the locked tint and `L`.
+- [ ] Enable pasting status while a plot paste is running. Expected: lore-derived pasting status uses its own tint and `PA`.
+- [ ] Run `/plotmenu priority pests current sprays locked pasting`. Expected: a current plot with pests now displays the pest status because pests has higher priority.
+- [ ] Toggle each status with `/plotmenu option <status> <on|off>`. Expected: only that status changes and all choices persist.
+- [ ] Toggle letters, counts and tooltip independently. Expected: the tint remains while each selected detail disappears.
+- [ ] Run `/plotmenu color pests FF00FF` and then an eight-digit ARGB value. Expected: the pest tint changes and six-digit values retain the default overlay opacity.
+- [ ] Open another inventory or leave the Garden. Expected: no plot status tint or tooltip is drawn.
+- [ ] Click plot slots normally. Expected: Constellation never blocks, changes or sends an extra click.
+
 ## Farming Fortune: test this release first
 
 ### Enable

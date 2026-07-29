@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.656 (2026-07-29) — Garden plot-menu status
+
+- added exact `Configure Plots` status highlighting for the current plot, pests, active sprays, locked plots and plots being pasted
+- added configurable status priority, independent status toggles, colors, letter markers, pest/spray counts and hover details
+- integrated existing physical-plot, pest and persistent spray state without menu clicks, item replacement or packet actions
+- added full persistent controls through Hercules config and `/plotmenu`
+
 ## 0.9.655 (2026-07-29) — Farming Fortune
 
 - added true Farming Fortune parsing from universal and crop-specific Stats-widget lines with persistent latest values for all 13 crops

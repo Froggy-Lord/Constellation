@@ -106,6 +106,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Pest cooldown, last-spawn and average-spawn HUD
 - Vacuum particle-path pest waypoint with optional box, beam, line, label, distance and particle filtering
 - Persistent per-plot Sprayonator type/expiry state, optional HUD, Portable Washer clearing and expiry/away alerts
+- Configure Plots status highlighting with priority, colors, letters, pest counts, spray minutes and hover details
 - Stereo Harmony active-vinyl HUD, carried-vacuum detection, crop-icon menu replacement and Jacob-contest matching
 - Greenhouse growth-cycle countdown/overdue HUD, ready/away alerts and diagnostic harvest/water highlights
 - True universal/crop Farming Fortune HUD, saved crop values, missing-widget guidance, pest reductions and Pesthunter bonus expiry
