@@ -67,7 +67,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Profile-safe countdown persistence with independent warning/expiry chat, title and sound
 - Movable Buff Status HUD with optional unknown, expired, profile and source-age rows
 - Full `/buffstatus` recovery, testing, thresholds and option controls
-- Reforge guidance remains scheduled; calculator functionality is already implemented in Lyra
+- Exact Basic Reforge and Hex menu tracking from authoritative item modifier metadata
+- Editable wanted/excluded reforge filters with substring matching and exclusion precedence
+- Current-reforge overlay, Hex candidate highlights and contextual filter/cost tooltips
+- Optional matched-result reroll/application guard with held-Control bypass and local alerts
+- Session attempt/spend/last-result statistics, movable HUD and `/reforgehelper` controls
+- Calculator functionality is implemented in Lyra
 
 ## Cassiopeia: chat
 

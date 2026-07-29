@@ -18,6 +18,7 @@ public class AurigaMisc extends BaseConstellation {
         AurigaChocolateFactory.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaAnvilHelper.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaBuffStatus.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaReforgeHelper.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
@@ -35,6 +36,9 @@ public class AurigaMisc extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.BuffStatusHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 56),
             () -> cfg.enabled && cfg.buffStatus && cfg.buffStatusHud));
+        hud.register(new com.froggylord.constellation.hud.ReforgeHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 68),
+            () -> cfg.enabled && cfg.reforgeHelper && cfg.reforgeHud));
     }
 
     @Override
@@ -43,5 +47,6 @@ public class AurigaMisc extends BaseConstellation {
         AurigaChocolateFactory.registerCommands(dispatcher);
         AurigaAnvilHelper.registerCommands(dispatcher);
         AurigaBuffStatus.registerCommands(dispatcher);
+        AurigaReforgeHelper.registerCommands(dispatcher);
     }
 }

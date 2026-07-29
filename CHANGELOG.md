@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.688 (2026-07-30) — Reforge Helper
+
+- added exact Basic Reforge and Hex menu tracking from item modifier metadata
+- added editable include/exclude filters, current-reforge overlay and Hex candidate highlights
+- added matched-reforge click protection with a deliberate Control bypass and local alerts
+- added session attempts/spend accounting, contextual tooltips, HUD and full `/reforgehelper` controls
+
 ## 0.9.687 (2026-07-30) — God Potion and Cookie status
 
 - added authoritative tab-footer parsing for God Potion, Cookie Buff and active-effect count

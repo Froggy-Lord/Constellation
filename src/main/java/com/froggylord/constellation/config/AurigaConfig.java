@@ -108,4 +108,29 @@ public class AurigaConfig extends BaseConfigGroup {
     public int buffStatusUnknownColor = 0xFFAAAAAA;
     public java.util.Map<String, Long> buffStatusGodExpiry = new java.util.LinkedHashMap<>();
     public java.util.Map<String, Long> buffStatusCookieExpiry = new java.util.LinkedHashMap<>();
+
+    // ported from SkyblockAddons (LGPL-3.0-only): mixin/hooks/AbstractContainerScreenHook.java, utils/ItemUtils.java, utils/Utils.java
+    public boolean reforgeHelper = true;
+    public boolean reforgeHud = true;
+    public boolean reforgeCurrentOverlay = true;
+    public boolean reforgeFilterEditor = true;
+    public boolean reforgeBlockMatched = true;
+    public boolean reforgeControlBypass = true;
+    public boolean reforgeMatchChat = true;
+    public boolean reforgeMatchSound = true;
+    public boolean reforgeHighlightCandidates = true;
+    public boolean reforgeShowTooltip = true;
+    public boolean reforgeShowItem = true;
+    public boolean reforgeShowCost = true;
+    public boolean reforgeShowAttempts = true;
+    public boolean reforgeShowSpent = true;
+    public boolean reforgeShowLastResult = false;
+    public boolean reforgeTrackSession = true;
+    public boolean reforgeCaseInsensitive = true;
+    public String reforgeIncludes = "";
+    public String reforgeExcludes = "";
+    public int reforgeCurrentColor = 0xFFFFFF55;
+    public int reforgeMatchColor = 0xFF55FF55;
+    public int reforgeMissColor = 0xFFFFAA00;
+    public int reforgeCandidateColor = 0x8055FFFF;
 }

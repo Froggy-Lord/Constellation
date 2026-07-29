@@ -1895,3 +1895,17 @@ The adversarial pass evaluates crossings before parsing a refreshed footer and r
 Version `0.9.687` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live footer parsing remains an explicit in-game checklist item because the title screen has no Hypixel player-list footer.
 
 The old `0.9.686` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-040256-0.9.687/`; only `constellation-0.9.687.jar` is live and its SHA-256 is `d19dceff937d3c74bae8ef73827b06ca9cb50495143de4f609c515c32f73e86f`. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.688 Reforge Helper
+
+`AurigaReforgeHelper.java`, `ReforgeHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and `ItemProtectionScreenMixin.java` port SkyblockAddons LGPL `mixin/hooks/AbstractContainerScreenHook.java`, `utils/ItemUtils.java` and `utils/Utils.java`. No code was copied from the forbidden reforge implementation.
+
+Exact `Reforge Item` and `The Hex ➜ Reforges` titles gate authoritative Basic slots 13/22 and Hex slots 19/48. Current reforges come from ExtraAttributes `modifier`, preserving the reference's `_sword`/`_bow` cleanup and Warped-to-Hyper exception. Wanted comma-separated substring filters and excluded substrings use exclusion precedence. Both are editable beside the live menu and through `/reforgehelper`.
+
+The current reforge is rendered beneath its item, wanted Hex candidates highlight only when lore marks them applicable, and navigation/page heads fail closed. Contextual tooltips expose current/candidate values, action cost and filters. A wanted current reforge can guard Basic rerolls plus Hex application/candidate clicks, with an explicit held-Control bypass. Match chat and sound latch once per modifier transition.
+
+Successful authoritative reforge/application chat increments session attempts and attributes only a menu cost clicked within five seconds; blocked, failed or stale clicks do not count. The movable HUD independently shows current, item, cost, attempts, spend, last result and bypass. Closing clears menu/editor/pending-click state while filters and session totals remain. No click is generated.
+
+Version `0.9.688` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live Basic/Hex slot and lore behavior remains an explicit in-game checklist item because the title screen cannot supply those containers.
+
+The old `0.9.687` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-041108-0.9.688/`; only `constellation-0.9.688.jar` is live and its SHA-256 is `fe13f6252b9e3833408bc64579dd1453a57d94ec15a5369103ee5584d6541c8d`. Live Gather preferences were not rewritten.

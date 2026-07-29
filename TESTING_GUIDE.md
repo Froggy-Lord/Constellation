@@ -954,6 +954,18 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Toggle warning/expiry chat, title and sound independently. Expected: each channel affects both configured buff alerts without sending server chat.
 - [ ] Run `/buffstatus clear`. Expected: only the active profile's saved buff timers clear and status becomes Unknown until the next footer refresh.
 - [ ] Move and resize Buff Status in `/cn hud`. Expected: its independent placement and scale persist.
+- [ ] Enable Auriga and `reforgeHelper`, then open exact `Reforge Item` and `The Hex ➜ Reforges` menus. Expected: no overlay, editor or guard appears in unrelated containers.
+- [ ] Enter comma-separated wanted reforges and excluded substrings in the left-side editor. Expected: both fields retain focus while typing, persist after reopening and use exclusions to override partial wanted matches.
+- [ ] Repeat with `/reforgehelper include <list>`, `exclude <list>` and `clear include|exclude|all`. Expected: commands and live fields stay synchronized.
+- [ ] Insert an item in Basic Reforge slot 13 and Hex slot 19. Expected: current reforge comes from its modifier metadata and appears below the item plus in the movable HUD.
+- [ ] Roll until a wanted non-excluded reforge appears. Expected: match chat/sound fires once, colors change and repeated screen ticks do not replay the alert.
+- [ ] Click Basic button 22 or Hex apply/candidate controls while matched. Expected: the optional guard blocks another change; holding Control deliberately bypasses it.
+- [ ] Browse Hex reforge choices. Expected: applicable wanted candidates highlight, while page arrows/navigation heads and unrelated items never highlight.
+- [ ] Hover the item, action button and Hex candidates. Expected: current/candidate reforge, cost and configured wanted/excluded filters appear contextually.
+- [ ] Complete successful reforges and applications. Expected: session attempts increment only on authoritative success chat and spend uses the recently clicked menu cost; failed/blocked clicks do not count.
+- [ ] Run `/reforgehelper reset`. Expected: attempts, spent and last-result state clear without changing filters.
+- [ ] Toggle editor, overlay, candidates, guard, bypass, alerts, tooltip, item, cost, attempts, spent, last and tracking independently. Expected: each changes only its documented behavior.
+- [ ] Close and reopen both menus. Expected: screen references, pending cost, match latch and editor widgets clear safely while session statistics and configured filters remain.
 - [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
 - [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
 - [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.
