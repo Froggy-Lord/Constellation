@@ -266,6 +266,36 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int treeProgressNearlyDoneColor = 0xFFFFFF55;
     public int treeProgressCompleteColor = 0xFFFFAA00;
 
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/galatea/{ForestNodes,TerracottaPuzzle,AbstractBlockHighlighter,LushlilacHighlighter,SeaLumiesHighlighter}.java
+    public boolean galateaExploration = true;
+    public boolean galateaForestNodes = true;
+    public boolean galateaNodeBox = true;
+    public boolean galateaNodeLabel = true;
+    public boolean galateaNodeBeam = false;
+    public boolean galateaNodeLine = false;
+    public boolean galateaNodeDistance = true;
+    public boolean galateaTempleSolver = true;
+    public boolean galateaTempleLabels = true;
+    public boolean galateaTempleBoxes = true;
+    public boolean galateaTempleHideSolved = true;
+    public boolean galateaLushlilac = true;
+    public boolean galateaSeaLumies = true;
+    public boolean galateaResourceBoxes = true;
+    public boolean galateaResourceLabels = false;
+    public boolean galateaResourceBeams = false;
+    public boolean galateaResourceDistance = true;
+    public boolean galateaExplorationThroughWalls = true;
+    public int galateaSeaLumiesMinimum = 3;
+    public int galateaExplorationRange = 64;
+    public int galateaExplorationChunkRadius = 4;
+    public int galateaNodeBeamHeight = 8;
+    public int galateaResourceBeamHeight = 5;
+    public int galateaNodeColor = 0xFFFFAA00;
+    public int galateaTempleClockwiseColor = 0xFF55FF55;
+    public int galateaTempleCounterColor = 0xFFFF5555;
+    public int galateaLushlilacColor = 0xFFFF55FF;
+    public int galateaSeaLumiesColor = 0xFF55FFFF;
+
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/MoongladeBeaconConfig.kt
     public boolean moongladeBeacon = true;
     public boolean moongladeBeaconHud = true;

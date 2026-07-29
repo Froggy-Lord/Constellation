@@ -29,7 +29,9 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisHotf.init(cfg);
         ArtemisForagingTracker.init(cfg);
         ArtemisStarlyn.init(cfg);
+        ArtemisGalateaExploration.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
+        registerRenderer(ArtemisGalateaExploration::draw);
     }
     @Override public void registerHud(HudManager hud){
         ArtemisConfig cfg=(ArtemisConfig)config;
@@ -72,5 +74,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisHotf.registerCommands(dispatcher);
         ArtemisForagingTracker.registerCommands(dispatcher);
         ArtemisStarlyn.registerCommands(dispatcher);
+        ArtemisGalateaExploration.registerCommands(dispatcher);
     }
 }

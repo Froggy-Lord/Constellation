@@ -406,3 +406,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Configurable slot colors, compact profit labels, detailed tooltips and a movable HUD expose every calculation.
 - Optional compact contest-result and personal-best messages retain the useful bracket, score, previous-best, collection and Sweep details.
 - `/starlynhelper` changes rows, sorting, price sources, coupon price and all display/message options.
+## Galatea exploration
+
+- Forest Nodes require the exact happy-villager particle and three nearby string item displays before rendering.
+- Node boxes, labels, beams, player lines, distance and expiry behavior are independently configurable.
+- Forest Temple validates all sixteen wall and floor tiles and shows the shortest left/right rotation for each unsolved tile.
+- Lushlilacs and Sea Lumies are learned incrementally from loaded chunks and authoritative block updates.
+- Sea Lumies minimum cluster size, resource boxes, labels, beams, distances, colors, range and through-wall behavior are saved.
+- `/galateahelper` exposes status, cache reset, range, chunk radius, minimum Lumies count and every main option.

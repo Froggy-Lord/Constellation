@@ -2144,3 +2144,16 @@ Offers support per-coupon, total, cost and name sorting; configurable row limits
 Optional Galatea-only chat state machines compact the complete Starlyn contest result, collection personal-best/Sweep sequence and sister personal-best pair. The replacement result has a user-clicked `/starlynsisterlevels` action and never sends server chat automatically.
 
 Version `0.9.710` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning was the known benign native-library warning.
+## July 30 version 0.9.711 Galatea Exploration
+
+`ArtemisGalateaExploration.java`, `ArtemisConfig.java` and `ArtemisHunting.java` port Skyblocker LGPL `skyblock/galatea/ForestNodes.java`, `TerracottaPuzzle.java`, `AbstractBlockHighlighter.java`, `LushlilacHighlighter.java` and `SeaLumiesHighlighter.java`. The live 26.1.2 Skyblocker profile has all four source features enabled.
+
+Forest Nodes accept only an authoritative happy-villager server particle one block above a position containing exactly three string item displays. Confirmation is range-bounded, interaction-independent and expires after five seconds; a missing display set receives the source's two-second grace. The renderer independently supports box, label, beam, player line, distance and through-wall controls.
+
+The Forest Temple solver retains Skyblocker's exact wall/floor coordinates and direction mapping. It fails closed unless all sixteen wall tiles and all sixteen floor tiles are orange glazed terracotta with horizontal facing. Each valid floor tile receives the shortest signed left/right rotation, with optional solved tiles, boxes and labels. It performs no click or rotation.
+
+Lushlilacs and Sea Lumies are discovered one loaded chunk per client tick, bounded to a configurable one-to-eight chunk radius rather than using a periodic full-volume scan. Authoritative block updates maintain the cache between scans. Sea Lumies respect a configurable one-to-four pickle count. Cached resources outside render range plus one chunk are discarded, and all transient state clears on level/connection changes or suite disable.
+
+`/galateahelper` exposes status, cache clearing, render range, scan radius, Sea Lumies threshold and all main presentation toggles. Every behavior remains Galatea-only and advisory.
+
+Version `0.9.711` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.

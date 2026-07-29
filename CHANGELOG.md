@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.711 (2026-07-30) — Galatea Exploration
+
+- added exact particle and item-display validated Forest Node detection with expiring world guidance
+- added fail-closed Forest Temple rotation solving with shortest left/right instructions for all sixteen tiles
+- added incrementally discovered Lushlilac and configurable-count Sea Lumies highlights
+- added independent boxes, labels, beams, lines, distances, colors, ranges and `/galateahelper` controls
+
 ## 0.9.710 (2026-07-30) — Starlyn and Agatha
 
 - added live Agatha Shop offer parsing with complete material, coupon, sell-value and profit calculations

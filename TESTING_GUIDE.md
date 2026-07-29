@@ -1441,3 +1441,14 @@ One issue at a time is ideal. You do not need to retest unrelated sections after
 - [ ] Enable compact Starlyn results and finish a contest. Expected: the multi-line result becomes one local summary with bracket, points, previous best, reward location and clickable Open action.
 - [ ] Enable compact personal bests and trigger both collection/Sweep and sister PB messages. Expected: each complete sequence becomes one local summary without hiding unrelated chat.
 - [ ] Disconnect or change servers during a partial result sequence. Expected: no stale contest or personal-best line is reused later.
+- [ ] Enable Artemis and Galatea Exploration, then approach a real Forest Node. Expected: it appears only after the node particle and three-string display signature exist.
+- [ ] Leave or consume the Forest Node. Expected: its guidance disappears within five seconds and never persists after changing server or world.
+- [ ] Toggle node box, label, beam, line and distance separately. Expected: each presentation changes independently and no interaction is generated.
+- [ ] Enter the Forest Temple puzzle. Expected: every valid unsolved floor tile shows the minimum number of right or left clicks matching its wall tile.
+- [ ] Solve one tile. Expected: it disappears when Hide Solved is enabled or reads Solved when disabled.
+- [ ] Observe the temple before all tiles load or anywhere away from its exact coordinates. Expected: the solver fails closed and draws nothing.
+- [ ] Approach flowering azalea used as Lushlilac. Expected: magenta guidance appears after its chunk is incrementally scanned.
+- [ ] Approach Sea Lumies clusters with different pickle counts and run `/galateahelper lumies <1-4>`. Expected: only clusters meeting the selected minimum remain.
+- [ ] Change a highlighted resource block. Expected: the authoritative block update adds/removes it without waiting for a reconnect.
+- [ ] Toggle resource boxes, labels, beams and distances independently and change range/chunk radius. Expected: presentation and discovery bounds remain separate.
+- [ ] Run `/galateahelper clear`, leave Galatea and return. Expected: cached nodes/resources clear safely and nearby loaded chunks are relearned incrementally.
