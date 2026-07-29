@@ -25,7 +25,34 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Garden pest core: test this release first
+## Garden pest waypoint: test this release first
+
+### Enable
+
+1. Run `/cn config`, enable Hercules, then enable `Pest Core` and `Pest Waypoint Enabled`.
+2. Leave box, beam, label, distance, plot-middle detection, through-walls and arrival cleanup enabled.
+3. Leave line and particle hiding disabled for the first test.
+4. Warp to the Garden and hold a vacuum.
+5. Run `/pestwaypoint status` if you need to confirm the saved state.
+
+### Track and render
+
+- [ ] Left-click once without sneaking while holding the vacuum. Expected: tracking starts, but no target appears until a valid angry-villager particle trail supplies enough points.
+- [ ] Right-click, left-click while sneaking, or left-click with a non-vacuum item. Expected: none starts tracking.
+- [ ] Follow a real pest-tracker trail. Expected: a red `Pest Guess` box, beam and distance label appear at the predicted endpoint.
+- [ ] Track a trail ending exactly at a plot center. Expected: the marker is yellow and includes `(plot middle)`.
+- [ ] Enable `pestWaypointLine`. Expected: a line reaches from the crosshair to the waypoint.
+- [ ] Change the target and plot-middle colors in config or with `/pestwaypoint color target RRGGBB` and `/pestwaypoint color middle RRGGBB`. Expected: the marker updates.
+
+### Cleanup and filtering
+
+- [ ] Walk within `pestWaypointArrivalRange` horizontally after the first second. Expected: the waypoint clears.
+- [ ] Do not approach it. Expected: it clears after `pestWaypointShowSeconds`.
+- [ ] Let the Garden pest total reach zero, leave the Garden, disconnect, or change worlds. Expected: all collected points and the marker clear.
+- [ ] Enable `pestWaypointHideParticles`. Expected: only the configured tracker firework, enchant and path particle groups are hidden; other particles remain.
+- [ ] Run `/pestwaypoint clear`. Expected: the current path clears without changing settings.
+
+## Garden pest core
 
 ### Enable
 

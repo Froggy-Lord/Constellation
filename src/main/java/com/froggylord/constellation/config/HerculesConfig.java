@@ -131,6 +131,31 @@ public class HerculesConfig extends BaseConfigGroup {
     public Map<String, Integer> pestPlotNames = new HashMap<>();
     public double pestLifetimeProfit = 0;
 
+    public boolean pestWaypointEnabled = true;
+    public boolean pestWaypointHideParticles = false;
+    public boolean pestWaypointHideFireworkParticles = true;
+    public boolean pestWaypointHideEnchantParticles = true;
+    public boolean pestWaypointHidePathParticles = true;
+    public boolean pestWaypointBox = true;
+    public boolean pestWaypointBeam = true;
+    public boolean pestWaypointLine = false;
+    public boolean pestWaypointLabel = true;
+    public boolean pestWaypointDistance = true;
+    public boolean pestWaypointDifferentiatePlotMiddle = true;
+    public boolean pestWaypointThroughWalls = true;
+    public boolean pestWaypointClearOnArrival = true;
+    public int pestWaypointActivationSeconds = 5;
+    public int pestWaypointShowSeconds = 15;
+    public int pestWaypointStartRange = 5;
+    public int pestWaypointParticleGapTenths = 30;
+    public int pestWaypointArrivalRange = 8;
+    public int pestWaypointRenderRange = 512;
+    public int pestWaypointBeamHeight = 12;
+    public int pestWaypointBoxSizeTenths = 8;
+    public int pestWaypointColor = 0xFFFF5555;
+    public int pestWaypointPlotMiddleColor = 0xFFFFFF55;
+    public String pestWaypointLabelTemplate = "Pest Guess {distance}";
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

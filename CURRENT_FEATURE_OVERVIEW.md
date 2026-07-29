@@ -104,6 +104,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Pest total and infested-plot HUD
 - Accurate plot borders and labels, including learned custom plot names
 - Pest cooldown, last-spawn and average-spawn HUD
+- Vacuum particle-path pest waypoint with optional box, beam, line, label, distance and particle filtering
 - Cooldown warnings and configurable custom cooldown
 - Persistent per-pest kills and per-drop quantities
 - Session and lifetime pest profit with delayed market-price reconciliation
@@ -221,7 +222,6 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Known next work
 
-- Garden pest particle trajectory waypoint
 - Garden spray expiry/plot display
 - Stereo Harmony crop and vinyl display
 - Remaining Garden progression depth

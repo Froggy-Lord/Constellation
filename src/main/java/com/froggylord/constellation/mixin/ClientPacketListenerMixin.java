@@ -103,7 +103,8 @@ public class ClientPacketListenerMixin {
     private void constellation$filterMageBeam(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
         // ported from SkyOcean (MIT): api/HotspotAPI.kt
         boolean hideHotspot = com.froggylord.constellation.constellation.HydraHotspots.onParticle(packet);
-        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot) ci.cancel();
+        boolean hidePest = com.froggylord.constellation.constellation.HerculesPestWaypoint.onParticle(packet);
+        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest) ci.cancel();
     }
 
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))

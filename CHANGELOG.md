@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.651 (2026-07-29) — Garden pest waypoint
+
+- added vacuum-activated pest trajectory fitting with a predicted pest waypoint, plot-middle detection, arrival and timeout cleanup, and Garden-only lifecycle gating
+- added configurable boxes, beams, lines, labels, distance text, colors, render range, particle filtering, activation timing, path tolerance, and `/pestwaypoint` controls
+- ported the particle recognition, cubic fitting, pitch correction, target classification, and cleanup behavior from SkyHanni's Garden pest waypoint
+
 ## 0.9.650 (2026-07-22) — Garden pest core
 
 - added exact Garden pest spawn, kill, no-pest, tab-widget, scoreboard, cooldown, and infested-plot tracking with custom plot-name learning

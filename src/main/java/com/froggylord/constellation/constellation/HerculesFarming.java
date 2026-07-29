@@ -18,7 +18,9 @@ public class HerculesFarming extends BaseConstellation {
         HerculesVisitorHelper.init(cfg);
         HerculesGardenTracker.init(cfg);
         HerculesPests.init(cfg);
+        HerculesPestWaypoint.init(cfg);
         registerRenderer(HerculesPests::draw);
+        registerRenderer(HerculesPestWaypoint::draw);
     }
 
     @Override
@@ -52,5 +54,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesVisitorHelper.registerCommands(dispatcher);
         HerculesGardenTracker.registerCommands(dispatcher);
         HerculesPests.registerCommands(dispatcher);
+        HerculesPestWaypoint.registerCommands(dispatcher);
     }
 }
