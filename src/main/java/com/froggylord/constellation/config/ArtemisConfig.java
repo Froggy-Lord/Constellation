@@ -296,6 +296,36 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int galateaLushlilacColor = 0xFFFF55FF;
     public int galateaSeaLumiesColor = 0xFF55FFFF;
 
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/foraging/SweepOverlay.java
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/galatea/{SweepDetailsListener,SweepDetailsHudWidget}.java
+    // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/CompactSweepDetails.kt
+    public boolean sweepHelper = true;
+    public boolean sweepBlockOverlay = true;
+    public boolean sweepThrownOverlay = true;
+    public boolean sweepRespectThrownCooldown = true;
+    public boolean sweepShowTarget = true;
+    public boolean sweepShowCountLabel = true;
+    public boolean sweepShowToughness = false;
+    public boolean sweepThroughWalls = false;
+    public boolean sweepMissingStatNotice = true;
+    public boolean sweepDetailsHud = true;
+    public boolean sweepDetailsCompactChat = true;
+    public boolean sweepDetailsShowTree = true;
+    public boolean sweepDetailsShowToughness = true;
+    public boolean sweepDetailsShowSweep = true;
+    public boolean sweepDetailsShowLogs = true;
+    public boolean sweepDetailsShowPenalty = true;
+    public boolean sweepDetailsShowCorrectStyle = true;
+    public boolean sweepDetailsShowInactive = false;
+    public int sweepMaximumLogs = 35;
+    public int sweepThrownRange = 50;
+    public int sweepDetailsVisibleMillis = 1000;
+    public int sweepOverlayColor = 0x66FF9600;
+    public int sweepThrownColor = 0x6655AAFF;
+    public int sweepTargetColor = 0xFFFFFF55;
+    public int sweepGoodColor = 0xFF55FF55;
+    public int sweepPenaltyColor = 0xFFFF5555;
+
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/MoongladeBeaconConfig.kt
     public boolean moongladeBeacon = true;
     public boolean moongladeBeaconHud = true;

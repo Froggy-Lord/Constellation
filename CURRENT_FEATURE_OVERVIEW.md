@@ -414,3 +414,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Lushlilacs and Sea Lumies are learned incrementally from loaded chunks and authoritative block updates.
 - Sea Lumies minimum cluster size, resource boxes, labels, beams, distances, colors, range and through-wall behavior are saved.
 - `/galateahelper` exposes status, cache reset, range, chunk radius, minimum Lumies count and every main option.
+## Sweep guidance
+
+- All eight supported SkyBlock axes are identified by exact item ID before any world prediction appears.
+- Current-target prediction uses the licensed Sweep/toughness approximation and bounded 26-neighbor connected-log traversal.
+- Throwable axes receive a separate configurable ray, color, one-second cooldown gate and half-log calculation.
+- Galatea, Hub and general foraging log rules remain distinct, with the licensed Fig and Mangrove toughness values.
+- Sweep Details tracks tree type, toughness, initial/final Sweep, resulting logs, throw penalty, style penalty and correct-style hint.
+- The movable HUD and optional compact chat summary preserve multiple penalties from the same calculation.
+- `/sweephelper` controls prediction, thrown range, cap, visibility duration, HUD rows and presentation independently.

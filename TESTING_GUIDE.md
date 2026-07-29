@@ -1452,3 +1452,15 @@ One issue at a time is ideal. You do not need to retest unrelated sections after
 - [ ] Change a highlighted resource block. Expected: the authoritative block update adds/removes it without waiting for a reconnect.
 - [ ] Toggle resource boxes, labels, beams and distances independently and change range/chunk radius. Expected: presentation and discovery bounds remain separate.
 - [ ] Run `/galateahelper clear`, leave Galatea and return. Expected: cached nodes/resources clear safely and nearby loaded chunks are relearned incrementally.
+- [ ] Add Sweep to the player list with `/tablist`, hold each supported axe and aim at a connected log structure. Expected: predicted blocks match the number permitted by current Sweep and tree toughness.
+- [ ] Hold a non-axe or unsupported axe. Expected: no Sweep overlay appears.
+- [ ] Compare Fig, Mangrove, Hub oak and ordinary Park logs. Expected: each uses its licensed location-specific log set and toughness.
+- [ ] Aim at more than 35 connected logs and change `/sweephelper maxlogs`. Expected: traversal stops at the lower configured/licensed cap without frame stalls.
+- [ ] With a throwable axe, aim beyond normal block reach. Expected: the separate thrown color follows the ray target and predicts half the normal log count.
+- [ ] Use the throwable ability. Expected: thrown prediction pauses for one second when cooldown respect is enabled, then returns.
+- [ ] Remove Sweep from the player list. Expected: prediction fails closed and the optional local `/tablist` notice appears only once per connection.
+- [ ] Enable Sweep Details at Swoop and cut a tree. Expected: the movable HUD shows tree, toughness, Sweep and final logs from the complete server sequence.
+- [ ] Trigger an axe-throw penalty, wrong-style penalty and both together. Expected: every penalty and correct-style hint remains in the HUD and the compact summary contains all penalties.
+- [ ] Toggle compact chat off. Expected: original server detail lines remain and the local compact replacement is not sent.
+- [ ] Toggle each overlay and HUD row independently, then move/resize Sweep Details in `/cn hud`. Expected: every choice persists without changing axe behavior.
+- [ ] Run `/sweephelper clear` or reconnect during an incomplete detail sequence. Expected: no stale tree, penalty or log value leaks into the next result.

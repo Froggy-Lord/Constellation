@@ -2157,3 +2157,14 @@ Lushlilacs and Sea Lumies are discovered one loaded chunk per client tick, bound
 `/galateahelper` exposes status, cache clearing, render range, scan radius, Sea Lumies threshold and all main presentation toggles. Every behavior remains Galatea-only and advisory.
 
 Version `0.9.711` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.
+## July 30 version 0.9.712 Sweep Guidance
+
+`ArtemisSweep.java`, `SweepDetailsHudWidget.java`, `ArtemisConfig.java` and `ArtemisHunting.java` port Skyblocker LGPL `skyblock/foraging/SweepOverlay.java`, `skyblock/galatea/SweepDetailsListener.java`, `SweepDetailsHudWidget.java` and SkyHanni LGPL `features/foraging/CompactSweepDetails.kt`. The live 26.1.2 profile enables Skyblocker's Sweep overlay, thrown overlay and details widget.
+
+Prediction accepts only the eight exact licensed axe IDs. It reads Sweep from the ordered player list, uses the licensed reverse-engineered toughness formula and hard 35-log cap, and traverses all 26 neighboring offsets with a bounded breadth-first search. Galatea accepts only stripped spruce/Fig and mangrove blocks with toughness 7 and 50; Hub accepts oak; Park/private-island paths accept the log tag.
+
+The four throwable axes receive a configurable eight-to-eighty-block ray, separate color, source one-second use cooldown and half-log output. Normal crosshair targeting takes priority. Missing Sweep produces at most one optional local instruction per connection. Boxes, target outline, count/toughness label, cap, colors and through-wall behavior are independent. No axe use, break, aim, click or packet is generated.
+
+The details state machine parses header, tree/toughness/log result and any number of throw or wrong-style penalties. It updates the movable HUD after each complete detail line, then waits for the configurable quiet window before emitting one optional compact local summary; this preserves combined throw and style penalties. Tree, toughness, Sweep comparison, logs, penalties, correct style and inactive retention are separately configurable. `/sweephelper` exposes all principal behavior.
+
+Version `0.9.712` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.

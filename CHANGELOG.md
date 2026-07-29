@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.712 (2026-07-30) — Sweep Guidance
+
+- added exact held-axe, Sweep-stat, toughness and connected-log prediction with the licensed 35-log cap
+- added 50-block throwable-axe prediction, one-second cooldown tracking and half-Sweep modeling
+- added structured tree, toughness, Sweep, logs, throw/style penalty and correct-style HUD details
+- added complete multi-line compact summaries, independent presentation controls and `/sweephelper`
+
 ## 0.9.711 (2026-07-30) — Galatea Exploration
 
 - added exact particle and item-display validated Forest Node detection with expiring world guidance
