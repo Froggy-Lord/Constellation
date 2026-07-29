@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-29 for version 0.9.659 Garden mouse sensitivity.
+Last updated: 2026-07-30 for version 0.9.660 Garden commands.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.659`.
+- Current artifact version: `0.9.660`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1519,3 +1519,13 @@ Garden-only automatic activation supports crop tools, fishing rods, vacuums/lass
 Version `0.9.659` built with exactly 11 successful tests and zero failures. A clean headless launch exited at the healthy timeout, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Gradle's redirected stream buffered before the markers, while the same process's `run/logs/latest.log` captured both at 23:52:36. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `426b5a81e1919b163eaf0c973e060278929c478a84b3ac427f10560def13a7f1`.
 
 The old `0.9.658` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-235530-0.9.659/`; only `constellation-0.9.659.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.660 Garden commands
+
+`HerculesGardenCommands.java`, `HerculesConfig.java`, `HerculesFarming.java` and the existing `WarpShortenerMixin.java` outgoing-command hook port SkyHanni LGPL `features/garden/GardenWarpCommands.kt` and `config/features/garden/GardenCommandsConfig.kt`. In the Garden only, typed `/home`, `/barn` and `/tp <plot>` become `/warp garden`, `/tptoplot barn` and `/tptoplot <plot>`. The whole trimmed plot argument is retained. Outside the Garden the hook returns without cancellation, preserving normal server or other-mod behavior.
+
+Three normal Minecraft Controls bindings provide Garden Home, Garden Set Home and Garden Barn. Defaults match the live 26.1.2 profile: Caps Lock, Left Alt and unbound. Inputs are consumed every tick but only acted upon in the Garden with no screen open and a live connection, preventing queued keypresses after menus. Each rewrite, each hotkey, optional local feedback and a millisecond duplicate-input cooldown are independently saved. `/gardencommands` reports state and exposes deliberate on/off changes. No command is scheduled, repeated or issued without a typed shortcut or keypress.
+
+Version `0.9.660` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124; the same process's Minecraft runtime log loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. The workstation's Gradle redirected stream again buffered before the markers, while `run/logs/latest.log` captured both at 23:59:41. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `5f15590c043d164daa8b2df2f8440199ad13b526ad854db949d80064d675f835`.
+
+The old `0.9.659` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-000228-0.9.660/`; only `constellation-0.9.660.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.

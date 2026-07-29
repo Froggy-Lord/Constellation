@@ -25,7 +25,29 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Garden mouse sensitivity: test this release first
+## Garden commands: test this release first
+
+### Enable
+
+1. Enable Hercules and `Garden Commands`.
+2. In Minecraft Controls, confirm `Garden Home` is Caps Lock, `Garden Set Home` is Left Alt and `Garden Barn` is unbound unless you choose a key.
+3. Keep `/home`, `/barn`, `/tp <plot>` and their desired hotkey toggles enabled.
+
+### Commands and hotkeys
+
+- [ ] In the Garden, run `/home`. Expected: Hypixel receives `/warp garden` and returns you to the Garden spawn.
+- [ ] Run `/barn`. Expected: Hypixel receives `/tptoplot barn`.
+- [ ] Run `/tp 3`, then test a named plot if you use one. Expected: the complete text after `/tp` is sent through `/tptoplot`.
+- [ ] Press Garden Home with no screen open. Expected: it sends `/warp garden` exactly once.
+- [ ] Press Garden Set Home with no screen open. Expected: it sends `/setspawn` exactly once.
+- [ ] Bind and press Garden Barn. Expected: it sends `/tptoplot barn` exactly once.
+- [ ] Hold a hotkey, open chat/inventory while pressing it, and close the screen. Expected: no repeat and no delayed command after the screen closes.
+- [ ] Leave the Garden and repeat the shortcuts. Expected: hotkeys do nothing and the normal server interpretation of typed commands is preserved.
+- [ ] Disable each command and hotkey option separately. Expected: only that shortcut stops.
+- [ ] Enable hotkey feedback and change the cooldown. Expected: deliberate key actions show local confirmation and rapid duplicate inputs respect the configured delay.
+- [ ] Run `/gardencommands` and `/gardencommands option <name> <on|off>`. Expected: saved status and supported option names are shown without sending a gameplay command.
+
+## Garden mouse sensitivity
 
 ### Enable
 

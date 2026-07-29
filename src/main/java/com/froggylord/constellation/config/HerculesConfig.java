@@ -311,6 +311,16 @@ public class HerculesConfig extends BaseConfigGroup {
     public int mouseSensitivityGroundToleranceHundredths = 13;
     public String mouseSensitivityUnlockOnTeleport = "ALWAYS";
 
+    public boolean gardenCommands = true;
+    public boolean gardenCommandHome = true;
+    public boolean gardenCommandBarn = true;
+    public boolean gardenCommandPlot = true;
+    public boolean gardenHomeHotkey = true;
+    public boolean gardenSetHomeHotkey = true;
+    public boolean gardenBarnHotkey = true;
+    public boolean gardenCommandHotkeyFeedback = false;
+    public int gardenCommandHotkeyCooldownMillis = 500;
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

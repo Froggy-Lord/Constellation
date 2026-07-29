@@ -27,6 +27,7 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPlotIcons.init(cfg);
         HerculesCropLocations.init(cfg);
         HerculesMouseSensitivity.init(cfg);
+        HerculesGardenCommands.init(cfg);
         registerRenderer(HerculesPests::draw);
         registerRenderer(HerculesPestWaypoint::draw);
         registerRenderer(HerculesCropLocations::draw);
@@ -88,5 +89,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPlotIcons.registerCommands(dispatcher);
         HerculesCropLocations.registerCommands(dispatcher);
         HerculesMouseSensitivity.registerCommands(dispatcher);
+        HerculesGardenCommands.registerCommands(dispatcher);
     }
 }

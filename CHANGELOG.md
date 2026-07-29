@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.660 (2026-07-30) — Garden commands
+
+- added Garden-only `/home`, `/barn` and `/tp <plot>` rewrites to the matching Hypixel Garden commands
+- added configurable Garden home, set-home and Barn hotkeys through Minecraft Controls
+- added independent command/hotkey toggles, optional local feedback and a configurable duplicate-input cooldown
+- preserved normal server command behavior outside the Garden and blocked every hotkey while a screen is open
+
 ## 0.9.659 (2026-07-29) — Garden mouse sensitivity
 
 - added reversible farming mouse lock and percentage sensitivity reduction without changing Minecraft's saved sensitivity
