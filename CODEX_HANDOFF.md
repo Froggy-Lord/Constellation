@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.667 Jacob contest history and planning.
+Last updated: 2026-07-30 for version 0.9.689 Chivalrous Carnival helpers.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.667`.
+- Current artifact version: `0.9.689`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -291,6 +291,14 @@ All six requested fixes were implemented in order and each stage passed the 11-t
 6. Party Finder hover details now show floor/mode, required Cata, missing classes, member class levels, and optionally remote Cata/secrets/current-floor PB data. `partyFinderStats` controls the remote enrichment. Source is Devonian GPL `PartyFinderOverview.kt` and `DungeonsApi.kt`; no join, kick, click, command, or packet action was added.
 
 The old queue items 1-4 above are complete. Re-rank the remaining queue from current live instance settings before starting another feature.
+
+## July 30 Chivalrous Carnival helpers
+
+Version `0.9.689` fills the live-enabled Skyblocker Carnival gap. `CygnusCarnival.java` ports Catch a Fish and Zombie Shootout behavior from Skyblocker LGPL `skyblock/carnival/CatchAFish.java` and `ZombieShootout.java`. Auto mode requires Hypixel, the Hub classification and Skyblocker's exact per-minigame coordinate box. Constellation does not currently have an authoritative mayor-perk signal, so the exact gameplay boxes are the final normal-mode gate; do not weaken them to a generic Hub renderer.
+
+Catch a Fish recognizes only the exact Golden Fish player-head texture and offers independent box, label, beam, first-seen sound, range, color and through-wall controls. Zombie Shootout maps diamond, gold, iron and leather chestplates to the matching weapon colors, renders optional labels and boxes, and outlines only the twelve known lamps whose live block state is a lit redstone lamp. The movable HUD reports only the currently active minigame. `/carnivalhelper force` is a session-only visual test mode and still requires Hypixel; it never aims, fishes, shoots or clicks.
+
+Build passed 11/11 and the 160-second headless boot passed with exit 124, 138 rooms, 14 constellations and zero forbidden crash/mixin signatures. The Gather configuration should be preserved during deployment. Next run: continue the structural audit of advertised but empty Cygnus event features against the live 26.1.2 settings and licensed sources, selecting one coherent event helper rather than filling unrelated toggles together.
 
 ## July 21 party-message audit
 

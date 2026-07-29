@@ -87,6 +87,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Catch a Fish Golden Fish detection using the exact Carnival head texture
+- Configurable Golden Fish box, label, beam, sound, range and through-wall rendering
+- Zombie Shootout armor-to-weapon color guidance and live lit-lamp target outlines
+- Exact Hub/minigame coordinate gating, movable Carnival HUD and manual test modes
+- `/carnivalhelper` status, force, range and presentation controls
 - Calendar and upcoming-event information
 - Mayor and perk information
 - Event notifications

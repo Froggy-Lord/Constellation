@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.689 (2026-07-30) — Chivalrous Carnival helpers
+
+- added strict Hub and exact-coordinate gating for Catch a Fish and Zombie Shootout
+- added Golden Fish texture detection with configurable box, label, beam, sound, range and visibility
+- added armor-matched Zombie Shootout guidance and live redstone-lamp target outlines
+- added a movable Carnival HUD plus complete `/carnivalhelper` status, test and option controls
+
 ## 0.9.688 (2026-07-30) — Reforge Helper
 
 - added exact Basic Reforge and Hex menu tracking from item modifier metadata

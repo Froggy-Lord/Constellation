@@ -13,6 +13,30 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean dianaDropTracker = true;
     public boolean dianaBurrowWaypoints = true; 
     public boolean carnivalHelper = true; 
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/carnival/CatchAFish.java
+    public boolean carnivalCatchFish = true;
+    public boolean carnivalFishBox = true;
+    public boolean carnivalFishLabel = true;
+    public boolean carnivalFishBeam = false;
+    public boolean carnivalFishSound = true;
+    public boolean carnivalFishThroughWalls = true;
+    public int carnivalFishColor = 0xFFFFD700;
+    public int carnivalFishRange = 64;
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/carnival/ZombieShootout.java
+    public boolean carnivalZombieShootout = true;
+    public boolean carnivalZombieBox = true;
+    public boolean carnivalZombieLabel = true;
+    public boolean carnivalZombieThroughWalls = true;
+    public boolean carnivalLampOutline = true;
+    public boolean carnivalLampLabel = false;
+    public boolean carnivalLampThroughWalls = false;
+    public int carnivalLampColor = 0xFFFF3030;
+    public int carnivalDiamondColor = 0xFF00FFFF;
+    public int carnivalGoldColor = 0xFFFFD700;
+    public int carnivalIronColor = 0xFFC0C0C0;
+    public int carnivalWoodColor = 0xFFA52A2A;
+    public int carnivalZombieRange = 96;
+    public boolean carnivalHud = true;
     public boolean newYearCakeTracker = true; 
     public boolean jerryTimer = true; 
     public boolean seasonDisplay = true; 

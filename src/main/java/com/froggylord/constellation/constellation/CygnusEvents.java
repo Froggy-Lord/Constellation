@@ -7,6 +7,8 @@ import com.froggylord.constellation.core.InitContext;
 import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
+import com.mojang.brigadier.CommandDispatcher;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +51,9 @@ public class CygnusEvents extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
+        cfg = (CygnusConfig) config;
+        CygnusCarnival.init(cfg);
+        registerRenderer(CygnusCarnival::draw);
     }
 
     private static void triangulate() {
@@ -73,6 +78,8 @@ public class CygnusEvents extends BaseConstellation {
 
     @Override
     public void registerHud(HudManager hud) {
+        hud.register(new HudWidget("cygnus-carnival", "Carnival", CygnusCarnival::hudText,
+            HudPosition.of(76, 68), () -> cfg.enabled && cfg.carnivalHelper && cfg.carnivalHud));
     }
 
     private static String calendarLine() {
@@ -105,7 +112,7 @@ public class CygnusEvents extends BaseConstellation {
     private static String hoppityLine() {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = HOPPITY.matcher(line);
-            if (m.find()) return "§d🐰 " + m.group(1);
+            if (m.find()) return "§dHoppity §f" + m.group(1);
         }
         return null;
     }
@@ -113,7 +120,7 @@ public class CygnusEvents extends BaseConstellation {
     private static String chocLine() {
         for (String line : ConstellationClient.loc().getSidebarLines()) {
             Matcher m = CHOCOLATE.matcher(line);
-            if (m.find()) return "§6🍫 " + compact(m.group(1));
+            if (m.find()) return "§6Chocolate §f" + compact(m.group(1));
         }
         return null;
     }
@@ -125,5 +132,10 @@ public class CygnusEvents extends BaseConstellation {
             if (n < 1_000_000) return String.format("%.1fk", n / 1000.0);
             return String.format("%.2fM", n / 1_000_000.0);
         } catch (NumberFormatException e) { return raw; }
+    }
+
+    @Override
+    public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        CygnusCarnival.registerCommands(dispatcher);
     }
 }

@@ -2,6 +2,27 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Chivalrous Carnival helpers
+
+### Enable
+
+1. Enable Cygnus and `Carnival Helper`.
+2. Enable Catch Fish, Zombie Shootout and Carnival HUD as wanted.
+3. Join the Hub during a Chivalrous Carnival.
+
+### Test
+
+- [ ] Enter Catch a Fish at coordinates around `-78 70 39`. Expected: Golden Fish armor stands receive the configured box and label; the sound plays once when a target first appears.
+- [ ] Leave the Catch a Fish area. Expected: every fish overlay and its HUD row disappear immediately.
+- [ ] Run `/carnivalhelper option fishbeam on`. Expected: a vertical advisory beam appears on detected Golden Fish targets.
+- [ ] Enter Zombie Shootout at coordinates around `-101 72 44`. Expected: zombies are boxed and labelled Diamond, Gold, Iron or Wood from their chestplate.
+- [ ] Watch a target lamp illuminate. Expected: only live lit redstone lamps receive the red outline.
+- [ ] Leave Zombie Shootout. Expected: zombie and lamp overlays disappear immediately.
+- [ ] Run `/carnivalhelper force fish` or `force zombie` in a safe test world. Expected: that helper can be visually tested without widening normal auto-mode gating. Run `force auto` afterwards.
+- [ ] Disable Fish, Zombies, Lamps, Labels, Boxes, Sound and HUD independently. Expected: only the selected presentation disappears.
+- [ ] Test outside Hypixel. Expected: no Carnival world overlay or HUD appears, including force modes.
+- [ ] Aim and use weapons normally. Expected: Constellation never aims, shoots, fishes or clicks for you.
+
 ## Garden plot prices
 
 ### Enable
