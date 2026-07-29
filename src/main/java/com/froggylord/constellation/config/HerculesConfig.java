@@ -262,6 +262,13 @@ public class HerculesConfig extends BaseConfigGroup {
     public int plotMenuPastingColor = 0x90FFFF55;
     public String plotMenuPriority = "current,pests,sprays,locked,pasting";
 
+    public boolean plotIcons = true;
+    public boolean plotIconEditorButton = true;
+    public boolean plotIconChatFeedback = true;
+    public boolean plotIconTooltipHelp = true;
+    public boolean plotIconPerProfile = true;
+    public Map<String, String> plotIconStacks = new HashMap<>();
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

@@ -25,6 +25,31 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
+## Garden custom plot icons: test this release first
+
+### Enable
+
+1. Enable Hercules, `Plot Icons`, `Plot Icon Editor Button` and tooltip help.
+2. In the Garden, open the Desk and then `Configure Plots`.
+3. Look at the bottom-right chest slot. Expected: a wooden axe marked `OFF` appears without replacing the real server item.
+
+### Edit and persistence
+
+- [ ] Left-click the editor axe once. Expected: it changes to Set mode, the click does not reach Hypixel and the tooltip explains the workflow.
+- [ ] Click a non-empty item in your player inventory. Expected: the inventory item does not move and local chat confirms it was selected.
+- [ ] Click any unlocked non-Barn plot slot. Expected: its visual icon changes to an exact copy of the selected item, including custom model data.
+- [ ] Hover the changed plot. Expected: Hypixel's original plot name and lore remain intact, followed by a short custom-icon note.
+- [ ] Click the plot normally after returning the editor to Off. Expected: the original plot action works and Constellation does not block or duplicate the click.
+- [ ] Close and reopen Configure Plots. Expected: the custom icon persists while the editor safely returns to Off with no pending item.
+- [ ] Restart the client and reopen the menu. Expected: the icon still renders from its saved exact-stack data.
+- [ ] Right-click the editor from Off. Expected: it enters Reset mode directly.
+- [ ] Click a customized plot in Reset mode. Expected: the original plot icon returns and the server receives no edit-mode click.
+- [ ] Switch SkyBlock profiles with per-profile mode enabled. Expected: each profile has an independent icon layout.
+- [ ] Disable per-profile mode. Expected: a separate global layout is used without deleting profile layouts.
+- [ ] Toggle editor button, chat feedback and tooltip help independently. Expected: saved icons remain visible while only the selected editor assistance changes.
+- [ ] Run `/ploticons`, `/ploticons option`, `/ploticons clear` and `/ploticons clearall`. Expected: status is accurate and the selected scope is cleared.
+- [ ] Open any other inventory or leave the Garden. Expected: there is no editor axe, custom plot icon or click interception.
+
 ## Garden plot-menu status: test this release first
 
 ### Enable

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-29 for version 0.9.656 Garden plot-menu status.
+Last updated: 2026-07-29 for version 0.9.657 Garden custom plot icons.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.656`.
+- Current artifact version: `0.9.657`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1481,3 +1481,15 @@ The overlay is gated to the Garden and exact `Configure Plots` title. Current, p
 Version `0.9.656` built with exactly 11 successful tests and zero failures. The headless boot reached healthy timeout exit 124, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `406c7d8204e3ef93ecef2a186a72b12da7b13ebdac23f9b16f9d70723a57e35f`.
 
 The old `0.9.655` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-232315-0.9.656/`; only `constellation-0.9.656.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.
+
+## July 29 version 0.9.657 Garden custom plot icons
+
+`HerculesPlotIcons.java`, `HerculesConfig.java`, `HerculesFarming.java`, and the existing advisory render/tooltip/click hook in `ItemProtectionScreenMixin.java` implement the user's enabled custom plot-icon feature. The exact editable-slot allowlist, bottom-right wooden-axe editor, Off/Set/Reset cycling, inventory-source selection, plot application, reset behavior, original-tooltip preservation and menu-close cleanup port SkyHanni LGPL `features/garden/inventory/plots/GardenPlotIcon.kt` and `config/features/garden/PlotIconConfig.kt`.
+
+Unlike a registry-ID-only approximation, icons persist the selected count-one ItemStack through Minecraft's registry-aware `ItemStack.OPTIONAL_CODEC`; this lossless persistence follows Skyblocker LGPL `skyblock/item/tooltip/BackpackPreview.java` and retains custom components/models across reopen and restart. Saved layouts can be profile-specific or global. Rendering covers the plot item without mutating the server stack, so original names, lore, tooltips and normal Off-mode clicks remain authoritative. Set/Reset mode cancels only deliberate editor actions and never sends or synthesizes a click. Empty selection, failed/oversized serialization and corrupted saved data fail safely.
+
+The master, editor button, local feedback, tooltip help and per-profile scope are independently saved and available in Hercules config and `/ploticons option`. `/ploticons` reports current scope/count; `clear` clears the active scope and `clearall` clears every saved layout. Closing the menu always resets mode, pending item and decoded cache.
+
+Version `0.9.657` built with exactly 11 successful tests and zero failures. The headless boot reached healthy timeout exit 124, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `d6a5a1c575477811976e019e76b203523e4c04fd76168a4f8bba3e1b9d9fb1d8`.
+
+The old `0.9.656` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-233206-0.9.657/`; only `constellation-0.9.657.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.

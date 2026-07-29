@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.657 (2026-07-29) — Garden custom plot icons
+
+- added a three-mode Configure Plots icon editor ported from SkyHanni, using the bottom-right wooden-axe control
+- added lossless persistence for exact selected ItemStacks, including custom models and components, with optional per-profile layouts
+- preserved original plot names, lore, tooltips and normal click behavior while rendering the chosen icon visually
+- added editor/help/feedback/profile controls, safe menu-close cleanup, clear/current-profile commands and `/ploticons` status controls
+
 ## 0.9.656 (2026-07-29) — Garden plot-menu status
 
 - added exact `Configure Plots` status highlighting for the current plot, pests, active sprays, locked plots and plots being pasted
