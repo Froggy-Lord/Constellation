@@ -23,11 +23,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Apollo: general HUD
 
-- FPS, ping and TPS displays
-- Coordinates, facing and real-world clock
-- Health, mana, defense and effective-health information
-- Speed and movement information
-- Potion/effect timers
+- Movable Performance panel with current/average FPS, current/average/median ping and current/average/minimum/maximum server TPS
+- Movable Location panel with integer/decimal coordinates, facing, yaw, pitch, dimension and 12/24-hour local clock
+- Movable Movement panel with SkyBlock speed stat, actual horizontal blocks per second and signed vertical speed
+- Movable Vitals panel using parsed SkyBlock health, mana, overflow mana, defense and effective health
+- Movable Active Effects panel with amplifier levels, durations, sorting, row limit and expiry-warning colors
+- Independent panel, row, scope, sampling, threshold and color controls through Apollo settings and `/apollohud`
 - Movable and resizable shared HUD framework
 - Transparent, chrome-free HUD editor
 

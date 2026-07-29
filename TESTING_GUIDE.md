@@ -912,6 +912,17 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 
 ## Rift, events and general HUD
 
+- [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
+- [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
+- [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.
+- [ ] Simulate poor FPS/ping or join a lagging server. Expected: configured good, warning and bad thresholds select the correct colors independently.
+- [ ] Move, jump and stop. Expected: horizontal blocks per second smooths over the configured movement ticks, vertical speed is signed when enabled, and both settle near zero while stationary.
+- [ ] Compare Speed stat to the SkyBlock statistic. Expected: it follows the movement-speed attribute rather than confusing it with physical blocks per second.
+- [ ] Turn and move between blocks. Expected: cardinal facing, yaw/pitch, integer or decimal XYZ, dimension and local clock rows follow their individual options.
+- [ ] Receive a SkyBlock action-bar update. Expected: health, mana, overflow mana, defense and effective health match the parsed values; percent mode uses the current maximum.
+- [ ] Apply effects with different levels and durations. Expected: amplifier numerals, sorting, infinite filtering, row limit and warning colors follow settings.
+- [ ] Toggle panels and representative rows with `/apollohud option <name> <on|off>`. Expected: no toggle changes another panel or sends anything to the server.
+- [ ] Move and resize each Apollo panel independently in `/cn hud`. Expected: only visible or recently visible panels are editable and placement/scale persists.
 - [ ] Enable Andromeda in the Rift. Expected: timer and selected waypoints are Rift-only; collected Enigma Souls hide.
 - [ ] Enable Cygnus during a scheduled event. Expected: event timing/alerts match the calendar and fire once.
 - [ ] Test Diana with a Spade. Expected: burrow guidance updates from real particles/events and clears after completion.

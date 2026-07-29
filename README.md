@@ -13,7 +13,7 @@ this is just one jar. one config file. one hud editor. everythings in the same p
 14 constellations, each one handles a different part of the game:
 
 - **andromeda** — the rift. timer, enigma souls, mirrorverse waypoints, effigies, motes, area hints
-- **apollo** — hud. fps, ping, tps, coords, clock, health/mana/defense bars, speed, facing, potion timers
+- **apollo** — hud. independently movable performance, location, movement, vitals and active-effects panels; rolling FPS/ping/TPS statistics, coordinates, clock, facing, yaw/pitch, dimension, actual/stat speed, parsed health/mana/defense/overflow/effective health and sorted potion timers
 - **aquila** — mining. Powder/commission HUDs, persistent forge slots and reminders, commission destination guidance, live commission and crystal progress, exact Fetchur/Puzzler guidance, profile-safe mineshaft pity, cave-in/cold timing, Glacite corpse finder/key/profit tracking, HOTM, fuel, Pickonimbus, Scatha, treasure/compass/nucleus and mining helpers
 - **auriga** — experiments + misc. ultrasequencer, superpairs, chocolate factory, reforges, anvil helper, god pot timer, /shcalc
 - **cassiopeia** — chat. spam filters (60 categories), timestamps, clickable links, mention alerts, compact damage, 60+ shortcuts (/f1-/f7, /h, /i, /dh, /pi, /bz, /ah, etc)

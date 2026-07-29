@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.683 (2026-07-30) — Apollo telemetry HUD suite
+
+- replaced Apollo's empty implementation with five independently movable HUD panels
+- added current/average FPS, ping and server-authoritative TPS with rolling minimum and maximum
+- added coordinates, facing, yaw/pitch, dimension, local clock and actual/stat movement speed
+- added parsed SkyBlock vitals and sorted active-effect durations with comprehensive row, scope, threshold and color controls
+
 ## 0.9.682 (2026-07-30) — Screenshot clipboard
 
 - added automatic image clipboard copying whenever Minecraft saves a screenshot
