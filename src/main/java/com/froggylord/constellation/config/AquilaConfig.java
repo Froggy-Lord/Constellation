@@ -54,6 +54,21 @@ public class AquilaConfig extends BaseConfigGroup {
     public int highHeatMuteMinimum = 90;
     public int highHeatMagmaFieldsMaximumY = 65;
 
+    public boolean miningHighlightsSuite = true;
+    public boolean dwarvenCarpetHighlighter = true;
+    public boolean dwarvenCarpetThroughWalls = false;
+    public boolean treasureChestOutline = true;
+    public boolean treasureChestLockSpot = true;
+    public boolean treasureChestLockProgress = true;
+    public boolean treasureChestThroughWalls = false;
+    public int dwarvenCarpetScanRadius = 15;
+    public int dwarvenCarpetScanTicks = 15;
+    public int dwarvenCarpetColor = 0x4D00FFFF;
+    public int treasureChestAssociationSeconds = 5;
+    public int treasureChestAssociationRange = 10;
+    public int treasureChestParticleMillis = 250;
+    public int treasureChestColor = 0x800000FF;
+
     public boolean miningProgressSuite = true;
     public boolean miningCommissionProgressHud = true;
     public boolean miningCommissionShowDone = true;

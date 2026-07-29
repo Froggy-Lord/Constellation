@@ -95,6 +95,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Scatha, treasure and mining-event assistance
 - Own Golden and Diamond Goblin box, beam, line, label and distance guidance
 - Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks
+- Sea-lantern-validated Dwarven ore-carpet highlights with bounded cache and scan controls
+- Crystal Hollows treasure-chest outlines, particle-derived lock spots and per-chest lock progress
 
 ## Auriga: experiments and utility
 

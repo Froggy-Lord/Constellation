@@ -1194,6 +1194,13 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 - [ ] Toggle goblin box, beam, line, label, distance and through-walls independently. Expected: each changes only its own presentation and the optional line remains off by default.
 - [ ] Reach at least the configured heat threshold below the configured Crystal Hollows height. Expected: only the exact high-heat wolf pant is muted; other mob and environment sounds remain audible.
 - [ ] Repeat above the configured height, below the heat threshold and outside Crystal Hollows. Expected: the pant is not filtered.
+- [ ] In the Dwarven Mines, approach gray, light-blue and light-gray carpet placed directly over sea lanterns in ore veins. Expected: only those carpets receive the thin configured fill.
+- [ ] Compare ordinary carpet, supported carpet away from a sea lantern and the same blocks outside the Dwarven Mines. Expected: none are highlighted.
+- [ ] Uncover a Crystal Hollows treasure chest. Expected: the nearby chest created after the exact uncover message receives an outline; unrelated existing chests do not.
+- [ ] Look directly at the active chest during lock picking. Expected: recent CRIT particles on that chest average into one small lock target.
+- [ ] Trigger a correct lock, a failed lock and chest-open progression. Expected: correct sounds advance only the targeted chest, failure resets its current progress, and the label never exceeds the learned total.
+- [ ] Stop looking at the chest, let the particle expire, remove/open the chest, leave the Hollows and reconnect. Expected: targeting, particles, progress and cached chests clear at the appropriate boundary.
+- [ ] Run `/mininghighlights` and test each option, radius, scan interval, association window/range, particle lifetime and ARGB color command. Expected: each setting persists and changes only its stated behavior.
 - [ ] In the Garden, run `/cropstart set <crop>` and `/cropstart setat <crop> <x> <y> <z>` for two different crops. Expected: each crop retains its own manual location independently.
 
 ## Kuudra and Crimson Isle

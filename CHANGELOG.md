@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.715 (2026-07-30) — Mining Highlights
+
+- added exact sea-lantern-backed Dwarven ore-carpet discovery and low-profile filled highlights
+- completed Crystal Hollows treasure-chest association from spawn chat and authoritative block updates
+- added chest outlines, live CRIT-particle lock spots and success/failure/open sound progress tracking
+- added independent ranges, timings, colors, wall modes, render layers, cleanup and `/mininghighlights` controls
+
 ## 0.9.714 (2026-07-30) — Mining Awareness
 
 - added ownership-paired Golden and Diamond Goblin highlighting from matching spawn chat and entity events

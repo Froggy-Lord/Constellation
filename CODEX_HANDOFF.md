@@ -2191,3 +2191,15 @@ The sound filter runs at the existing pre-play server-sound cancellation point. 
 Garden crop starts remain independently manual per crop: `/cropstart set <crop>` records the current block and `/cropstart setat <crop> <x> <y> <z>` records an exact location. This behavior predates the mining release and is explicitly retained in the changelog and testing guide for the latest request.
 
 Version `0.9.714` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The verified main jar contains the new awareness class and reports version `0.9.714`.
+
+## July 30 version 0.9.715 Mining Highlights
+
+`AquilaMiningHighlights.java`, `AquilaConfig.java` and `AquilaMining.java` port the live-enabled Skyblocker LGPL `skyblock/dwarven/CarpetHighlighter.java` and `CrystalsChestHighlighter.java`. This replaces Aquila's old unused `treasureChestEsp` advertisement with a real consumer and adds the other enabled live-profile highlight.
+
+The Dwarven scanner accepts only gray, light-blue or light-gray carpet directly over a sea lantern. It runs at a configurable bounded interval/radius, copies mutable search positions before caching and revalidates cached blocks while dropping distant entries. Rendering uses the carpet's one-sixteenth-block height with independent color and through-wall behavior. It clears immediately outside the Dwarven Mines.
+
+Chest discovery requires the exact uncover message followed within the configured window by an authoritative chest block update inside the configured player range. Each active chest has its own current and learned lock count. Recent server CRIT particles within 0.8 blocks of the looked-at chest are averaged into the lock target; exact experience-orb, villager-no and chest-open sounds advance, reset or learn progress only for the targeted active chest. Particle averaging fails closed at zero matches. Chat associations, particles, removed blocks, ten-minute safety expiry, world changes and area exits all have explicit cleanup.
+
+`/mininghighlights` exposes cache clearing, scan radius/interval, association range/window, particle lifetime, both ARGB colors and all master/presentation/wall toggles. The implementation only observes chat, server block/particle/sound events and renders locally. It never clicks, aims, mines, opens a chest or sends a packet.
+
+Version `0.9.715` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.

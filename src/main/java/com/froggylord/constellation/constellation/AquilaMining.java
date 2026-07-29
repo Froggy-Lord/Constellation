@@ -50,7 +50,8 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningGuidance.init(cfg);
         AquilaForgeHelper.init(cfg);
         AquilaMiningAwareness.init(cfg);
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); } });
+        AquilaMiningHighlights.init(cfg);
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); } });
     }
 
     private static int readCold() {
@@ -88,6 +89,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaCorpseHelper.registerCommands(dispatcher);
         AquilaMiningGuidance.registerCommands(dispatcher);
         AquilaForgeHelper.registerCommands(dispatcher);
+        AquilaMiningHighlights.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {
