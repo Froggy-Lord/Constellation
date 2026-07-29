@@ -22,6 +22,7 @@
         "MapDataAccessor",
         "MainHeadlessMixin",
         "MouseSensitivityMixin",
+        "MiningToolDurabilityMixin",
         "PlayerTabOverlayAccessor",
         "QuickCloseDungeonChestMixin",
         "SpiritLeapScreenMixin",

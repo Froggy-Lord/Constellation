@@ -1179,6 +1179,16 @@ Enable Hydra, then enable only the tracker/alerts for the fishing area you plan 
 
 Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 
+### Mining tool state
+
+1. Enable Aquila, `Mining Tool Suite`, `Drill Fuel Hud`, `Pickonimbus Hud`, and `Mining Tool Item Bars`.
+2. Enter a mining area and hold a drill with fuel. The movable `Mining Tool` HUD should show its cleaned name, exact current/max fuel, percentage, and text bar. Its inventory slot should show the same proportional durability bar.
+3. Hold a Pickonimbus. The HUD and slot bar should use `pickonimbus_durability`; a fresh item without that field should safely show 2,000/2,000. A pre-September-2024 or still-over-2,000 legacy item should use its historical 5,000-use maximum.
+4. Use `/miningtools option heldonly off`, then test `hotbar` and `inventory` scope options. Held selection must win; otherwise the first eligible enabled scope is used.
+5. Use `/miningtools threshold 10`, lower a tool through the threshold, and verify each enabled chat/title/sound channel fires once for that item. Re-equipping it must not repeat the warning until its value rises above the threshold.
+6. Test `hidefull`, the independent drill/Pickonimbus switches, mining-only scope, HUD row switches, `/miningtools barwidth 5-30`, and `/miningtools color good|warning|danger AARRGGBB`.
+7. Leave Hypixel or disable Aquila. The HUD and custom durability bars must disappear without affecting ordinary vanilla durability bars.
+
 ### Test
 
 - [ ] View commissions. Expected: names/progress match tab and destination guidance points to the selected commission.

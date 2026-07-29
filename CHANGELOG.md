@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.719 (2026-07-30) — Mining Tool State
+
+- replaced Aquila's dead drill-fuel and Pickonimbus HUD flags with licensed metadata and lore parsing
+- added a movable tool HUD with independent name, amount, percentage, text-bar and color controls
+- added drill and Pickonimbus inventory durability bars plus held, hotbar, inventory and mining-area scopes
+- added per-item low-state alerts, thresholds, colors and complete `/miningtools` controls
+
 ## 0.9.718 (2026-07-30) — Metal Detector Solver
 
 - replaced Aquila's dead Metal Detector flag with the complete licensed distance solver

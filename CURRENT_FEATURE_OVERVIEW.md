@@ -88,7 +88,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Powder and mining-session tracking
 - Persistent Forge slots, completion times and reminders
 - Fetchur and Puzzler solutions
-- Drill fuel, Pickonimbus and mining-tool information
+- Exact drill-fuel and Pickonimbus metadata/lore parsing with modern and legacy item support
+- Movable mining-tool HUD with configurable tool, amount, percentage, text bar, colors and visibility scope
+- Drill and Pickonimbus inventory durability bars plus per-item low-state chat, title and sound warnings
 - Glacite Mineshaft pity, cave-in and cold state
 - Corpse finder, corpse keys and corpse profit tracking
 - Fossil and mining-puzzle helpers
