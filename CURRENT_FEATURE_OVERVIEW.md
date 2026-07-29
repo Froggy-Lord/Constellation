@@ -84,6 +84,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 - Commission HUD, progress parsing and destination guidance
 - Crystal Hollows crystal progress and waypoint guidance
+- Exact Amber, Amethyst, Topaz, Jade and Sapphire Crystal Nucleus barrier volumes with filled/outline styles, labels, individual colors, wall visibility and optional Spring-only scope
 - Wishing Compass and nucleus-related helpers
 - Powder and mining-session tracking
 - Persistent Forge slots, completion times and reminders

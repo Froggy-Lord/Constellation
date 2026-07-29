@@ -2,6 +2,22 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Crystal Nucleus barriers
+
+Enable Aquila and Crystal Nucleus Barriers. The default is the filled live-profile design with all five barriers visible through walls.
+
+- [ ] Enter the Crystal Hollows but remain outside the central Nucleus coordinates. Expected: no barrier volume is drawn.
+- [ ] Enter the Crystal Nucleus. Expected: Amber, Amethyst, Topaz, Jade and Sapphire receive distinct large translucent barrier volumes at their real collision regions.
+- [ ] Compare each edge against the invisible collision. Expected: all six faces surround the complete barrier, including SkyHanni's one-block expansion.
+- [ ] Run `/nucleusbarriers style outline`, then set `/nucleusbarriers thickness 5`. Expected: filled faces disappear and the five outlines use the wider line.
+- [ ] Toggle `/nucleusbarriers option labels on`. Expected: each enabled volume receives its own crystal name above the box.
+- [ ] Toggle Amber through Sapphire independently. Expected: only the selected volume changes and at least one repeated toggle proves settings persist.
+- [ ] Set each `/nucleusbarriers color <crystal> <argb>` target. Expected: only that crystal changes and filled alpha follows the supplied ARGB value.
+- [ ] Toggle walls off while looking through Nucleus terrain. Expected: hidden portions obey depth while visible faces remain.
+- [ ] Enable Hoppity-only visibility during a non-Spring SkyBlock season. Expected: all barriers hide. Repeat during Spring and expect them to return.
+- [ ] Leave the Nucleus coordinates, Crystal Hollows or Hypixel. Expected: every barrier disappears immediately.
+- [ ] Observe normal movement around the boxes. Expected: the helper never moves, clicks, aims, mines, uses an item or sends a gameplay packet.
+
 ## Galatea Tree Progress
 
 Enable Artemis and Tree Progress. Defaults match the live profile: enabled, axe-only, full display and not restricted to your own tree.

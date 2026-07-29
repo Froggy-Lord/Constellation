@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.724 (2026-07-30) — Crystal Nucleus Barriers
+
+- added the five exact Crystal Nucleus barrier volumes with the live SkyHanni colors
+- added filled or configurable-width outline rendering, labels and through-wall controls
+- added independent Amber, Amethyst, Topaz, Jade and Sapphire visibility and colors
+- added strict Crystal Hollows/Nucleus-coordinate gating, optional Spring-only visibility and complete `/nucleusbarriers` controls
+
 ## 0.9.723 (2026-07-30) — Ordered Mining Routes
 
 - added profile-safe named mining routes with Coleweight clipboard import/export and atomic persistence

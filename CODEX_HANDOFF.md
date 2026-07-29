@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.706 Galatea Tree Progress.
+Last updated: 2026-07-30 for version 0.9.724 Crystal Nucleus Barriers.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.706`.
+- Current artifact version: `0.9.724`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2305,3 +2305,15 @@ Editing supports append/insert below the player, exact-coordinate insert, move-t
 World rendering independently supports current, previous, one-to-five next, nearby setup and show-all points; filled or outlined blocks; thickness; labels; distance; through-wall behavior; six colors; player trace and sneaking/standing setup lines. The movable HUD independently shows route, dirty state, progress, current, next, distance and setup mode. `/ordered` and `/ow` expose the operational surface. No movement, aiming, teleport, item use, click, chat command or gameplay packet is generated.
 
 Version `0.9.723` built with exactly 11 successful tests and zero failures. The full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `c5d1384d682c6f71cf59d1f405f8aedf68206536502a24222c75bfc3e523434d`.
+
+## July 30 version 0.9.724 Crystal Nucleus Barriers
+
+`AquilaNucleusBarriers.java`, `AquilaConfig.java` and `AquilaMining.java` port SkyHanni LGPL `features/mining/crystalhollows/NucleusBarriersBox.kt`, `config/features/mining/nucleus/CrystalHighlighterConfig.kt`, `CrystalHighlighterColorConfig.kt` and the Spring-season gate from `features/event/hoppity/HoppityApi.kt`. This is distinct from the existing crystal-status HUD, Nucleus waypoints and gemstone/chest renderers: it visualizes the five normally invisible collision volumes around the Nucleus crystals.
+
+The exact five endpoint pairs and the licensed one-block expansion produce the complete Amber, Amethyst, Topaz, Jade and Sapphire volumes. Defaults match the live profile's filled colors. Saved controls independently select each crystal, its ARGB color, filled or one-to-ten-width outline rendering, labels, through-wall behavior and Spring-only visibility. The render gate requires the Crystal Hollows plus the fixed central Nucleus coordinate region, preventing the absolute-coordinate volumes from appearing elsewhere.
+
+`/nucleusbarriers` exposes status, style, outline thickness, every visibility option and all five colors. The helper reads location, position and SkyBlock season text and renders locally. It never moves, aims, clicks, mines, uses an item, sends chat or constructs a gameplay packet.
+
+Version `0.9.724` built with exactly 11 successful tests and zero failures. The full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `052e074e4a97011f2b2e9f79553fbf75466abae28774cc567e961ae6abf8ca60`.
+
+The old `0.9.723` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-091420-0.9.724/`; only `constellation-0.9.724.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten. Re-rank the adjacent live-enabled mining queue after this release; SkyHanni Deep Caverns Guide remains a likely high-utility candidate.

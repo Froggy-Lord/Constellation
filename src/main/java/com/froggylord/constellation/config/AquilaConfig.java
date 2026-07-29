@@ -193,6 +193,23 @@ public class AquilaConfig extends BaseConfigGroup {
     public int orderedWaypointsSetupColor = 0x66FF0000;
     public int orderedWaypointsShowAllColor = 0x6600FF00;
 
+    public boolean nucleusBarrierHighlighter = true;
+    public boolean nucleusBarrierFilled = true;
+    public boolean nucleusBarrierLabels = false;
+    public boolean nucleusBarrierThroughWalls = true;
+    public boolean nucleusBarrierOnlyHoppity = false;
+    public boolean nucleusBarrierAmber = true;
+    public boolean nucleusBarrierAmethyst = true;
+    public boolean nucleusBarrierTopaz = true;
+    public boolean nucleusBarrierJade = true;
+    public boolean nucleusBarrierSapphire = true;
+    public int nucleusBarrierOutlineThickness = 2;
+    public int nucleusBarrierAmberColor = 0x7FCB6400;
+    public int nucleusBarrierAmethystColor = 0x7FA80BCB;
+    public int nucleusBarrierTopazColor = 0x7FCDC400;
+    public int nucleusBarrierJadeColor = 0x5568CB00;
+    public int nucleusBarrierSapphireColor = 0x7F2964CB;
+
     public boolean pickobulusSuite = true;
     public boolean pickobulusHud = true;
     public boolean pickobulusHideHudOnCooldown = false;
