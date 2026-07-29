@@ -96,7 +96,8 @@ public class ClientPacketListenerMixin {
         // fusion filter ported from SkyHanni (LGPL-3.0-or-later): features/foraging/MuteFusionMachine.kt
         if (com.froggylord.constellation.constellation.ArtemisGalateaSounds.shouldCancel(packet)
             || com.froggylord.constellation.constellation.SlayerSounds.shouldCancel(packet)
-            || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)) ci.cancel();
+            || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)
+            || com.froggylord.constellation.constellation.AquilaMiningAwareness.shouldCancel(packet)) ci.cancel();
     }
 
     // ported from SkyHanni (LGPL-2.1): features/dungeon/DungeonSecretTrackerLocator.kt (particle event input)

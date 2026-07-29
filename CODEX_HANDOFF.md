@@ -2179,3 +2179,15 @@ Sound filtering occurs at the existing pre-play server-sound cancellation point.
 Transient display diagnostics clear on world/connection changes. `/treecleanup` exposes master, clean-view, four block-state, sound and two scope controls plus session diagnostics. The feature performs no click, block action, movement or packet send.
 
 Version `0.9.713` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.
+
+## July 30 version 0.9.714 Mining Awareness
+
+`AquilaMiningAwareness.java`, `AquilaConfig.java`, `AquilaMining.java` and `ClientPacketListenerMixin.java` port SkyHanni LGPL `features/mining/GoldenGoblinHighlight.kt` and `features/mining/crystalhollows/HighHeatSound.kt`. The live 26.1.2 profile enables own-Golden-Goblin highlighting, disables its player line and enables high-heat muting.
+
+Goblin ownership requires both an exact local `A Golden Goblin has spawned!` or `A Diamond Goblin has spawned!` chat event and a newly observed exact Golden/Diamond Goblin name entity inside the configurable pairing window. Either event may arrive first. The matched mob is resolved from the nametag entity, then receives independently configurable box, beam, line, label, distance and through-wall rendering. The line remains disabled by the live-profile default. Other players' unpaired goblins remain untouched.
+
+The sound filter runs at the existing pre-play server-sound cancellation point. It requires Aquila, the awareness suite, Crystal Hollows, player height at or below the configured Magma Fields ceiling, parsed sidebar heat at or above the configured threshold and exact `minecraft:entity.wolf.pant` with pitch zero and volume one. All other sounds pass unchanged.
+
+Garden crop starts remain independently manual per crop: `/cropstart set <crop>` records the current block and `/cropstart setat <crop> <x> <y> <z>` records an exact location. This behavior predates the mining release and is explicitly retained in the changelog and testing guide for the latest request.
+
+Version `0.9.714` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The verified main jar contains the new awareness class and reports version `0.9.714`.

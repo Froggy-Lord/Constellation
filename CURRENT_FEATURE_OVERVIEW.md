@@ -93,6 +93,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Corpse finder, corpse keys and corpse profit tracking
 - Fossil and mining-puzzle helpers
 - Scatha, treasure and mining-event assistance
+- Own Golden and Diamond Goblin box, beam, line, label and distance guidance
+- Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks
 
 ## Auriga: experiments and utility
 

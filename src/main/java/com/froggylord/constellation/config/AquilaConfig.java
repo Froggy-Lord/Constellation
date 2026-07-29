@@ -38,6 +38,22 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean amethystCrystalTracker = true;
     public boolean amberCrystalTracker = true;
 
+    public boolean miningAwarenessSuite = true;
+    public boolean ownGoldenGoblinHighlight = true;
+    public boolean ownGoldenGoblinBox = true;
+    public boolean ownGoldenGoblinBeam = false;
+    public boolean ownGoldenGoblinLine = false;
+    public boolean ownGoldenGoblinLabel = true;
+    public boolean ownGoldenGoblinDistance = true;
+    public boolean ownGoldenGoblinThroughWalls = true;
+    public boolean muteCrystalHollowsHighHeat = true;
+    public int ownGoldenGoblinPairSeconds = 10;
+    public int ownGoldenGoblinScanRange = 96;
+    public int ownGoldenGoblinBeamHeight = 12;
+    public int ownGoldenGoblinColor = 0xFF55FF55;
+    public int highHeatMuteMinimum = 90;
+    public int highHeatMagmaFieldsMaximumY = 65;
+
     public boolean miningProgressSuite = true;
     public boolean miningCommissionProgressHud = true;
     public boolean miningCommissionShowDone = true;

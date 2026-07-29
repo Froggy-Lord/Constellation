@@ -1189,6 +1189,12 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 - [ ] Enter a Glacite Mineshaft. Expected: cave-in/cold and pity information appears.
 - [ ] Find/loot a corpse. Expected: waypoint, key count and profit update once.
 - [ ] Test a fossil puzzle. Expected: advisory solution matches the board without automatic clicking.
+- [ ] Spawn your own Golden or Diamond Goblin in a mining island. Expected: only the goblin paired with your spawn message receives the configured green guidance.
+- [ ] Let another player spawn a goblin nearby. Expected: it is not claimed or highlighted as yours.
+- [ ] Toggle goblin box, beam, line, label, distance and through-walls independently. Expected: each changes only its own presentation and the optional line remains off by default.
+- [ ] Reach at least the configured heat threshold below the configured Crystal Hollows height. Expected: only the exact high-heat wolf pant is muted; other mob and environment sounds remain audible.
+- [ ] Repeat above the configured height, below the heat threshold and outside Crystal Hollows. Expected: the pant is not filtered.
+- [ ] In the Garden, run `/cropstart set <crop>` and `/cropstart setat <crop> <x> <y> <z>` for two different crops. Expected: each crop retains its own manual location independently.
 
 ## Kuudra and Crimson Isle
 

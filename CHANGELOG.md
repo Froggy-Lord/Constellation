@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.714 (2026-07-30) — Mining Awareness
+
+- added ownership-paired Golden and Diamond Goblin highlighting from matching spawn chat and entity events
+- added independent box, beam, line, label, distance, through-wall, range, timing and color controls
+- added exact Crystal Hollows high-heat pant muting with configurable heat and Magma Fields height thresholds
+- retained manual current-position and exact-coordinate start locations for every individual Garden crop
+
 ## 0.9.713 (2026-07-30) — Tree Cleanup
 
 - added Galatea-only removal of the four exact decorative tree block-display states

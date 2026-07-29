@@ -49,7 +49,8 @@ public class AquilaMining extends BaseConstellation {
         AquilaCorpseHelper.init(cfg);
         AquilaMiningGuidance.init(cfg);
         AquilaForgeHelper.init(cfg);
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); } });
+        AquilaMiningAwareness.init(cfg);
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); } });
     }
 
     private static int readCold() {
