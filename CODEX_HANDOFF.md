@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.724 Crystal Nucleus Barriers.
+Last updated: 2026-07-30 for version 0.9.725 Deep Caverns Guide.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.724`.
+- Current artifact version: `0.9.725`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2317,3 +2317,17 @@ The exact five endpoint pairs and the licensed one-block expansion produce the c
 Version `0.9.724` built with exactly 11 successful tests and zero failures. The full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `052e074e4a97011f2b2e9f79553fbf75466abae28774cc567e961ae6abf8ca60`.
 
 The old `0.9.723` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-091420-0.9.724/`; only `constellation-0.9.724.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten. Re-rank the adjacent live-enabled mining queue after this release; SkyHanni Deep Caverns Guide remains a likely high-utility candidate.
+
+## July 30 version 0.9.725 Deep Caverns Guide
+
+`AquilaDeepCavernsGuide.java`, `DeepCavernsGuideHudWidget.java`, `AquilaConfig.java`, `AquilaMining.java`, `LocationManager.java`, `ItemProtectionScreenMixin.java` and `assets/constellation/mining/deepCavernsParkour.json` port SkyHanni LGPL `features/mining/DeepCavernsGuide.kt`, `utils/ParkourHelper.kt`, `config/features/mining/caverns/DeepCavernsGuideConfig.kt` and the MIT SkyHanni Repo `constants/DeepCavernsParkour.json`. All 92 locations and the empty shortcut list were compared programmatically against the live repository and match exactly.
+
+The guide starts from the exact Lift Operator locked instruction, a local `GO` overlay on Lift slot 49 when slot 31 is not the unlocked Obsidian Sanctuary destination, or `/deepguide start`. The overlay click is cancelled before vanilla sends the container interaction. It never synthesizes a click. World/area changes clear activation and progress.
+
+Progress preserves the licensed three-dimensional, on-ground proximity model with configurable one-to-ten-block detection. The live default renders 30 steps ahead. Optional nearest recovery handles players who fall past a point, while bounded skip/back provide manual correction. The licensed three-block expanded platform boxes, center-to-center lines, spatial rainbow sequence and four-second animation are retained. Monochrome ARGB, rainbow alpha/saturation/brightness/speed, boxes, lines, labels, distances, start box/beam, through-wall behavior and each HUD row are independently saved.
+
+`LocationManager` now recognizes all six authoritative Deep Caverns layer names from SkyHanni's MIT island graph, rather than relying only on a generic Deep Caverns sidebar line. The movable HUD shows progress, next point, remaining count and distance. `/deepguide` exposes start/stop/restart, skip/back, look-ahead, detection, recovery, rainbow, alpha, monochrome color and every main option. No movement, jump, aiming, warp, item use, chat send or gameplay packet creation was added.
+
+Version `0.9.725` built with exactly 11 successful tests and zero failures. The full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `0b28c52ae571a5ff48574762e4c22e916a6c90dd52e211c93ce42b78ecc01f73`.
+
+The old `0.9.724` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-092614-0.9.725/`; only `constellation-0.9.725.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten. Re-scan the live mining settings after this release and select the next distinct enabled gap.

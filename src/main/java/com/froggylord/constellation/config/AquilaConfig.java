@@ -210,6 +210,33 @@ public class AquilaConfig extends BaseConfigGroup {
     public int nucleusBarrierJadeColor = 0x5568CB00;
     public int nucleusBarrierSapphireColor = 0x7F2964CB;
 
+    public boolean deepCavernsGuide = true;
+    public boolean deepCavernsGuideHud = true;
+    public boolean deepCavernsGuideRainbow = true;
+    public boolean deepCavernsGuideBoxes = true;
+    public boolean deepCavernsGuideLines = true;
+    public boolean deepCavernsGuideLabels = false;
+    public boolean deepCavernsGuideDistance = true;
+    public boolean deepCavernsGuideThroughWalls = false;
+    public boolean deepCavernsGuideAutoChat = true;
+    public boolean deepCavernsGuideLiftButton = true;
+    public boolean deepCavernsGuideAutoRecover = true;
+    public boolean deepCavernsGuideShowStart = true;
+    public boolean deepCavernsGuideStartBeam = true;
+    public boolean deepCavernsGuideCompletionChat = true;
+    public boolean deepCavernsGuideHudShowProgress = true;
+    public boolean deepCavernsGuideHudShowNext = true;
+    public boolean deepCavernsGuideHudShowRemaining = true;
+    public boolean deepCavernsGuideHudShowDistance = true;
+    public int deepCavernsGuideLookAhead = 30;
+    public int deepCavernsGuideDetectionTenths = 35;
+    public int deepCavernsGuideRecoveryRange = 15;
+    public int deepCavernsGuideLineColor = 0x3C0000FF;
+    public int deepCavernsGuideRainbowAlpha = 96;
+    public int deepCavernsGuideRainbowSaturation = 100;
+    public int deepCavernsGuideRainbowBrightness = 70;
+    public int deepCavernsGuideRainbowSeconds = 4;
+
     public boolean pickobulusSuite = true;
     public boolean pickobulusHud = true;
     public boolean pickobulusHideHudOnCooldown = false;

@@ -97,6 +97,10 @@ public class LocationManager {
             if (l.contains("barn")) return SkyblockArea.BARN;
             if (l.contains("park")) return SkyblockArea.PARK;
             if (l.contains("gold mine")) return SkyblockArea.GOLD_MINE;
+            // ported from SkyHanni Repo (MIT): constants/island_graphs/DEEP_CAVERNS.json
+            if (l.contains("gunpowder mines") || l.contains("lapis quarry") || l.contains("pigmen's den")
+                || l.contains("slimehill") || l.contains("diamond reserve") || l.contains("obsidian sanctuary"))
+                return SkyblockArea.DEEP_CAVERNS;
             if (l.contains("deep caverns")) return SkyblockArea.DEEP_CAVERNS;
             if (l.contains("village") || l.contains("hub")) return SkyblockArea.HUB;
         }

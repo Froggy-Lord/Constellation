@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.725 (2026-07-30) — Deep Caverns Guide
+
+- added the exact 92-point SkyHanni route from the Gunpowder Mines Lift to Rhys
+- added ground-aware progression, configurable look-ahead, nearest recovery, skip/back and completion state
+- added live-profile rainbow rendering plus monochrome, box, line, label, distance, start and wall controls
+- added locked-Lift chat/menu activation, complete `/deepguide` controls and a movable progress HUD
+
 ## 0.9.724 (2026-07-30) — Crystal Nucleus Barriers
 
 - added the five exact Crystal Nucleus barrier volumes with the live SkyHanni colors

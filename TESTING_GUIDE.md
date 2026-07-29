@@ -2,6 +2,29 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Deep Caverns Guide
+
+Enable Aquila and Deep Caverns Guide. Defaults match the live profile: 30 points ahead, rainbow rendering, boxes and lines.
+
+- [ ] Enter each named Deep Caverns layer. Expected: Gunpowder Mines, Lapis Quarry, Pigmen's Den, Slimehill, Diamond Reserve and Obsidian Sanctuary all classify as Deep Caverns.
+- [ ] Open the Lift before Obsidian Sanctuary is unlocked. Expected: slot 49 shows a local `GO` guide button while the real slot 31 is not named Obsidian Sanctuary.
+- [ ] Click `GO`. Expected: the click is consumed locally, no container packet is sent for slot 49, and the guide starts.
+- [ ] Trigger the exact Lift Operator instruction to venture into Lapis Quarry. Expected: automatic activation occurs only when Auto Chat is enabled.
+- [ ] Run `/deepguide start` away from the first point. Expected: Guide Start receives a box, beam, label and optional distance.
+- [ ] Reach the first point near `44, 149, 16` while on the ground. Expected: the route begins and the movable HUD shows progress, next point, remaining points and distance.
+- [ ] Follow the route downward. Expected: reached points disappear, up to 30 points remain ahead, and progress advances only near route points while grounded.
+- [ ] Fall past several points, land near a later route point and keep recovery enabled. Expected: the guide safely resumes from the nearest point inside the configured recovery range.
+- [ ] Disable recovery and restart away from the first point. Expected: the guide remains at its start marker until the real first point is reached.
+- [ ] Test `/deepguide skip`, `skip <amount>`, `back` and `back <amount>`. Expected: progress stays bounded between points 1 and 92.
+- [ ] Set look-ahead to 1 and 30. Expected: the renderer shows only the current point or the full configured forward window without changing progression.
+- [ ] Toggle boxes, lines, labels, distance and wall visibility independently. Expected: each changes only its own presentation.
+- [ ] Disable rainbow and set an eight-digit monochrome ARGB color. Expected: every visible point and line uses that exact color and alpha.
+- [ ] Re-enable rainbow and change speed, saturation, brightness and alpha. Expected: the spatial hue sequence animates at the configured speed.
+- [ ] Toggle each HUD row independently, then move and resize Deep Caverns Guide in `/cn hud`. Expected: placement and scale persist independently.
+- [ ] Reach point 92 near Rhys. Expected: the route closes and the optional local completion message appears once.
+- [ ] Leave the Deep Caverns, switch worlds or disconnect midway. Expected: route, Lift prompt and progress clear immediately.
+- [ ] Observe the entire run. Expected: no movement, jump, aim, click, warp, item use, chat or gameplay packet is generated automatically.
+
 ## Crystal Nucleus barriers
 
 Enable Aquila and Crystal Nucleus Barriers. The default is the filled live-profile design with all five barriers visible through walls.
