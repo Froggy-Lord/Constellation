@@ -293,7 +293,7 @@ public final class HerculesGardenTracker {
         return false;
     }
 
-    private static Crop cropInHand(ItemStack stack) {
+    static Crop cropInHand(ItemStack stack) {
         String id = LyraTooltips.marketId(stack); if (id == null) return null; id=id.toUpperCase(Locale.ROOT);
         if (id.startsWith("THEORETICAL_HOE_WHEAT")) return Crop.WHEAT; if (id.startsWith("THEORETICAL_HOE_CARROT")) return Crop.CARROT;
         if (id.startsWith("THEORETICAL_HOE_POTATO")) return Crop.POTATO; if (id.startsWith("THEORETICAL_HOE_WARTS")) return Crop.NETHER_WART;

@@ -25,7 +25,33 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Greenhouse growth: test this release first
+## Farming Fortune: test this release first
+
+### Enable
+
+1. Enable Hercules, `Fortune Helper` and `Fortune Display`.
+2. Keep compact mode off, missing warnings visible and Pesthunter bonus display off to match the live profile.
+3. In `/widget`, enable the Stats widget plus universal Farming Fortune and latest Crop Fortune.
+4. Hold a supported farming tool in the Garden.
+
+### Fortune state and warnings
+
+- [ ] Compare the HUD total with universal plus current-crop Fortune in the Stats widget. Expected: the values match exactly.
+- [ ] Switch between farming tools. Expected: the HUD follows the held crop and uses the last saved value until that crop's tab line updates.
+- [ ] Break the selected crop. Expected: its fresh total is persisted for later tool switches and restarts.
+- [ ] Enable breakdown mode. Expected: universal and crop-specific values appear separately beneath the total.
+- [ ] Create four or more effective Garden pests. Expected: the configured reduction row follows the exact 5/15/30/50/75 percent thresholds.
+- [ ] Temporarily hide universal Farming Fortune from the Stats widget. Expected: a delayed, repeat-limited warning offers a clickable `/widget` action.
+- [ ] Restore universal Fortune but hide latest Crop Fortune, then farm. Expected: the separate crop warning appears after its configured delay.
+
+### Pesthunter bonus
+
+- [ ] Enable the bonus row and obtain a Pesthunter Farming Fortune bonus. Expected: amount and stable remaining time appear.
+- [ ] Let it expire or observe `Bonus: INACTIVE`. Expected: enabled chat/title/sound channels fire once.
+- [ ] Enable the clickable action. Expected: the chat button deliberately runs either `/call Phillip` or `/tptoplot barn`; nothing runs automatically.
+- [ ] Run `/fortune` and its option, missing-delay, title-duration and template controls. Expected: all changes persist.
+
+## Greenhouse growth
 
 ### Enable
 

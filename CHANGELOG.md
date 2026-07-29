@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.655 (2026-07-29) — Farming Fortune
+
+- added true Farming Fortune parsing from universal and crop-specific Stats-widget lines with persistent latest values for all 13 crops
+- added a movable tool-aware display, optional universal/crop breakdown, wrong-crop guidance, missing-widget warnings and exact pest-count fortune reductions
+- added Pesthunter bonus amount/expiry tracking, optional HUD row, expiry chat/title/sound and deliberate clickable Phillip/Barn actions
+- added full display, warning, timing, action and template controls through Hercules config and `/fortune`
+
 ## 0.9.654 (2026-07-29) — Greenhouse growth
 
 - added persistent Greenhouse growth-cycle detection from the exact Crop Diagnostics menu, a movable countdown/overdue HUD and configurable ready/while-away alerts

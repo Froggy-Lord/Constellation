@@ -220,6 +220,32 @@ public class HerculesConfig extends BaseConfigGroup {
     public long greenhouseNextCycle = 0;
     public boolean greenhouseCycleNotified = true;
 
+    public boolean fortuneHelper = true;
+    public boolean fortuneDisplay = true;
+    public boolean fortuneCompact = false;
+    public boolean fortuneHideMissingWarnings = false;
+    public boolean fortuneShowPestBonus = false;
+    public boolean fortuneBonusExpireChat = true;
+    public boolean fortuneBonusExpireTitle = false;
+    public boolean fortuneBonusExpireSound = false;
+    public boolean fortuneBonusClickableAction = true;
+    public boolean fortuneBonusCallPhillip = false;
+    public boolean fortuneShowCrop = true;
+    public boolean fortuneShowBreakdown = false;
+    public boolean fortuneShowPestReduction = true;
+    public boolean fortuneRequireTool = true;
+    public boolean fortuneMissingChat = true;
+    public boolean fortuneMissingClickableWidget = true;
+    public int fortuneUniversalMissingSeconds = 5;
+    public int fortuneCropMissingSeconds = 10;
+    public int fortuneMissingRepeatSeconds = 20;
+    public int fortuneTitleTicks = 60;
+    public String fortuneBonusExpireTemplate = "Pest fortune bonus expired";
+    public Map<String, Double> fortuneLatestByCrop = new HashMap<>();
+    public int fortunePestBonus = 0;
+    public long fortunePestBonusExpiry = 0;
+    public boolean fortunePestBonusNotified = true;
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;
