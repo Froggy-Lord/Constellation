@@ -1582,6 +1582,21 @@ For each failure, record only these five things:
 5. The newest relevant file from `config/constellation-scrapes/` after `/cn scrape all`.
 
 One issue at a time is ideal. You do not need to retest unrelated sections after reporting a localized parser or overlay problem.
+
+## Scatha Mining
+
+- [ ] Enable Aquila, Scatha Alert, Scatha Counter, Scatha Mining Suite and Scatha HUD in `/cn config`.
+- [ ] Enter the Crystal Hollows and trigger a natural Worm spawn. Expected: the exact approaching chat starts a roughly 31-second HUD cooldown, then the nearby level-5 Worm is counted once and receives only the enabled local alert and world guidance.
+- [ ] Trigger a natural Scatha. Expected: it is distinguished from a Worm, uses the separate Scatha color/title and increments both total and Scatha counts exactly once.
+- [ ] Stand near unrelated named armor stands before and after a spawn. Expected: nothing is paired without the exact recent approaching message, the level/name signature and the licensed local-axis bounds.
+- [ ] Let the cooldown expire. Expected: Ready appears and each enabled ready chat/title/sound channel fires once, not every tick.
+- [ ] Toggle box, label, distance, beam, line and through-walls separately. Expected: only the active paired Worm or Scatha changes and no interaction occurs.
+- [ ] Receive a Scatha Pet drop with compact replacement enabled. Expected: one local replacement preserves proven rarity and Magic Find, the original is hidden, counters update and enabled title/sound channels fire.
+- [ ] Test an unrecognized or newly formatted pet message. Expected: it remains visible unchanged rather than being swallowed.
+- [ ] Compare `/scatha`, HUD totals, Scatha rate, dry streak and pet rarity totals across a profile switch. Expected: persistent totals follow the profile while session state resets.
+- [ ] Run `/scatha reset` and `/scatha clearprofile`. Expected: session reset leaves saved totals intact; clearprofile removes only the active profile history.
+- [ ] Change cooldown, range and every `/scatha option` switch. Expected: settings persist and none sends movement, mining, attack, aim, click, chat or gameplay packets.
+- [ ] Move and resize Scatha Mining in `/cn hud`. Expected: it is editable only while visible or during editor grace and keeps its independent placement.
 - [ ] Enable Artemis and open exact `Agatha's Shop`. Expected: only actual sale offers with an Agatha Coupon cost appear; unrelated menus remain unchanged.
 - [ ] Compare every displayed material count against each offer's Cost lore, including any `1k`, `1m`, prefix-count or `x<count>` form. Expected: total input cost uses the full quantity.
 - [ ] Compare sell value, total cost, sale profit and profit per coupon against Bazaar prices. Expected: the arithmetic agrees, and missing market data says `partial` instead of silently becoming free.

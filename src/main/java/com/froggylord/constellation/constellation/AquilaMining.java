@@ -60,8 +60,9 @@ public class AquilaMining extends BaseConstellation {
         AquilaOrderedWaypoints.init(cfg);
         AquilaNucleusBarriers.init(cfg);
         AquilaDeepCavernsGuide.init(cfg);
+        AquilaScathaMining.init(cfg);
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) AquilaOrderedWaypoints.draw(context); });
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaScathaMining.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
 
     private static int readCold() {
@@ -105,6 +106,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.orderedWaypointsSuite && c.orderedWaypointsHud));
         hud.register(new com.froggylord.constellation.hud.DeepCavernsGuideHudWidget(HudPosition.of(78, 194),
             () -> c.enabled && c.deepCavernsGuide && c.deepCavernsGuideHud));
+        hud.register(new com.froggylord.constellation.hud.ScathaHudWidget(HudPosition.of(78, 208),
+            () -> c.enabled && c.scathaAlert && c.scathaCounter && c.scathaMiningSuite && c.scathaHud));
     }
 
     @Override
@@ -123,6 +126,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaOrderedWaypoints.registerCommands(dispatcher);
         AquilaNucleusBarriers.registerCommands(dispatcher);
         AquilaDeepCavernsGuide.registerCommands(dispatcher);
+        AquilaScathaMining.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

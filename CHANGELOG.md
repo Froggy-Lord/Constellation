@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.726 (2026-07-30) — Scatha Mining
+
+- replaced the dead Scatha flags with exact spawn-message and local named-entity pairing
+- added independent Worm, Scatha, cooldown-ready and Scatha Pet chat/title/sound alerts
+- added profile-safe spawn, ratio, dry-streak, pet-drop and rarity statistics plus a movable HUD
+- added optional rarity-preserving pet-message replacement, active-worm world guidance and complete `/scatha` controls
+
 ## 0.9.725 (2026-07-30) — Deep Caverns Guide
 
 - added the exact 92-point SkyHanni route from the Gunpowder Mines Lift to Rhys

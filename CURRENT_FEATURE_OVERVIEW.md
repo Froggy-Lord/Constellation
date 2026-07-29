@@ -388,6 +388,15 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Remaining Garden progression depth
 - Additional non-dungeon gaps from the active 26.1.2 instance
 
+## Scatha Mining
+
+- Exact Crystal Hollows spawn-message recognition followed by a bounded nearby level-5 Worm or level-10 Scatha pairing window
+- Independent Worm, Scatha, cooldown-ready and Scatha Pet chat, title and sound channels
+- Optional active-worm box, label, distance, beam and player line with separate colors and through-wall control
+- Session and profile-safe Worm, Scatha, rate, dry-streak, pet-drop and rarity statistics
+- Rarity-preserving compact pet-drop replacement that fails open when the rarity cannot be proved
+- Movable cooldown/current/session/total/rate/dry-streak/pet/uptime HUD and full `/scatha` controls
+
 The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`. You do not need that document for normal testing.
 
 ## Artemis: Moonglade Beacon
