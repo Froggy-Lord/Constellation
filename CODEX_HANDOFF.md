@@ -1881,3 +1881,17 @@ The movable HUD shows state, input names, matching inventory count and active by
 Version `0.9.686` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live Anvil slot behavior remains an explicit in-game checklist item because the title screen cannot supply its container.
 
 The old `0.9.685` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-035431-0.9.686/`; only `constellation-0.9.686.jar` is live and its SHA-256 is `bf8e6315e69182b2e04a521489ded73bff45f80774a837d0a447bd1e9b35e279`. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.687 God Potion and Cookie status
+
+The live Froggy__Lord 26.1.2 Skyblocker profile enables its Tab HUD and `effectsFromFooter`. `AurigaBuffStatus.java`, `BuffStatusHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and `PlayerTabOverlayAccessor.java` port Skyblocker LGPL `skyblock/tabhud/widget/EffectWidget.java` and SkyblockAddons LGPL `features/tablist/TabListParser.java`, `resources/regex.json`.
+
+The authoritative player-list footer supplies God Potion duration, Cookie Buff duration/not-active state and ordinary active-effect count. Both compact `1d 2h` and worded `1 day 2 hours` durations are accepted. Parsed expiries persist by detected SkyBlock profile, ignore unknown profiles and update only when drift exceeds 90 seconds to avoid per-second config writes.
+
+The movable HUD has independent God Potion, Cookie, effect-count, profile and source-age rows plus unknown/expired visibility. God and Cookie warning/expiry behavior is independently enabled, with shared independently selectable local chat, title and sound channels and configurable thresholds/colors. `/buffstatus` provides status, toggle, active-profile clearing, manual test/recovery timers, thresholds and named options.
+
+The adversarial pass evaluates crossings before parsing a refreshed footer and reconciles again afterward, preventing an authoritative not-active refresh from erasing a just-crossed expiry before its alert. Profile switches initialize crossing state without stale login alerts. No tab contents are changed and no server message is sent.
+
+Version `0.9.687` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Live footer parsing remains an explicit in-game checklist item because the title screen has no Hypixel player-list footer.
+
+The old `0.9.686` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-040256-0.9.687/`; only `constellation-0.9.687.jar` is live and its SHA-256 is `d19dceff937d3c74bae8ef73827b06ca9cb50495143de4f609c515c32f73e86f`. Live Gather preferences were not rewritten.

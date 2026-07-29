@@ -78,4 +78,34 @@ public class AurigaConfig extends BaseConfigGroup {
     public int anvilMatchColor = 0x8055FF55;
     public int anvilMismatchColor = 0x80FF5555;
     public int anvilResultColor = 0x8055FF55;
+
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/tabhud/widget/EffectWidget.java
+    // ported from SkyblockAddons (LGPL-3.0-only): features/tablist/TabListParser.java, resources/regex.json
+    public boolean buffStatus = true;
+    public boolean buffStatusHud = true;
+    public boolean buffStatusGodPotion = true;
+    public boolean buffStatusCookie = true;
+    public boolean buffStatusEffectCount = true;
+    public boolean buffStatusShowUnknown = false;
+    public boolean buffStatusShowExpired = true;
+    public boolean buffStatusShowSourceAge = false;
+    public boolean buffStatusShowProfile = false;
+    public boolean buffStatusGodWarning = true;
+    public boolean buffStatusGodExpired = true;
+    public boolean buffStatusCookieWarning = true;
+    public boolean buffStatusCookieExpired = true;
+    public boolean buffStatusWarningChat = true;
+    public boolean buffStatusExpiredChat = true;
+    public boolean buffStatusWarningTitle = false;
+    public boolean buffStatusExpiredTitle = false;
+    public boolean buffStatusWarningSound = true;
+    public boolean buffStatusExpiredSound = true;
+    public int buffStatusGodWarningMinutes = 30;
+    public int buffStatusCookieWarningHours = 24;
+    public int buffStatusActiveColor = 0xFF55FF55;
+    public int buffStatusWarningColor = 0xFFFFAA00;
+    public int buffStatusExpiredColor = 0xFFFF5555;
+    public int buffStatusUnknownColor = 0xFFAAAAAA;
+    public java.util.Map<String, Long> buffStatusGodExpiry = new java.util.LinkedHashMap<>();
+    public java.util.Map<String, Long> buffStatusCookieExpiry = new java.util.LinkedHashMap<>();
 }

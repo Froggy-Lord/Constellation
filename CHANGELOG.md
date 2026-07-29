@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.687 (2026-07-30) — God Potion and Cookie status
+
+- added authoritative tab-footer parsing for God Potion, Cookie Buff and active-effect count
+- added profile-safe timer persistence with compact and worded duration support
+- added independent warning/expiry chat, title and sound channels for both buffs
+- added a movable Buff Status HUD, manual recovery/testing commands and complete options
+
 ## 0.9.686 (2026-07-30) — Anvil Helper
 
 - added exact-screen Anvil state tracking for enchanted-book combinations

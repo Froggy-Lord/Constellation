@@ -943,6 +943,17 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Hover inputs, output and highlighted matches. Expected: contextual state, complete left/right enchant lists and match count appear only when configured.
 - [ ] Close and reopen the Anvil. Expected: parsed names, mismatch latch and match count clear rather than leaking from the prior menu.
 - [ ] Run `/anvilhelper`, `toggle` and every `/anvilhelper option <name> <on|off>` family. Expected: readable status and independent persistent controls.
+- [ ] Enable Auriga and `buffStatus`, then join Hypixel with tab-footer effects enabled. Expected: God Potion, Cookie Buff and active-effect count match the authoritative tab footer.
+- [ ] Test compact and worded durations if available. Expected: values such as `1d 2h 3m` and `1 day 2 hours` produce equivalent countdowns.
+- [ ] Switch SkyBlock profiles. Expected: saved God Potion and Cookie timers follow the active profile and never share an `unknown` profile entry.
+- [ ] Let the footer refresh for several minutes. Expected: countdowns remain stable without jumping forward and config writes are not performed every second.
+- [ ] Set `/buffstatus godwarning 1`, then `/buffstatus setgod 2`. Expected: the warning fires once when crossing one minute and expiry fires once at zero.
+- [ ] Set `/buffstatus cookiewarning 1`, then `/buffstatus setcookie 1` for a longer test. Expected: Cookie warning/expiry channels remain independent from God Potion channels.
+- [ ] Remove or expire a buff normally. Expected: a live timer crossing still alerts before the refreshed footer changes it to Inactive; stale expired data does not alert on login.
+- [ ] Toggle God, Cookie, effects, unknown, expired, profile and source-age rows independently. Expected: only the selected rows change.
+- [ ] Toggle warning/expiry chat, title and sound independently. Expected: each channel affects both configured buff alerts without sending server chat.
+- [ ] Run `/buffstatus clear`. Expected: only the active profile's saved buff timers clear and status becomes Unknown until the next footer refresh.
+- [ ] Move and resize Buff Status in `/cn hud`. Expected: its independent placement and scale persist.
 - [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
 - [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
 - [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.

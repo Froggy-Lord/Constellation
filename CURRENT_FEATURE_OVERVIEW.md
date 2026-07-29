@@ -63,7 +63,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips
 - Movable Anvil state/input/match HUD and `/anvilhelper` controls
-- Reforge and God Potion helpers remain scheduled; calculator functionality is already implemented in Lyra
+- Authoritative tab-footer God Potion, Cookie Buff and active-effect status
+- Profile-safe countdown persistence with independent warning/expiry chat, title and sound
+- Movable Buff Status HUD with optional unknown, expired, profile and source-age rows
+- Full `/buffstatus` recovery, testing, thresholds and option controls
+- Reforge guidance remains scheduled; calculator functionality is already implemented in Lyra
 
 ## Cassiopeia: chat
 

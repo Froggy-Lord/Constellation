@@ -14,4 +14,7 @@ public interface PlayerTabOverlayAccessor {
     static Comparator<PlayerInfo> constellation$ordering() {
         throw new UnsupportedOperationException();
     }
+
+    @Accessor("footer")
+    net.minecraft.network.chat.Component constellation$footer();
 }
