@@ -34,6 +34,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Profile-safe Attribute Shard goals with Direct, Bazaar, Fuse and Cycle source preservation
+- Bounded SkyShards/NoFrills clipboard import and a Minecraft Controls hovered-shard selection key
+- Exact catch, Lootshare, charm, Fusion, absorption and Hunting Box ownership accounting
+- Completion alerts, menu-aware source filters, sorting, remaining value and movable Shard Tracker HUD
+- Manual goal, obtained-count, row, price, filter and presentation recovery through `/shardtracker`
 - Exact Fusion Box, Shard Fusion and Confirm Fusion input/output parsing
 - Required/owned material counts, readiness, missing state and real output quantity
 - Separate input replacement cost and output liquidation value with net value

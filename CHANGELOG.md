@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.700 (2026-07-30) — Attribute Shard Tracker
+
+- added profile-safe shard goals with live catch, Lootshare, charm, Fusion and Hunting Box accounting
+- added bounded SkyShards and NoFrills recipe import plus hovered-shard selection from Minecraft Controls
+- added exact Hunting Box ownership synchronization, completion alerts and Direct/Fuse/Cycle filtering
+- added sorting, remaining Bazaar value, compact progress rows, movable HUD and full `/shardtracker` controls
+
 ## 0.9.699 (2026-07-30) — Fusion display
 
 - added exact Fusion Box, Shard Fusion and Confirm Fusion slot/lore parsing

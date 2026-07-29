@@ -2,6 +2,30 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Attribute Shard Tracker
+
+### Enable
+
+1. Enable Artemis, Shard Tracker and Shard Tracker HUD.
+2. Open Minecraft Controls and bind `Track Hovered Shard` if hovered selection is wanted.
+3. Use `/shardtracker import` with a SkyShards `NoFrillsRecipe` or `SkyHanniRecipe` export, or use `/shardtracker add <needed> <name>`.
+
+### Test
+
+- [ ] Import a real SkyShards tree. Expected: valid Direct, Bazaar, Fuse and Cycle rows appear; invalid, oversized or unrelated clipboard text is rejected without changing existing goals.
+- [ ] Import a new valid tree. Expected: the active profile's previous goals are replaced, while other SkyBlock profiles remain unchanged.
+- [ ] Hover an Attribute Shard in Hunting Box, Attribute Menu or a Fusion menu and press the configured control. Expected: the shard toggles in the tracker without clicking the slot.
+- [ ] Catch, Lootshare, charm or fuse a tracked shard. Expected: its obtained count increases by the exact chat quantity once.
+- [ ] Send a tracked shard to the Hunting Box. Expected: the absorption quantity is counted.
+- [ ] Open Hunting Box. Expected: every tracked shard found there synchronizes to the exact `Owned` lore count.
+- [ ] Cross a configured goal. Expected: enabled completion chat, title and sound channels fire once at the crossing.
+- [ ] Run `/shardtracker sort remaining`, `progress`, `value`, `name` and `import`. Expected: row ordering changes deterministically.
+- [ ] Enable Fusion and Direct filters, then enter and leave Fusion Box. Expected: Direct/Bazaar rows hide inside and Fuse/Cycle rows hide outside.
+- [ ] Enable value rows and switch `/shardtracker price purchase|sell`. Expected: remaining-value estimates use the chosen Bazaar side and unresolved prices say `partial`.
+- [ ] Close every inventory and continue playing. Expected: the movable HUD remains available because goals are persistent, but no menu is clicked or opened.
+- [ ] Switch SkyBlock profiles. Expected: goals and obtained counts change to that profile's independent set.
+- [ ] Use `/shardtracker obtained <amount> <name>`, remove and clear. Expected: manual recovery affects only the active profile.
+
 ## Hunting profit tracker
 
 ### Enable

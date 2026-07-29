@@ -123,4 +123,32 @@ public class ArtemisConfig extends BaseConfigGroup {
     public String fusionInputPriceSource = "PURCHASE";
     public String fusionOutputPriceSource = "SELL";
     public Map<String,Long> fusionPureReptiles = new HashMap<>();
+
+    // ported from NoFrills (GPL-3.0-only): features/hunting/ShardTracker.java
+    // ported from SkyHanni (LGPL-3.0-or-later): features/hunting/ShardTrackerDisplay.kt
+    public boolean shardTracker = true;
+    public boolean shardTrackerHud = true;
+    public boolean shardTrackerHideEmpty = false;
+    public boolean shardTrackerSyncBox = true;
+    public boolean shardTrackerCompletionChat = true;
+    public boolean shardTrackerCompletionTitle = false;
+    public boolean shardTrackerCompletionSound = true;
+    public boolean shardTrackerFilterFusionOutside = false;
+    public boolean shardTrackerFilterDirectInside = false;
+    public boolean shardTrackerShowSource = true;
+    public boolean shardTrackerShowRemaining = true;
+    public boolean shardTrackerShowValue = false;
+    public boolean shardTrackerShowTotal = true;
+    public boolean shardTrackerRemoveCompleted = false;
+    public int shardTrackerRows = 20;
+    public int shardTrackerIncompleteColor = 0xFFFFFF55;
+    public int shardTrackerCompleteColor = 0xFF55FF55;
+    public int shardTrackerMissingColor = 0xFFFF5555;
+    public String shardTrackerSort = "IMPORT";
+    public String shardTrackerPriceSource = "PURCHASE";
+    public Map<String,Long> shardTrackerNeeded = new HashMap<>();
+    public Map<String,Long> shardTrackerObtained = new HashMap<>();
+    public Map<String,String> shardTrackerNames = new HashMap<>();
+    public Map<String,String> shardTrackerSources = new HashMap<>();
+    public Map<String,Long> shardTrackerOrder = new HashMap<>();
 }
