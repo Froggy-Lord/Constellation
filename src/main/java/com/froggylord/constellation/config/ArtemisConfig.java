@@ -189,4 +189,26 @@ public class ArtemisConfig extends BaseConfigGroup {
     public boolean galateaMuteFusionAnyVolume = false;
     public int galateaFusionVolumeHundredths = 2000;
     public int galateaFusionVolumeToleranceHundredths = 0;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/HuntingBoxValue.kt
+    public boolean huntingBoxValue = true;
+    public boolean huntingBoxValueHud = true;
+    public boolean huntingBoxValueShowRows = true;
+    public boolean huntingBoxValueShowAmount = true;
+    public boolean huntingBoxValueShowUnit = false;
+    public boolean huntingBoxValueShowSell = true;
+    public boolean huntingBoxValueShowBuy = false;
+    public boolean huntingBoxValueShowTotalShards = true;
+    public boolean huntingBoxValueShowTotalSell = true;
+    public boolean huntingBoxValueShowTotalBuy = true;
+    public boolean huntingBoxValueHideZero = true;
+    public boolean huntingBoxValueTooltips = true;
+    public boolean huntingBoxValueHighlights = true;
+    public boolean huntingBoxValueHighlightThroughMissingPrice = false;
+    public int huntingBoxValueRows = 15;
+    public int huntingBoxValueHighlightMillions = 5;
+    public int huntingBoxValueNormalColor = 0x6655AAFF;
+    public int huntingBoxValueHighColor = 0x99FFAA00;
+    public int huntingBoxValueMissingColor = 0x66FF5555;
+    public String huntingBoxValueSort = "SELL_DESC";
 }

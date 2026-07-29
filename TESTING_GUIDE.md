@@ -2,6 +2,33 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Hunting Box value
+
+### Enable
+
+1. Enable Artemis, Hunting Box Value and its HUD.
+2. Keep per-row Instant Sell visible and Instant Buy hidden for the compact default, or enable both row sides for comparison.
+3. Set the high-value overlay threshold with `/huntingboxvalue threshold <millions>`.
+
+### Test
+
+- [ ] Open exact `Hunting Box`. Expected: only slots 9-44 excluding the two border columns are considered.
+- [ ] Compare every displayed amount to exact `Owned: <amount> Shard(s)` lore. Expected: counts match, including zero and comma-separated quantities.
+- [ ] Compare per-shard Instant Sell and Instant Buy values with Bazaar. Expected: amount times the correct price side is shown.
+- [ ] Compare Total Shards, Instant Sell and Instant Buy with a manual sum. Expected: all parsed rows contribute, even when the HUD row limit is lower.
+- [ ] Temporarily make Bazaar data unavailable. Expected: affected rows and totals say `partial`; no zero-price row is presented as a complete valuation.
+- [ ] Wait for asynchronous prices to load. Expected: the open HUD and tooltips refresh without reopening the menu.
+- [ ] Test Sell Desc, Buy Desc, Amount Desc and Name sorting. Expected: all rows reorder deterministically.
+- [ ] Change the row limit. Expected: only HUD detail rows are limited; totals, slot overlays and tooltips still cover every parsed shard.
+- [ ] Enable Unit, Sell and Buy row options independently. Expected: the selected fields appear without changing calculations.
+- [ ] Hover a shard. Expected: contextual tooltip rows show both total and unit values.
+- [ ] Enable slot highlights. Expected: every parsed shard receives the normal/high-value overlay based on liquidation total.
+- [ ] Test a missing-priced shard with Missing Highlight disabled and enabled. Expected: it uses the missing color by default or normal threshold behavior when explicitly allowed.
+- [ ] Disable Hide Zero. Expected: zero-owned shard entries appear without changing totals.
+- [ ] Open another inventory or close Hunting Box. Expected: the HUD, overlays and added tooltips disappear immediately.
+- [ ] Open a populated Hunting Box whose lore cannot be parsed. Expected: a visible parse warning appears instead of a false zero total.
+- [ ] Run `/huntingboxvalue status`, rows, threshold, sort and options. Expected: settings persist and no slot is clicked.
+
 ## Galatea sound controls
 
 ### Enable

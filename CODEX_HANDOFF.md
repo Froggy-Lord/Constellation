@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.699 Fusion display.
+Last updated: 2026-07-30 for version 0.9.704 Hunting Box value.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.699`.
+- Current artifact version: `0.9.704`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2059,3 +2059,15 @@ The default Galatea-only phantom filter recognizes Skyblocker's full `entity.pha
 Fusion-machine suppression matches only `entity.firework_rocket.blast` and `entity.firework_rocket.blast_far`. It defaults to SkyHanni's exact volume 20, represented as `2000` hundredths. The target, zero-to-ten volume tolerance and an explicit any-volume mode are configurable, so ordinary fireworks remain audible under defaults. `/galateasounds` exposes scope, all sound types, Fusion matching and local session counters.
 
 Version `0.9.703` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Live phantom sound paths and real Fusion-machine packet volumes remain explicit in-game checklist items.
+
+## July 30 version 0.9.704 Hunting Box value
+
+`ArtemisHuntingBoxValue.java`, `HuntingBoxValueHudWidget.java`, `ArtemisConfig.java`, `ArtemisHunting.java` and the shared inventory render/tooltip hook port the live-enabled SkyHanni LGPL `features/inventory/attribute/HuntingBoxValue.kt` and its Attribute Shards configuration.
+
+Exact `Hunting Box` title gating and SkyHanni's slots 9-44 excluding both border columns prevent unrelated menu items from entering the calculation. Each shard requires exact `Owned: <amount> Shard(s)` lore. Names resolve through Artemis's authoritative Bazaar shard mapping. Instant-sell liquidation and instant-buy replacement sides are calculated separately; unresolved prices warm the shared provider and make only their side and aggregate visibly partial.
+
+The movable menu-only HUD supports per-shard amount, unit, sell and buy fields, total shard count, both total values and one-to-100 detail rows. Sell, buy, amount and name sorting are deterministic. The row limit never truncates totals, slot overlays or tooltips. Contextual tooltips include both unit and aggregate sides. Optional normal/high-value/missing slot overlays use a configurable zero-to-one-billion coin liquidation threshold and independent ARGB colors.
+
+`/huntingboxvalue` exposes status, row limit, threshold, sorting and all presentation/overlay controls. A populated valid region with no parseable shard lore shows a warning rather than a false complete zero. The feature is read-only and never clicks or opens a menu.
+
+Version `0.9.704` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report or fatal-error signatures. Source-credit, forbidden-source, symbol and whitespace audits pass. Real Hunting Box layout/lore, current Bazaar IDs and per-side prices remain explicit in-game checklist items.

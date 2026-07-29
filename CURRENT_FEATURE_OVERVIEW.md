@@ -34,6 +34,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Exact Hunting Box shard-region and `Owned` quantity parsing with both Bazaar value sides
+- Per-shard rows, complete totals, partial-price state, sorting and movable Hunting Box Value HUD
+- High-value slot overlays, contextual unit/total tooltips and `/huntingboxvalue` controls
 - Galatea-scoped phantom and exact Fusion-machine firework sound suppression
 - Independent ambient, bite, death, flap, hurt and swoop controls with future phantom-path coverage
 - Fusion volume target/tolerance, any-volume mode, session counters and `/galateasounds` controls

@@ -22,6 +22,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisFusionKeybinds.init(cfg);
         ArtemisHuntaxeLock.init(cfg);
         ArtemisGalateaSounds.init(cfg);
+        ArtemisHuntingBoxValue.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -34,6 +35,8 @@ public final class ArtemisHunting extends BaseConstellation {
             HudPosition.of(78,34),()->cfg.enabled&&cfg.fusionDisplay));
         hud.register(new com.froggylord.constellation.hud.ShardTrackerHudWidget(
             HudPosition.of(78,46),()->cfg.enabled&&cfg.shardTracker&&cfg.shardTrackerHud));
+        hud.register(new com.froggylord.constellation.hud.HuntingBoxValueHudWidget(
+            HudPosition.of(78,58),()->cfg.enabled&&cfg.huntingBoxValue&&cfg.huntingBoxValueHud));
     }
     @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         ArtemisHuntingProfit.registerCommands(dispatcher);
@@ -44,5 +47,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisFusionKeybinds.registerCommands(dispatcher);
         ArtemisHuntaxeLock.registerCommands(dispatcher);
         ArtemisGalateaSounds.registerCommands(dispatcher);
+        ArtemisHuntingBoxValue.registerCommands(dispatcher);
     }
 }

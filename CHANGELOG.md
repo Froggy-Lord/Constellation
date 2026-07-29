@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.704 (2026-07-30) — Hunting Box value
+
+- added exact Hunting Box shard-region and `Owned` lore parsing
+- added per-shard and total instant-sell/instant-buy valuation with partial-price handling
+- added value, amount and name sorting plus configurable row, unit and total presentation
+- added high-value slot overlays, contextual tooltips, movable HUD and full `/huntingboxvalue` controls
+
 ## 0.9.703 (2026-07-30) — Galatea sound controls
 
 - added Galatea-scoped muting for all six known phantom sounds and future phantom sound paths
