@@ -104,6 +104,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks
 - Sea-lantern-validated Dwarven ore-carpet highlights with bounded cache and scan controls
 - Crystal Hollows treasure-chest outlines, particle-derived lock spots and per-chest lock progress
+- Exact powder-chest lifetimes with urgency/static highlights, world timers and oldest/nearest route chains
+- Movable powder-chest count/oldest/nearest HUD, Great Explorer gating and independent sound muting
 - Pickobulus exposed-block outlines and location-specific block, ore, powder and Mineshaft-pity forecasts
 - Pickobulus held-ability/cooldown state with independently movable and configurable HUD rows
 - Completed-commission slot highlights in the exact Commissions menu

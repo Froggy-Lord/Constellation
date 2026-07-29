@@ -138,6 +138,27 @@ public class AquilaConfig extends BaseConfigGroup {
     public int treasureChestAssociationRange = 10;
     public int treasureChestParticleMillis = 250;
     public int treasureChestColor = 0x800000FF;
+    public boolean powderChestTimer = true;
+    public boolean powderChestTimerHud = true;
+    public boolean powderChestOnlyMaxGreatExplorer = false;
+    public boolean powderChestHighlight = true;
+    public boolean powderChestStaticColor = false;
+    public boolean powderChestDrawTimer = true;
+    public boolean powderChestDrawLine = true;
+    public boolean powderChestThroughWalls = true;
+    public boolean powderChestMuteDiscover = false;
+    public boolean powderChestMuteOpen = false;
+    public boolean powderChestHudShowCount = true;
+    public boolean powderChestHudShowOldest = true;
+    public boolean powderChestHudShowNearest = false;
+    public int powderChestDurationSeconds = 60;
+    public int powderChestLineCount = 5;
+    public int powderChestGreatExplorerLevel = -1;
+    public int powderChestStaticArgb = 0xF555FF55;
+    public int powderChestGoodArgb = 0xD955FF55;
+    public int powderChestCautionArgb = 0xD9FFAA00;
+    public int powderChestDangerArgb = 0xD9FF5555;
+    public String powderChestLineMode = "OLDEST";
 
     public boolean pickobulusSuite = true;
     public boolean pickobulusHud = true;

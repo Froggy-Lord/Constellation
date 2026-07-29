@@ -14,8 +14,10 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
@@ -30,9 +32,16 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/dwarven/CarpetHighlighter.java
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/dwarven/CrystalsChestHighlighter.java
+// ported from SkyHanni (LGPL-3.0-or-later): features/mining/powdertracker/PowderChestTimer.kt
+// ported from SkyHanni (LGPL-3.0-or-later): config/features/mining/nucleus/PowderChestTimerConfig.kt
 public final class AquilaMiningHighlights {
     private static final String CHEST_SPAWN = "You uncovered a treasure chest!";
     private static final Set<BlockPos> CARPETS = new HashSet<>();
@@ -40,12 +49,15 @@ public final class AquilaMiningHighlights {
     private static final Map<Vec3, Long> PARTICLES = new HashMap<>();
     private static final Map<BlockPos, Integer> CURRENT_LOCKS = new HashMap<>();
     private static final Map<BlockPos, Integer> NEEDED_LOCKS = new HashMap<>();
+    private static final Map<BlockPos, Long> MINED_BLOCKS = new HashMap<>();
+    private static final Pattern GREAT_EXPLORER = Pattern.compile("^(?:(?:Level\\s*)?(?<current>\\d+)\\s*/\\s*20|Level\\s*(?<level>\\d+)|MAX(?:ED)?)$",Pattern.CASE_INSENSITIVE);
     private static AquilaConfig cfg;
     private static boolean initialized;
     private static int waitingForChest;
     private static long chestMessageAt;
     private static Object levelIdentity;
     private static int carpetTick;
+    private static long lastDiscoverySound;
 
     private AquilaMiningHighlights() {}
 
@@ -78,6 +90,7 @@ public final class AquilaMiningHighlights {
     private static boolean hollows() {
         return active() && ConstellationClient.loc().area() == SkyblockArea.CRYSTAL_HOLLOWS;
     }
+    private static boolean chestTracking(){return hollows()&&(cfg.treasureChestEsp||cfg.powderChestTimer);}
 
     private static void tick() {
         Minecraft mc = Minecraft.getInstance();
@@ -97,12 +110,14 @@ public final class AquilaMiningHighlights {
             clearChests();
             return;
         }
+        learnGreatExplorer(mc);
         long now = System.currentTimeMillis();
         if (waitingForChest > 0 && now - chestMessageAt > Math.clamp(cfg.treasureChestAssociationSeconds, 1, 15) * 1000L)
             waitingForChest = 0;
         PARTICLES.entrySet().removeIf(entry -> now - entry.getValue() > Math.clamp(cfg.treasureChestParticleMillis, 50, 1000));
+        MINED_BLOCKS.entrySet().removeIf(entry -> now - entry.getValue() > 5000);
         CHESTS.entrySet().removeIf(entry -> {
-            boolean gone = now - entry.getValue() > 600_000L || mc.level == null || !mc.level.getBlockState(entry.getKey()).is(Blocks.CHEST);
+            boolean gone = now >= entry.getValue() || mc.level == null || !mc.level.getBlockState(entry.getKey()).is(Blocks.CHEST);
             if (gone) clearProgress(entry.getKey());
             return gone;
         });
@@ -123,21 +138,28 @@ public final class AquilaMiningHighlights {
     }
 
     private static void onChat(String message) {
-        if (!hollows() || !cfg.treasureChestEsp || !message.equals(CHEST_SPAWN)) return;
+        if (!chestTracking() || !message.equals(CHEST_SPAWN)) return;
         waitingForChest++;
         chestMessageAt = System.currentTimeMillis();
     }
 
     private static void onBlock(BlockStateUpdate update) {
         Minecraft mc = Minecraft.getInstance();
-        if (!hollows() || !cfg.treasureChestEsp || mc.player == null) return;
+        if (!chestTracking() || mc.player == null) return;
         BlockPos pos = update.pos().immutable();
-        if (waitingForChest > 0 && update.newState().is(Blocks.CHEST)
+        long now=System.currentTimeMillis();
+        if(update.oldState().is(Blocks.STONE)&&update.newState().isAir())MINED_BLOCKS.put(pos,now);
+        boolean newChest=!update.oldState().is(Blocks.CHEST)&&update.newState().is(Blocks.CHEST);
+        boolean mined=MINED_BLOCKS.remove(pos)!=null;
+        boolean nearbyPlayer=mc.level.players().stream().anyMatch(player->player!=mc.player&&player.distanceToSqr(Vec3.atCenterOf(pos))<625);
+        boolean possibleFalsePositive=nearbyPlayer||!mined&&update.oldState().isAir();
+        boolean licensedSignal=!possibleFalsePositive||now-lastDiscoverySound<=200;
+        if ((waitingForChest > 0 || licensedSignal) && newChest
             && pos.distToCenterSqr(mc.player.position()) <= Math.pow(Math.clamp(cfg.treasureChestAssociationRange, 3, 20), 2)) {
-            CHESTS.put(pos, System.currentTimeMillis());
+            CHESTS.put(pos, now + Math.clamp(cfg.powderChestDurationSeconds, 30, 90) * 1000L);
             CURRENT_LOCKS.put(pos, 0);
-            waitingForChest--;
-        } else if (update.newState().isAir() && CHESTS.remove(pos) != null) clearProgress(pos);
+            if(waitingForChest>0)waitingForChest--;
+        } else if (!update.newState().is(Blocks.CHEST) && CHESTS.remove(pos) != null) clearProgress(pos);
     }
 
     private static void onParticle(ClientboundLevelParticlesPacket packet) {
@@ -147,9 +169,11 @@ public final class AquilaMiningHighlights {
     }
 
     private static void onSound(ClientboundSoundPacket packet) {
-        if (!hollows() || !cfg.treasureChestEsp || CHESTS.isEmpty()) return;
-        BlockPos target = targetedChest();
         var id = packet.getSound().value().location();
+        if(!chestTracking())return;
+        if(id.equals(SoundEvents.PLAYER_LEVELUP.location())&&packet.getPitch()==1f&&packet.getVolume()==1f)lastDiscoverySound=System.currentTimeMillis();
+        if(CHESTS.isEmpty())return;
+        BlockPos target = targetedChest();
         if (id.equals(SoundEvents.EXPERIENCE_ORB_PICKUP.location()) && packet.getPitch() == 1f && target != null) {
             CURRENT_LOCKS.merge(target, 1, Integer::sum);
             PARTICLES.clear();
@@ -160,7 +184,16 @@ public final class AquilaMiningHighlights {
             NEEDED_LOCKS.put(target, Math.min(CURRENT_LOCKS.getOrDefault(target, 0), 5));
             CURRENT_LOCKS.put(target, 0);
             PARTICLES.clear();
+            CHESTS.remove(target);
+            clearProgress(target);
         }
+    }
+
+    public static boolean shouldCancel(ClientboundSoundPacket packet){
+        if(!hollows()||cfg==null||!cfg.powderChestTimer)return false;
+        var id=packet.getSound().value().location();
+        return cfg.powderChestMuteDiscover&&id.equals(SoundEvents.PLAYER_LEVELUP.location())&&packet.getPitch()==1f&&packet.getVolume()==1f
+            ||cfg.powderChestMuteOpen&&id.equals(SoundEvents.CHEST_OPEN.location())&&packet.getPitch()==1f&&packet.getVolume()==1f;
     }
 
     private static BlockPos targetedChest() {
@@ -175,12 +208,17 @@ public final class AquilaMiningHighlights {
             for (BlockPos pos : CARPETS)
                 ctx.box(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + .0625, pos.getZ() + 1),
                     cfg.dwarvenCarpetColor, cfg.dwarvenCarpetThroughWalls);
-        if (!hollows() || !cfg.treasureChestEsp) return;
+        if (!chestTracking()) return;
+        long now=System.currentTimeMillis();
         for (BlockPos pos : CHESTS.keySet()) {
             Vec3 center = Vec3.atCenterOf(pos).subtract(0, .0625, 0);
-            if (cfg.treasureChestOutline)
+            if (cfg.treasureChestEsp&&cfg.treasureChestOutline)
                 ctx.outline(AABB.ofSize(center, .885, .885, .885), cfg.treasureChestColor, cfg.treasureChestThroughWalls, 3);
+            if(timerEnabled()&&cfg.powderChestHighlight)ctx.box(AABB.ofSize(center,.94,.94,.94),timerColor(CHESTS.get(pos)-now),cfg.powderChestThroughWalls);
+            if(timerEnabled()&&cfg.powderChestDrawTimer){double y=playerBelow(pos)?1.25:-.25;ctx.label(Vec3.atLowerCornerOf(pos).add(.5,y,.5),formatRemaining(CHESTS.get(pos)-now),timerColor(CHESTS.get(pos)-now),cfg.powderChestThroughWalls);}
         }
+        drawTimerLines(ctx);
+        if(!cfg.treasureChestEsp)return;
         BlockPos target = targetedChest();
         if (target == null) return;
         Vec3 center = Vec3.atCenterOf(target);
@@ -190,6 +228,34 @@ public final class AquilaMiningHighlights {
             int current = Math.min(CURRENT_LOCKS.getOrDefault(target, 0), needed);
             ctx.label(center.add(0, .75, 0), current + "/" + needed, cfg.treasureChestColor, true);
         }
+    }
+
+    private static void drawTimerLines(WorldRenderer.Ctx ctx){
+        if(!timerEnabled()||!cfg.powderChestDrawLine||CHESTS.isEmpty())return;Minecraft mc=Minecraft.getInstance();if(mc.player==null)return;
+        List<Map.Entry<BlockPos,Long>> entries=new ArrayList<>(CHESTS.entrySet());
+        Comparator<Map.Entry<BlockPos,Long>> comparator=cfg.powderChestLineMode.equalsIgnoreCase("NEAREST")
+            ?Comparator.comparingDouble(e->e.getKey().distToCenterSqr(mc.player.position())):Comparator.comparingLong(Map.Entry::getValue);
+        entries.sort(comparator);int count=Math.min(entries.size(),Math.clamp(cfg.powderChestLineCount,1,30));Vec3 previous=mc.player.getEyePosition();
+        for(int i=0;i<count;i++){var entry=entries.get(i);Vec3 next=Vec3.atCenterOf(entry.getKey());ctx.line(previous,next,timerColor(entry.getValue()-System.currentTimeMillis()),cfg.powderChestThroughWalls);previous=next;}
+    }
+
+    public record PowderState(int count,long oldestMillis,double nearestDistance,long nearestMillis){}
+    public static PowderState powderState(){
+        if(!timerEnabled()||CHESTS.isEmpty())return null;Minecraft mc=Minecraft.getInstance();if(mc.player==null)return null;long now=System.currentTimeMillis();
+        long oldest=CHESTS.values().stream().mapToLong(v->v).min().orElse(now)-now;var nearest=CHESTS.entrySet().stream().min(Comparator.comparingDouble(e->e.getKey().distToCenterSqr(mc.player.position()))).orElse(null);
+        return nearest==null?null:new PowderState(CHESTS.size(),Math.max(0,oldest),Math.sqrt(nearest.getKey().distToCenterSqr(mc.player.position())),Math.max(0,nearest.getValue()-now));
+    }
+    public static boolean powderVisible(){return powderState()!=null;}
+    public static AquilaConfig config(){return cfg;}
+    public static String formatRemaining(long millis){long tenths=Math.max(0,(millis+99)/100);return String.format(Locale.ROOT,"%d.%ds",tenths/10,tenths%10);}
+    public static int powderColor(long millis){return timerColor(millis);}
+    private static int timerColor(long millis){if(cfg.powderChestStaticColor)return cfg.powderChestStaticArgb;double ratio=Math.clamp(millis/(Math.clamp(cfg.powderChestDurationSeconds,30,90)*1000.0),0,1);if(ratio>.5)return blend(cfg.powderChestCautionArgb,cfg.powderChestGoodArgb,(ratio-.5)*2);return blend(cfg.powderChestDangerArgb,cfg.powderChestCautionArgb,ratio*2);}
+    private static int blend(int a,int b,double amount){amount=Math.clamp(amount,0,1);int aa=(int)(((a>>>24)&255)*(1-amount)+((b>>>24)&255)*amount),r=(int)(((a>>>16)&255)*(1-amount)+((b>>>16)&255)*amount),g=(int)(((a>>>8)&255)*(1-amount)+((b>>>8)&255)*amount),bl=(int)((a&255)*(1-amount)+(b&255)*amount);return aa<<24|r<<16|g<<8|bl;}
+    private static boolean playerBelow(BlockPos pos){Minecraft mc=Minecraft.getInstance();return mc.player!=null&&pos.getY()<=mc.player.getY();}
+    private static boolean timerEnabled(){return hollows()&&cfg.powderChestTimer&&(!cfg.powderChestOnlyMaxGreatExplorer||cfg.powderChestGreatExplorerLevel>=20);}
+    private static void learnGreatExplorer(Minecraft mc){
+        if(!(mc.gui.screen() instanceof AbstractContainerScreen<?> screen)||!clean(screen.getTitle().getString()).equals("Heart of the Mountain"))return;
+        for(ItemStack stack:screen.getMenu().getItems()){if(stack.isEmpty()||!clean(stack.getHoverName().getString()).equals("Great Explorer"))continue;for(Component line:stack.getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY,mc.player,net.minecraft.world.item.TooltipFlag.NORMAL)){Matcher matcher=GREAT_EXPLORER.matcher(clean(line.getString()));if(!matcher.find())continue;int level=matcher.group().toUpperCase(Locale.ROOT).startsWith("MAX")?20:Integer.parseInt(matcher.group("current")!=null?matcher.group("current"):matcher.group("level"));if(level!=cfg.powderChestGreatExplorerLevel){cfg.powderChestGreatExplorerLevel=Math.clamp(level,0,20);save();}return;}}
     }
 
     private static void drawLockSpot(WorldRenderer.Ctx ctx, Vec3 chest) {
@@ -248,6 +314,18 @@ public final class AquilaMiningHighlights {
                         save();
                         return status();
                     })))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("timer")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("seconds", IntegerArgumentType.integer(30, 90))
+                    .executes(context -> {cfg.powderChestDurationSeconds=IntegerArgumentType.getInteger(context,"seconds");save();return status();})))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("linecount")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("count", IntegerArgumentType.integer(1, 30))
+                    .executes(context -> {cfg.powderChestLineCount=IntegerArgumentType.getInteger(context,"count");save();return status();})))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("linemode")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("mode", StringArgumentType.word())
+                    .executes(context -> lineMode(StringArgumentType.getString(context,"mode")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("explorer")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("level", IntegerArgumentType.integer(0, 20))
+                    .executes(context -> {cfg.powderChestGreatExplorerLevel=IntegerArgumentType.getInteger(context,"level");save();return status();})))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("color")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("target", StringArgumentType.word())
                     .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
@@ -260,7 +338,7 @@ public final class AquilaMiningHighlights {
 
     private static int status() {
         local("Carpets " + on(cfg.dwarvenCarpetHighlighter) + " with " + CARPETS.size() + " cached; chests "
-            + on(cfg.treasureChestEsp) + " with " + CHESTS.size() + " active.");
+            + on(cfg.treasureChestEsp) + " with " + CHESTS.size() + " active; timer "+on(cfg.powderChestTimer)+", lines "+cfg.powderChestLineMode.toLowerCase(Locale.ROOT)+".");
         return 1;
     }
 
@@ -279,13 +357,23 @@ public final class AquilaMiningHighlights {
             case "lockspot" -> cfg.treasureChestLockSpot = value;
             case "progress" -> cfg.treasureChestLockProgress = value;
             case "chestwalls" -> cfg.treasureChestThroughWalls = value;
+            case "timer" -> cfg.powderChestTimer=value;
+            case "timerhud" -> cfg.powderChestTimerHud=value;
+            case "timerhighlight" -> cfg.powderChestHighlight=value;
+            case "timerlabel" -> cfg.powderChestDrawTimer=value;
+            case "timerline" -> {cfg.powderChestDrawLine=value;if(value&&cfg.powderChestLineMode.equalsIgnoreCase("NONE"))cfg.powderChestLineMode="OLDEST";}
+            case "timerwalls" -> cfg.powderChestThroughWalls=value;
+            case "staticcolor" -> cfg.powderChestStaticColor=value;
+            case "maxexplorer" -> cfg.powderChestOnlyMaxGreatExplorer=value;
+            case "mutediscover" -> cfg.powderChestMuteDiscover=value;
+            case "muteopen" -> cfg.powderChestMuteOpen=value;
             default -> {
-                local("Option must be enabled, carpets, carpetwalls, chests, outline, lockspot, progress, or chestwalls.");
+                local("Unknown option. Use enabled, carpets, carpetwalls, chests, outline, lockspot, progress, chestwalls, timer, timerhud, timerhighlight, timerlabel, timerline, timerwalls, staticcolor, maxexplorer, mutediscover, or muteopen.");
                 return 0;
             }
         }
         if (!cfg.dwarvenCarpetHighlighter) CARPETS.clear();
-        if (!cfg.treasureChestEsp) clearChests();
+        if (!cfg.treasureChestEsp&&!cfg.powderChestTimer) clearChests();
         save();
         return status();
     }
@@ -302,8 +390,12 @@ public final class AquilaMiningHighlights {
         }
         if (target.equalsIgnoreCase("carpet")) cfg.dwarvenCarpetColor = value;
         else if (target.equalsIgnoreCase("chest")) cfg.treasureChestColor = value;
+        else if(target.equalsIgnoreCase("timer"))cfg.powderChestStaticArgb=value;
+        else if(target.equalsIgnoreCase("good"))cfg.powderChestGoodArgb=value;
+        else if(target.equalsIgnoreCase("caution"))cfg.powderChestCautionArgb=value;
+        else if(target.equalsIgnoreCase("danger"))cfg.powderChestDangerArgb=value;
         else {
-            local("Color target must be carpet or chest.");
+            local("Color target must be carpet, chest, timer, good, caution, or danger.");
             return 0;
         }
         save();
@@ -322,6 +414,8 @@ public final class AquilaMiningHighlights {
         PARTICLES.clear();
         CURRENT_LOCKS.clear();
         NEEDED_LOCKS.clear();
+        MINED_BLOCKS.clear();
+        lastDiscoverySound=0;
     }
 
     private static void reset() {
@@ -355,4 +449,5 @@ public final class AquilaMiningHighlights {
     private static String on(boolean value) {
         return value ? "on" : "off";
     }
+    private static int lineMode(String raw){String value=raw.toUpperCase(Locale.ROOT);if(!value.equals("OLDEST")&&!value.equals("NEAREST")&&!value.equals("NONE")){local("Line mode must be oldest, nearest, or none.");return 0;}cfg.powderChestLineMode=value;cfg.powderChestDrawLine=!value.equals("NONE");save();return status();}
 }

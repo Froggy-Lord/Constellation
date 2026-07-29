@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.722 (2026-07-30) — Powder Chest Timer
+
+- added authoritative 60-second Crystal Hollows powder-chest lifetimes and abandoned-state cleanup
+- added dynamic urgency or static highlights, world timers and oldest/nearest chained route lines
+- added a movable active-count/oldest/nearest HUD plus optional discovery and opening sound muting
+- added exact Great Explorer menu learning, nearby-player false-positive rejection and complete timer controls
+
 ## 0.9.721 (2026-07-30) — Fossil Excavator Profit Tracker
 
 - added exact excavation completion framing with every live observed reward type and unresolved-price safety

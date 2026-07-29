@@ -95,6 +95,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.fossilHelper && c.fossilSolverSuite && c.fossilSolverHud));
         hud.register(new com.froggylord.constellation.hud.FossilProfitHudWidget(HudPosition.of(78, 152),
             () -> c.enabled && c.fossilHelper && c.fossilProfitSuite && c.fossilProfitHud));
+        hud.register(new com.froggylord.constellation.hud.PowderChestHudWidget(HudPosition.of(78, 166),
+            () -> c.enabled && c.miningHighlightsSuite && c.powderChestTimer && c.powderChestTimerHud));
     }
 
     @Override

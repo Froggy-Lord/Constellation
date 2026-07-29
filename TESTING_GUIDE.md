@@ -1210,6 +1210,20 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 8. Switch between session and profile persistence, change profiles and reconnect. Session data must reset only when requested; profile data must remain isolated and survive restart.
 9. Use `/fossilprofit reset` and `/fossilprofit clearprofile` in their matching modes. Only the current tracker view or current profile may be cleared.
 10. Move and resize Fossil Profit in `/cn hud`. With research-center-only visibility enabled, it should appear in the excavator menu, in the recent window after a result, or at the Research Center, and nowhere unrelated.
+
+### Crystal Hollows powder-chest timer
+
+1. Enable Aquila, Mining Highlights, Treasure Chest ESP and Powder Chest Timer, then uncover a chest in the Crystal Hollows.
+2. Confirm the chest appears once with approximately 60 seconds remaining. Its timer must count down smoothly and the HUD count must agree.
+3. Stand near another player uncovering a chest. Their ordinary block update must not become yours unless the exact level-up discovery sound arrives inside the licensed 200-millisecond window.
+4. Wait for a tracked chest to expire, break, disappear or open. Every highlight, timer, route line, lock state and HUD count must clear.
+5. Switch `/mininghighlights linemode oldest`, `nearest` and `none`, then change `linecount`. Oldest must prioritize expiry; nearest must prioritize distance; none must draw no route.
+6. Toggle dynamic/static color and set timer, good, caution and danger ARGB colors. Dynamic chests must progress green through amber to red without changing the lock highlight color.
+7. Toggle chest outline/lock ESP off while leaving Powder Chest Timer on. Timer tracking, labels, highlights and HUD must continue independently.
+8. Toggle timer highlight, label, route, through-wall and HUD count/oldest/nearest rows independently.
+9. Open Heart of the Mountain and inspect Great Explorer. `/mininghighlights` should learn level 0-20; max-only mode must fail closed until level 20 is known.
+10. Toggle discovery and opening sound muting separately. Only exact unit-volume, pitch-one level-up or chest-open sounds in Crystal Hollows may be affected.
+11. Move and resize Powder Chests in `/cn hud`. It must be editable during its visibility grace, retain its own placement and disappear outside Crystal Hollows.
 7. Enable `Fossil Protect Wrong Clicks`; a dirt tile other than the recommendation must be blocked. The recommendation must remain clickable, and holding either Control key must bypass protection when that option is enabled.
 8. Use `/fossilsolver option`, `/fossilsolver color best|probability|impossible AARRGGBB`, and `/fossilsolver reset` to verify every saved display, tooltip, protection, HUD and Muncher control.
 9. Trigger each Fossil Muncher riddle. The exact answer should appear locally; original replacement must follow `Fossil Muncher Replace Riddle`, and unknown text must pass through unchanged.
