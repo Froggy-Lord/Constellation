@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.698 Lasso HUD.
+Last updated: 2026-07-30 for version 0.9.699 Fusion display.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.698`.
+- Current artifact version: `0.9.699`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2007,3 +2007,13 @@ The movable HUD supports a progress bar, remaining percentage, cleaned target la
 State requires the held item to be a real Lasso, the endpoint to be alive and leashed to the local player, and an exact progress or REEL armor stand near that endpoint. Losing any condition clears the HUD and ready latch. `/lassohud` exposes status, reset, target search range, threshold, repeat timing and presentation switches. No interaction is generated.
 
 Version `0.9.698` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live leash/component composition remains an explicit in-game checklist item.
+
+## July 30 version 0.9.699 Fusion display
+
+`ArtemisFusion.java`, `FusionHudWidget.java`, `ArtemisConfig.java`, `ArtemisHunting.java` and the shared shard product resolver in `ArtemisHuntingProfit.java` implement the live-enabled Fusion display. Exact input slots 12/14, output slot 31, `Required to fuse` lore and three Fusion menu titles port SkyHanni LGPL `features/inventory/attribute/FusionData.kt` and `AttributeShardsData.kt`. Result and Pure Reptile lifecycle port SkyHanni LGPL `features/hunting/FusionDisplay.kt`.
+
+The HUD shows independent input names, owned/required quantities, output name and actual stack amount, material readiness, input replacement cost, output liquidation value and net value. Input and output use separately configurable purchase/sell sources. Every shard resolves through the authoritative Bazaar-name mapping introduced for the Hunting Profit Tracker; unresolved prices remain visibly partial and warm the shared provider.
+
+Exact Fusion result chat preserves the last output/quantity for an otherwise empty Fusion Box. It never renders outside Fusion Box, Shard Fusion or Confirm Fusion. Pure Reptiles are session-counted by default or optionally persisted per SkyBlock profile. Readiness can alert once through independent local chat, title and sound channels. `/fusionhud` exposes reset, profile count clearing, two-sided price sources and all rows/alerts. No click is generated.
+
+Version `0.9.699` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live Fusion menu lore and quantities remain explicit in-game checklist items.

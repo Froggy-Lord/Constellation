@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.699 (2026-07-30) — Fusion display
+
+- added exact Fusion Box, Shard Fusion and Confirm Fusion slot/lore parsing
+- added input ownership/requirements, output quantity, affordability and missing-material guidance
+- added Bazaar input cost, output liquidation value and net value with independent price sources
+- added Fusion result/Pure Reptile tracking, configurable alerts, movable HUD and full `/fusionhud` controls
+
 ## 0.9.698 (2026-07-30) — Lasso HUD
 
 - added player-owned leash and exact armor-stand progress/REEL detection

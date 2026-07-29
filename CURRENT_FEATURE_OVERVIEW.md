@@ -34,6 +34,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Exact Fusion Box, Shard Fusion and Confirm Fusion input/output parsing
+- Required/owned material counts, readiness, missing state and real output quantity
+- Separate input replacement cost and output liquidation value with net value
+- Fusion result and optional profile-persistent Pure Reptile tracking
+- Movable Fusion HUD, configurable readiness alerts and `/fusionhud` controls
 - Player-owned Lasso endpoint detection with exact progress-bar and REEL state
 - Rarity-aware Abysmal, Vinerip, Entangler and Everstretch progress offsets
 - Movable compact/full Lasso HUD with progress, percentage, target, tool and distance

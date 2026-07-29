@@ -97,4 +97,30 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int lassoReadyColor = 0xFF55FF55;
     public int lassoProgressColor = 0xFFFFFF55;
     public int lassoTargetColor = 0xFF55FFFF;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/hunting/FusionDisplay.kt
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/FusionData.kt
+    public boolean fusionDisplay = true;
+    public boolean fusionShowInputs = true;
+    public boolean fusionShowOutput = true;
+    public boolean fusionShowOwned = true;
+    public boolean fusionShowRequired = true;
+    public boolean fusionShowInputCost = true;
+    public boolean fusionShowOutputValue = true;
+    public boolean fusionShowNetValue = true;
+    public boolean fusionShowPureReptiles = true;
+    public boolean fusionShowLastResult = true;
+    public boolean fusionWarnMissing = true;
+    public boolean fusionReadyAlert = false;
+    public boolean fusionReadyChat = true;
+    public boolean fusionReadyTitle = false;
+    public boolean fusionReadySound = true;
+    public boolean fusionPersistentReptiles = false;
+    public int fusionReadyColor = 0xFF55FF55;
+    public int fusionMissingColor = 0xFFFF5555;
+    public int fusionInputColor = 0xFFFFFF55;
+    public int fusionOutputColor = 0xFF55FFFF;
+    public String fusionInputPriceSource = "PURCHASE";
+    public String fusionOutputPriceSource = "SELL";
+    public Map<String,Long> fusionPureReptiles = new HashMap<>();
 }

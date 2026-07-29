@@ -67,6 +67,29 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 - [ ] Kill or release the target, change worlds or leave the configured scope. Expected: the HUD and ready latch clear.
 - [ ] Observe normal operation. Expected: Constellation never reels, clicks, aims or sends an interaction.
 
+## Fusion display
+
+### Enable
+
+1. Enable Artemis and Fusion Display.
+2. Enable Inputs, Output, Owned, Required, Input Cost, Output Value and Net Value.
+3. Keep input pricing on Purchase and output pricing on Sell for practical profit estimates.
+
+### Test
+
+- [ ] Open Fusion Box, Shard Fusion and Confirm Fusion. Expected: the HUD appears only inside these exact menus.
+- [ ] Select two valid input shards. Expected: slots 12 and 14 show their exact names and `Required to fuse` quantities.
+- [ ] Compare each input’s `Owned` lore. Expected: readiness is green only when both owned quantities meet their separate requirements.
+- [ ] Inspect slot 31. Expected: output name and actual stack quantity match the menu.
+- [ ] Compare input cost to Bazaar purchase prices and output value to Bazaar sell prices. Expected: Net equals output value minus both complete input costs.
+- [ ] Make one price unavailable. Expected: affected values show `partial` rather than inventing a zero-price profit.
+- [ ] Switch `/fusionhud price input sell` and `/fusionhud price output purchase`. Expected: only the selected side’s valuation changes.
+- [ ] Complete a Fusion. Expected: the exact result and amount are remembered when returning to an otherwise empty Fusion Box.
+- [ ] Trigger `PURE REPTILE`. Expected: its count increases once; enabling persistent mode isolates totals by SkyBlock profile.
+- [ ] Enable readiness alerts. Expected: selected chat/title/sound channels fire once when both materials become sufficient.
+- [ ] Close the Fusion GUI. Expected: the HUD disappears immediately and never persists over normal gameplay.
+- [ ] Observe normal operation. Expected: Constellation never selects, confirms, repeats or clicks a Fusion.
+
 ## Unique gifting
 
 ### Enable

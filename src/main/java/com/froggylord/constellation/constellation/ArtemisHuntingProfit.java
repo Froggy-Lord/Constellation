@@ -85,7 +85,7 @@ public final class ArtemisHuntingProfit {
 
     private static void gain(String rawName,int amount,boolean mob){
         if(amount<=0)return;
-        String name=cleanName(rawName),id=shardId(name),key=profile+"|"+id;
+        String name=cleanName(rawName),id=shardMarketId(name),key=profile+"|"+id;
         long now=System.currentTimeMillis();
         Gain gain=SESSION.get(id);
         if(gain==null)SESSION.put(id,new Gain(name,amount,now));else{gain.amount+=amount;gain.lastAt=now;}
@@ -173,7 +173,7 @@ public final class ArtemisHuntingProfit {
         CompoundTag root=data.copyTag(),extra=root.getCompoundOrEmpty("ExtraAttributes");if(extra.isEmpty())extra=root;
         return extra.getStringOr("id","").toUpperCase(Locale.ROOT);
     }
-    private static String shardId(String name){String normalized=name.toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+","_").replaceAll("^_|_$","");return SHARD_ALIASES.getOrDefault(normalized,"SHARD_"+normalized);}
+    public static String shardMarketId(String name){String normalized=name.toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+","_").replaceAll("^_|_$","");return SHARD_ALIASES.getOrDefault(normalized,"SHARD_"+normalized);}
     private static String displayFromId(String id){String value=id.replaceFirst("^SHARD_","").toLowerCase(Locale.ROOT).replace('_',' ');StringBuilder out=new StringBuilder();for(String part:value.split(" "))if(!part.isBlank())out.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(' ');return out.toString().trim();}
     private static String cleanName(String raw){return clean(raw).replaceFirst("(?i) Attribute$","").trim();}
     private static String charmedMob(String line){Matcher m=Pattern.compile("(?i)charmed (?:a|an) (.+?) and captured").matcher(line);return m.find()?m.group(1):"Charmed Mob";}
