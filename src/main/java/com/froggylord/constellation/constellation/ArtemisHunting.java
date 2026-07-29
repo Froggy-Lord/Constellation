@@ -19,6 +19,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisLasso.init(cfg);
         ArtemisFusion.init(cfg);
         ArtemisShardTracker.init(cfg);
+        ArtemisFusionKeybinds.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -38,5 +39,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisLasso.registerCommands(dispatcher);
         ArtemisFusion.registerCommands(dispatcher);
         ArtemisShardTracker.registerCommands(dispatcher);
+        ArtemisFusionKeybinds.registerCommands(dispatcher);
     }
 }

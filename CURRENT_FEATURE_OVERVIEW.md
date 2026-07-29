@@ -34,6 +34,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- User-bound repeat, confirm and cancel Fusion controls with exact menu/button validation
+- Duplicate/simultaneous-key rejection, click cooldown, feedback, sound and input-consumption controls
+- Session action counts and complete `/fusionkeys` controls; no automatic Fusion interaction
 - Profile-safe Attribute Shard goals with Direct, Bazaar, Fuse and Cycle source preservation
 - Bounded SkyShards/NoFrills clipboard import and a Minecraft Controls hovered-shard selection key
 - Exact catch, Lootshare, charm, Fusion, absorption and Hunting Box ownership accounting

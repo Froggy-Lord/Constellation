@@ -151,4 +151,15 @@ public class ArtemisConfig extends BaseConfigGroup {
     public Map<String,String> shardTrackerNames = new HashMap<>();
     public Map<String,String> shardTrackerSources = new HashMap<>();
     public Map<String,Long> shardTrackerOrder = new HashMap<>();
+
+    // ported from NoFrills (GPL-3.0-only): features/hunting/FusionKeybinds.java
+    // ported from SkyHanni (LGPL-3.0-or-later): features/hunting/FusionKeybinds.kt
+    public boolean fusionKeybinds = true;
+    public boolean fusionKeybindRepeat = true;
+    public boolean fusionKeybindConfirm = true;
+    public boolean fusionKeybindCancel = true;
+    public boolean fusionKeybindConsume = true;
+    public boolean fusionKeybindFeedback = true;
+    public boolean fusionKeybindSound = true;
+    public int fusionKeybindCooldownMillis = 200;
 }

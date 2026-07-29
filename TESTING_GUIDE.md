@@ -2,6 +2,30 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Fusion keybinds
+
+### Enable
+
+1. Enable Artemis and Fusion Keybinds.
+2. Open Minecraft Controls and assign different keys to `Fusion Repeat`, `Fusion Confirm` and `Fusion Cancel`.
+3. Keep the default 200ms cooldown unless repeated physical key presses need more separation.
+
+### Test
+
+- [ ] Press Repeat in an exact `Fusion Box` with `Repeat Previous Fusion` available. Expected: one deliberate middle-click is sent to that exact button.
+- [ ] Press Confirm in exact `Confirm Fusion`. Expected: one deliberate middle-click is sent only to the green terracotta button.
+- [ ] Press Cancel in exact `Confirm Fusion`. Expected: one deliberate middle-click is sent only to the red terracotta button.
+- [ ] Press any binding in another inventory or over normal gameplay. Expected: nothing is clicked.
+- [ ] Press Confirm in Fusion Box or Repeat in Confirm Fusion. Expected: no action occurs.
+- [ ] Test when the expected repeat name or action material is absent. Expected: the action fails closed and optional local feedback explains that it is unavailable.
+- [ ] Assign the same physical input to two Fusion actions. Expected: Constellation refuses the ambiguous action and warns at most once per second.
+- [ ] Hold one Fusion binding while pressing another. Expected: neither action runs.
+- [ ] Press a valid action repeatedly faster than `/fusionkeys cooldown`. Expected: only one action per cooldown window is sent.
+- [ ] Disable repeat, confirm or cancel independently through `/fusionkeys option`. Expected: the disabled action no longer clicks while the others still work.
+- [ ] Disable input consumption. Expected: invalid or disabled Fusion bindings may reach the underlying screen; valid clicks remain consumed.
+- [ ] Run `/fusionkeys status` and `resetstats`. Expected: session repeat, confirm and cancel counts are accurate and reset locally.
+- [ ] Observe Fusion without pressing a configured key. Expected: no click, repeat, confirmation or cancellation ever occurs automatically.
+
 ## Attribute Shard Tracker
 
 ### Enable

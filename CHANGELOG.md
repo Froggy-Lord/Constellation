@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.701 (2026-07-30) — Fusion keybinds
+
+- added separate Minecraft Controls bindings for repeat, confirm and cancel Fusion actions
+- added exact Fusion Box/Confirm Fusion title, repeat-button name and confirm/cancel terracotta validation
+- added duplicate/simultaneous binding rejection, bounded click cooldown and unavailable-action feedback
+- added independent action, input-consumption, feedback and sound options with full `/fusionkeys` controls
+
 ## 0.9.700 (2026-07-30) — Attribute Shard Tracker
 
 - added profile-safe shard goals with live catch, Lootshare, charm, Fusion and Hunting Box accounting
