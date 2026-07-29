@@ -1853,3 +1853,17 @@ An adversarial pass fixed two pre-deployment state bugs: Ultrasequencer no longe
 Version `0.9.684` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124 with experiment screen callbacks and shared click mixin loaded; the same process loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Live Experimentation Table sequences remain an explicit in-game checklist item because the headless title screen has no server container.
 
 The old `0.9.683` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-033738-0.9.684/`; only `constellation-0.9.684.jar` is live and its SHA-256 is `493cb43d0939ccac3f7a0a2d4483420cd28fb19052a3d2cb3d991b8d46fa7450`. Live Gather preferences were not rewritten.
+
+## July 30 version 0.9.685 Chocolate Factory helper
+
+`AurigaChocolateFactory.java`, `ChocolateFactoryHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and `ItemProtectionScreenMixin.java` port Skyblocker LGPL `skyblock/chocolatefactory/ChocolateFactorySolver.java`, `TimeTowerReminder.java` and Devonian GPL `features/misc/FactoryHelper.kt`.
+
+The exact `Chocolate Factory` screen gate reads current Chocolate, production, multiplier, rabbit tiers, Coach, prestige, Time Tower and Hitman from the menu. Rabbit and Coach upgrades are ranked by chocolate cost per added CPS; best overall and best affordable overlays are independent. Tooltips add CPS, affordability, payback and rank. Stray Rabbits, prestige readiness and Hitman status remain advisory.
+
+The movable HUD exposes production, best upgrade, affordability, prestige, Time Tower and optional Hitman rows. Time Tower chat creates a profile-aware expiry with independent warning/expiry chat, title and sound. Boundary crossing prevents stale login alerts. Menu close clears parsed and stray state; missing upgrades and zero CPS fail closed as Unknown. `/chocolatefactory` provides status, toggle, timer clearing, warning minutes and option controls.
+
+Manual crop-start placement requested during this release already exists as `/cropstart set <crop>`, including compact crop names, profile-specific/global storage and crop-specific clearing. No duplicate implementation was added.
+
+Version `0.9.685` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source and symbol audits pass. Live Chocolate Factory parsing remains an explicit in-game checklist item because the title screen cannot supply its container.
+
+The old `0.9.684` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-034723-0.9.685/`; only `constellation-0.9.685.jar` is live and its SHA-256 is `d640b68d12e5e37a40249f9e89a46b15b515c2eba1ae12b2e1987b34f174f00c`. Live Gather preferences were not rewritten.

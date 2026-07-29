@@ -55,7 +55,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Movable experiment type, phase, step, remaining and remembered-item HUD
 - Independent solver, scope, tooltip, memory, overlay, label and color controls
 - `/experiments` status, reset and complete main option commands
-- Chocolate Factory, reforge, anvil, God Potion and calculator helpers remain scheduled for reconstruction
+- Exact Chocolate Factory screen helper with live rabbit and coach efficiency ranking
+- Best and best-affordable highlights, affordability/payback tooltips and prestige guidance
+- Stray and Golden Rabbit alerts, Hitman status and a movable factory HUD
+- Profile-aware Time Tower persistence with configurable warning and expiry channels
+- Reforge, anvil, God Potion and calculator helpers remain scheduled for reconstruction
 
 ## Cassiopeia: chat
 

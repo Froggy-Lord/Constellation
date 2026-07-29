@@ -33,4 +33,29 @@ public class AurigaConfig extends BaseConfigGroup {
     public int superpairsKnownPairColor = 0x8055FFFF;
     public int superpairsCurrentMatchColor = 0x8055FF55;
     public int superpairsPowerupColor = 0x80FF55FF;
+
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/chocolatefactory/ChocolateFactorySolver.java, TimeTowerReminder.java
+    public boolean chocolateFactoryHelper = true;
+    public boolean chocolateFactoryHud = true;
+    public boolean chocolateFactoryBestUpgrade = true;
+    public boolean chocolateFactoryBestAffordable = true;
+    public boolean chocolateFactoryUpgradeTimers = true;
+    public boolean chocolateFactoryPayback = true;
+    public boolean chocolateFactoryPrestige = true;
+    public boolean chocolateFactoryStrayRabbits = true;
+    public boolean chocolateFactoryStraySound = true;
+    public boolean chocolateFactoryGoldenSound = true;
+    public boolean chocolateFactoryTimeTower = true;
+    public boolean chocolateFactoryTimeTowerChat = true;
+    public boolean chocolateFactoryTimeTowerTitle = false;
+    public boolean chocolateFactoryTimeTowerSound = true;
+    public boolean chocolateFactoryShowHitman = true;
+    public boolean chocolateFactoryShowLevels = true;
+    public int chocolateFactoryWarningMinutes = 5;
+    public int chocolateFactoryBestColor = 0x8055FFFF;
+    public int chocolateFactoryAffordableColor = 0x8055FF55;
+    public int chocolateFactoryUnaffordableColor = 0x80FFFF55;
+    public int chocolateFactoryPrestigeColor = 0x8055FF55;
+    public int chocolateFactoryStrayColor = 0x80FF55FF;
+    public java.util.Map<String, Long> chocolateFactoryTimeTowerExpiry = new java.util.LinkedHashMap<>();
 }

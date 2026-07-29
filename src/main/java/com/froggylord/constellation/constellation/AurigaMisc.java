@@ -15,6 +15,7 @@ public class AurigaMisc extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         AurigaExperiments.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaChocolateFactory.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
@@ -23,10 +24,14 @@ public class AurigaMisc extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.ExperimentHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 20),
             () -> cfg.enabled && cfg.experimentSolver && cfg.experimentHud));
+        hud.register(new com.froggylord.constellation.hud.ChocolateFactoryHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 32),
+            () -> cfg.enabled && cfg.chocolateFactoryHelper && cfg.chocolateFactoryHud));
     }
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         AurigaExperiments.registerCommands(dispatcher);
+        AurigaChocolateFactory.registerCommands(dispatcher);
     }
 }

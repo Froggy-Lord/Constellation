@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.685 (2026-07-30) — Chocolate Factory helper
+
+- added best and best-affordable upgrade ranking from live rabbit and coach production gains
+- added upgrade affordability, payback, prestige, stray-rabbit and Hitman guidance
+- added a movable Chocolate Factory HUD with independent rows and level display
+- added profile-aware Time Tower expiry persistence, warning/expiry alerts and complete `/chocolatefactory` controls
+
 ## 0.9.684 (2026-07-30) — Experimentation Table solvers
 
 - replaced Auriga's empty implementation with licensed Chronomatron, Ultrasequencer and Superpairs state machines

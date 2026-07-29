@@ -924,6 +924,15 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Toggle Hypixel-only and Private-Island-only scope. Expected: exact experiment screens outside selected scope remain untouched.
 - [ ] Close and reopen an experiment or run `/experiments reset`. Expected: sequence, pair and click state clears without affecting items.
 - [ ] Move and resize the Experiment HUD in `/cn hud`. Expected: it appears only during a live experiment or its five-second grace and persists.
+- [ ] Enable Auriga and `chocolateFactoryHelper`, then open the exact Chocolate Factory menu. Expected: no similarly named or unrelated inventory receives an overlay.
+- [ ] Compare all seven rabbit upgrades and the Coach. Expected: the best-efficiency highlight follows lowest chocolate-cost per added production, while green marks the best currently affordable option.
+- [ ] Hover every ranked upgrade. Expected: added production, affordability time, optional payback and efficiency rank match the menu; zero or missing production reports Unknown.
+- [ ] Reach a prestige requirement and inspect Hitman. Expected: prestige changes to Ready and configured egg/slot rows reflect the menu.
+- [ ] Wait for normal and Golden stray Rabbits. Expected: the correct slot highlights and enabled sound fires once per appearance, then may fire again after reopening.
+- [ ] Activate Time Tower normally, then use `/chocolatefactory warning 1` for a boundary test. Expected: the profile timer persists, warning fires once at one minute and expiry fires once at zero without stale-login spam.
+- [ ] Run `/chocolatefactory`, `toggle`, `cleartower` and representative `option <name> <on|off>` commands. Expected: readable status and persistent independent settings.
+- [ ] Move and resize the Chocolate Factory HUD in `/cn hud`. Expected: it appears only while the menu or a saved active Time Tower is relevant, plus editor grace.
+- [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
 - [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
 - [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.
