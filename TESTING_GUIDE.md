@@ -2,6 +2,24 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Galatea Tree Progress
+
+Enable Artemis and Tree Progress. Defaults match the live profile: enabled, axe-only, full display and not restricted to your own tree.
+
+- [ ] Enter Galatea without holding an axe. Expected: Tree Progress stays hidden.
+- [ ] Hold a real foraging axe near an active Fig Tree. Expected: the nearest `FIG TREE <percent>%` label becomes a movable Fig Tree HUD.
+- [ ] Repeat at a Mangrove Tree. Expected: the type changes to Mangrove Tree and the current percentage follows the server label.
+- [ ] Hold a pickaxe or non-tool whose name merely contains similar letters. Expected: it is not accepted as an axe.
+- [ ] Enable own-only near another player's tree. Expected: the HUD hides unless the vertically grouped labels contain your name or the server's shared-player marker.
+- [ ] Join a shared tree. Expected: contributor count appears when its row is enabled and ownership filtering accepts the tree.
+- [ ] Place two eligible trees inside scan range. Expected: only the nearest eligible tree is displayed.
+- [ ] Toggle compact mode. Expected: one type-and-percent row replaces the full panel.
+- [ ] Toggle type, percentage, bar, distance and contributor rows independently. Expected: each affects only its own presentation.
+- [ ] Set `/treeprogress range 16`, then restore the preferred range. Expected: labels outside the bounded distance disappear.
+- [ ] Enable threshold alerts and set `/treeprogress alert 90`. Expected: the selected local chat/title/sound channels fire once when progress crosses 90 percent, not every tick.
+- [ ] Leave Galatea, change worlds or disconnect. Expected: all Tree Progress state clears immediately.
+- [ ] Confirm no interaction occurs. Expected: the feature never swings, aims, selects a tree, breaks a block or sends a packet.
+
 ## Attribute Shard overlay
 
 Enable Artemis, Attribute Overlay and its HUD. The overlay is intentionally visible only while the exact `Attribute Menu` is open.

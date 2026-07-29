@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.706 (2026-07-30) — Galatea Tree Progress
+
+- added exact Fig and Mangrove tree progress detection from nearby armor-stand labels
+- added live-compatible axe-only visibility plus optional Skyblocker-style own-tree filtering
+- added compact/full HUD, progress bar, distance, contributor and configurable color presentation
+- added optional threshold alerts, bounded scan range and complete `/treeprogress` controls
+
 ## 0.9.705 (2026-07-30) — Attribute Shard overlay
 
 - added profile-safe Attribute Menu tier, requirement, rarity and enabled-state learning

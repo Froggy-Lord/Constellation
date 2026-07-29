@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.705 Attribute Shard overlay.
+Last updated: 2026-07-30 for version 0.9.706 Galatea Tree Progress.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.705`.
+- Current artifact version: `0.9.706`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2083,3 +2083,15 @@ The menu-only movable HUD supports cheapest-first price-to-next or price-to-max 
 Optional tier slot text uses the reference's zero, low, high and max color bands. Optional disabled-attribute tinting trusts only exact `Enabled: No` lore. Contextual tooltips add tier, selected requirement, price and Hunting Box amount. `/attributeoverlay` exposes status, rows, sorting, price source and every main presentation control. The feature only observes menus and renders locally; it never clicks, toggles, syphons, buys or opens anything.
 
 Version `0.9.705` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Real Attribute Menu pagination, exact modern rarity lore and Bazaar name aliases remain explicit in-game checklist items.
+
+## July 30 version 0.9.706 Galatea Tree Progress
+
+`ArtemisTreeProgress.java`, `TreeProgressHudWidget.java`, `ArtemisConfig.java` and `ArtemisHunting.java` port the live-enabled SkyHanni LGPL `features/foraging/TreeProgressDisplay.kt`, its `ModernPatterns` label and `TreeProgressConfig.kt`. Nearest-tree selection, vertically grouped ownership markers and shared-player recognition are cross-ported from Skyblocker LGPL `skyblock/galatea/TreeBreakProgressHud.java`.
+
+The scanner is hard-gated to Galatea and accepts only exact stripped `FIG TREE <percent>%` or `MANGROVE TREE <percent>%` armor-stand labels inside a configurable 16-to-256-block range. It chooses the nearest eligible tree. The live-compatible default shows any tree; optional own-only mode requires the local player name or Skyblocker's shared-player marker in the same x/z label stack.
+
+Axe-only visibility accepts an authoritative `_AXE` item ID, a whole-word Axe display name or a rarity/type lore line. It deliberately rejects Pickaxes and unrelated substring matches. The movable HUD supports SkyHanni's one-line compact mode plus independent type, percent, ten-step bar, distance and contributor rows with normal, nearly-complete and complete colors.
+
+Optional one-shot threshold feedback has independent local chat, title and sound channels and a one-to-100 percentage. `/treeprogress` exposes status, reset, scan range, threshold and every main display/scope/alert option. Join, disconnect, level replacement, scope exit and held-tool loss clear visible state. It never swings, aims, selects, breaks, clicks or sends a packet.
+
+Version `0.9.706` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Real Galatea ownership-stack wording and current axe IDs remain explicit in-game checklist items.

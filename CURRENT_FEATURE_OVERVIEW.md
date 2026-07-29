@@ -34,6 +34,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Exact Galatea Fig and Mangrove Tree Progress with axe-only or own-tree visibility
+- Compact/full HUD, progress bar, distance, contributor, colors and optional threshold alerts
+- Bounded nearest-tree scanning and full `/treeprogress` controls
 - Profile-safe Attribute Menu learning for tier, rarity, next-tier requirement and enabled state
 - Cheapest next-tier or max-tier ranking using selectable Bazaar price side and Hunting Box deductions
 - Hide-maxed, only-locked, current-inventory and unknown-price filters with complete summary totals

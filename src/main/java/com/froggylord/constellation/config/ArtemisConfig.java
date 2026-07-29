@@ -243,4 +243,26 @@ public class ArtemisConfig extends BaseConfigGroup {
     public Map<String,String> attributeOverlayRarity = new HashMap<>();
     public Map<String,String> attributeOverlayNames = new HashMap<>();
     public Map<String,Boolean> attributeOverlayEnabled = new HashMap<>();
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/TreeProgressDisplay.kt
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/galatea/TreeBreakProgressHud.java
+    public boolean treeProgress = true;
+    public boolean treeProgressHud = true;
+    public boolean treeProgressOnlyHoldingAxe = true;
+    public boolean treeProgressOnlyOwn = false;
+    public boolean treeProgressCompact = false;
+    public boolean treeProgressShowType = true;
+    public boolean treeProgressShowPercent = true;
+    public boolean treeProgressShowBar = true;
+    public boolean treeProgressShowDistance = false;
+    public boolean treeProgressShowContributors = false;
+    public boolean treeProgressCompletionAlert = false;
+    public boolean treeProgressCompletionChat = false;
+    public boolean treeProgressCompletionTitle = false;
+    public boolean treeProgressCompletionSound = true;
+    public int treeProgressScanRange = 96;
+    public int treeProgressAlertPercent = 100;
+    public int treeProgressNormalColor = 0xFF55FF55;
+    public int treeProgressNearlyDoneColor = 0xFFFFFF55;
+    public int treeProgressCompleteColor = 0xFFFFAA00;
 }

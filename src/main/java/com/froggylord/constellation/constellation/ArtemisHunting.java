@@ -24,6 +24,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisGalateaSounds.init(cfg);
         ArtemisHuntingBoxValue.init(cfg);
         ArtemisAttributeOverlay.init(cfg);
+        ArtemisTreeProgress.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -40,6 +41,8 @@ public final class ArtemisHunting extends BaseConstellation {
             HudPosition.of(78,58),()->cfg.enabled&&cfg.huntingBoxValue&&cfg.huntingBoxValueHud));
         hud.register(new com.froggylord.constellation.hud.AttributeOverlayHudWidget(
             HudPosition.of(78,70),()->cfg.enabled&&cfg.attributeOverlay&&cfg.attributeOverlayHud));
+        hud.register(new com.froggylord.constellation.hud.TreeProgressHudWidget(
+            HudPosition.of(78,82),()->cfg.enabled&&cfg.treeProgress&&cfg.treeProgressHud));
     }
     @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         ArtemisHuntingProfit.registerCommands(dispatcher);
@@ -52,5 +55,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisGalateaSounds.registerCommands(dispatcher);
         ArtemisHuntingBoxValue.registerCommands(dispatcher);
         ArtemisAttributeOverlay.registerCommands(dispatcher);
+        ArtemisTreeProgress.registerCommands(dispatcher);
     }
 }
