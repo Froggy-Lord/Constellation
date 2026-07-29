@@ -18,6 +18,8 @@ public class MapSegments {
     private static final int ENTRANCE_COLOR = 30; 
 
     public static String lastDebug = "no map scan";
+    private static RoomType currentType = RoomType.UNKNOWN;
+    private static String currentMapToken = "";
 
     
     
@@ -26,7 +28,9 @@ public class MapSegments {
     private static int physEntranceX, physEntranceZ;      
     private static int mapStep = 0;                        // pixels per room cell (size + gap)
 
-    public static void reset() { calibrated = false; }
+    public static void reset() { calibrated = false; currentType = RoomType.UNKNOWN; currentMapToken = ""; }
+    public static RoomType currentType() { return currentType; }
+    public static String currentMapToken() { return currentMapToken; }
 
     public static int[] worldXZFromMapPixel(int mpx, int mpz) {
         if (!calibrated || mapStep <= 0) return null;
@@ -68,6 +72,7 @@ public class MapSegments {
         };
         
         byte color = colorAt(map, playerCell[0] + roomSize / 2, playerCell[1] + roomSize / 2);
+        currentType = roomType(color & 0xFF);
         if (color <= 0) { lastDebug = "no colour @ cell " + playerCell[0] + "," + playerCell[1] + " (size=" + roomSize + " off=" + offX + "," + offZ + ")"; return Set.of(); }
 
         
@@ -102,8 +107,61 @@ public class MapSegments {
         return physCells;
     }
 
-    private static void tryCalibrateMort(Minecraft mc, int mapEntX, int mapEntZ) {
-        if (calibrated) return;
+    /**
+     * Every revealed room cell on the dungeon map, as physical RoomGrid cell keys.
+     * Mirrors FunnyMap scanning all revealed rooms so callers can pre-identify rooms
+     * ahead of the player. Empty until the map + entrance calibration are available.
+     */
+    public static Set<Long> revealedCells() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null) return Set.of();
+
+        MapItemSavedData map = findMap(mc);
+        if (map == null || map.colors.length < 128 * 128) return Set.of();
+
+        int[] playerMap = mapPlayerPos(map);
+        if (playerMap == null) return Set.of();
+
+        int[] entrance = entranceInfo(map, playerMap);
+        if (entrance == null) return Set.of();
+        int roomSize = entrance[2];
+        int step = roomSize + 4;
+        int offX = Math.floorMod(entrance[0], step);
+        int offZ = Math.floorMod(entrance[1], step);
+
+        // anchor for map->world conversion (same lineage as footprint())
+        int anchorMapX, anchorMapZ, anchorPhysX, anchorPhysZ;
+        mapStep = step;
+        tryCalibrateMort(mc, entrance[0], entrance[1]);
+        if (calibrated) {
+            anchorMapX = mapEntranceX; anchorMapZ = mapEntranceZ;
+            anchorPhysX = physEntranceX; anchorPhysZ = physEntranceZ;
+        } else {
+            int alignedX = (playerMap[0] + 2) - offX;
+            int alignedZ = (playerMap[1] + 2) - offZ;
+            anchorMapX = alignedX - Math.floorMod(alignedX, step) + offX;
+            anchorMapZ = alignedZ - Math.floorMod(alignedZ, step) + offZ;
+            anchorPhysX = RoomGrid.cornerX(mc.player.position());
+            anchorPhysZ = RoomGrid.cornerZ(mc.player.position());
+        }
+
+        int half = roomSize / 2;
+        Set<Long> physCells = new LinkedHashSet<>();
+        for (int gx = offX; gx + roomSize <= 128; gx += step) {
+            for (int gz = offZ; gz + roomSize <= 128; gz += step) {
+                byte color = colorAt(map, gx + half, gz + half);
+                if (color <= 0) continue;   // unrevealed / gap between rooms
+                int dxCells = Math.round((gx - anchorMapX) / (float) step);
+                int dzCells = Math.round((gz - anchorMapZ) / (float) step);
+                int px = anchorPhysX + dxCells * 32;
+                int pz = anchorPhysZ + dzCells * 32;
+                physCells.add(RoomGrid.cellKey(px, pz));
+            }
+        }
+        return physCells;
+    }
+
+    private static void tryCalibrateMort(Minecraft mc, int mapEntX, int mapEntZ) {        if (calibrated) return;
         var area = mc.player.getBoundingBox().inflate(120);
         for (var stand : mc.level.getEntitiesOfClass(
                 net.minecraft.world.entity.decoration.ArmorStand.class, area)) {
@@ -215,8 +273,24 @@ public class MapSegments {
             MapId id = stack.get(DataComponents.MAP_ID);
             if (id == null) continue;
             MapItemSavedData data = mc.level.getMapData(id);
-            if (data != null) return data;
+            if (data != null) {
+                currentMapToken = id.toString();
+                return data;
+            }
         }
         return null;
+    }
+
+    private static RoomType roomType(int color) {
+        return switch (color) {
+            case 66 -> RoomType.PUZZLE;
+            case 62 -> RoomType.TRAP;
+            case 18 -> RoomType.BLOOD;
+            case 82 -> RoomType.FAIRY;
+            case 74 -> RoomType.MINIBOSS;
+            case 30 -> RoomType.NORMAL;
+            case 63 -> RoomType.NORMAL;
+            default -> RoomType.UNKNOWN;
+        };
     }
 }
