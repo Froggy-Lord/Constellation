@@ -93,6 +93,26 @@ public class AquilaConfig extends BaseConfigGroup {
     public String callMismylaMessage = "Commission complete: {commission}. Call Mismyla?";
     public String redialMessage = "Bad signal from {npc}. Call again?";
 
+    public boolean metalDetectorSuite = true;
+    public boolean metalDetectorBox = true;
+    public boolean metalDetectorBeam = true;
+    public boolean metalDetectorLine = true;
+    public boolean metalDetectorLabel = true;
+    public boolean metalDetectorDistance = true;
+    public boolean metalDetectorThroughWalls = true;
+    public boolean metalDetectorStartTip = true;
+    public boolean metalDetectorCountChat = true;
+    public boolean metalDetectorFoundChat = true;
+    public boolean metalDetectorFoundTitle = false;
+    public boolean metalDetectorFoundSound = true;
+    public boolean metalDetectorShowTime = true;
+    public int metalDetectorStableSamples = 2;
+    public int metalDetectorMaximumWaypoints = 8;
+    public int metalDetectorBeamHeight = 12;
+    public int metalDetectorToleranceHundredths = 25;
+    public int metalDetectorPossibleColor = 0xFFFFFFFF;
+    public int metalDetectorFoundColor = 0xFFFFFF55;
+
     public boolean miningProgressSuite = true;
     public boolean miningCommissionProgressHud = true;
     public boolean miningCommissionShowDone = true;

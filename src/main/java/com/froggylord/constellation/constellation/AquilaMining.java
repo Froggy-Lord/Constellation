@@ -53,7 +53,8 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningHighlights.init(cfg);
         AquilaPickobulus.init(cfg);
         AquilaMiningConveniences.init(cfg);
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaPickobulus.draw(context); } });
+        AquilaMetalDetector.init(cfg);
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
 
     private static int readCold() {
@@ -96,6 +97,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningHighlights.registerCommands(dispatcher);
         AquilaPickobulus.registerCommands(dispatcher);
         AquilaMiningConveniences.registerCommands(dispatcher);
+        AquilaMetalDetector.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

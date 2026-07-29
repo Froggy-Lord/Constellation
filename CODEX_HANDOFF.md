@@ -2227,3 +2227,17 @@ The Mismyla action requires the exact named commission-complete sentence and del
 Both actions have independent enable and original-line replacement settings. Hover text is optional. Mismyla and redial messages accept up to 240 characters and support `{commission}` or `{npc}` placeholders respectively. `/miningconveniences` exposes every toggle, both message templates and the eight-digit commission ARGB color.
 
 Version `0.9.717` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.
+
+## July 30 version 0.9.718 Metal Detector Solver
+
+`AquilaMetalDetector.java`, `AquilaConfig.java` and `AquilaMining.java` port Skyblocker LGPL `skyblock/dwarven/MetalDetector.java`. Collection timing is cross-ported from SkyHanni LGPL `features/mining/crystalhollows/MetalDetectorSolver.kt`. This replaces the old unused `metalDetectorHelper` advertisement with a real consumer.
+
+The solver is Crystal-Hollows-only and accepts only actionbar text containing an exact numeric `TREASURE: <distance>m` segment. By default it requires two identical readings at the exact same player position before updating. The count is configurable from one to five and distance tolerance from 0.05 to 1.00 blocks.
+
+Mines of Divan center detection scans named armor stands for the exact four Keeper names and applies Skyblocker's keeper-specific offsets. All 42 known chest offsets are copied exactly and tested against the distance at the block one above each chest. If keepers have not loaded, the licensed bounded horizontal ring fallback is used. Subsequent stable readings intersect the existing candidate set; an empty result safely starts a new search.
+
+One remaining candidate is shifted to the actual chest block and can show an exact box, beam, player line, label and distance. Multiple candidates use the separate possible color and omit the line. Rendering has a configurable one-to-32 candidate cap. Start tip, candidate-count chat, found chat/title/sound and elapsed collection time are independent. Only a `You found ... with your Metal Detector` line completes the search. Area exit and connection changes clear every transient field.
+
+`/metaldetector` exposes reset, stable samples, render maximum, tolerance, two ARGB colors and all presentation/alert controls. The feature reads actionbar/entity/location state and renders locally; it never moves, aims, clicks, opens a chest or sends a packet.
+
+Version `0.9.718` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.

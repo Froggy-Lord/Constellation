@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.718 (2026-07-30) — Metal Detector Solver
+
+- replaced Aquila's dead Metal Detector flag with the complete licensed distance solver
+- added keeper-derived Mines of Divan center detection and all 42 known chest offsets
+- added stable-sample trilateration, configurable tolerance, fallback search and collection timing
+- added possible/exact boxes, beams, line, labels, distances, alerts, colors and `/metaldetector` controls
+
 ## 0.9.717 (2026-07-30) — Mining Conveniences
 
 - added exact completed-commission slot highlighting in the Commissions menu

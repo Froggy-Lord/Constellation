@@ -101,6 +101,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Pickobulus held-ability/cooldown state with independently movable and configurable HUD rows
 - Completed-commission slot highlights in the exact Commissions menu
 - Customizable user-clicked Mismyla completion calls and obfuscation-validated Fred redial actions
+- Mines of Divan keeper-center detection with all 42 licensed Metal Detector chest offsets
+- Stable-reading Metal Detector narrowing, fallback search, exact/possible guidance and collection timing
 
 ## Auriga: experiments and utility
 

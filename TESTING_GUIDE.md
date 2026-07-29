@@ -1221,6 +1221,18 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 - [ ] Toggle original-line replacement separately for Mismyla and redial. Expected: each original server line is preserved or hidden independently while the local action remains.
 - [ ] Customize Mismyla with `{commission}` and redial with `{npc}` using `/miningconveniences message`. Expected: placeholders resolve locally and saved text survives relaunch.
 - [ ] Test every `/miningconveniences option`, hover and color control. Expected: each changes only its named behavior and no action is automatic.
+- [ ] Enter Mines of Divan and hold the Metal Detector. Expected: a nearby `Keeper of Diamond/Lapis/Emerald/Gold` label establishes one consistent center.
+- [ ] Stand still for the configured number of repeated `TREASURE: <distance>m` actionbar readings. Expected: candidates are created or narrowed only after stable readings.
+- [ ] Move to a meaningfully different position and stand still again. Expected: the candidate list shrinks using the new sphere and configured tolerance.
+- [ ] Compare solver output with all visible keeper orientations. Expected: every keeper derives the same Mines of Divan center and the 42 licensed offsets remain aligned.
+- [ ] Test before keeper labels load. Expected: the bounded fallback ring produces possible locations without freezing the client; once a keeper loads, future treasures use the known offsets.
+- [ ] Reach one remaining candidate. Expected: exact treasure color, box, beam, optional player line, label and distance identify the chest position.
+- [ ] Test two through eight candidates. Expected: possible markers render with their separate color and the player line remains exact-location only.
+- [ ] Produce more than the configured maximum candidates. Expected: rendering fails closed while chat still reports the count for another reading.
+- [ ] Collect a treasure whose message contains `with your Metal Detector`. Expected: candidates clear and optional local search time reports once.
+- [ ] Trigger an unrelated `You found` message. Expected: it does not reset the Metal Detector search.
+- [ ] Leave Crystal Hollows and return. Expected: center, samples, candidate positions and timer do not leak across areas.
+- [ ] Run `/metaldetector` and test sample count, maximum waypoints, tolerance, colors and every presentation/alert option. Expected: each persists and no interaction is generated.
 - [ ] In the Garden, run `/cropstart set <crop>` and `/cropstart setat <crop> <x> <y> <z>` for two different crops. Expected: each crop retains its own manual location independently.
 
 ## Kuudra and Crimson Isle
