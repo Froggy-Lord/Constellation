@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.692 mayor and election state.
+Last updated: 2026-07-30 for version 0.9.693 Gift profit tracker.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.692`.
+- Current artifact version: `0.9.693`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -329,6 +329,18 @@ The parser rejects unsuccessful or structurally incomplete responses, preserves 
 The movable Mayor HUD independently shows mayor, minister/perk, filtered active perks, descriptions, election leader/votes and cache state. Old Cygnus `mayorPerksDisplay` and `mayorElectionHud` toggles are wired into the new renderer instead of remaining decorative. Mayor-change chat/title/sound only fire on a later live transition, never when initial cache data is replaced by the first response. `/mayor` exposes status, full perk/election lists, refresh cadence, limit, filters, color and every display/alert switch.
 
 Boot validated a real cached response containing Diana, minister Finnegan, two mayor perks and five election candidates. Build passed 11/11; boot passed exit 124 with 138 rooms, 14 constellations and no crash/mixin/fatal signatures. Next Cygnus release should select one remaining seasonal helper with concrete licensed behavior; do not retain broad advertised toggles whose backing path is still empty.
+
+## July 30 Gift profit tracker
+
+Version `0.9.693` adds `CygnusGifts.java`, ported from SkyHanni LGPL `features/gifting/GiftProfitTracker.kt`, `GiftApi.kt` and `IsGiftingDetection.kt`. This was selected because the live SkyHanni profile enables the tracker and holding-gift visibility, while its Hidden Jerry timer is disabled.
+
+The parser uses stripped equivalents of SkyHanni's exact gift rarity, coin, skill-XP, North Star, boost-potion, enchantment-book and generic-item messages. It records COMMON, RARE, SWEET, SANTA and PARTY counts, handles item quantities, resolves predictable internal IDs and warms market prices. Unknown or renamed rewards remain visible and can be corrected through explicit reward-ID or custom-price commands instead of silently inventing value.
+
+Data is profile-keyed and includes gift usage, rewards, rarities, skill XP, coins and North Stars. Persistent-off mode is truly session-only: it does not mutate shared config statistic maps, preventing another feature's later save from leaking the session. Gift usage remains deliberate `/gifttracker add <white|green|red|party> <amount>` input, matching SkyHanni's safety note that stash and inventory movement make automatic usage inference unreliable. Value, gift replacement cost, profit and session hourly rate use the shared market provider with configurable sell/buy reward pricing.
+
+The movable HUD supports holding-gift-only display or SkyHanni's recent-gifting location window, rarity/XP/star summaries and one-to-ten top reward rows. Rare tiers, title, sound, price source, recent duration/distance, alert color and every value/cost/profit/hourly row are configurable. Commands also provide profile/session resets and exact ID/custom-price overrides.
+
+Build passed 11/11; boot passed exit 124 with 138 rooms, 14 constellations and no crash/mixin/fatal signatures. Continue the live-settings audit after this release; gifting opportunities and unique-recipient counting are enabled nearby in the live profile and are logical follow-ups, but should remain separate coherent releases.
 
 ## July 21 party-message audit
 

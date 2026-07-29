@@ -2,6 +2,33 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Gift profit tracker
+
+### Enable
+
+1. Enable Cygnus, Winter Gift Tracker, Gift Profit Tracker and Gift Profit HUD.
+2. Keep Holding Only enabled to match the live profile, or enable Recent Location fallback.
+3. Hold a White, Green or Red Gift and exchange gifts with another player.
+
+### Test
+
+- [ ] Receive COMMON, RARE, SWEET, SANTA and PARTY rewards. Expected: the matching rarity total increments once per exact gift reward line.
+- [ ] Receive coins, skill XP and North Stars. Expected: each updates its dedicated total and never appears as a generic item.
+- [ ] Receive an item stack reward. Expected: the complete quantity is added under one normalized reward name.
+- [ ] Receive a boost potion, enchantment book or Ice Rune. Expected: its specific internal ID is used for pricing.
+- [ ] Receive SWEET, SANTA or PARTY tier rewards. Expected: configured title and sound channels fire once.
+- [ ] Run `/gifttracker add white 10`. Expected: ten White Gifts are added to cost while reward totals remain unchanged.
+- [ ] Compare Value, Gift Cost and Profit. Expected: profit equals reward liquidation value plus coins minus gift replacement cost.
+- [ ] Observe Per Hour during a session. Expected: it uses only this session's rewards and manually entered gifts.
+- [ ] Hold and release a gift with Holding Only enabled. Expected: the HUD appears and disappears with the held item.
+- [ ] Enable Recent Location, exchange one gift, release it and remain within the configured radius. Expected: the HUD remains for the configured window, then hides.
+- [ ] Run `/gifttracker id "Snow Suit Helmet" SNOW_SUIT_HELMET` or set a custom price. Expected: the reward valuation updates without changing its count.
+- [ ] Switch reward pricing with `/gifttracker pricesource sell` and `buy`. Expected: reward value changes while gift cost continues using replacement cost.
+- [ ] Disable Persistent, reset the session and collect rewards. Expected: current-session statistics work but do not return after restart or another config save.
+- [ ] Switch profiles. Expected: persistent counts, used gifts and totals are isolated per profile.
+- [ ] Run `/gifttracker resetsession`. Expected: only rate/session accounting clears. Run `reset` only to clear the active profile's lifetime totals.
+- [ ] Gift normally. Expected: Constellation never clicks a player, uses a gift or moves an item automatically.
+
 ## Mayor and election state
 
 ### Enable

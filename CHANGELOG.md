@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.693 (2026-07-30) — Gift profit tracker
+
+- added exact gift reward rarity, coins, item, skill XP and North Star tracking
+- added profile-safe value, manually accounted gift cost, profit, hourly rate and reward breakdowns
+- added holding-gift/recent-location visibility, rare-tier alerts and a movable Gift HUD
+- added persistent/session-only modes, reward ID/custom-price correction and full `/gifttracker` controls
+
 ## 0.9.692 (2026-07-30) — Mayor and election state
 
 - added authoritative current mayor, minister, active-perk and election-slate loading

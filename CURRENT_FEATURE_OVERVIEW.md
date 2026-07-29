@@ -87,6 +87,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Profile-safe gift reward rarity, item, coin, skill XP and North Star tracking
+- Market value, manually accounted gift replacement cost, profit and session hourly rate
+- Holding-gift or recent-gifting-location HUD visibility with configurable reward breakdowns
+- Configurable SWEET/SANTA/PARTY alerts plus reward ID and custom-price correction
+- `/gifttracker` gift usage, reset, pricing, rows, rare tiers and presentation controls
 - Authoritative current mayor, minister, active perk and live election state
 - Temporary perk overrides with partial-state-safe Carnival event gating
 - Movable Mayor HUD with perk descriptions/filtering, election leader/votes and cache state
