@@ -1597,6 +1597,23 @@ One issue at a time is ideal. You do not need to retest unrelated sections after
 - [ ] Run `/scatha reset` and `/scatha clearprofile`. Expected: session reset leaves saved totals intact; clearprofile removes only the active profile history.
 - [ ] Change cooldown, range and every `/scatha option` switch. Expected: settings persist and none sends movement, mining, attack, aim, click, chat or gameplay packets.
 - [ ] Move and resize Scatha Mining in `/cn hud`. Expected: it is editable only while visible or during editor grace and keeps its independent placement.
+
+## Crystal Hollows Waypoints
+
+- [ ] Enable Aquila, Wishing Compass Helper, Crystal Waypoints Suite and Compass Solver in `/cn config`, then enter the Crystal Hollows.
+- [ ] Use a Wishing Compass outside the Nucleus. Expected: the HUD counts the first happy-villager trail to the configured particle target and then says to move for the second use.
+- [ ] Try using it again too soon or less than the configured distance away. Expected: the optional guard blocks only that invalid use and gives a local explanation.
+- [ ] Move at least eight blocks in the same major zone and use it again. Expected: the second trail solves to a bounded forward intersection and creates the structure appropriate to the zone, inventory/effect and unfinished crystal.
+- [ ] Repeat after moving to another major zone between readings. Expected: the old reading is discarded and the new trail becomes the first reading.
+- [ ] Test in Jungle with and without a Jungle Key, and Goblin Holdout with and without King's Scent. Expected: target names switch between Temple/Odawa and Queen/Yolkar respectively.
+- [ ] Finish a zone's crystal and repeat. Expected: the location is marked Unknown rather than claiming the already-completed structure.
+- [ ] Send party chat coordinates naming a supported structure. Expected: valid 202-823, 31-188, 202-823 coordinates add once; ordinary structure discussion or out-of-bounds numbers do nothing.
+- [ ] Enter a supported named sub-area and trigger exact linked NPC/crystal messages. Expected: the first authoritative local position records the waypoint without broad chat false positives.
+- [ ] Toggle boxes, beams, lines, labels, distances, walls, nearest-only and auto-remove separately. Expected: each affects presentation/lifecycle independently and never moves or aims.
+- [ ] Use `/crystalwaypoints add`, `remove`, `list`, `clear`, `resetsolver`, `color`, `tuning` and every `option`. Expected: all changes are bounded, readable and persistent where applicable.
+- [ ] Run `/crystalwaypoints share <name>`. Expected: only this deliberate command sends one party message; Fairy Grotto remains blocked unless its separate sharing toggle is enabled.
+- [ ] Change server or leave the Crystal Hollows. Expected: randomized-server waypoints and partial compass trails clear rather than leaking into another lobby.
+- [ ] Move and resize Crystal Waypoints in `/cn hud`. Expected: its independent placement and scale persist.
 - [ ] Enable Artemis and open exact `Agatha's Shop`. Expected: only actual sale offers with an Agatha Coupon cost appear; unrelated menus remain unchanged.
 - [ ] Compare every displayed material count against each offer's Cost lore, including any `1k`, `1m`, prefix-count or `x<count>` form. Expected: total input cost uses the full quantity.
 - [ ] Compare sell value, total cost, sale profit and profit per coupon against Bazaar prices. Expected: the arithmetic agrees, and missing market data says `partial` instead of silently becoming free.

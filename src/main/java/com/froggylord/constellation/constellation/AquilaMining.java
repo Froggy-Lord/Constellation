@@ -61,8 +61,9 @@ public class AquilaMining extends BaseConstellation {
         AquilaNucleusBarriers.init(cfg);
         AquilaDeepCavernsGuide.init(cfg);
         AquilaScathaMining.init(cfg);
+        AquilaCrystalWaypoints.init(cfg);
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) AquilaOrderedWaypoints.draw(context); });
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaScathaMining.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaScathaMining.draw(context); AquilaCrystalWaypoints.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
 
     private static int readCold() {
@@ -108,6 +109,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.deepCavernsGuide && c.deepCavernsGuideHud));
         hud.register(new com.froggylord.constellation.hud.ScathaHudWidget(HudPosition.of(78, 208),
             () -> c.enabled && c.scathaAlert && c.scathaCounter && c.scathaMiningSuite && c.scathaHud));
+        hud.register(new com.froggylord.constellation.hud.CrystalWaypointsHudWidget(HudPosition.of(78, 222),
+            () -> c.enabled && c.wishingCompassHelper && c.crystalWaypointsSuite && c.crystalWaypointsHud));
     }
 
     @Override
@@ -127,6 +130,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaNucleusBarriers.registerCommands(dispatcher);
         AquilaDeepCavernsGuide.registerCommands(dispatcher);
         AquilaScathaMining.registerCommands(dispatcher);
+        AquilaCrystalWaypoints.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

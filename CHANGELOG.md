@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.727 (2026-07-30) — Crystal Hollows Waypoints
+
+- replaced the dead Wishing Compass flag with exact two-trail particle solving and reliable forward-ray intersection
+- added chat, area, manual and compass-discovered waypoints for all thirteen supported Crystal Hollows locations
+- added configurable world boxes, beams, lines, labels, distance, nearest-only mode, arrival removal and a movable HUD
+- added invalid-use protection, crystal/zone-aware target naming, deliberate party sharing and complete `/crystalwaypoints` controls
+
 ## 0.9.726 (2026-07-30) — Scatha Mining
 
 - replaced the dead Scatha flags with exact spawn-message and local named-entity pairing

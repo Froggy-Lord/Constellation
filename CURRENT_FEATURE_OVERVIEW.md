@@ -397,6 +397,15 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Rarity-preserving compact pet-drop replacement that fails open when the rarity cannot be proved
 - Movable cooldown/current/session/total/rate/dry-streak/pet/uptime HUD and full `/scatha` controls
 
+## Crystal Hollows Waypoints
+
+- Exact Wishing Compass use lifecycle with two 25-particle trails, distance/zone checks, timeout recovery and optional invalid-use interception
+- Correct closest-forward-ray intersection with configurable particles, gap, separation and solution tolerance
+- Crystal completion, Jungle Key and King's Scent state select the actual target structure for the current zone
+- Chat coordinates, linked NPC/crystal lines, current sub-area, manual commands and solved compass trails populate thirteen supported locations
+- Independent boxes, beams, player lines, labels, distances, range, nearest-only mode, arrival removal, wall state and per-location colors
+- Movable solver/count/nearest HUD plus add, remove, list, clear, color, tuning and deliberate party-share commands
+
 The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`. You do not need that document for normal testing.
 
 ## Artemis: Moonglade Beacon
