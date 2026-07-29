@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.653 (2026-07-29) — Stereo Harmony
+
+- added persistent active-vinyl detection from the Stereo Harmony menu and every carried vacuum, covering all 13 vinyl, pest and crop combinations
+- added a movable farming-aware display, nothing-selected behavior, optional selection alerts, templates, title/chat/sound channels and complete `/stereoharmony` controls
+- added crop-icon menu replacement, active-vinyl marking and Jacob-contest crop matching without changing or clicking the underlying menu items
+
 ## 0.9.652 (2026-07-29) — Garden plot sprays
 
 - added persistent per-plot Sprayonator type and expiry tracking from exact use messages, the Pests tab widget, current plot detection, and Portable Washer clearing

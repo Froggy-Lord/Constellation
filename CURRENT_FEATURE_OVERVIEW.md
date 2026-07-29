@@ -106,6 +106,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Pest cooldown, last-spawn and average-spawn HUD
 - Vacuum particle-path pest waypoint with optional box, beam, line, label, distance and particle filtering
 - Persistent per-plot Sprayonator type/expiry state, optional HUD, Portable Washer clearing and expiry/away alerts
+- Stereo Harmony active-vinyl HUD, carried-vacuum detection, crop-icon menu replacement and Jacob-contest matching
 - Cooldown warnings and configurable custom cooldown
 - Persistent per-pest kills and per-drop quantities
 - Session and lifetime pest profit with delayed market-price reconciliation
@@ -223,7 +224,6 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Known next work
 
-- Stereo Harmony crop and vinyl display
 - Remaining Garden progression depth
 - Additional non-dungeon gaps from the active 26.1.2 instance
 

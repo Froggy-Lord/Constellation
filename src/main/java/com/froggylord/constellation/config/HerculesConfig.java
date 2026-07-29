@@ -178,6 +178,25 @@ public class HerculesConfig extends BaseConfigGroup {
     public Map<String, String> sprayTypes = new HashMap<>();
     public Map<String, Boolean> sprayNotified = new HashMap<>();
 
+    public boolean stereoHarmony = true;
+    public boolean stereoDisplay = true;
+    public boolean stereoAlwaysShow = false;
+    public boolean stereoShowPest = true;
+    public boolean stereoShowCrop = true;
+    public boolean stereoHideWhenNone = false;
+    public boolean stereoReplaceMenuIcons = true;
+    public boolean stereoContestHelper = true;
+    public boolean stereoChangeNotification = false;
+    public boolean stereoChangeChat = true;
+    public boolean stereoChangeTitle = false;
+    public boolean stereoChangeSound = false;
+    public boolean stereoPersistSelection = true;
+    public int stereoMatchingColor = 0xA055FF55;
+    public int stereoPlayingColor = 0xA0FFFF55;
+    public int stereoTitleTicks = 60;
+    public String stereoChangeTemplate = "Stereo Harmony: {vinyl} boosts {pest} for {crop}";
+    public String stereoActiveVinyl = "";
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

@@ -25,7 +25,27 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Garden plot sprays: test this release first
+## Stereo Harmony: test this release first
+
+### Enable
+
+1. Enable Hercules, `Stereo Harmony`, `Stereo Display`, `Stereo Replace Menu Icons` and `Stereo Contest Helper`.
+2. Keep `Stereo Always Show` and selection notifications disabled initially, matching the live profile.
+3. Start breaking crops briefly so the farming-aware HUD is eligible to appear.
+
+### Selection, display and menu
+
+- [ ] Open Stereo Harmony. Expected: each vinyl entry is visually replaced by its associated crop while its original tooltip and click behavior remain unchanged.
+- [ ] During a Jacob contest, inspect the matching crop's vinyl. Expected: the matching inactive entry is green; the playing entry is yellow.
+- [ ] Select a vinyl. Expected: the HUD shows its exact vinyl, pest and crop after the menu or vacuum lore updates.
+- [ ] Close the menu and keep the vacuum anywhere in your inventory. Expected: the active selection remains synchronized.
+- [ ] Stop farming for longer than `farmingResetAfterSeconds`. Expected: the HUD hides unless `Stereo Always Show` is enabled.
+- [ ] Select None. Expected: the HUD says `Playing: Nothing`, or hides when `Stereo Hide When None` is enabled.
+- [ ] Toggle pest/crop rows independently. Expected: the selected rows disappear without losing active-vinyl state.
+- [ ] Enable selection notification channels and change vinyl. Expected: one configurable chat/title/sound alert appears; initial login reconciliation does not alert.
+- [ ] Run `/stereoharmony` and its option, color, template and title-duration commands. Expected: every setting persists.
+
+## Garden plot sprays
 
 ### Enable
 
