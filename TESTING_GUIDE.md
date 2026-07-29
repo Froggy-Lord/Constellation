@@ -1197,6 +1197,19 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 4. After uncovering a fossil tile, verify the recommendation changes from the opening sequence to evidence-based solving. Patterns, minimum remaining tiles, charges, possible fossil types and next probability must update without reopening the menu.
 5. Hover board tiles with tooltip hiding disabled. Dirt and fossil tooltips should show possible patterns, minimum tiles, tile probability and the fossil name once only one type remains.
 6. Test `Hide Dirt Tooltips` and `Hide All Tooltips` independently. Neither may hide tooltips outside the exact Fossil Excavator board.
+
+### Fossil Excavator profit tracker
+
+1. Enable Aquila, Fossil Helper, Fossil Profit Suite and Fossil Profit Hud, then finish one excavation in the Fossil Research Center.
+2. Confirm exactly one excavation is recorded and each indented reward has the correct amount. An empty excavation must still count once.
+3. Confirm one Suspicious Scrap is deducted, Fossil Dust uses one five-hundredth of the current Scrap price and Glacite Powder has no coin value.
+4. Compare Tusk, Webbed, Clubbed, Spine, Claw, Footprint, Helix and Ugly Fossils plus gemstone, essence, enchanted material and enchanted-book rewards. Unknown or temporarily unpriced loot must mark totals partial instead of acting like zero-value profit.
+5. Run `/fossilprofit status`, change rows, price source and every sorting mode. Values and order must update without changing stored amounts.
+6. Toggle item names, amounts, values, excavations, Scrap, Dust, Powder, total, per-excavation, hourly, uptime and recent rows independently.
+7. Enable the per-excavation summary and set warning thresholds. Confirm chat, title and sound channels fire only for a complete value meeting their own threshold.
+8. Switch between session and profile persistence, change profiles and reconnect. Session data must reset only when requested; profile data must remain isolated and survive restart.
+9. Use `/fossilprofit reset` and `/fossilprofit clearprofile` in their matching modes. Only the current tracker view or current profile may be cleared.
+10. Move and resize Fossil Profit in `/cn hud`. With research-center-only visibility enabled, it should appear in the excavator menu, in the recent window after a result, or at the Research Center, and nowhere unrelated.
 7. Enable `Fossil Protect Wrong Clicks`; a dirt tile other than the recommendation must be blocked. The recommendation must remain clickable, and holding either Control key must bypass protection when that option is enabled.
 8. Use `/fossilsolver option`, `/fossilsolver color best|probability|impossible AARRGGBB`, and `/fossilsolver reset` to verify every saved display, tooltip, protection, HUD and Muncher control.
 9. Trigger each Fossil Muncher riddle. The exact answer should appear locally; original replacement must follow `Fossil Muncher Replace Riddle`, and unknown text must pass through unchanged.

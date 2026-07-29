@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.721 (2026-07-30) — Fossil Excavator Profit Tracker
+
+- added exact excavation completion framing with every live observed reward type and unresolved-price safety
+- added session or per-profile excavation, item, Suspicious Scrap, Fossil Dust and Glacite Powder accounting
+- added total, per-excavation and hourly profit, active uptime, recent rewards and six item sorting modes
+- added a movable configurable HUD, independent high-value alerts, per-excavation summaries and `/fossilprofit` controls
+
 ## 0.9.720 (2026-07-30) — Fossil Excavator Solver
 
 - replaced Aquila's dead fossil flag with all eight fossil shapes and 404 valid starting placements

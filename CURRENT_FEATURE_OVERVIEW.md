@@ -96,6 +96,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Complete Fossil Excavator solver covering all eight fossils and 404 initial placements
 - Safe and low-charge opening sequences, exact probability highlights, percentage text and movable solver HUD
 - Fossil pattern/type/charge/minimum tooltips, optional wrong-click protection and Fossil Muncher answers
+- Exact Fossil Excavator completion framing with session or profile item histories
+- Suspicious Scrap cost, Fossil Dust value, Glacite Powder, total/per-excavation/hourly profit and active uptime
+- Movable configurable Fossil Profit HUD, recent rewards, sorting and high-value alerts
 - Scatha, treasure and mining-event assistance
 - Own Golden and Diamond Goblin box, beam, line, label and distance guidance
 - Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks
