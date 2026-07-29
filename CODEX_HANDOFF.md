@@ -2133,3 +2133,14 @@ Data supports the live session-only default or optional profile persistence. Ite
 `/foragingtracker` exposes session reset, active-profile clearing, rows, disappearance/recent/AFK timing, chat/title thresholds, tree filter, price source, sorting and all presentation/accounting switches. The tracker never breaks, aims, moves, clicks or sends gameplay packets.
 
 Version `0.9.709` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Real Tree Gift hover composition, item-name aliases, sack-delivered logs and modern bonus-drop categories remain explicit in-game checklist items.
+## July 30 version 0.9.710 Starlyn and Agatha
+
+`ArtemisStarlyn.java`, `StarlynCouponHudWidget.java`, `ArtemisConfig.java`, `ArtemisHunting.java` and `ItemProtectionScreenMixin.java` port SkyHanni LGPL `features/foraging/AgathaCouponProfit.kt` and `features/foraging/CompactStarlynSisters.kt`.
+
+The helper activates only in the exact `Agatha's Shop` container. It reads each offer's own `Cost` lore, supports prefix and suffix quantities including abbreviated thousands or millions, values every input and output through independently selectable Bazaar price sides, and calculates total and per-coupon profit. The coupon itself can use live pricing or a manual value. Missing prices remain visibly partial, can be filtered, and are warmed through the shared provider.
+
+Offers support per-coupon, total, cost and name sorting; configurable row limits; negative/unpriced filters; slot shading and compact labels; contextual cost tooltips; and a separately movable HUD with independent item, coupon, sell, cost and total-profit rows. `/starlynhelper` controls every behavior without generating any menu click.
+
+Optional Galatea-only chat state machines compact the complete Starlyn contest result, collection personal-best/Sweep sequence and sister personal-best pair. The replacement result has a user-clicked `/starlynsisterlevels` action and never sends server chat automatically.
+
+Version `0.9.710` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning was the known benign native-library warning.

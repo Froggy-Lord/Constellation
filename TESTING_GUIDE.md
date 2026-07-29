@@ -1430,3 +1430,14 @@ For each failure, record only these five things:
 5. The newest relevant file from `config/constellation-scrapes/` after `/cn scrape all`.
 
 One issue at a time is ideal. You do not need to retest unrelated sections after reporting a localized parser or overlay problem.
+- [ ] Enable Artemis and open exact `Agatha's Shop`. Expected: only actual sale offers with an Agatha Coupon cost appear; unrelated menus remain unchanged.
+- [ ] Compare every displayed material count against each offer's Cost lore, including any `1k`, `1m`, prefix-count or `x<count>` form. Expected: total input cost uses the full quantity.
+- [ ] Compare sell value, total cost, sale profit and profit per coupon against Bazaar prices. Expected: the arithmetic agrees, and missing market data says `partial` instead of silently becoming free.
+- [ ] Run `/starlynhelper couponprice 0`, then set a known manual coupon price. Expected: zero uses market pricing; a positive value immediately changes every affected offer.
+- [ ] Change input/output sources with `/starlynhelper price <input|output> <purchase|sell>`. Expected: each side changes independently.
+- [ ] Test all `/starlynhelper sort` modes, row count, negative and hide-unpriced options. Expected: ranking/filtering is stable and never changes the shop.
+- [ ] Toggle highlight, labels and tooltips independently. Expected: each affects only Agatha offers and labels remain readable for large or negative values.
+- [ ] Move and resize the Agatha Coupon Profit HUD in `/cn hud`. Expected: it is editable only while visible or during editor grace and retains its own placement.
+- [ ] Enable compact Starlyn results and finish a contest. Expected: the multi-line result becomes one local summary with bracket, points, previous best, reward location and clickable Open action.
+- [ ] Enable compact personal bests and trigger both collection/Sweep and sister PB messages. Expected: each complete sequence becomes one local summary without hiding unrelated chat.
+- [ ] Disconnect or change servers during a partial result sequence. Expected: no stale contest or personal-best line is reused later.

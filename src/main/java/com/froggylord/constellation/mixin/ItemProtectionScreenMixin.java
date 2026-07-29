@@ -77,6 +77,8 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.drawSlot(graphics, screen, slot);
         // ported from SkyHanni (LGPL-3.0-or-later): features/mining/HotxFeatures.kt
         com.froggylord.constellation.constellation.ArtemisHotf.drawSlot(graphics, screen, slot);
+        // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/AgathaCouponProfit.kt
+        com.froggylord.constellation.constellation.ArtemisStarlyn.drawSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         com.froggylord.constellation.constellation.PhoenixSlotBinding.drawSlot(graphics, screen, slot, mouseX, mouseY);
         if (slot != null && ItemProtection.showMarker(slot.getItem()))
@@ -90,7 +92,8 @@ public abstract class ItemProtectionScreenMixin {
             cir.setReturnValue(List.of());
             return;
         }
-        cir.setReturnValue(com.froggylord.constellation.constellation.ArtemisHotf.appendTooltip(screen, stack,
+        cir.setReturnValue(com.froggylord.constellation.constellation.ArtemisStarlyn.appendTooltip(screen, stack,
+            com.froggylord.constellation.constellation.ArtemisHotf.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.ArtemisAttributeOverlay.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.ArtemisHuntingBoxValue.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.AurigaReforgeHelper.appendTooltip(screen, stack,
@@ -111,6 +114,6 @@ public abstract class ItemProtectionScreenMixin {
             com.froggylord.constellation.constellation.HerculesVisitorHelper.appendTooltip(screen, stack,
                 com.froggylord.constellation.constellation.LyraAuctionHelper.appendTooltip(screen, stack,
                     com.froggylord.constellation.constellation.LyraBazaarHelper.appendTooltip(screen, stack,
-                        ItemProtection.appendTooltip(stack, cir.getReturnValue())))))))))))))))))))))));
+                        ItemProtection.appendTooltip(stack, cir.getReturnValue()))))))))))))))))))))))));
     }
 }

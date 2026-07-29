@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.710 (2026-07-30) — Starlyn and Agatha
+
+- added live Agatha Shop offer parsing with complete material, coupon, sell-value and profit calculations
+- added configurable price sides, manual coupon value, ranking, unpriced/negative filtering and row limits
+- added profitable-slot highlights, compact slot values, contextual cost tooltips and a movable profit HUD
+- added optional compact Starlyn contest results and personal-best messages plus full `/starlynhelper` controls
+
 ## 0.9.709 (2026-07-30) — Foraging Tracker
 
 - added transaction-safe Fig and Mangrove Tree Gift tracking with contribution and whole-tree accounting

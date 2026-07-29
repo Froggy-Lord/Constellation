@@ -360,4 +360,28 @@ public class ArtemisConfig extends BaseConfigGroup {
     public Map<String,Long> foragingTrackerHotfXp = new HashMap<>();
     public Map<String,Long> foragingTrackerWhispers = new HashMap<>();
     public Map<String,Long> foragingTrackerUptime = new HashMap<>();
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/StarlynContestsConfig.kt
+    public boolean starlynCouponProfit = true;
+    public boolean starlynCouponProfitHud = true;
+    public boolean starlynCouponHighlightSlots = true;
+    public boolean starlynCouponSlotLabels = true;
+    public boolean starlynCouponTooltips = true;
+    public boolean starlynCouponShowItem = true;
+    public boolean starlynCouponShowSell = true;
+    public boolean starlynCouponShowCost = true;
+    public boolean starlynCouponShowProfit = true;
+    public boolean starlynCouponShowCouponCount = true;
+    public boolean starlynCouponShowNegative = true;
+    public boolean starlynCouponHideUnpriced = false;
+    public boolean starlynCompactResults = false;
+    public boolean starlynCompactPersonalBest = false;
+    public int starlynCouponRows = 20;
+    public int starlynCouponPositiveColor = 0x8855FF55;
+    public int starlynCouponNegativeColor = 0x88FF5555;
+    public int starlynCouponUnknownColor = 0x88777777;
+    public int starlynCouponManualPrice = 0;
+    public String starlynCouponOutputPriceSource = "SELL";
+    public String starlynCouponInputPriceSource = "PURCHASE";
+    public String starlynCouponSort = "PROFIT_DESC";
 }

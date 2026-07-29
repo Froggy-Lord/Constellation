@@ -28,6 +28,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisMoongladeBeacon.init(cfg);
         ArtemisHotf.init(cfg);
         ArtemisForagingTracker.init(cfg);
+        ArtemisStarlyn.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -52,6 +53,8 @@ public final class ArtemisHunting extends BaseConstellation {
             HudPosition.of(78,106),()->cfg.enabled&&cfg.hotfHelper&&cfg.hotfHud));
         hud.register(new com.froggylord.constellation.hud.ForagingTrackerHudWidget(
             HudPosition.of(78,118),()->cfg.enabled&&cfg.foragingTracker&&cfg.foragingTrackerHud));
+        hud.register(new com.froggylord.constellation.hud.StarlynCouponHudWidget(
+            HudPosition.of(78,130),()->cfg.enabled&&cfg.starlynCouponProfit&&cfg.starlynCouponProfitHud));
     }
     @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         ArtemisHuntingProfit.registerCommands(dispatcher);
@@ -68,5 +71,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisMoongladeBeacon.registerCommands(dispatcher);
         ArtemisHotf.registerCommands(dispatcher);
         ArtemisForagingTracker.registerCommands(dispatcher);
+        ArtemisStarlyn.registerCommands(dispatcher);
     }
 }

@@ -398,3 +398,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Profit, profit/hour, recent drops, uptime and configurable confirmed-value alerts
 - Axe-only visibility with a saved disappearance delay and movable HUD
 - Full `/foragingtracker` status, reset, warning, filter and presentation controls
+## Starlyn contests and Agatha Coupon profit
+
+- Exact Agatha Shop offer detection reads sale items and their own material/coupon Cost lore.
+- Input and output values have independent purchase/sell price sources, with a manual Agatha Coupon override.
+- Offers can be ranked by coupon profit, total profit, cost or name and filtered for losses or incomplete prices.
+- Configurable slot colors, compact profit labels, detailed tooltips and a movable HUD expose every calculation.
+- Optional compact contest-result and personal-best messages retain the useful bracket, score, previous-best, collection and Sweep details.
+- `/starlynhelper` changes rows, sorting, price sources, coupon price and all display/message options.
