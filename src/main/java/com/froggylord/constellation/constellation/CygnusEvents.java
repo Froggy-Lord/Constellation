@@ -55,6 +55,7 @@ public class CygnusEvents extends BaseConstellation {
         CygnusCarnival.init(cfg);
         CygnusDiana.init(cfg);
         CygnusCalendar.init(cfg);
+        CygnusMayor.init(cfg);
         registerRenderer(CygnusCarnival::draw);
         registerRenderer(CygnusDiana::draw);
     }
@@ -89,6 +90,8 @@ public class CygnusEvents extends BaseConstellation {
             HudPosition.of(76, 80), () -> cfg.enabled && cfg.dianaDropTracker && cfg.dianaDropHud));
         hud.register(new HudWidget("cygnus-calendar", "Events", CygnusCalendar::hudText,
             HudPosition.of(76, 86), () -> cfg.enabled && cfg.eventCalendar && cfg.eventCalendarHud));
+        hud.register(new HudWidget("cygnus-mayor", "Mayor", CygnusMayor::hudText,
+            HudPosition.of(76, 92), () -> cfg.enabled && cfg.mayorState && cfg.mayorHud));
     }
 
     private static String calendarLine() {
@@ -148,5 +151,6 @@ public class CygnusEvents extends BaseConstellation {
         CygnusCarnival.registerCommands(dispatcher);
         CygnusDiana.registerCommands(dispatcher);
         CygnusCalendar.registerCommands(dispatcher);
+        CygnusMayor.registerCommands(dispatcher);
     }
 }

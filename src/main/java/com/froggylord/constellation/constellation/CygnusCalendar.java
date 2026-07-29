@@ -72,10 +72,11 @@ public final class CygnusCalendar {
         if(!enabled())return null;
         long now=System.currentTimeMillis()/1000;
         List<String> rows=new ArrayList<>();
-        if(cfg.eventCalendarShowSkyblockDate)rows.add(skyblockDate(System.currentTimeMillis()));
+        if(cfg.eventCalendarShowSkyblockDate&&cfg.calendarHud)rows.add(skyblockDate(System.currentTimeMillis()));
         int limit=Math.clamp(cfg.eventCalendarRows,1,8);
         for(Event event:EVENTS) {
-            if(rows.size()-(cfg.eventCalendarShowSkyblockDate?1:0)>=limit)break;
+            if(rows.size()-(cfg.eventCalendarShowSkyblockDate&&cfg.calendarHud?1:0)>=limit)break;
+            if(!cfg.eventNotificationHud)break;
             if(event.end()<now||!included(event.name))continue;
             boolean active=event.start<=now;
             if(active&&!cfg.eventCalendarShowActive)continue;

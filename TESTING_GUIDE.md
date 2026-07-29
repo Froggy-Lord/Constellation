@@ -2,6 +2,31 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Mayor and election state
+
+### Enable
+
+1. Enable Cygnus, Mayor State and Mayor HUD.
+2. Enable Minister, Perks and Election Leader rows as wanted.
+3. Join Hypixel SkyBlock and run `/mayor refresh`.
+
+### Test
+
+- [ ] Wait several seconds and run `/mayor status`. Expected: current mayor, minister, active-perk count and election year are populated.
+- [ ] Run `/mayor perks`. Expected: every mayor, minister and active temporary perk is listed with a plain-text description and source tag where applicable.
+- [ ] Run `/mayor election`. Expected: current candidates show vote totals and available perk counts.
+- [ ] Inspect the Mayor HUD. Expected: mayor, minister, filtered perks and current election leader match the command output.
+- [ ] Toggle Minister, Perks, Descriptions, Election and Votes independently. Expected: only the selected HUD information changes.
+- [ ] Run `/mayor include ritual` and `/mayor exclude mythological`. Expected: substring filters combine and affect only HUD perk rows, never internal active-perk detection.
+- [ ] Run `/mayor clearfilters` and `/mayor limit 2`. Expected: filters clear and at most two perk rows display.
+- [ ] Run `/mayor refreshminutes 30` and `/mayor color #ffaa00`. Expected: values persist across restart.
+- [ ] Refresh repeatedly. Expected: the current mayor never produces a change alert.
+- [ ] After a real mayor transition, refresh. Expected: each enabled chat, title and sound channel fires once for the live change.
+- [ ] Disconnect after a successful response and restart without network access. Expected: last-good mayor state remains visible with optional cached-state text.
+- [ ] Test Carnival with complete live perk state. Expected: auto overlays require Chivalrous Carnival plus their exact Hub coordinate box.
+- [ ] Test with the overrides request unavailable. Expected: Carnival falls back to exact coordinate gating rather than being incorrectly disabled.
+- [ ] Test outside Hypixel with SkyBlock Only enabled. Expected: Mayor HUD stays hidden while cached state remains intact.
+
 ## Event calendar and reminders
 
 ### Enable

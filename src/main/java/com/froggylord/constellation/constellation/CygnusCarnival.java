@@ -113,8 +113,9 @@ public final class CygnusCarnival {
 
     private static boolean enabled(){return cfg!=null&&cfg.enabled&&cfg.carnivalHelper&&ConstellationClient.loc().onHypixel()&&force!=Force.OFF;}
     private static boolean hub(){return ConstellationClient.loc().area()==SkyblockArea.HUB;}
-    private static boolean fishActive(Minecraft mc){return force==Force.FISH||(force==Force.AUTO&&hub()&&FISH_AREA.contains(mc.player.position()));}
-    private static boolean zombieActive(Minecraft mc){return force==Force.ZOMBIE||(force==Force.AUTO&&hub()&&SHOOTOUT_AREA.contains(mc.player.position()));}
+    private static boolean fishActive(Minecraft mc){return force==Force.FISH||(force==Force.AUTO&&hub()&&carnivalActive()&&FISH_AREA.contains(mc.player.position()));}
+    private static boolean zombieActive(Minecraft mc){return force==Force.ZOMBIE||(force==Force.AUTO&&hub()&&carnivalActive()&&SHOOTOUT_AREA.contains(mc.player.position()));}
+    private static boolean carnivalActive(){return !CygnusMayor.perkStateComplete()||CygnusMayor.hasPerk("Chivalrous Carnival");}
     private static boolean goldenFish(ArmorStand stand){ItemStack helmet=stand.getItemBySlot(EquipmentSlot.HEAD);if(!helmet.is(Items.PLAYER_HEAD))return false;var profile=helmet.get(DataComponents.PROFILE);if(profile==null)return false;for(Property p:profile.partialProfile().properties().get("textures"))if(p!=null&&FISH_TEXTURE.equals(textureHash(p.value())))return true;return false;}
     private static String textureHash(String encoded){try{String json=new String(Base64.getDecoder().decode(encoded),StandardCharsets.UTF_8);String url=JsonParser.parseString(json).getAsJsonObject().getAsJsonObject("textures").getAsJsonObject("SKIN").get("url").getAsString();return url.substring(url.lastIndexOf('/')+1);}catch(Exception ignored){return"";}}
     private static int zombieColor(Zombie z){ItemStack chest=z.getItemBySlot(EquipmentSlot.CHEST);if(chest.is(Items.DIAMOND_CHESTPLATE))return cfg.carnivalDiamondColor;if(chest.is(Items.GOLDEN_CHESTPLATE))return cfg.carnivalGoldColor;if(chest.is(Items.IRON_CHESTPLATE))return cfg.carnivalIronColor;if(chest.is(Items.LEATHER_CHESTPLATE))return cfg.carnivalWoodColor;return 0;}

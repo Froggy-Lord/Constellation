@@ -87,6 +87,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Authoritative current mayor, minister, active perk and live election state
+- Temporary perk overrides with partial-state-safe Carnival event gating
+- Movable Mayor HUD with perk descriptions/filtering, election leader/votes and cache state
+- Deduplicated mayor-change chat, title and sound notifications
+- `/mayor` status, perk/election lists, refresh, filters, limit, color and display controls
 - Live upcoming-event calendar with active/upcoming countdowns and locations
 - Offline last-good calendar cache plus deterministic SkyBlock season, day and year
 - Five-minute/one-minute reminders with independent chat, title and sound

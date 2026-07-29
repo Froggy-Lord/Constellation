@@ -91,6 +91,24 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean spookyEventTracker = true; 
     public boolean raffleHelper = true;        
     public boolean mayorPerksDisplay = true;    
+    // ported from Devonian (GPL-3.0): api/MayorApi.kt
+    public boolean mayorState = true;
+    public boolean mayorHud = true;
+    public boolean mayorShowMinister = true;
+    public boolean mayorShowPerks = true;
+    public boolean mayorShowPerkDescriptions = false;
+    public boolean mayorShowElectionLeader = true;
+    public boolean mayorShowElectionVotes = true;
+    public boolean mayorShowFetchState = false;
+    public boolean mayorChangeChat = true;
+    public boolean mayorChangeTitle = true;
+    public boolean mayorChangeSound = true;
+    public boolean mayorOnlySkyblock = true;
+    public int mayorRefreshMinutes = 21;
+    public int mayorHudPerkLimit = 6;
+    public int mayorColor = 0xFFFFAA00;
+    public String mayorPerkIncludes = "";
+    public String mayorPerkExcludes = "";
     public boolean dianaBurrowGuesser = true;   
     public boolean chimeraAlert = true;          
     public boolean daedalusAlert = true;         // alert when daedalus stick drop...

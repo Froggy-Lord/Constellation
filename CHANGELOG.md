@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.692 (2026-07-30) — Mayor and election state
+
+- added authoritative current mayor, minister, active-perk and election-slate loading
+- added temporary perk overrides, special-event gating and validated last-good offline cache
+- added configurable mayor/election HUD, perk descriptions/filters and mayor-change alerts
+- added complete `/mayor` status, perks, election, refresh, filter, color and presentation controls
+
 ## 0.9.691 (2026-07-30) — Event calendar and reminders
 
 - added a live upcoming-event calendar with deterministic SkyBlock date and active-event countdowns

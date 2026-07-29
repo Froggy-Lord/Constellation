@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.691 event calendar and reminders.
+Last updated: 2026-07-30 for version 0.9.692 mayor and election state.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.691`.
+- Current artifact version: `0.9.692`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -319,6 +319,16 @@ Fetching is asynchronous on one daemon executor with connection/request timeouts
 The movable HUD supports active events, location, SkyBlock date/year, one-to-eight upcoming rows and optional fetch state. Editable case-insensitive substring include/exclude filters avoid noisy high-frequency events; defaults omit Jacob contests and Cult of the Fallen Star while leaving all larger events visible. Chat, title and sound alerts are independent. `/events` exposes status, manual refresh, rows, reminder seconds, filters and every boolean presentation channel.
 
 The first full boot wrote and parsed a 7,308-byte live calendar cache, in addition to passing exit 124 with 138 rooms, 14 constellations and zero crash/mixin/fatal signatures. Next Cygnus vertical should be mayor/minister/perk state, then select one still-advertised seasonal helper backed by licensed live behavior.
+
+## July 30 mayor and election state
+
+Version `0.9.692` adds `CygnusMayor.java`. Core mayor, minister, perk and current-election parsing uses Devonian GPL `api/MayorApi.kt` and Hypixel's public no-key resource endpoint. Active temporary perk overrides use Skyblocker LGPL `utils/mayor/MayorUtils.java`. Both requests share one daemon executor and bounded HTTP client; core state succeeds independently if overrides are unavailable.
+
+The parser rejects unsuccessful or structurally incomplete responses, preserves descriptions after removing formatting for display, sorts election candidates by votes and writes the full validated response to `config/constellation-mayor.json`. Startup loads this last-good cache before refreshing. A cached mayor does not falsely claim temporary override completeness. Carnival's normal auto mode now requires the real `Chivalrous Carnival` perk only when both live mayor and override state are complete; offline or partial API state falls back to its already strict Hub/minigame coordinate gates.
+
+The movable Mayor HUD independently shows mayor, minister/perk, filtered active perks, descriptions, election leader/votes and cache state. Old Cygnus `mayorPerksDisplay` and `mayorElectionHud` toggles are wired into the new renderer instead of remaining decorative. Mayor-change chat/title/sound only fire on a later live transition, never when initial cache data is replaced by the first response. `/mayor` exposes status, full perk/election lists, refresh cadence, limit, filters, color and every display/alert switch.
+
+Boot validated a real cached response containing Diana, minister Finnegan, two mayor perks and five election candidates. Build passed 11/11; boot passed exit 124 with 138 rooms, 14 constellations and no crash/mixin/fatal signatures. Next Cygnus release should select one remaining seasonal helper with concrete licensed behavior; do not retain broad advertised toggles whose backing path is still empty.
 
 ## July 21 party-message audit
 
