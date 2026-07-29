@@ -2215,3 +2215,15 @@ Only exposed, non-air and non-bedrock blocks are considered. Gold Mine, Deep Cav
 The world preview outlines every predicted block with configurable color and wall mode. The movable HUD independently supports errors, total blocks, Mineshaft pity, ordinary drops and powder; cooldown visibility matches the live profile's `hideHudOnCooldown=false`. `/pickobulushelper` exposes the master, preview, HUD, cooldown, row, range, color and wall controls. The helper only reads local world/item/player-list state and renders; it never uses the ability, clicks, aims, selects a slot or sends a packet.
 
 Version `0.9.716` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.
+
+## July 30 version 0.9.717 Mining Conveniences
+
+`AquilaMiningConveniences.java`, `AquilaConfig.java`, `AquilaMining.java` and `ItemProtectionScreenMixin.java` port the live-enabled Skyblocker LGPL `skyblock/dwarven/CommissionHighlight.java`, `CallMismyla.java` and `RedialOnBadSignal.java`. Completed-slot behavior was cross-checked against NoFrills GPL `features/mining/CommissionHighlight.java`.
+
+Commission highlighting is gated to Hypixel and the exact cleaned `Commissions` container title. It shades only a slot whose own lore contains the exact cleaned `COMPLETED` line. Fill color and optional compact `DONE` text are independent. It neither clicks nor changes the menu.
+
+The Mismyla action requires the exact named commission-complete sentence and deliberately excludes Glacite Mineshafts as the source does. The Fred action requires both the exact NPC prefix/name shape and recursively detected obfuscated component style, preventing ordinary Fred dialogue from matching. Each produces a local user-clicked `/call` action; neither sends a command merely because chat arrived.
+
+Both actions have independent enable and original-line replacement settings. Hover text is optional. Mismyla and redial messages accept up to 240 characters and support `{commission}` or `{npc}` placeholders respectively. `/miningconveniences` exposes every toggle, both message templates and the eight-digit commission ARGB color.
+
+Version `0.9.717` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.

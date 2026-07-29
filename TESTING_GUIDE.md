@@ -1211,6 +1211,16 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 - [ ] Remove the Pickobulus tool or leave a supported mining area. Expected: world outlines and visible state clear on the next tick.
 - [ ] Move and resize Pickobulus in `/cn hud`, then toggle total, pity, drops, powder and errors independently. Expected: each row and the HUD placement remain independent of the world preview.
 - [ ] Run `/pickobulushelper` and test preview, HUD, cooldown, row, wall, range and ARGB controls. Expected: every setting persists without using the ability or sending a packet.
+- [ ] Open the exact `Commissions` menu with incomplete and completed entries. Expected: only slots whose lore contains the exact `COMPLETED` line receive the configured fill.
+- [ ] Open another book-based menu containing similar text. Expected: no commission highlight appears outside the exact menu title.
+- [ ] Toggle the optional commission `DONE` label and change its ARGB fill. Expected: the label and fill update independently without changing any slot or click.
+- [ ] Complete a commission outside a Glacite Mineshaft. Expected: one local message includes the parsed commission name and a clickable `[Call Mismyla]` action.
+- [ ] Click the Mismyla action. Expected: the user click runs `/call mismyla`; receiving the completion message alone sends no command.
+- [ ] Complete a commission inside a Glacite Mineshaft. Expected: no Mismyla call is suggested because the source deliberately excludes that location.
+- [ ] Receive ordinary Fred dialogue and a genuinely obfuscated bad-signal Fred line. Expected: only the component containing obfuscated text receives `[Call Fred]`.
+- [ ] Toggle original-line replacement separately for Mismyla and redial. Expected: each original server line is preserved or hidden independently while the local action remains.
+- [ ] Customize Mismyla with `{commission}` and redial with `{npc}` using `/miningconveniences message`. Expected: placeholders resolve locally and saved text survives relaunch.
+- [ ] Test every `/miningconveniences option`, hover and color control. Expected: each changes only its named behavior and no action is automatic.
 - [ ] In the Garden, run `/cropstart set <crop>` and `/cropstart setat <crop> <x> <y> <z>` for two different crops. Expected: each crop retains its own manual location independently.
 
 ## Kuudra and Crimson Isle

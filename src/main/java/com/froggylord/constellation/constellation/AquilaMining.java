@@ -52,6 +52,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningAwareness.init(cfg);
         AquilaMiningHighlights.init(cfg);
         AquilaPickobulus.init(cfg);
+        AquilaMiningConveniences.init(cfg);
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaPickobulus.draw(context); } });
     }
 
@@ -94,6 +95,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaForgeHelper.registerCommands(dispatcher);
         AquilaMiningHighlights.registerCommands(dispatcher);
         AquilaPickobulus.registerCommands(dispatcher);
+        AquilaMiningConveniences.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

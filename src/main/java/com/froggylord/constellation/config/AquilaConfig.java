@@ -81,6 +81,18 @@ public class AquilaConfig extends BaseConfigGroup {
     public int pickobulusRange = 20;
     public int pickobulusColor = 0xFF55FFFF;
 
+    public boolean miningConveniencesSuite = true;
+    public boolean commissionHighlight = true;
+    public boolean commissionHighlightLabel = false;
+    public boolean callMismyla = true;
+    public boolean callMismylaReplaceOriginal = true;
+    public boolean redialOnBadSignal = true;
+    public boolean redialReplaceOriginal = true;
+    public boolean miningCallHoverText = true;
+    public int commissionHighlightColor = 0x8055FF55;
+    public String callMismylaMessage = "Commission complete: {commission}. Call Mismyla?";
+    public String redialMessage = "Bad signal from {npc}. Call again?";
+
     public boolean miningProgressSuite = true;
     public boolean miningCommissionProgressHud = true;
     public boolean miningCommissionShowDone = true;

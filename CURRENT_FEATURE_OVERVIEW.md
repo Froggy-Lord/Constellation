@@ -99,6 +99,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Crystal Hollows treasure-chest outlines, particle-derived lock spots and per-chest lock progress
 - Pickobulus exposed-block outlines and location-specific block, ore, powder and Mineshaft-pity forecasts
 - Pickobulus held-ability/cooldown state with independently movable and configurable HUD rows
+- Completed-commission slot highlights in the exact Commissions menu
+- Customizable user-clicked Mismyla completion calls and obfuscation-validated Fred redial actions
 
 ## Auriga: experiments and utility
 

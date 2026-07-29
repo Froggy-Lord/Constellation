@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.717 (2026-07-30) — Mining Conveniences
+
+- added exact completed-commission slot highlighting in the Commissions menu
+- added customizable clickable Mismyla calls after eligible commission completions
+- added obfuscation-validated Fred bad-signal redial actions without false matching ordinary dialogue
+- added independent original-line replacement, hover, label, color, message placeholder and command controls
+
 ## 0.9.716 (2026-07-30) — Pickobulus Helper
 
 - replaced Aquila's dead Pickobulus flag with exact 8-by-8-by-8 exposed-block prediction

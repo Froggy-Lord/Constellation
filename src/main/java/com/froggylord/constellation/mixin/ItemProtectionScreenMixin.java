@@ -79,6 +79,8 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.ArtemisHotf.drawSlot(graphics, screen, slot);
         // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/AgathaCouponProfit.kt
         com.froggylord.constellation.constellation.ArtemisStarlyn.drawSlot(graphics, screen, slot);
+        // ported from Skyblocker (LGPL-3.0-or-later): skyblock/dwarven/CommissionHighlight.java
+        com.froggylord.constellation.constellation.AquilaMiningConveniences.drawSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         com.froggylord.constellation.constellation.PhoenixSlotBinding.drawSlot(graphics, screen, slot, mouseX, mouseY);
         if (slot != null && ItemProtection.showMarker(slot.getItem()))
