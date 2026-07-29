@@ -25,6 +25,26 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 - [ ] Switch profiles with Persistent enabled. Expected: stored totals remain isolated.
 - [ ] Run `/huntingprofit reset`. Expected: session values clear. Run `clearprofile` only when deliberately removing persistent active-profile history.
 
+## Galatea hunting targets
+
+### Enable
+
+1. Enable Artemis and Hunting Mob Highlights.
+2. Enable Hideonleaf, Invisibug, Shellwise and Coralot. Birries is disabled by default to match the live SkyHanni profile.
+3. Enable Boxes and Labels first; add beams or lines only if wanted.
+
+### Test
+
+- [ ] Approach a green Hideonleaf shulker in Galatea. Expected: only that green shulker receives the configured Hideonleaf overlay inside its range.
+- [ ] Find a Shellwise turtle and Coralot axolotl. Expected: each receives its own independently colored overlay.
+- [ ] Enable Birries and approach one. Expected: the helper links its detached Birries name tag to the nearest living base entity rather than outlining the armor stand.
+- [ ] Approach an Invisibug CRIT particle. Expected: the nearest inventory-empty default armor stand within five blocks receives the offset Invisibug marker.
+- [ ] Observe unrelated CRIT particles without a matching default stand. Expected: no marker appears.
+- [ ] Change every target range and color with `/huntingmobs`. Expected: changes are independent and persist.
+- [ ] Toggle box, label, distance, beam, line and through-wall rendering independently. Expected: only selected presentation remains.
+- [ ] Enable target alerts and find the same target repeatedly. Expected: selected chat/title/sound channels obey the per-type cooldown.
+- [ ] Leave Galatea or change worlds. Expected: every hunting target immediately disappears and no stale marker leaks into another island.
+
 ## Unique gifting
 
 ### Enable

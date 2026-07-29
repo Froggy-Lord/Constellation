@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.696 Hunting profit tracker.
+Last updated: 2026-07-30 for version 0.9.697 Galatea hunting targets.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.696`.
+- Current artifact version: `0.9.697`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1987,3 +1987,13 @@ Exact stripped caught, hunting Lootshare and CHARM/NAGA/SALT messages create one
 The tracker defaults to the live profile's session-only, recent-pickup, held-tool, ten-row and instant-buy-style behavior. Optional profile persistence stores quantities, names, last-gain times, mobs, shards and active uptime separately. AFK time is excluded. The movable HUD independently shows recent drop, table, total, hourly rate, mobs, shards and uptime. Sorting, price source, visibility, grace time, warnings, thresholds and event-source inclusion are configurable through Artemis settings and `/huntingprofit`.
 
 Version `0.9.696` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live hunting chat and Bazaar valuation remain explicit in-game checklist items.
+
+## July 30 version 0.9.697 Galatea hunting targets
+
+`ArtemisHuntingTargets.java`, `ArtemisConfig.java` and `ArtemisHunting.java` add the live-enabled Galatea hunting target vertical. Hideonleaf, Invisibug and Birries behavior ports SkyHanni LGPL `features/hunting/HideonleafHighlighter.kt`, `InvisibugHighlighter.kt`, `BirriesHighlighter.kt` and their config classes. Hideonleaf, Shellwise and Coralot entity-type detection cross-ports Skyblocker LGPL `skyblock/entity/glow/adder/GalateaGlowAdder.java`.
+
+Skyblocker’s green-Shulker, Turtle and Axolotl checks avoid fragile display-name inference. Invisibugs preserve SkyHanni’s exact CRIT-particle, five-block nearest default armor stand, empty equipment and duplicate-distance rules, including its offset filled marker. Birries detection accounts for Hypixel’s detached mob-name armor stand and binds the exact tag to the nearest non-armor-stand living base entity.
+
+Each of the five targets has an independent live-default toggle, range and ARGB color. Boxes, labels, distance, beams, lines and through-wall rendering are independently configurable. Optional chat/title/sound alerts deduplicate per target type. `/huntingmobs` exposes status, transient clearing, ranges, colors and presentation switches. All detection and rendering require exact Galatea area state; world or island changes clear targets.
+
+Version `0.9.697` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live Galatea entity composition remains an explicit in-game checklist item.

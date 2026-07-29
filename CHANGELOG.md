@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.697 (2026-07-30) — Galatea hunting targets
+
+- added Hideonleaf, Invisibug, Birries, Shellwise and Coralot target detection
+- added exact entity-type, CRIT-particle/default-stand and detached-name-tag matching
+- added independent target toggles, colors and ranges plus box, label, beam, line and distance rendering
+- added optional deduplicated chat, title and sound alerts with complete `/huntingmobs` controls
+
 ## 0.9.696 (2026-07-30) — Hunting profit tracker
 
 - added Artemis as an independent hunting and foraging constellation

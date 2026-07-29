@@ -34,6 +34,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Galatea-only Hideonleaf, Invisibug, Birries, Shellwise and Coralot detection
+- Independent target toggles, colors and ranges with boxes, labels, beams, lines and distance
+- Optional deduplicated local target chat, title and sound alerts
+- `/huntingmobs` status, clearing, range, color and presentation controls
 - Exact caught-shard, hunting Lootshare and charm result tracking
 - Authoritative Bazaar product resolution including all exceptional shard names
 - Session-only or profile-persistent totals, mobs, shards, value, hourly rate and uptime
