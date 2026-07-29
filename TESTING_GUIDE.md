@@ -2,6 +2,31 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Huntaxe Lock
+
+### Enable
+
+1. Enable Artemis and Huntaxe Lock.
+2. Keep Air, Blocks and Actionbar enabled with the ten-tick window for the live NoFrills behavior.
+3. Leave Single Use and Sneak Bypass disabled unless every use should confirm or crouching should deliberately bypass the first-click lock.
+
+### Test
+
+- [ ] Hold Genesis, Dominus, Cursus, Praedator or Nex Titanum and right-click air once. Expected: Absorptio is cancelled and the actionbar asks for a second click.
+- [ ] Right-click again inside ten ticks. Expected: the interaction is allowed.
+- [ ] Wait longer than the configured window before clicking again. Expected: the next click is treated as a new first click and blocked.
+- [ ] Right-click a block with a Huntaxe. Expected: the same confirmation state applies while Block scope is enabled.
+- [ ] Disable Air or Blocks independently. Expected: that interaction route passes normally while the other remains protected.
+- [ ] Change Huntaxes or move the Huntaxe between hands during the confirmation window. Expected: only the same item identity retains the window.
+- [ ] Switch away from the Huntaxe. Expected: the confirmation window clears immediately.
+- [ ] Enable Single Use. Expected: every allowed Absorptio consumes the window, so another use needs a fresh double-click.
+- [ ] Enable Sneak Bypass and crouch-right-click. Expected: the first interaction passes deliberately and clears any old window.
+- [ ] Test an unrelated golden axe, dungeon ability item and non-Huntaxe weapon. Expected: none are blocked.
+- [ ] Test a Huntaxe whose ID is unavailable but whose name contains Huntaxe and lore contains `Ability: Absorptio`. Expected: it remains protected.
+- [ ] Toggle actionbar, chat and sound independently. Expected: only the selected local channels announce the blocked first click.
+- [ ] Run `/huntaxelock ticks`, `status`, `reset` and `resetstats`. Expected: timing, current state and local session counters update correctly.
+- [ ] Observe normal gameplay without right-clicking a Huntaxe. Expected: no interaction is generated automatically.
+
 ## Fusion keybinds
 
 ### Enable

@@ -34,6 +34,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Absorptio confirmation lock for all five current Huntaxes with future-tier lore fallback
+- Air/block scopes, confirmation window, continuous/single-use modes and optional sneak bypass
+- Actionbar, chat and sound feedback, session counters and full `/huntaxelock` controls
 - User-bound repeat, confirm and cancel Fusion controls with exact menu/button validation
 - Duplicate/simultaneous-key rejection, click cooldown, feedback, sound and input-consumption controls
 - Session action counts and complete `/fusionkeys` controls; no automatic Fusion interaction

@@ -162,4 +162,15 @@ public class ArtemisConfig extends BaseConfigGroup {
     public boolean fusionKeybindFeedback = true;
     public boolean fusionKeybindSound = true;
     public int fusionKeybindCooldownMillis = 200;
+
+    // ported from NoFrills (GPL-3.0-only): features/hunting/HuntaxeLock.java
+    public boolean huntaxeLock = true;
+    public boolean huntaxeLockAir = true;
+    public boolean huntaxeLockBlocks = true;
+    public boolean huntaxeLockSingleUse = false;
+    public boolean huntaxeLockSneakBypass = false;
+    public boolean huntaxeLockActionbar = true;
+    public boolean huntaxeLockChat = false;
+    public boolean huntaxeLockSound = false;
+    public int huntaxeLockTicks = 10;
 }

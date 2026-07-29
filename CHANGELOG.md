@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.702 (2026-07-30) — Huntaxe Lock
+
+- added double-right-click protection for all five current Absorptio Huntaxes
+- added ID-first detection with exact Huntaxe-name and Absorptio-lore fallback for future tiers
+- added configurable confirmation window, air/block scopes, single-use mode and sneak bypass
+- added independent actionbar, chat and sound feedback plus full `/huntaxelock` controls
+
 ## 0.9.701 (2026-07-30) — Fusion keybinds
 
 - added separate Minecraft Controls bindings for repeat, confirm and cancel Fusion actions
