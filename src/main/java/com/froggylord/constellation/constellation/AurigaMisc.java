@@ -14,13 +14,19 @@ public class AurigaMisc extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
+        AurigaExperiments.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
     public void registerHud(HudManager hud) {
+        var cfg = (com.froggylord.constellation.config.AurigaConfig) config;
+        hud.register(new com.froggylord.constellation.hud.ExperimentHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 20),
+            () -> cfg.enabled && cfg.experimentSolver && cfg.experimentHud));
     }
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        AurigaExperiments.registerCommands(dispatcher);
     }
 }

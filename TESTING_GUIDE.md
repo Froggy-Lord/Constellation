@@ -912,6 +912,18 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 
 ## Rift, events and general HUD
 
+- [ ] Enable Auriga, `experimentSolver` and all three experiment types, then open each exact Experimentation Table game on the Private Island. Expected: no solver activates in similarly named or unrelated containers.
+- [ ] Start Chronomatron. Expected: every glowing color is remembered once during replay, then slots matching the next color highlight when the timer begins.
+- [ ] Click the correct Chronomatron color. Expected: step and remaining counts advance once and next/second/later colors update.
+- [ ] Start Ultrasequencer. Expected: the full numbered pattern is captured during Remember, preserved during Wait, and revealed in numeric order during Timer.
+- [ ] Click Ultrasequencer slots in order. Expected: the next highlight advances once per accepted click and the HUD reaches End after the final step.
+- [ ] Reveal Superpairs items. Expected: remembered items remain highlighted after being covered; known pairs, the current first-click match and powerups use independent colors.
+- [ ] Enable wrong-click protection and click a known-wrong Chronomatron/Ultrasequencer target. Expected: the click is blocked. Hold Control and repeat; expected: the deliberate bypass allows it.
+- [ ] With known-wrong-second Superpairs protection enabled, reveal one known item then click a different known item. Expected: only the known-wrong second click is blocked; completing or bypassing a pair resets first/second state.
+- [ ] Toggle next, second, remaining, dim-wrong, labels, tooltip hiding, pair memory and pair highlights independently. Expected: each changes only its documented presentation or safeguard.
+- [ ] Toggle Hypixel-only and Private-Island-only scope. Expected: exact experiment screens outside selected scope remain untouched.
+- [ ] Close and reopen an experiment or run `/experiments reset`. Expected: sequence, pair and click state clears without affecting items.
+- [ ] Move and resize the Experiment HUD in `/cn hud`. Expected: it appears only during a live experiment or its five-second grace and persists.
 - [ ] Enable Apollo. Expected: Performance, Location and Movement appear in a loaded world; Vitals follows its Hypixel scope; Active Effects appears only while at least one effect is active or was visible during the HUD editor's five-second grace.
 - [ ] Stand on Hypixel for at least five seconds. Expected: FPS, player-list ping and negative-ping server TPS settle to plausible values without sending an additional ping packet.
 - [ ] Compare current, average, median, minimum and maximum rows while changing `/apollohud samples <seconds>`. Expected: current responds fastest and rolling statistics remain bounded to the selected window.

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.684 (2026-07-30) — Experimentation Table solvers
+
+- replaced Auriga's empty implementation with licensed Chronomatron, Ultrasequencer and Superpairs state machines
+- added next/second/remaining overlays, remembered pair matching, powerup highlights and a movable progress HUD
+- added optional wrong/early-click protection with a deliberate Control bypass
+- added independent solver, scope, tooltip, memory, presentation and color controls through settings and `/experiments`
+
 ## 0.9.683 (2026-07-30) — Apollo telemetry HUD suite
 
 - replaced Apollo's empty implementation with five independently movable HUD panels

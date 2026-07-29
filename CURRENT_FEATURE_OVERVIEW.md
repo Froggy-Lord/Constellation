@@ -48,13 +48,14 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Auriga: experiments and utility
 
-- Ultrasequencer helper
-- Superpairs memory helper
-- Chronomatron/experiment support where exposed by the current table
-- Chocolate Factory information and helpers
-- Reforge and anvil assistance
-- God Potion timing
-- Item/stack calculation commands
+- Chronomatron sequence memory with next, second and remaining color guidance
+- Ultrasequencer numeric sequence memory, step tracking and ordered slot guidance
+- Superpairs item memory, known-pair matching, current-match and powerup highlighting
+- Optional wrong/early-click protection with a deliberate hold-Control bypass
+- Movable experiment type, phase, step, remaining and remembered-item HUD
+- Independent solver, scope, tooltip, memory, overlay, label and color controls
+- `/experiments` status, reset and complete main option commands
+- Chocolate Factory, reforge, anvil, God Potion and calculator helpers remain scheduled for reconstruction
 
 ## Cassiopeia: chat
 
