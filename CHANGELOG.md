@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.690 (2026-07-30) — Diana tracking suite
+
+- added exact empirical Start, Mob and Treasure burrow detection from server particles
+- added persistent Diana mob, rare-drop and dug-coin tracking with two movable HUDs
+- added deduplicated Minos Inquisitor titles, sounds, coordinate waypoints and optional party sharing
+- added configurable rendering, lifetimes, ranges, colors, alerts, compact/full HUD modes and `/diana` controls
+
 ## 0.9.689 (2026-07-30) — Chivalrous Carnival helpers
 
 - added strict Hub and exact-coordinate gating for Catch a Fish and Zombie Shootout

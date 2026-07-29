@@ -2,6 +2,30 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Diana tracking suite
+
+### Enable
+
+1. Enable Cygnus, Diana Burrow Waypoints, Diana Mob Tracker and Diana Drop Tracker.
+2. Enable both Diana HUDs and the Inquisitor alert options you want.
+3. Join the Hub during a Mythological Ritual with a Griffin pet and spade.
+
+### Test
+
+- [ ] Reveal each empirical burrow type. Expected: Start is green, Mob red and Treasure yellow by default, with the correct box, beam and label.
+- [ ] Stay near a revealed burrow while its particle repeats. Expected: one waypoint remains instead of duplicates accumulating.
+- [ ] Dig a tracked burrow. Expected: the nearby waypoint clears when Hypixel advances the chain.
+- [ ] Complete the chain. Expected: all empirical burrow waypoints clear.
+- [ ] Run `/diana range 128`, `/diana lifetime 60` and `/diana color treasure #ffaa00`. Expected: rendering range, expiry and Treasure color update and persist.
+- [ ] Dig each mythological mob type. Expected: only Hypixel's exact dug-out messages increment the corresponding counter once.
+- [ ] Receive a supported rare drop or dug-coin message. Expected: the drop/coin total increments once; configured title and sound fire for rare drops.
+- [ ] Spawn an Inquisitor with coordinate information. Expected: one alert and an expiring world waypoint appear.
+- [ ] Enable Inquisitor Share. Expected: a locally sourced coordinate is sent once; receiving a teammate's coordinate never echoes it back.
+- [ ] Switch Compact/Full HUD modes. Expected: compact shows high-value highlights; full shows every nonzero entry ranked by count.
+- [ ] Run `/diana resetmobs`, `resetdrops` and `clearwaypoints`. Expected: each clears only its named state.
+- [ ] Leave the Hub or Hypixel. Expected: world waypoints and both HUDs disappear and no incoming chat changes Diana totals.
+- [ ] Dig normally. Expected: Constellation never clicks, digs, moves or aims for you.
+
 ## Chivalrous Carnival helpers
 
 ### Enable

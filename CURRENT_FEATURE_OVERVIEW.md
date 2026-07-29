@@ -87,6 +87,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Cygnus: events and Diana
 
+- Exact server-particle detection for empirical Start, Mob and Treasure burrows
+- Configurable burrow boxes, beams, labels, distance, range, lifetime, colors and through-wall rendering
+- Persistent tracking for eleven mythological mobs, sixteen rare drops and dug coins
+- Compact or full movable Diana mob and drop HUDs
+- Deduplicated Minos Inquisitor title/sound alerts, expiring coordinate waypoint and optional safe party sharing
+- `/diana` status, reset, clearing, range, lifetime, color and presentation controls
 - Catch a Fish Golden Fish detection using the exact Carnival head texture
 - Configurable Golden Fish box, label, beam, sound, range and through-wall rendering
 - Zombie Shootout armor-to-weapon color guidance and live lit-lamp target outlines

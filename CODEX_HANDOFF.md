@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.689 Chivalrous Carnival helpers.
+Last updated: 2026-07-30 for version 0.9.690 Diana tracking suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.689`.
+- Current artifact version: `0.9.690`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -299,6 +299,16 @@ Version `0.9.689` fills the live-enabled Skyblocker Carnival gap. `CygnusCarniva
 Catch a Fish recognizes only the exact Golden Fish player-head texture and offers independent box, label, beam, first-seen sound, range, color and through-wall controls. Zombie Shootout maps diamond, gold, iron and leather chestplates to the matching weapon colors, renders optional labels and boxes, and outlines only the twelve known lamps whose live block state is a lit redstone lamp. The movable HUD reports only the currently active minigame. `/carnivalhelper force` is a session-only visual test mode and still requires Hypixel; it never aims, fishes, shoots or clicks.
 
 Build passed 11/11 and the 160-second headless boot passed with exit 124, 138 rooms, 14 constellations and zero forbidden crash/mixin signatures. The Gather configuration should be preserved during deployment. Next run: continue the structural audit of advertised but empty Cygnus event features against the live 26.1.2 settings and licensed sources, selecting one coherent event helper rather than filling unrelated toggles together.
+
+## July 30 Diana tracking suite
+
+Version `0.9.690` replaces the previously advertised but unregistered Diana trackers with `CygnusDiana.java`, ported from Devonian GPL `features/diana/BurrowWaypoint.kt`, `DianaMobTracker.kt` and `DianaDropTracker.kt`. The live Devonian profile currently has these modules disabled, so Constellation preserves Cygnus's disabled master default and does not alter the Gather configuration. When enabled, all processing is additionally limited to Hypixel Hub.
+
+Empirical burrows use Devonian's exact particle type/count/spread signatures and block-coordinate conversion. Duplicate nearby particles replace the same waypoint, entries expire after a configurable lifetime, nearby chain progress removes the nearest point, and completing a chain clears them. Boxes, beams, labels, distance, through-wall state, range, lifetime and all three colors are independent. No block interaction or digging is generated.
+
+The tracker ports all eleven current Devonian mythological mobs and sixteen rare-drop names plus dug coins. Counts persist in Cygnus config when persistence is enabled and appear in independently movable compact or full mob/drop HUDs. Inquisitor coordinate messages provide an expiring beam/label; alerts are deduplicated, and optional party sharing occurs only for a locally identified coordinate source so teammate messages cannot echo. `/diana` exposes status, resets, waypoint clearing, range, lifetime, colors and all behavioral toggles.
+
+Build passed 11/11 and boot passed the expected exit 124 with 138 rooms, 14 constellations and no forbidden mixin/crash/fatal signatures. Next Cygnus candidate should be calendar/upcoming-event notifications using licensed authoritative event timing, since the current calendar fields remain advertised but unregistered.
 
 ## July 21 party-message audit
 

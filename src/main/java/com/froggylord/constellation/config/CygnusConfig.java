@@ -12,6 +12,35 @@ public class CygnusConfig extends BaseConfigGroup {
     public boolean dianaInquisitorShare = false; 
     public boolean dianaDropTracker = true;
     public boolean dianaBurrowWaypoints = true; 
+    // ported from Devonian (GPL-3.0): features/diana/BurrowWaypoint.kt
+    public boolean dianaBurrowBox = true;
+    public boolean dianaBurrowBeam = true;
+    public boolean dianaBurrowLabel = true;
+    public boolean dianaBurrowDistance = true;
+    public boolean dianaBurrowThroughWalls = true;
+    public int dianaBurrowStartColor = 0xFF00FF00;
+    public int dianaBurrowMobColor = 0xFFFF3030;
+    public int dianaBurrowTreasureColor = 0xFFFFFF00;
+    public int dianaBurrowRange = 256;
+    public int dianaBurrowLifetimeSeconds = 300;
+    // ported from Devonian (GPL-3.0): features/diana/DianaMobTracker.kt
+    public boolean dianaMobTracker = true;
+    public boolean dianaMobHud = true;
+    public boolean dianaMobHudAll = false;
+    public boolean dianaPersistentStats = true;
+    public java.util.Map<String,Integer> dianaMobCounts = new java.util.LinkedHashMap<>();
+    // ported from Devonian (GPL-3.0): features/diana/DianaDropTracker.kt
+    public boolean dianaDropHud = true;
+    public boolean dianaDropHudAll = false;
+    public java.util.Map<String,Integer> dianaDropCounts = new java.util.LinkedHashMap<>();
+    public long dianaCoinsDug = 0;
+    public boolean dianaRareDropSound = true;
+    public boolean dianaRareDropTitle = true;
+    public boolean dianaInquisitorWaypoint = true;
+    public boolean dianaInquisitorSound = true;
+    public boolean dianaInquisitorTitle = true;
+    public int dianaInquisitorColor = 0xFFFFAA00;
+    public int dianaInquisitorWaypointSeconds = 180;
     public boolean carnivalHelper = true; 
     // ported from Skyblocker (LGPL-3.0-or-later): skyblock/carnival/CatchAFish.java
     public boolean carnivalCatchFish = true;
