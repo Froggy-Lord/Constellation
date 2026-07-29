@@ -32,6 +32,7 @@ public class ConstellationConfig {
     @SerializedName("andromeda")  public AndromedaConfig andromeda = new AndromedaConfig();
     @SerializedName("pegasus")    public PegasusConfig pegasus = new PegasusConfig();
     @SerializedName("auriga")     public AurigaConfig auriga = new AurigaConfig();
+    @SerializedName("artemis")    public ArtemisConfig artemis = new ArtemisConfig();
 
     public void migrate() {
         if (cfgVersion < CURRENT_VERSION) {
@@ -64,6 +65,7 @@ public class ConstellationConfig {
             case "andromeda"  -> andromeda;
             case "pegasus"    -> pegasus;
             case "auriga"     -> auriga;
+            case "artemis"    -> artemis;
             default -> null;
         };
     }

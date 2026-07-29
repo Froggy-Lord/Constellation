@@ -50,7 +50,7 @@ public class HubScreen extends Screen {
         String title = "Constellation";
         int tw = font.width(title);
         g.text(font, title, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
-        String sub = "14 modules — right shift to open, esc to close";
+        String sub = "15 modules — right shift to open, esc to close";
         g.text(font, sub, 14 + tw, 14, ConstellationTheme.TEXT_MUTED, false);
 
         // ---- constellation cards ----

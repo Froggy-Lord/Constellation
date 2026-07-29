@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.696 (2026-07-30) — Hunting profit tracker
+
+- added Artemis as an independent hunting and foraging constellation
+- added exact caught, Lootshare and charm shard tracking with authoritative Bazaar IDs
+- added session or profile persistence, value, hourly rate, uptime and configurable rare-value alerts
+- added holding-tool/recent-pickup/always visibility, sorting, a movable HUD and complete `/huntingprofit` controls
+
 ## 0.9.695 (2026-07-30) — Manual crop coordinates
 
 - added explicit per-crop Garden start locations through `/cropstart setat <crop> <x> <y> <z>`

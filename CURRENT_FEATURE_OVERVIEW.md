@@ -32,6 +32,16 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Movable and resizable shared HUD framework
 - Transparent, chrome-free HUD editor
 
+## Artemis: hunting and foraging
+
+- Exact caught-shard, hunting Lootshare and charm result tracking
+- Authoritative Bazaar product resolution including all exceptional shard names
+- Session-only or profile-persistent totals, mobs, shards, value, hourly rate and uptime
+- Recent-pickup, held-tool or always-visible movable Hunting Profit HUD
+- Value/amount/name/recent sorting, row count, buy/sell price source and independent HUD rows
+- Configurable high-value chat, title and sound warnings
+- `/huntingprofit` status, reset, profile clearing, timing, sorting, pricing and option controls
+
 ## Aquila: mining
 
 - Commission HUD, progress parsing and destination guidance

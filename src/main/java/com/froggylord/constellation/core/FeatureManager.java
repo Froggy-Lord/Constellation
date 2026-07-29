@@ -28,6 +28,7 @@ public class FeatureManager {
         register(new AndromedaRift());
         register(new PegasusParty());
         register(new AurigaMisc());
+        register(new ArtemisHunting());
 
         for (BaseConstellation c : constellations) {
             if (c.getConfig() != null && c.getConfig().enabled) {

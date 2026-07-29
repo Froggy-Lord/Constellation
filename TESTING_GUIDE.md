@@ -2,6 +2,29 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Hunting profit tracker
+
+### Enable
+
+1. Enable Artemis, Hunting Profit Tracker and Hunting Profit HUD.
+2. Keep Show When Pickup and Show With Tool enabled to match the live SkyHanni behavior.
+3. Leave Persistent disabled for session-only tracking, or enable it for profile history.
+
+### Test
+
+- [ ] Catch a mob that awards one shard. Expected: Mobs Caught and Shards each increase by one and the shard appears once.
+- [ ] Catch an `x2` or larger shard result. Expected: one mob and the complete shard quantity are recorded.
+- [ ] Receive a hunting Lootshare shard. Expected: it is counted only while Lootshare inclusion is enabled.
+- [ ] Charm a mob with CHARM, NAGA or SALT. Expected: the captured shard quantity and mob shard name are recorded.
+- [ ] Compare a tracked shard against Bazaar. Expected: value uses its actual `SHARD_*` product, including renamed exceptions such as Inferno Demonlord and End Stone Protector.
+- [ ] Select purchase and sell price sources. Expected: totals update without changing quantities.
+- [ ] Sort by value, amount, name and recent. Expected: row order changes while the configured row limit remains enforced.
+- [ ] Stop hunting longer than the AFK threshold. Expected: uptime and profit per hour stop accumulating inactive time.
+- [ ] Hold a lasso, Hunting Net or Black Hole tool and then release it. Expected: the HUD remains for the configured grace period.
+- [ ] Trigger the configured high-value threshold. Expected: each enabled local chat/title/sound channel fires once.
+- [ ] Switch profiles with Persistent enabled. Expected: stored totals remain isolated.
+- [ ] Run `/huntingprofit reset`. Expected: session values clear. Run `clearprofile` only when deliberately removing persistent active-profile history.
+
 ## Unique gifting
 
 ### Enable
