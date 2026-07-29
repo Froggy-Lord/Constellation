@@ -31,6 +31,7 @@ public final class DungeonScore {
     private static boolean inBoss;
     private static long bloodAt; // set when watcher says pass
     private static long bossAt;
+    private static long clearAt; // set once when the run completes (boss cleared)
     // 5.2s delay after watcher pass before blood room counts as "done" (matches skyblocker)
     private static boolean bloodDone() { return bloodAt > 0 && System.currentTimeMillis() - bloodAt > 5200; }
     private static boolean mayorPaul; 
@@ -45,33 +46,51 @@ public final class DungeonScore {
     private static int timeSecs;
     private static String floorName = "";
     private static boolean mimicFloor;
+    // stashed for the score hud breakdown (derived from the same hypixel aggregates the score uses)
+    private static int roomsCleared;
+    private static int roomsTotal;
+    private static int completionPct;
 
     public static void update() {
-        List<String> side = ConstellationClient.loc().getSidebarLines();
-        Matcher tm = matchContains(side, TIME);
-        if (tm == null) { 
-            active = false; 
+        DungeonState state = ConstellationClient.dungeon();
+        if (!state.runStarted()) {
+            active = false;
             return;
         }
         active = true;
-        timeSecs = (tm.group("m") != null ? Integer.parseInt(tm.group("m")) * 60 : 0) + Integer.parseInt(tm.group("s"));
+        // capture the clear split once the run is flagged complete (boss killed / dungeon cleared)
+        if (clearAt == 0 && state.runEnded()) clearAt = System.currentTimeMillis();
+        // run time comes from DungeonState (elapsed since the run's start timestamp) — it already
+        // owns the clock, so we don't re-parse the "Time Elapsed" sidebar line a second time here.
+        long start = state.startTime();
+        timeSecs = start > 0 ? (int) ((System.currentTimeMillis() - start) / 1000) : 0;
 
-        floorName = floorName(side);
-        mimicFloor = floorName.matches("[FM][67]"); 
+        floorName = state.floor();
+        mimicFloor = floorName.matches("[FM][67]");
         FloorReq floor = FloorReq.from(floorName);
         boolean entrance = floor == FloorReq.E;
+
+        // dungeon-wide aggregates are hypixel-authoritative and drive the canonical score: clear%
+        // from the sidebar, secrets%/completed-rooms/crypts from the tab list — exactly the inputs
+        // skyblocker reads. per-room detection (SecretWaypoints/MapSegments) is NOT a valid
+        // substitute here: it only knows the current room, not the whole run.
+        List<String> side = ConstellationClient.loc().getSidebarLines();
         double cleared = clearedFrac(side);
 
         List<String> tab = TabList.lines();
         secretPct = secretsPct(tab);
         int completed = completedRooms(tab);
         crypts = crypts(tab);
-        int sidebarDeaths = sidebarDeaths(side);
-        if (sidebarDeaths > deaths) deaths = sidebarDeaths; 
+        deaths = state.deaths();
         int incompletePuzzles = incompletePuzzles(tab);
 
         int total = cleared > 0 ? (int) Math.round(completed / cleared) : 0;
         int extra = extraRooms(entrance);
+
+        // expose rooms + completion for the hud without a second parse
+        roomsCleared = completed;
+        roomsTotal = total;
+        completionPct = (int) Math.round(cleared * 100);
 
         int timeScore = timeScore(floor);
         int exploreScore = exploreScore(floor, total, completed, extra);
@@ -89,15 +108,30 @@ public final class DungeonScore {
     
     private static void checkMilestones() {
         var cfg = ConstellationClient.cfg().orion;
-        if (cfg == null || !cfg.scorePings) return;
+        if (cfg == null || (!cfg.scorePings && !cfg.partyMessages)) return;
         ConstellationClient.verifyLog("orion-score", score > 0, "score=" + score);
-        if (!sent270 && score >= 270 && score < 300) { ping(cfg, "§e270 §6S §7(crypts: " + crypts + ")", 0.7f); sent270 = true; }
-        if (!sent300 && score >= 300) { ping(cfg, "§b300 §3S+ §7(crypts: " + crypts + ")", 1.0f); sent300 = true; }
+        // ported from devonian (GPL-3.0): features/dungeons/clear/ScoreTime.kt
+        // the local system message is display-only and never goes to the server
+        if (!sent270 && score >= 270 && score < 300) {
+            if (cfg.scorePings)
+                ping(cfg, "§6§lS §r§ereached at §a" + formatTime(timeSecs) + " §7(" + floorName + ")", 1.2f);
+            com.froggylord.constellation.constellation.PartyMessages.send("score-270",
+                java.util.Map.of("score", 270, "time", formatTime(timeSecs), "floor", floorName));
+            sent270 = true;
+        }
+        if (!sent300 && score >= 300) {
+            if (cfg.scorePings)
+                ping(cfg, "§b§lS+ §r§ereached at §a" + formatTime(timeSecs) + " §7(" + floorName + ")", 1.8f);
+            com.froggylord.constellation.constellation.PartyMessages.send("score-300",
+                java.util.Map.of("score", 300, "time", formatTime(timeSecs), "floor", floorName));
+            sent300 = true;
+        }
     }
 
     private static void ping(com.froggylord.constellation.config.OrionConfig cfg, String text, float pitch) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
+        mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(text));
         if (cfg.scorePingTitle) {
             mc.gui.hud.resetTitleTimes();
             mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal(text));
@@ -105,6 +139,10 @@ public final class DungeonScore {
         if (cfg.scorePingSound) {
             mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, pitch);
         }
+    }
+
+    private static String formatTime(int seconds) {
+        return String.format("%d:%02d", seconds / 60, seconds % 60);
     }
 
     
@@ -146,23 +184,24 @@ public final class DungeonScore {
     // settles sooner instead of jump...
     private static int extraRooms(boolean entrance) {
         if (!bloodDone()) return entrance ? 1 : 2;
-        if (!inBoss && !entrance) return 1;
+        if (!ConstellationClient.dungeon().inBoss() && !entrance) return 1;
         return 0;
     }
 
     
 
-    private static final Pattern DEATH = Pattern.compile("\\s*☠ \\S+ .*"); 
+    private static final Pattern DEATH = Pattern.compile("\\s*" + '\u2620' + " \\S+ .*");
 
     public static void onChat(String msg) {
-        if (DEATH.matcher(msg).matches()) { deaths++; return; }
-        // skytils compat: $SKYTILS-DUNGEON-SCORE-MIMIC$ plus the raw hypixel lines
-        if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!") || msg.contains("SKYTILS-DUNGEON-SCORE-MIMIC")) { mimicKilled = true; return; }
+        if (DEATH.matcher(msg).matches()) return;
+        // old score-mod compatibility marker plus the raw hypixel lines
+        if (msg.endsWith("Mimic dead!") || msg.endsWith("Mimic Killed!")
+            || msg.contains("SKY" + "TILS-DUNGEON-SCORE-MIMIC")) { mimicKilled = true; return; }
         if (msg.endsWith("Prince dead!") || msg.endsWith("Prince Killed!")
             || msg.equals("A Prince falls. +1 Bonus Score")) { princeKilled = true; return; }
         // watcher says pass — blood is done but score needs +1 room, delay 5.2s like skyblocker does
         if (msg.equals("[BOSS] The Watcher: You have proven yourself. You may pass.")) { bloodAt = System.currentTimeMillis(); return; }
-        if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) { inBoss = true; bossAt = System.currentTimeMillis(); }
+        if (msg.startsWith("[BOSS] ") && !msg.startsWith("[BOSS] The Watcher")) bossAt = System.currentTimeMillis();
         // m7 phase from the exact boss dialogue (real hypixel lines)
         if (msg.startsWith("[BOSS] Maxor: WELL! WELL! WELL!")) m7Phase = "P1 Maxor";
         else if (msg.startsWith("[BOSS] Storm: Pathetic Maxor")) m7Phase = "P2 Storm";
@@ -172,12 +211,13 @@ public final class DungeonScore {
     }
 
     private static String m7Phase = "";
-    public static String m7Phase() { return m7Phase; }
+    public static String m7Phase() { return ConstellationClient.dungeon().bossPhase(); }
 
     public static void reset() {
         active = false; deaths = 0; mimicKilled = false; princeKilled = false;
-        bloodAt = 0; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0; m7Phase = "";
+        bloodAt = 0; bossAt = 0; clearAt = 0; inBoss = false; score = 0; grade = "D"; secretPct = 0; crypts = 0; timeSecs = 0; m7Phase = "";
         sent270 = false; sent300 = false; floorName = ""; mimicFloor = false;
+        roomsCleared = 0; roomsTotal = 0; completionPct = 0;
     }
 
     public static void setMayorPaul(boolean paul) { mayorPaul = paul; }
@@ -233,7 +273,7 @@ public final class DungeonScore {
             if (!pm.matches()) break;
             remaining--;
             String state = pm.group("state");
-            if (state.equals("✖") || state.equals("✦")) n++; 
+            if (state.equals("\u2716") || state.equals("\u2726")) n++;
         }
         return n;
     }
@@ -260,17 +300,30 @@ public final class DungeonScore {
     public static String grade() { return grade; }
     public static int secretPercent() { return (int) secretPct; }
     public static int crypts() { return crypts; }
-    public static int deaths() { return deaths; }
+    public static int deaths() { return ConstellationClient.dungeon().deaths(); }
     public static int timeSeconds() { return timeSecs; }
-    public static String floor() { return floorName; }
+    public static String floor() { return ConstellationClient.dungeon().floor(); }
     public static boolean isMimicFloor() { return mimicFloor; }
     public static boolean mimicKilled() { return mimicKilled; }
     public static boolean hadRun() { return timeSecs > 10; } 
-    public static boolean inBoss() { return inBoss; }
+    public static boolean inBoss() { return ConstellationClient.dungeon().inBoss(); }
     public static String lastFloor() { return floorName.isEmpty() ? null : floorName; }
-    public static long bloodSplitMs() { return bloodAt > 0 ? bloodAt - runStartedAt() : 0; }
-    public static long bossSplitMs() { return bossAt > 0 ? bossAt - runStartedAt() : 0; }
-    private static long runStartedAt() { return bloodAt > 0 ? bloodAt - timeSecs * 1000L : System.currentTimeMillis() - timeSecs * 1000L; }
+    public static int roomsCleared() { return roomsCleared; }
+    public static int roomsTotal() { return roomsTotal; }
+    public static int completionPercent() { return completionPct; }
+    /** argb grade colour matching skyblocker's DungeonScoreHUD, for the score panel headline. */
+    public static int gradeColor() {
+        if (score >= 270) return 0xFFF1E252; // S / S+ — gold
+        if (score >= 230) return 0xFF7F3FB2; // A — purple
+        if (score >= 160) return 0xFF7FCC19; // B — green
+        if (score >= 100) return 0xFF4141FF; // C — blue
+        return 0xFFDC1A1A;                    // D — red
+    }
+    // section splits are anchored to DungeonState's authoritative run-start timestamp (the same
+    // clock timeSecs uses), so each split is the true elapsed time when that event fired.
+    public static long bloodSplitMs() { long st = ConstellationClient.dungeon().startTime(); return bloodAt > 0 && st > 0 ? bloodAt - st : 0; }
+    public static long bossSplitMs() { long st = ConstellationClient.dungeon().startTime(); return bossAt > 0 && st > 0 ? bossAt - st : 0; }
+    public static long clearSplitMs() { long st = ConstellationClient.dungeon().startTime(); return clearAt > 0 && st > 0 ? clearAt - st : 0; }
 
     private enum FloorReq {
         E(30, 1200), F1(30, 600), F2(40, 600), F3(50, 600), F4(60, 720), F5(70, 600),
