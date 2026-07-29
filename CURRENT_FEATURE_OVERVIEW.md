@@ -106,6 +106,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Crystal Hollows treasure-chest outlines, particle-derived lock spots and per-chest lock progress
 - Exact powder-chest lifetimes with urgency/static highlights, world timers and oldest/nearest route chains
 - Movable powder-chest count/oldest/nearest HUD, Great Explorer gating and independent sound muting
+- Profile-safe named ordered mining routes with Coleweight clipboard compatibility and atomic persistence
+- Complete insert/move/delete/label/save editing, dirty-state protection and manual progression controls
+- Current/previous/next/setup/all waypoint rendering, trace lines, forward recovery and Mineshaft lifecycle options
+- Movable ordered-route name/progress/current/next/distance HUD
 - Pickobulus exposed-block outlines and location-specific block, ore, powder and Mineshaft-pity forecasts
 - Pickobulus held-ability/cooldown state with independently movable and configurable HUD rows
 - Completed-commission slot highlights in the exact Commissions menu

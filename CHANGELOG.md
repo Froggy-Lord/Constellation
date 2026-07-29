@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.723 (2026-07-30) — Ordered Mining Routes
+
+- added profile-safe named mining routes with Coleweight clipboard import/export and atomic persistence
+- added nearest-start selection, cyclic progression, skip/back/skip-to and optional forward-jump recovery
+- added insert, exact-coordinate insert, move, delete, label, save, erase and protected unload editing
+- added current/previous/next/setup/all rendering, trace/setup lines, Mineshaft lifecycle options and movable HUD
+
 ## 0.9.722 (2026-07-30) — Powder Chest Timer
 
 - added authoritative 60-second Crystal Hollows powder-chest lifetimes and abandoned-state cleanup

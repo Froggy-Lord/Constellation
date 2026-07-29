@@ -57,6 +57,8 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningTools.init(cfg);
         AquilaFossils.init(cfg);
         AquilaFossilProfit.init(cfg);
+        AquilaOrderedWaypoints.init(cfg);
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) AquilaOrderedWaypoints.draw(context); });
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
 
@@ -97,6 +99,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.fossilHelper && c.fossilProfitSuite && c.fossilProfitHud));
         hud.register(new com.froggylord.constellation.hud.PowderChestHudWidget(HudPosition.of(78, 166),
             () -> c.enabled && c.miningHighlightsSuite && c.powderChestTimer && c.powderChestTimerHud));
+        hud.register(new com.froggylord.constellation.hud.OrderedWaypointsHudWidget(HudPosition.of(78, 180),
+            () -> c.enabled && c.orderedWaypointsSuite && c.orderedWaypointsHud));
     }
 
     @Override
@@ -112,6 +116,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningTools.registerCommands(dispatcher);
         AquilaFossils.registerCommands(dispatcher);
         AquilaFossilProfit.registerCommands(dispatcher);
+        AquilaOrderedWaypoints.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

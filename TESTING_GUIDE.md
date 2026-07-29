@@ -1224,6 +1224,24 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 9. Open Heart of the Mountain and inspect Great Explorer. `/mininghighlights` should learn level 0-20; max-only mode must fail closed until level 20 is known.
 10. Toggle discovery and opening sound muting separately. Only exact unit-volume, pitch-one level-up or chest-open sounds in Crystal Hollows may be affected.
 11. Move and resize Powder Chests in `/cn hud`. It must be editable during its visibility grace, retain its own placement and disappear outside Crystal Hollows.
+
+### Ordered mining routes
+
+1. Copy a Coleweight route array to the clipboard and run `/ordered import`. Confirm its numeric `options.name` order is respected even when the JSON array is shuffled.
+2. Run `/ordered export`, clear the loaded route, then re-import the exported clipboard. Every coordinate, order and custom label must round-trip.
+3. Import a plain route containing one `x y z optional label` waypoint per line. Invalid JSON, gaps/duplicates in numbered entries, over-5,000 routes and out-of-world coordinates must fail without replacing the current route.
+4. Run `/ordered save <name>`, reconnect, change profiles and load it again. Routes and remembered active names must remain isolated per profile and survive restart.
+5. Approach the route after loading. The nearest waypoint should start current; entering its configured range should advance cyclically without moving or aiming the player.
+6. Test `/ordered skip`, `back` and `skipto`, including negative/wrapped progression. Each must change only the displayed route state.
+7. Enable forward skipping, approach a later waypoint and confirm it jumps only forward to the closest later point inside range.
+8. Use `add`, `addat`, `move`, `delete` and `label` at the first, middle and last positions. Numbers must remain contiguous and repeated coordinates must remain allowed.
+9. Edit a route, then try ordinary unload and automatic area/world/Mineshaft unload. Unsaved edits must be retained with a warning; `/ordered unload force` may deliberately discard them.
+10. Toggle fill/outline, thickness, wall mode, distance, number, custom label, next count and all six colors independently.
+11. Test setup mode and setup range. Nearby non-active points and the current-to-next eye-height line must appear without changing the route.
+12. Test Show All separately. Every point should use the all color and ordinary trace/setup behavior should not overlap it.
+13. Save a route with a real Mineshaft code such as `JASP_1`, enable shaft auto-load and enter that exact scoreboard type. Only the matching profile route may load.
+14. Enable auto-unload on area changes and Mineshaft exit. Saved clean routes may unload; dirty routes may not be destroyed.
+15. Move and resize Ordered Mining Route in `/cn hud`, then toggle every route/progress/current/next/distance row. It should remain mining-scoped unless that scope is disabled.
 7. Enable `Fossil Protect Wrong Clicks`; a dirt tile other than the recommendation must be blocked. The recommendation must remain clickable, and holding either Control key must bypass protection when that option is enabled.
 8. Use `/fossilsolver option`, `/fossilsolver color best|probability|impossible AARRGGBB`, and `/fossilsolver reset` to verify every saved display, tooltip, protection, HUD and Muncher control.
 9. Trigger each Fossil Muncher riddle. The exact answer should appear locally; original replacement must follow `Fossil Muncher Replace Riddle`, and unknown text must pass through unchanged.
