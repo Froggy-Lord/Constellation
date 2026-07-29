@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-29 for version 0.9.658 Garden crop locations.
+Last updated: 2026-07-29 for version 0.9.659 Garden mouse sensitivity.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.658`.
+- Current artifact version: `0.9.659`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1507,3 +1507,15 @@ Start/last boxes, start/last beams, line, labels, distance, start/last colors, s
 Version `0.9.658` built with exactly 11 successful tests and zero failures. The headless boot reached healthy timeout exit 124, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Source-credit, forbidden-source, emoji, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `550fe39cb6225d5ec168705e6d0cd4e8ecbc696563e18e972bd29345c04f90f1`.
 
 The old `0.9.657` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-234038-0.9.658/`; only `constellation-0.9.658.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.
+
+## July 29 version 0.9.659 Garden mouse sensitivity
+
+`HerculesMouseSensitivity.java`, `MouseSensitivityMixin.java`, `HerculesConfig.java` and `HerculesFarming.java` port SkyHanni LGPL `features/garden/MouseSensitivityReducer.kt`, `config/features/garden/MouseSensitivityReducerConfig.kt` and `mixins/transformers/MixinMouse.java`. The mouse hook transforms only the two rotation deltas immediately before `LocalPlayer.turn`; it never writes or substitutes Minecraft's saved sensitivity.
+
+Manual `/sensreduce` and `/farmmouselock` toggles share one explicit state, while the Controls-screen `Garden Sensitivity` key selects the configured reduced or locked behavior. A movable HUD exists only while a state is active. Optional local status messages explain every manual, mousemat and teleport transition. Disconnect and world join reset all transient state.
+
+Garden-only automatic activation supports crop tools, fishing rods, vacuums/lassos, squeaky mousemats, Sprayonator and Sun's Grasp as independently saved modes. Optional physical-plot exclusion rejects the Barn, and the ground requirement supports a configurable collision tolerance. Reduction percentage, rotation locking, HUD, chat, auto activation, each held-item mode, plot/ground constraints, squeaky-mousemat locking and Always/Barn-only/Never teleport release are independently configurable. It changes only the player's own mouse input and performs no movement, aiming, clicks or packets.
+
+Version `0.9.659` built with exactly 11 successful tests and zero failures. A clean headless launch exited at the healthy timeout, loaded 138 rooms across nine shapes, initialized all 14 constellations, and contained zero mixin-apply, crash-report, fatal-error, `IllegalClassLoadError`, `MixinTransformerError`, or `MixinApplyError` signatures. Gradle's redirected stream buffered before the markers, while the same process's `run/logs/latest.log` captured both at 23:52:36. Source-credit, forbidden-source, symbol, whitespace and user-facing-copy audits pass. Main-jar SHA-256: `426b5a81e1919b163eaf0c973e060278929c478a84b3ac427f10560def13a7f1`.
+
+The old `0.9.658` main jar was archived at `~/Desktop/To-Delete/gather-jars/20260729-235530-0.9.659/`; only `constellation-0.9.659.jar` is live and its checksum matches the build artifact. Live Gather preferences were not rewritten.

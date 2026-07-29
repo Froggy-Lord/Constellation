@@ -26,6 +26,7 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPlotMenu.init(cfg);
         HerculesPlotIcons.init(cfg);
         HerculesCropLocations.init(cfg);
+        HerculesMouseSensitivity.init(cfg);
         registerRenderer(HerculesPests::draw);
         registerRenderer(HerculesPestWaypoint::draw);
         registerRenderer(HerculesCropLocations::draw);
@@ -67,6 +68,10 @@ public class HerculesFarming extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.FarmingFortuneHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(2, 108),
             () -> cfg.enabled && cfg.fortuneHelper && cfg.fortuneDisplay));
+        hud.register(new com.froggylord.constellation.hud.HudWidget(
+            "garden-mouse-sensitivity", "Mouse", HerculesMouseSensitivity::hudText,
+            com.froggylord.constellation.hud.HudPosition.of(2, 114),
+            () -> cfg.enabled && cfg.mouseSensitivityHelper && cfg.mouseSensitivityHud));
     }
 
     @Override
@@ -82,5 +87,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPlotMenu.registerCommands(dispatcher);
         HerculesPlotIcons.registerCommands(dispatcher);
         HerculesCropLocations.registerCommands(dispatcher);
+        HerculesMouseSensitivity.registerCommands(dispatcher);
     }
 }

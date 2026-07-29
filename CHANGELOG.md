@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.659 (2026-07-29) — Garden mouse sensitivity
+
+- added reversible farming mouse lock and percentage sensitivity reduction without changing Minecraft's saved sensitivity
+- added manual commands, a Controls-screen keybind, active-only movable HUD and optional status messages
+- added Garden auto activation for farming tools, rods, vacuums, mousemats, Sprayonator and Sun's Grasp with plot and ground checks
+- added configurable teleport release, squeaky-mousemat locking, reduction percentage and ground tolerance
+
 ## 0.9.658 (2026-07-29) — Garden crop locations
 
 - added profile-specific start and last-farmed waypoints for all 13 crops with Start, Last and Both modes

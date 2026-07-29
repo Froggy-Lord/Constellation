@@ -292,6 +292,25 @@ public class HerculesConfig extends BaseConfigGroup {
     public Map<String, String> cropStartLocations = new HashMap<>();
     public Map<String, String> cropLastFarmedLocations = new HashMap<>();
 
+    public boolean mouseSensitivityHelper = true;
+    public boolean mouseSensitivityAutoEnable = false;
+    public boolean mouseSensitivityHud = true;
+    public boolean mouseSensitivityChat = true;
+    public boolean mouseSensitivityLockMouse = false;
+    public boolean mouseSensitivityLockOnMousemat = true;
+    public boolean mouseSensitivityOnlyPlot = true;
+    public boolean mouseSensitivityOnGround = true;
+    public boolean mouseSensitivityModeKeybind = true;
+    public boolean mouseSensitivityModeTool = true;
+    public boolean mouseSensitivityModeFishingRod = false;
+    public boolean mouseSensitivityModeVacuum = false;
+    public boolean mouseSensitivityModeMousemat = false;
+    public boolean mouseSensitivityModeSprayonator = false;
+    public boolean mouseSensitivityModeSunsGrasp = false;
+    public int mouseSensitivityPercent = 10;
+    public int mouseSensitivityGroundToleranceHundredths = 13;
+    public String mouseSensitivityUnlockOnTeleport = "ALWAYS";
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

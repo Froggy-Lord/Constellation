@@ -25,7 +25,33 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Garden crop locations: test this release first
+## Garden mouse sensitivity: test this release first
+
+### Enable
+
+1. Enable Hercules and `Mouse Sensitivity Helper`.
+2. In Minecraft Controls, bind `Garden Sensitivity` if N is unsuitable.
+3. Keep auto-enable off for the first manual checks.
+
+### Manual controls
+
+- [ ] Run `/sensreduce`. Expected: camera movement becomes 10% of normal, the Mouse HUD shows `10%`, and Minecraft's sensitivity option does not change.
+- [ ] Run `/sensreduce` again. Expected: normal camera movement returns and the HUD disappears.
+- [ ] Run `/farmmouselock`. Expected: mouse movement cannot rotate the player, but movement keys and menus still work.
+- [ ] Teleport to another Garden plot. Expected with release mode Always: rotation unlocks and a local status message appears.
+- [ ] Press the Garden Sensitivity key. Expected: it toggles the configured reduced or locked state without repeating while held.
+
+### Automatic controls
+
+- [ ] Enable auto activation and Tool mode, then hold a crop-specific farming tool on a Garden plot. Expected: sensitivity lowers only while the tool and location conditions match.
+- [ ] Walk into the Barn. Expected with Only Plot enabled: automatic reduction stops.
+- [ ] Jump. Expected with On Ground enabled: automatic reduction stops while airborne and resumes within the configured ground tolerance.
+- [ ] Test optional rod, vacuum, mousemat, Sprayonator and Sun's Grasp modes separately. Expected: only enabled held-item modes activate.
+- [ ] Enable Lock Mouse. Expected: automatic modes lock rotation instead of reducing it.
+- [ ] Change the percentage, ground tolerance, HUD, chat, mousemat lock and teleport release settings. Expected: each behaves independently and persists after restart.
+- [ ] Leave the Garden. Expected: automatic state and its HUD disappear; a deliberate manual state remains until toggled, teleported or disconnected.
+
+## Garden crop locations
 
 ### Enable
 
