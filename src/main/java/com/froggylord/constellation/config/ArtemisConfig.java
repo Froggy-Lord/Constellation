@@ -326,6 +326,17 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int sweepGoodColor = 0xFF55FF55;
     public int sweepPenaltyColor = 0xFFFF5555;
 
+    // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/{ClearTreeLogs,MuteTreeSounds}.kt
+    public boolean treeCleanup = true;
+    public boolean treeCleanView = true;
+    public boolean treeCleanStrippedSpruceWood = true;
+    public boolean treeCleanMangroveWood = true;
+    public boolean treeCleanMangroveLeaves = true;
+    public boolean treeCleanAzaleaLeaves = true;
+    public boolean treeMuteBreaking = true;
+    public boolean treeMuteBreakingOutsideGalatea = true;
+    public boolean treeMuteBreakingOnGalatea = false;
+
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/MoongladeBeaconConfig.kt
     public boolean moongladeBeacon = true;
     public boolean moongladeBeaconHud = true;

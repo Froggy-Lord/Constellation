@@ -2168,3 +2168,14 @@ The four throwable axes receive a configurable eight-to-eighty-block ray, separa
 The details state machine parses header, tree/toughness/log result and any number of throw or wrong-style penalties. It updates the movable HUD after each complete detail line, then waits for the configurable quiet window before emitting one optional compact local summary; this preserves combined throw and style penalties. Tree, toughness, Sweep comparison, logs, penalties, correct style and inactive retention are separately configurable. `/sweephelper` exposes all principal behavior.
 
 Version `0.9.712` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.
+## July 30 version 0.9.713 Tree Cleanup
+
+`ArtemisTreeCleanup.java`, `ArtemisConfig.java`, `ArtemisHunting.java`, `ArtemisGalateaSounds.java`, `EntityRenderDispatcherMixin.java` and `ClientPacketListenerMixin.java` port SkyHanni LGPL `features/foraging/ClearTreeLogs.kt` and `MuteTreeSounds.kt`. The live 26.1.2 profile has `cleanView=true`, `muteBreaking=true` and `muteBreakingOnGalatea=false`.
+
+Clean view is Galatea-only and operates solely at the entity-dispatch render decision. It accepts only `Display.BlockDisplay` entities whose render state equals the default state for stripped spruce wood, mangrove wood, mangrove leaves or azalea leaves. Each state has an independent toggle. It never changes, removes or replaces a world block or entity.
+
+Sound filtering occurs at the existing pre-play server-sound cancellation point. It accepts only exact `entity.creaking.death`, requires Hypixel and supports independent Galatea and outside-Galatea scopes. Its evaluation deliberately precedes the older Galatea-only phantom/Fusion master gate so the live outside-Galatea preference works. Other creaking sounds and all unrelated audio pass unchanged.
+
+Transient display diagnostics clear on world/connection changes. `/treecleanup` exposes master, clean-view, four block-state, sound and two scope controls plus session diagnostics. The feature performs no click, block action, movement or packet send.
+
+Version `0.9.713` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. The narrator flite warning remained the known benign native-library warning.

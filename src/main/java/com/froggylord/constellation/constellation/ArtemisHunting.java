@@ -31,6 +31,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisStarlyn.init(cfg);
         ArtemisGalateaExploration.init(cfg);
         ArtemisSweep.init(cfg);
+        ArtemisTreeCleanup.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
         registerRenderer(ArtemisGalateaExploration::draw);
         registerRenderer(ArtemisSweep::draw);
@@ -80,5 +81,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisStarlyn.registerCommands(dispatcher);
         ArtemisGalateaExploration.registerCommands(dispatcher);
         ArtemisSweep.registerCommands(dispatcher);
+        ArtemisTreeCleanup.registerCommands(dispatcher);
     }
 }

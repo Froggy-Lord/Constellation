@@ -27,8 +27,10 @@ public final class ArtemisGalateaSounds {
     public static void init(ArtemisConfig config){cfg=config;}
 
     public static boolean shouldCancel(ClientboundSoundPacket packet){
-        if(!active()||packet==null)return false;
+        if(packet==null)return false;
         String path=packet.getSound().value().location().getPath();
+        if(ArtemisTreeCleanup.shouldMute(path)){ArtemisTreeCleanup.recordMuted();return true;}
+        if(!active())return false;
         boolean phantom=phantom(path);
         if(phantom){phantomMuted++;return true;}
         if(fusion(path,packet.getVolume())){fusionMuted++;return true;}

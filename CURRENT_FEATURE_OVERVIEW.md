@@ -423,3 +423,10 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Sweep Details tracks tree type, toughness, initial/final Sweep, resulting logs, throw penalty, style penalty and correct-style hint.
 - The movable HUD and optional compact chat summary preserve multiple penalties from the same calculation.
 - `/sweephelper` controls prediction, thrown range, cap, visibility duration, HUD rows and presentation independently.
+## Tree cleanup
+
+- Galatea clean view hides only exact decorative block displays, never real world blocks.
+- Stripped spruce wood, mangrove wood, mangrove leaves and azalea leaves have independent saved toggles.
+- Tree-breaking audio recognizes only the exact `entity.creaking.death` sound.
+- Galatea and non-Galatea Hypixel sound scopes are independent; live-profile defaults keep Galatea audible and mute elsewhere.
+- `/treecleanup` exposes all settings plus current hidden-display and muted-sound diagnostics.

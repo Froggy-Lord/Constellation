@@ -1464,3 +1464,12 @@ One issue at a time is ideal. You do not need to retest unrelated sections after
 - [ ] Toggle compact chat off. Expected: original server detail lines remain and the local compact replacement is not sent.
 - [ ] Toggle each overlay and HUD row independently, then move/resize Sweep Details in `/cn hud`. Expected: every choice persists without changing axe behavior.
 - [ ] Run `/sweephelper clear` or reconnect during an incomplete detail sequence. Expected: no stale tree, penalty or log value leaks into the next result.
+- [ ] Enable Artemis and Tree Cleanup, then inspect active Fig and Mangrove trees on Galatea. Expected: only decorative stripped-spruce/mangrove wood and selected leaf block displays disappear.
+- [ ] Compare real world blocks and unrelated block displays. Expected: they remain rendered and unchanged.
+- [ ] Toggle spruce wood, mangrove wood, mangrove leaves and azalea leaves separately. Expected: each exact display state returns or hides immediately without a reconnect.
+- [ ] Disable Clean View or leave Galatea. Expected: every decorative display renders normally.
+- [ ] With outside-Galatea mute enabled, trigger the tree-breaking creaking-death sound in another Hypixel foraging area. Expected: only that exact sound is muted.
+- [ ] Repeat on Galatea with Galatea mute disabled and enabled. Expected: the sound remains audible by live-profile default and mutes only after enabling its separate scope.
+- [ ] Listen for other creaking, block, mob and environmental sounds. Expected: none are affected.
+- [ ] Run `/treecleanup`, `resetstats` and every `/treecleanup option <name> <on|off>` setting. Expected: status reports current choices and session counts, and every choice persists.
+- [ ] Change world or reconnect. Expected: hidden-display diagnostics reset and no stale entity UUIDs remain.

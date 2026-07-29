@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.713 (2026-07-30) — Tree Cleanup
+
+- added Galatea-only removal of the four exact decorative tree block-display states
+- added independent stripped spruce, mangrove wood, mangrove leaf and azalea leaf controls
+- added exact creaking-death tree-break sound filtering with separate Galatea/outside scopes
+- added session diagnostics and complete `/treecleanup` controls matching the live preference
+
 ## 0.9.712 (2026-07-30) — Sweep Guidance
 
 - added exact held-axe, Sweep-stat, toughness and connected-log prediction with the licensed 35-log cap
