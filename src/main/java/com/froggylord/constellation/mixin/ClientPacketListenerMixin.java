@@ -92,7 +92,10 @@ public class ClientPacketListenerMixin {
         shift = At.Shift.AFTER), cancellable = true)
     private void constellation$onSound(ClientboundSoundPacket packet, CallbackInfo ci) {
         ConstellationClient.instance().packets().fire(packet);
-        if (com.froggylord.constellation.constellation.SlayerSounds.shouldCancel(packet)
+        // ported from Skyblocker (LGPL-3.0-only): skyblock/hunting/SilencePhantoms.java
+        // fusion filter ported from SkyHanni (LGPL-3.0-or-later): features/foraging/MuteFusionMachine.kt
+        if (com.froggylord.constellation.constellation.ArtemisGalateaSounds.shouldCancel(packet)
+            || com.froggylord.constellation.constellation.SlayerSounds.shouldCancel(packet)
             || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)) ci.cancel();
     }
 

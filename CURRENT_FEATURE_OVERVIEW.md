@@ -34,6 +34,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Galatea-scoped phantom and exact Fusion-machine firework sound suppression
+- Independent ambient, bite, death, flap, hurt and swoop controls with future phantom-path coverage
+- Fusion volume target/tolerance, any-volume mode, session counters and `/galateasounds` controls
 - Absorptio confirmation lock for all five current Huntaxes with future-tier lore fallback
 - Air/block scopes, confirmation window, continuous/single-use modes and optional sneak bypass
 - Actionbar, chat and sound feedback, session counters and full `/huntaxelock` controls

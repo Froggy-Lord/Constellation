@@ -21,6 +21,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisShardTracker.init(cfg);
         ArtemisFusionKeybinds.init(cfg);
         ArtemisHuntaxeLock.init(cfg);
+        ArtemisGalateaSounds.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -42,5 +43,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisShardTracker.registerCommands(dispatcher);
         ArtemisFusionKeybinds.registerCommands(dispatcher);
         ArtemisHuntaxeLock.registerCommands(dispatcher);
+        ArtemisGalateaSounds.registerCommands(dispatcher);
     }
 }

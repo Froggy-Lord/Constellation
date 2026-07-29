@@ -2,6 +2,29 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Galatea sound controls
+
+### Enable
+
+1. Enable Artemis and Galatea Sound Control.
+2. Keep Galatea Only, Mute Phantoms and Mute Fusion Machine enabled.
+3. Keep Fusion volume at `2000` hundredths with zero tolerance for SkyHanni's exact volume-20 behavior.
+
+### Test
+
+- [ ] Stand in Galatea near a phantom. Expected: ambient, bite, death, flap, hurt and swoop sounds are muted.
+- [ ] Disable one phantom sound type through `/galateasounds option`. Expected: only that type becomes audible.
+- [ ] Leave an unrecognized `entity.phantom.*` sound enabled globally. Expected: it is muted under the master Phantom option, matching Skyblocker's future-proof prefix behavior.
+- [ ] Disable the Phantom master. Expected: every phantom sound becomes audible regardless of individual type toggles.
+- [ ] Use the Fusion machine in Galatea. Expected: volume-20 `firework_rocket.blast` and `blast_far` sounds are muted.
+- [ ] Set an incorrect Fusion target volume with zero tolerance. Expected: Fusion firework sounds are no longer muted.
+- [ ] Expand tolerance or enable Any Volume. Expected: matching Fusion blast names inside that range are muted.
+- [ ] Trigger ordinary fireworks at normal volume. Expected: they remain audible with the default exact-volume mode.
+- [ ] Leave Galatea. Expected: phantom and firework sounds elsewhere remain untouched while Galatea Only is enabled.
+- [ ] Disable Galatea Only deliberately. Expected: selected filters apply anywhere on Hypixel, but never off Hypixel.
+- [ ] Run `/galateasounds status` and `resetstats`. Expected: local phantom/Fusion hidden counts report and reset correctly.
+- [ ] Disable Artemis or the master control. Expected: every sound immediately passes through.
+
 ## Huntaxe Lock
 
 ### Enable

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.703 (2026-07-30) — Galatea sound controls
+
+- added Galatea-scoped muting for all six known phantom sounds and future phantom sound paths
+- added exact Fusion-machine firework blast/far-blast muting at the reference volume
+- added per-phantom-sound toggles, Fusion target/tolerance and optional any-volume mode
+- added scope, session counters and full `/galateasounds` controls
+
 ## 0.9.702 (2026-07-30) — Huntaxe Lock
 
 - added double-right-click protection for all five current Absorptio Huntaxes

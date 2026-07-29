@@ -173,4 +173,20 @@ public class ArtemisConfig extends BaseConfigGroup {
     public boolean huntaxeLockChat = false;
     public boolean huntaxeLockSound = false;
     public int huntaxeLockTicks = 10;
+
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/hunting/SilencePhantoms.java
+    // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/{MutePhantom,MuteFusionMachine}.kt
+    public boolean galateaSoundControl = true;
+    public boolean galateaSoundsGalateaOnly = true;
+    public boolean galateaMutePhantoms = true;
+    public boolean galateaMutePhantomAmbient = true;
+    public boolean galateaMutePhantomBite = true;
+    public boolean galateaMutePhantomDeath = true;
+    public boolean galateaMutePhantomFlap = true;
+    public boolean galateaMutePhantomHurt = true;
+    public boolean galateaMutePhantomSwoop = true;
+    public boolean galateaMuteFusionMachine = true;
+    public boolean galateaMuteFusionAnyVolume = false;
+    public int galateaFusionVolumeHundredths = 2000;
+    public int galateaFusionVolumeToleranceHundredths = 0;
 }
