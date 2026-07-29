@@ -364,3 +364,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Additional non-dungeon gaps from the active 26.1.2 instance
 
 The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`. You do not need that document for normal testing.
+
+## Artemis: Moonglade Beacon
+
+- Exact `Tune Frequency` and `Upgrade Signal Strength` menu gating on Galatea
+- Separate normal and enchanted color, speed and pitch states during upgrades
+- Filtered moving-pane interval measurement and exact bass-note packet pitch detection
+- Signed click offsets, correct-setting slot highlights and a movable menu-only HUD
+- Optional user-initiated middle-click conversion and over-click protection with Control bypass
+- Stereo Pants interference warning and optional ready chat, title and sound alerts
+- Full `/moongladebeacon` status, option, tolerance and sample controls

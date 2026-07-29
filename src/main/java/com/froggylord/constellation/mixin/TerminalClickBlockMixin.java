@@ -47,6 +47,19 @@ public class TerminalClickBlockMixin {
         if (!OrionTerminals.shouldMiddleClick(cs, slotId, button, containerInput)) return;
         args.set(2, 2);
         args.set(3, ContainerInput.CLONE);
+        return;
+    }
+
+    @ModifyArgs(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V",
+        at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;handleContainerInput(IIILnet/minecraft/world/inventory/ContainerInput;Lnet/minecraft/world/entity/player/Player;)V"))
+    private void constellation$middleClickMoonglade(Args args, Slot slot, int slotId, int button,
+                                                    ContainerInput containerInput) {
+        AbstractContainerScreen<?> cs = (AbstractContainerScreen<?>) (Object) this;
+        if (!com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldMiddleClick(
+            cs, slotId, button, containerInput)) return;
+        args.set(2, 2);
+        args.set(3, ContainerInput.CLONE);
     }
 
     @Inject(method = "extractSlot", at = @At("HEAD"), cancellable = true)

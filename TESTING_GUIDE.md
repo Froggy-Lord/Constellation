@@ -1310,6 +1310,20 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Reveal Superpairs items. Expected: remembered items remain highlighted after being covered; known pairs, the current first-click match and powerups use independent colors.
 - [ ] Enable wrong-click protection and click a known-wrong Chronomatron/Ultrasequencer target. Expected: the click is blocked. Hold Control and repeat; expected: the deliberate bypass allows it.
 - [ ] With known-wrong-second Superpairs protection enabled, reveal one known item then click a different known item. Expected: only the known-wrong second click is blocked; completing or bypassing a pair resets first/second state.
+
+## Moonglade Beacon
+
+- [ ] Enable Artemis and run `/moongladebeacon`. Expected: the solver, middle click and over-click protection report on.
+- [ ] Open `Tune Frequency` on Galatea. Expected: no overlay appears before opening it, then Color, Speed and Pitch rows appear in the movable Moonglade Beacon HUD.
+- [ ] Wait through several reference-pane movements. Expected: target color appears immediately, target speed resolves after at least two consistent movements, and target pitch resolves after repeated matching bass notes.
+- [ ] Compare each signed number on the Color, Speed and Pitch controls. Expected: positive and negative values show the shortest direction to the target; a matching setting is highlighted green.
+- [ ] Left-click a tuning control. Expected: with middle-click mode enabled, only that user click is sent as middle click; no setting changes without an input.
+- [ ] Click a control already showing zero. Expected: the click is blocked with local feedback. Hold either Control key and repeat; expected: it is allowed.
+- [ ] Open `Upgrade Signal Strength`. Expected: separate Normal and Enchanted HUD sections update independently, with normal controls in the upper row and enchanted controls in the lower row.
+- [ ] Wear Stereo Pants and reopen either tuning menu. Expected: one local interference warning per menu session.
+- [ ] Run `/moongladebeacon tolerance 200`, `/moongladebeacon samples 6` and toggle HUD/reference/current/offset/highlight options. Expected: settings save and only their intended presentation or detector tolerance changes.
+- [ ] Enable `/moongladebeacon option alert on` and one or more alert channels, then match every setting. Expected: one ready alert fires and does not repeat until a setting becomes wrong again.
+- [ ] Leave Galatea or close the menu. Expected: HUD and solver state disappear immediately and no other inventory is highlighted or click-modified.
 - [ ] Toggle next, second, remaining, dim-wrong, labels, tooltip hiding, pair memory and pair highlights independently. Expected: each changes only its documented presentation or safeguard.
 - [ ] Toggle Hypixel-only and Private-Island-only scope. Expected: exact experiment screens outside selected scope remain untouched.
 - [ ] Close and reopen an experiment or run `/experiments reset`. Expected: sequence, pair and click state clears without affecting items.

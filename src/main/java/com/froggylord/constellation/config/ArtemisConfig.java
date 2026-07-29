@@ -265,4 +265,27 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int treeProgressNormalColor = 0xFF55FF55;
     public int treeProgressNearlyDoneColor = 0xFFFFFF55;
     public int treeProgressCompleteColor = 0xFFFFAA00;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/MoongladeBeaconConfig.kt
+    public boolean moongladeBeacon = true;
+    public boolean moongladeBeaconHud = true;
+    public boolean moongladeBeaconUseMiddleClick = true;
+    public boolean moongladeBeaconPreventOverClicking = true;
+    public boolean moongladeBeaconControlBypass = true;
+    public boolean moongladeBeaconHighlightCorrect = true;
+    public boolean moongladeBeaconOffsetLabels = true;
+    public boolean moongladeBeaconShowReference = true;
+    public boolean moongladeBeaconShowCurrent = true;
+    public boolean moongladeBeaconShowOffsets = true;
+    public boolean moongladeBeaconShowSolved = true;
+    public boolean moongladeBeaconStereoWarning = true;
+    public boolean moongladeBeaconReadyAlert = false;
+    public boolean moongladeBeaconReadyChat = false;
+    public boolean moongladeBeaconReadyTitle = false;
+    public boolean moongladeBeaconReadySound = true;
+    public int moongladeBeaconCorrectColor = 0xAA55FF55;
+    public int moongladeBeaconUnknownColor = 0xFFFFFF55;
+    public int moongladeBeaconReadyColor = 0xFF55FF55;
+    public int moongladeBeaconPitchToleranceMillis = 150;
+    public int moongladeBeaconSpeedSamples = 10;
 }

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.707 (2026-07-30) — Moonglade Beacon solver
+
+- added normal and dual-track Upgrade Signal Strength color, speed and pitch solving
+- added filtered moving-pane speed learning and exact bass-packet pitch detection
+- added correct-setting highlights, signed offsets and Control-bypass over-click protection
+- added user-initiated middle-click conversion, movable HUD, Stereo Pants warning and configurable alerts
+
 ## 0.9.706 (2026-07-30) — Galatea Tree Progress
 
 - added exact Fig and Mangrove tree progress detection from nearby armor-stand labels

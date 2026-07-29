@@ -25,6 +25,7 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisHuntingBoxValue.init(cfg);
         ArtemisAttributeOverlay.init(cfg);
         ArtemisTreeProgress.init(cfg);
+        ArtemisMoongladeBeacon.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
@@ -43,6 +44,8 @@ public final class ArtemisHunting extends BaseConstellation {
             HudPosition.of(78,70),()->cfg.enabled&&cfg.attributeOverlay&&cfg.attributeOverlayHud));
         hud.register(new com.froggylord.constellation.hud.TreeProgressHudWidget(
             HudPosition.of(78,82),()->cfg.enabled&&cfg.treeProgress&&cfg.treeProgressHud));
+        hud.register(new com.froggylord.constellation.hud.MoongladeBeaconHudWidget(
+            HudPosition.of(78,94),()->cfg.enabled&&cfg.moongladeBeacon&&cfg.moongladeBeaconHud));
     }
     @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         ArtemisHuntingProfit.registerCommands(dispatcher);
@@ -56,5 +59,6 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisHuntingBoxValue.registerCommands(dispatcher);
         ArtemisAttributeOverlay.registerCommands(dispatcher);
         ArtemisTreeProgress.registerCommands(dispatcher);
+        ArtemisMoongladeBeacon.registerCommands(dispatcher);
     }
 }

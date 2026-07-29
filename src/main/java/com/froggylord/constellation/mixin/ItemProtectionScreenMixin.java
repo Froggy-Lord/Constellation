@@ -31,6 +31,7 @@ public abstract class ItemProtectionScreenMixin {
         if (com.froggylord.constellation.constellation.AurigaAnvilHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaReforgeHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.HerculesDnaAnalyzer.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
+        if (com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.HerculesPlotIcons.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.HerculesVisitorHelper.shouldBlockClick(screen, slot, slotId, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.LyraAuctionHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
@@ -72,6 +73,8 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.ArtemisHuntingBoxValue.drawSlot(graphics, screen, slot);
         // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/AttributesShardsInventory.kt
         com.froggylord.constellation.constellation.ArtemisAttributeOverlay.drawSlot(graphics, screen, slot);
+        // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/MoongladeBeacon.kt
+        com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.drawSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         com.froggylord.constellation.constellation.PhoenixSlotBinding.drawSlot(graphics, screen, slot, mouseX, mouseY);
         if (slot != null && ItemProtection.showMarker(slot.getItem()))
