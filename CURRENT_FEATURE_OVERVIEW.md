@@ -97,6 +97,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Crystal Hollows high-heat pant sound filtering with exact sound, heat and height checks
 - Sea-lantern-validated Dwarven ore-carpet highlights with bounded cache and scan controls
 - Crystal Hollows treasure-chest outlines, particle-derived lock spots and per-chest lock progress
+- Pickobulus exposed-block outlines and location-specific block, ore, powder and Mineshaft-pity forecasts
+- Pickobulus held-ability/cooldown state with independently movable and configurable HUD rows
 
 ## Auriga: experiments and utility
 

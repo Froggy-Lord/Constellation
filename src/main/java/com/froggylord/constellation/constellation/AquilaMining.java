@@ -51,7 +51,8 @@ public class AquilaMining extends BaseConstellation {
         AquilaForgeHelper.init(cfg);
         AquilaMiningAwareness.init(cfg);
         AquilaMiningHighlights.init(cfg);
-        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); } });
+        AquilaPickobulus.init(cfg);
+        registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaPickobulus.draw(context); } });
     }
 
     private static int readCold() {
@@ -81,6 +82,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.miningGuidanceSuite && c.miningDailyHud));
         hud.register(new com.froggylord.constellation.hud.ForgeHudWidget(HudPosition.of(78, 96),
             () -> c.enabled && c.forgeSuite && c.forgeTrackerHud));
+        hud.register(new com.froggylord.constellation.hud.PickobulusHudWidget(HudPosition.of(78, 110),
+            () -> c.enabled && c.pickobulusSuite && c.pickobulusHud));
     }
 
     @Override
@@ -90,6 +93,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaMiningGuidance.registerCommands(dispatcher);
         AquilaForgeHelper.registerCommands(dispatcher);
         AquilaMiningHighlights.registerCommands(dispatcher);
+        AquilaPickobulus.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

@@ -69,6 +69,18 @@ public class AquilaConfig extends BaseConfigGroup {
     public int treasureChestParticleMillis = 250;
     public int treasureChestColor = 0x800000FF;
 
+    public boolean pickobulusSuite = true;
+    public boolean pickobulusHud = true;
+    public boolean pickobulusHideHudOnCooldown = false;
+    public boolean pickobulusShowTotalBlocks = true;
+    public boolean pickobulusShowMineshaftPity = true;
+    public boolean pickobulusShowDrops = true;
+    public boolean pickobulusShowPowder = true;
+    public boolean pickobulusShowErrors = true;
+    public boolean pickobulusThroughWalls = false;
+    public int pickobulusRange = 20;
+    public int pickobulusColor = 0xFF55FFFF;
+
     public boolean miningProgressSuite = true;
     public boolean miningCommissionProgressHud = true;
     public boolean miningCommissionShowDone = true;

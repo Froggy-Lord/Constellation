@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.716 (2026-07-30) — Pickobulus Helper
+
+- replaced Aquila's dead Pickobulus flag with exact 8-by-8-by-8 exposed-block prediction
+- added Gold Mine, Deep Caverns, Dwarven, Crystal Hollows, Glacite Tunnels and Mineshaft rules
+- added world outlines plus block, ore, powder and Mineshaft-pity HUD forecasts
+- added held-ability/cooldown states, independent HUD rows, range, color, wall and `/pickobulushelper` controls
+
 ## 0.9.715 (2026-07-30) — Mining Highlights
 
 - added exact sea-lantern-backed Dwarven ore-carpet discovery and low-profile filled highlights

@@ -1201,6 +1201,16 @@ Enable Aquila and the relevant Dwarven, Crystal Hollows or Glacite options.
 - [ ] Trigger a correct lock, a failed lock and chest-open progression. Expected: correct sounds advance only the targeted chest, failure resets its current progress, and the label never exceeds the learned total.
 - [ ] Stop looking at the chest, let the particle expire, remove/open the chest, leave the Hollows and reconnect. Expected: targeting, particles, progress and cached chests clear at the appropriate boundary.
 - [ ] Run `/mininghighlights` and test each option, radius, scan interval, association window/range, particle lifetime and ARGB color command. Expected: each setting persists and changes only its stated behavior.
+- [ ] Hold a tool whose lore contains the Pickobulus ability and aim at exposed mining blocks. Expected: outlines show the same blocks the ability will affect inside its licensed 8-by-8-by-8 calculation volume.
+- [ ] Aim at fully enclosed blocks or into empty space. Expected: enclosed blocks are excluded and empty targeting reports `Not looking at a block` without drawing stale outlines.
+- [ ] Compare Gold Mine, Deep Caverns, Dwarven Mines, Crystal Hollows, Glacite Tunnels and a Glacite Mineshaft. Expected: each uses its own licensed conversion/breakable rules rather than sharing one generic block list.
+- [ ] In Crystal Hollows, aim at gemstone glass and each Mithril block variant. Expected: the HUD forecasts gemstone blocks and the correct one, three or five Mithril Powder weights.
+- [ ] In Glacite Tunnels, aim across ice, gemstones, titanium, Mithril, Umber and Tungsten blocks. Expected: HUD ore counts and two/four-point Mineshaft pity weights match the outlined blocks.
+- [ ] In a Glacite Mineshaft, compare stone and other exposed blocks. Expected: all licensed breakable blocks outline while only stone contributes Hardstone.
+- [ ] Put Pickobulus on cooldown with `Pickobulus: <time>` visible in the player list. Expected: the HUD shows cooldown or hides according to the saved option, and world prediction does not remain stale.
+- [ ] Remove the Pickobulus tool or leave a supported mining area. Expected: world outlines and visible state clear on the next tick.
+- [ ] Move and resize Pickobulus in `/cn hud`, then toggle total, pity, drops, powder and errors independently. Expected: each row and the HUD placement remain independent of the world preview.
+- [ ] Run `/pickobulushelper` and test preview, HUD, cooldown, row, wall, range and ARGB controls. Expected: every setting persists without using the ability or sending a packet.
 - [ ] In the Garden, run `/cropstart set <crop>` and `/cropstart setat <crop> <x> <y> <z>` for two different crops. Expected: each crop retains its own manual location independently.
 
 ## Kuudra and Crimson Isle

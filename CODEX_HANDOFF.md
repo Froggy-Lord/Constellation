@@ -2203,3 +2203,15 @@ Chest discovery requires the exact uncover message followed within the configure
 `/mininghighlights` exposes cache clearing, scan radius/interval, association range/window, particle lifetime, both ARGB colors and all master/presentation/wall toggles. The implementation only observes chat, server block/particle/sound events and renders locally. It never clicks, aims, mines, opens a chest or sends a packet.
 
 Version `0.9.715` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.
+
+## July 30 version 0.9.716 Pickobulus Helper
+
+`AquilaPickobulus.java`, `PickobulusHudWidget.java`, `AquilaConfig.java` and `AquilaMining.java` port the live-enabled Skyblocker LGPL `skyblock/dwarven/PickobulusHelper.java` and `PickobulusHudWidget.java`. This replaces the old unused `pickobulusPreview` advertisement with its first real consumer.
+
+The predictor requires a supported mining area and a held item whose cleaned lore contains the Pickobulus ability. It reads `Pickobulus: Available` or the remaining cooldown from the player list before the held-tool check, preserving the source HUD behavior. The throw ray starts at the licensed eye-height offset, has a configurable five-to-thirty-block range and samples the exact eight-cubed block volume around the hit.
+
+Only exposed, non-air and non-bedrock blocks are considered. Gold Mine, Deep Caverns and Dwarven Mines use the source bedrock-conversion block set. Crystal Hollows simulates air conversion while forecasting gemstones and one/three/five-point Mithril Powder blocks. Glacite Tunnels retain the exact breakable list and Mineshaft-pity weights for ice, gemstones, titanium, Mithril, Umber and Tungsten; Glacite Mineshafts simulate all exposed blocks while counting stone as Hardstone.
+
+The world preview outlines every predicted block with configurable color and wall mode. The movable HUD independently supports errors, total blocks, Mineshaft pity, ordinary drops and powder; cooldown visibility matches the live profile's `hideHudOnCooldown=false`. `/pickobulushelper` exposes the master, preview, HUD, cooldown, row, range, color and wall controls. The helper only reads local world/item/player-list state and renders; it never uses the ability, clicks, aims, selects a slot or sends a packet.
+
+Version `0.9.716` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures.
