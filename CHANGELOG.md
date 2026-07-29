@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.654 (2026-07-29) — Greenhouse growth
+
+- added persistent Greenhouse growth-cycle detection from the exact Crop Diagnostics menu, a movable countdown/overdue HUD and configurable ready/while-away alerts
+- added exact harvestable, reward and sufficient-water slot highlighting with independent colors and no menu interaction
+- added display, stale-cycle, early-warning, title/chat/sound, template and location controls through Hercules config and `/greenhouse`
+- restricted both Greenhouse and Stereo Harmony slot rendering to server-container slots so matching player-inventory items remain untouched
+
 ## 0.9.653 (2026-07-29) — Stereo Harmony
 
 - added persistent active-vinyl detection from the Stereo Harmony menu and every carried vacuum, covering all 13 vinyl, pest and crop combinations

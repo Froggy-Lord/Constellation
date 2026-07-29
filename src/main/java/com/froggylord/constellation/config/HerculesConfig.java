@@ -197,6 +197,29 @@ public class HerculesConfig extends BaseConfigGroup {
     public String stereoChangeTemplate = "Stereo Harmony: {vinyl} boosts {pest} for {crop}";
     public String stereoActiveVinyl = "";
 
+    public boolean greenhouseHelper = true;
+    public boolean greenhouseGrowth = true;
+    public boolean greenhouseOnlyWhenReady = false;
+    public boolean greenhouseHighlightHarvestable = true;
+    public boolean greenhouseHighlightWater = true;
+    public boolean greenhouseReadyNotification = true;
+    public boolean greenhouseReadyChat = true;
+    public boolean greenhouseReadyTitle = false;
+    public boolean greenhouseReadySound = true;
+    public boolean greenhouseShowOutsideGarden = true;
+    public boolean greenhouseNotifyAfterAway = true;
+    public boolean greenhouseShowStageLabel = true;
+    public int greenhouseWarningSeconds = 0;
+    public int greenhouseForgetAfterMinutes = 60;
+    public int greenhouseTitleTicks = 80;
+    public int greenhouseHarvestableColor = 0xA055FF55;
+    public int greenhouseNotReadyColor = 0xA0FF5555;
+    public int greenhouseRewardColor = 0xA0FFFF55;
+    public int greenhouseWaterColor = 0xA055FF55;
+    public String greenhouseReadyTemplate = "Greenhouse growth stage is {time}";
+    public long greenhouseNextCycle = 0;
+    public boolean greenhouseCycleNotified = true;
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;

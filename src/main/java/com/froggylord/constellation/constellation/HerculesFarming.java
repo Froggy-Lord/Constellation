@@ -21,6 +21,7 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPestWaypoint.init(cfg);
         HerculesSprays.init(cfg);
         HerculesStereoHarmony.init(cfg);
+        HerculesGreenhouse.init(cfg);
         registerRenderer(HerculesPests::draw);
         registerRenderer(HerculesPestWaypoint::draw);
     }
@@ -55,6 +56,9 @@ public class HerculesFarming extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.GardenStereoHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(76, 96),
             () -> cfg.enabled && cfg.stereoHarmony && cfg.stereoDisplay));
+        hud.register(new com.froggylord.constellation.hud.GreenhouseGrowthHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(76, 108),
+            () -> cfg.enabled && cfg.greenhouseHelper && cfg.greenhouseGrowth));
     }
 
     @Override
@@ -65,5 +69,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPestWaypoint.registerCommands(dispatcher);
         HerculesSprays.registerCommands(dispatcher);
         HerculesStereoHarmony.registerCommands(dispatcher);
+        HerculesGreenhouse.registerCommands(dispatcher);
     }
 }

@@ -25,7 +25,28 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Stereo Harmony: test this release first
+## Greenhouse growth: test this release first
+
+### Enable
+
+1. Enable Hercules, `Greenhouse Helper`, `Greenhouse Growth`, harvestable highlighting and water highlighting.
+2. Keep the countdown visible outside the Garden and ready chat/sound enabled, matching the live profile's always-available timer behavior.
+3. Open the Greenhouse's exact `Crop Diagnostics` menu.
+
+### Timer and diagnostic slots
+
+- [ ] Inspect menu slot 20. Expected: `Next Stage` is parsed into a persistent countdown and the movable Greenhouse HUD appears.
+- [ ] Reopen the menu while the timer runs. Expected: the deadline remains stable rather than drifting or repeatedly resetting notification state.
+- [ ] Inspect Growth Status. Expected: harvestable is green, unavailable is red, and visible drops/rewards use yellow.
+- [ ] Inspect Water Status. Expected: enough-water or no-water-needed lore makes the water bucket green.
+- [ ] Put similar items in your player inventory. Expected: only server-menu diagnostic slots receive highlights.
+- [ ] Let the cycle become ready. Expected: configured chat/title/sound channels fire once.
+- [ ] Leave and return after it becomes ready. Expected: an optional while-away message appears once.
+- [ ] Keep an overdue timer beyond `Greenhouse Forget After Minutes`. Expected: it hides and does not produce a stale alert.
+- [ ] Toggle `Greenhouse Only When Ready`. Expected: the HUD hides until overdue.
+- [ ] Run `/greenhouse` plus its option, warning, forget, title-duration, color and template controls. Expected: all changes persist.
+
+## Stereo Harmony
 
 ### Enable
 

@@ -125,6 +125,8 @@ public final class HerculesStereoHarmony {
 
     public static void drawSlot(GuiGraphicsExtractor graphics, AbstractContainerScreen<?> screen, Slot slot) {
         if (!scope() || slot == null || slot.getItem().isEmpty() || !title(screen).equals("Stereo Harmony")) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || slot.container == mc.player.getInventory()) return;
         Vinyl vinyl = vinylFromItem(slot.getItem());
         if (vinyl == null) return;
         boolean playing = lore(slot.getItem()).stream().anyMatch(line -> line.toUpperCase(Locale.ROOT).contains("PLAYING"));
