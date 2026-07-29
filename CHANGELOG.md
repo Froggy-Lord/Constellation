@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.695 (2026-07-30) — Manual crop coordinates
+
+- added explicit per-crop Garden start locations through `/cropstart setat <crop> <x> <y> <z>`
+- retained independent profile/global layouts and automatic block-centred waypoint storage
+- added command guidance to the crop-location status output
+
 ## 0.9.694 (2026-07-30) — Unique gifting
 
 - added profile-safe unique-recipient history from exact gift confirmations and Generow totals

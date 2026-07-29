@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.694 unique gifting.
+Last updated: 2026-07-30 for version 0.9.695 manual crop coordinates.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.694`.
+- Current artifact version: `0.9.695`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1969,3 +1969,11 @@ Exact `+1 Unique Gift given! To <player>!` confirmations build a case-insensitiv
 The optional advisory overlay considers only live player entities present in the connection player list. It can show not-yet-gifted or already-gifted players with independent colors, boxes, labels, range, through-wall behavior and case-insensitive include/exclude filters. It never clicks, equips or uses a gift. `/uniquegifts` exposes history, manual corrections, goal, milestones, filters, colors and all presentation switches.
 
 Version `0.9.694` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report or fatal-error signatures. Live gift chat, Generow lore and opportunity rendering remain in-game checklist items.
+
+## July 30 version 0.9.695 manual crop coordinates
+
+`HerculesCropLocations.java` now supports `/cropstart setat <crop> <x> <y> <z>` in addition to current-position assignment. The existing SkyHanni LGPL Garden start-location port remains the implementation base. Explicit coordinates use the same block-centred normalization, crop parser, profile/global keying and persistent maps as learned and current-position starts.
+
+The command is Garden-only, refuses unknown profile state when per-profile storage is enabled, validates world coordinate bounds and changes only the named crop. Existing `/cropstart set <crop>`, automatic first-harvest learning and type-scoped clearing are unchanged.
+
+Version `0.9.695` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized all 14 constellations and contained zero mixin-apply, crash-report or fatal-error signatures.

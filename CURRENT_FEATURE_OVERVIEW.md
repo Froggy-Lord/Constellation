@@ -167,7 +167,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Profile-specific Composter resource/empty-time tracking, material and profit overlay, inventory numbers, upgrade prices/highlights and low-resource warnings
 - Authoritative upcoming Jacob contest schedule with current/next/following crops, boosted-crop correction, countdowns, persistence and crop-filtered warnings
 - Profile-specific Jacob contest medal history with last-N bracket averages, time/FF planning, hovered-record details, harvest summaries and Personal Best Fortune gains
-- Profile-specific crop start and last-farmed waypoints with manual per-crop placement and configurable world rendering
+- Profile-specific crop start and last-farmed waypoints with current-block or explicit-coordinate per-crop placement and configurable world rendering
 - Farming mouse lock and percentage sensitivity reduction with manual commands, keybind, tool auto-modes, ground/plot checks and teleport release
 - Garden-only home, Barn and named-plot command shortcuts with configurable no-GUI hotkeys
 - Jacob contest crop, collection rate and projected total

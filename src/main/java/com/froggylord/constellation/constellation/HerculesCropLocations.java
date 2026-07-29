@@ -5,6 +5,7 @@ import com.froggylord.constellation.config.HerculesConfig;
 import com.froggylord.constellation.core.LocationManager;
 import com.froggylord.constellation.render.WorldRenderer;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -130,6 +131,14 @@ public final class HerculesCropLocations {
                 .executes(context -> set(null))
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("crop", StringArgumentType.word())
                     .executes(context -> set(StringArgumentType.getString(context, "crop")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("setat")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("crop", StringArgumentType.word())
+                    .then(RequiredArgumentBuilder.<FabricClientCommandSource, Double>argument("x", DoubleArgumentType.doubleArg(-30_000_000, 30_000_000))
+                        .then(RequiredArgumentBuilder.<FabricClientCommandSource, Double>argument("y", DoubleArgumentType.doubleArg(-2048, 2048))
+                            .then(RequiredArgumentBuilder.<FabricClientCommandSource, Double>argument("z", DoubleArgumentType.doubleArg(-30_000_000, 30_000_000))
+                                .executes(context -> setAt(StringArgumentType.getString(context, "crop"),
+                                    DoubleArgumentType.getDouble(context, "x"), DoubleArgumentType.getDouble(context, "y"),
+                                    DoubleArgumentType.getDouble(context, "z"))))))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("clear")
                 .executes(context -> clear(null, false))
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("crop", StringArgumentType.word())
@@ -206,6 +215,29 @@ public final class HerculesCropLocations {
         cfg.cropStartLocations.put(key(crop), encode(blockPosition(mc.player.position())));
         save();
         local("Set the " + crop.display() + " start location.");
+        return 1;
+    }
+
+    private static int setAt(String cropName, double x, double y, double z) {
+        if (!inGarden()) {
+            local("This command only works in the Garden.");
+            return 0;
+        }
+        if (cfg.cropLocationPerProfile && !profileAvailable()) {
+            local("SkyBlock profile data is not available yet.");
+            return 0;
+        }
+        HerculesGardenTracker.Crop crop = crop(cropName);
+        if (crop == null) {
+            local("Unknown crop.");
+            return 0;
+        }
+        maps();
+        Vec3 position = blockPosition(new Vec3(x, y, z));
+        cfg.cropStartLocations.put(key(crop), encode(position));
+        save();
+        local("Set the " + crop.display() + " start location to "
+            + encode(position).replace(",", ", ") + ".");
         return 1;
     }
 
@@ -352,6 +384,7 @@ public final class HerculesCropLocations {
         long lasts = cfg.cropLastFarmedLocations.keySet().stream().filter(key -> key.startsWith(profilePrefix())).count();
         local("Crop locations " + (cfg.cropLocationHelper ? "on" : "off") + ", mode "
             + mode().name().toLowerCase(Locale.ROOT) + ", " + starts + " starts and " + lasts + " last-farmed points.");
+        local("Use /cropstart set <crop> here or /cropstart setat <crop> <x> <y> <z>.");
         return 1;
     }
 

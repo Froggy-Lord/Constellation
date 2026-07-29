@@ -575,6 +575,7 @@ If all seven pass, the shared framework is healthy. Continue with whichever area
 
 - [ ] Stand at the intended beginning of a farm and run `/cropstart set`. Expected: the held tool’s crop receives a start point at your current block.
 - [ ] Without changing tools, stand elsewhere and run `/cropstart set wheat`. Expected: Wheat receives that manually chosen location independently of the held tool.
+- [ ] Run `/cropstart setat carrot 12 73 -45`. Expected: Carrot receives a block-centred start at `12.5, 73.0, -44.5` without requiring you to stand there.
 - [ ] Repeat with compact multi-word crop names such as `/cropstart set netherwart`, `sugarcane`, `wildrose` and `cocoa`. Expected: each specific crop is accepted.
 - [ ] Switch between those tools. Expected: only the held crop’s saved start waypoint is shown.
 - [ ] Run `/cropstart clearstart wheat`. Expected: only Wheat’s manual start is removed; its last-farmed position and other crops remain.
