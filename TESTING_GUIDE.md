@@ -45,6 +45,28 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 - [ ] Enable target alerts and find the same target repeatedly. Expected: selected chat/title/sound channels obey the per-type cooldown.
 - [ ] Leave Galatea or change worlds. Expected: every hunting target immediately disappears and no stale marker leaks into another island.
 
+## Lasso HUD
+
+### Enable
+
+1. Enable Artemis and Lasso Display.
+2. Keep Galatea Only enabled unless deliberately testing another island.
+3. Enable Progress and Percent; enable Target, Tool or Distance if wanted.
+
+### Test
+
+- [ ] Hold a non-Lasso item. Expected: the Lasso HUD remains hidden.
+- [ ] Cast a Lasso that creates a leash from the target to you. Expected: the HUD appears only for your own leash.
+- [ ] Compare Abysmal, Vinerip, Entangler and Everstretch Lassos. Expected: their two-, three-, three- and four-segment reel offsets produce a correctly normalized percentage.
+- [ ] Watch the server progress armor stand. Expected: the HUD updates from the exact twenty-character component structure and ignores unrelated nearby names.
+- [ ] Wait for the exact REEL armor stand. Expected: the HUD changes to `REEL`/`NOW` and displays the ready color.
+- [ ] Enable Target. Expected: a nearby target label is cleaned of level and health text before display.
+- [ ] Toggle compact mode. Expected: progress, ready state and target collapse into one row.
+- [ ] Enable ready chat, title and sound independently. Expected: each fires once when the configured threshold is crossed.
+- [ ] Enable Repeat and set `/lassohud repeatseconds 3`. Expected: alerts repeat no faster than every three seconds while ready.
+- [ ] Kill or release the target, change worlds or leave the configured scope. Expected: the HUD and ready latch clear.
+- [ ] Observe normal operation. Expected: Constellation never reels, clicks, aims or sends an interaction.
+
 ## Unique gifting
 
 ### Enable

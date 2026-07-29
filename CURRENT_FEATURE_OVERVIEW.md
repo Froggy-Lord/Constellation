@@ -34,6 +34,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Artemis: hunting and foraging
 
+- Player-owned Lasso endpoint detection with exact progress-bar and REEL state
+- Rarity-aware Abysmal, Vinerip, Entangler and Everstretch progress offsets
+- Movable compact/full Lasso HUD with progress, percentage, target, tool and distance
+- Configurable ready threshold and local chat, title, sound or timed repeat alerts
+- `/lassohud` status, reset, threshold, search range and presentation controls
 - Galatea-only Hideonleaf, Invisibug, Birries, Shellwise and Coralot detection
 - Independent target toggles, colors and ranges with boxes, labels, beams, lines and distance
 - Optional deduplicated local target chat, title and sound alerts

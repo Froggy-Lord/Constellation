@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.697 Galatea hunting targets.
+Last updated: 2026-07-30 for version 0.9.698 Lasso HUD.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.697`.
+- Current artifact version: `0.9.698`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -1997,3 +1997,13 @@ Skyblocker’s green-Shulker, Turtle and Axolotl checks avoid fragile display-na
 Each of the five targets has an independent live-default toggle, range and ARGB color. Boxes, labels, distance, beams, lines and through-wall rendering are independently configurable. Optional chat/title/sound alerts deduplicate per target type. `/huntingmobs` exposes status, transient clearing, ranges, colors and presentation switches. All detection and rendering require exact Galatea area state; world or island changes clear targets.
 
 Version `0.9.697` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live Galatea entity composition remains an explicit in-game checklist item.
+
+## July 30 version 0.9.698 Lasso HUD
+
+`ArtemisLasso.java`, `LassoHudWidget.java`, `ArtemisConfig.java` and `ArtemisHunting.java` implement the live-enabled Lasso display. The held-Lasso gate, player-owned `Leashable` endpoint scan, nearby armor-stand progress/REEL discovery and raw display behavior port SkyHanni LGPL `features/hunting/LassoDisplay.kt`. Exact twenty-space/two-sibling validation, filled-section percentage calculation and Abysmal/Vinerip/Entangler/Everstretch reel offsets port Skyblocker LGPL `skyblock/hunting/LassoHud.java`.
+
+The movable HUD supports a progress bar, remaining percentage, cleaned target label, held tool and endpoint distance. Compact mode reduces it to one row. Galatea-only scope defaults on, matching both live implementations, but can be disabled. A configurable zero-to-100 ready threshold supports independent local chat, title and sound, plus an optional bounded one-to-thirty-second repeat interval.
+
+State requires the held item to be a real Lasso, the endpoint to be alive and leashed to the local player, and an exact progress or REEL armor stand near that endpoint. Losing any condition clears the HUD and ready latch. `/lassohud` exposes status, reset, target search range, threshold, repeat timing and presentation switches. No interaction is generated.
+
+Version `0.9.698` built with exactly 11 successful tests and zero failures. The headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, initialized the existing 14 enabled constellations while Artemis remained disabled by default, and contained zero mixin-apply, crash-report, fatal-error, illegal-class-load or transformer signatures. Live leash/component composition remains an explicit in-game checklist item.

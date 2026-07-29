@@ -75,4 +75,26 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int huntingBirriesColor = 0xFF00FF00;
     public int huntingShellwiseColor = 0xFFFF6800;
     public int huntingCoralotColor = 0xFF0000FF;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/hunting/LassoDisplay.kt
+    // ported from Skyblocker (LGPL-3.0-only): skyblock/hunting/LassoHud.java
+    public boolean lassoDisplay = true;
+    public boolean lassoGalateaOnly = true;
+    public boolean lassoShowProgress = true;
+    public boolean lassoShowPercent = true;
+    public boolean lassoShowTarget = true;
+    public boolean lassoShowTool = false;
+    public boolean lassoShowDistance = false;
+    public boolean lassoCompact = false;
+    public boolean lassoReadyAlert = true;
+    public boolean lassoReadyChat = false;
+    public boolean lassoReadyTitle = false;
+    public boolean lassoReadySound = true;
+    public boolean lassoReadyRepeat = false;
+    public int lassoTargetSearchRange = 4;
+    public int lassoReadyPercent = 0;
+    public int lassoReadyRepeatSeconds = 2;
+    public int lassoReadyColor = 0xFF55FF55;
+    public int lassoProgressColor = 0xFFFFFF55;
+    public int lassoTargetColor = 0xFF55FFFF;
 }

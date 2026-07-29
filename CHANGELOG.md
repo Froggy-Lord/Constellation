@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.698 (2026-07-30) — Lasso HUD
+
+- added player-owned leash and exact armor-stand progress/REEL detection
+- added rarity-aware Abysmal, Vinerip, Entangler and Everstretch progress calculation
+- added compact/full HUD rows for progress, percentage, target, tool and distance
+- added configurable ready threshold, deduplicated/repeating alerts, scope and full `/lassohud` controls
+
 ## 0.9.697 (2026-07-30) — Galatea hunting targets
 
 - added Hideonleaf, Invisibug, Birries, Shellwise and Coralot target detection

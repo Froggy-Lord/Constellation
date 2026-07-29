@@ -16,15 +16,19 @@ public final class ArtemisHunting extends BaseConstellation {
         ArtemisConfig cfg=(ArtemisConfig)config;
         ArtemisHuntingProfit.init(cfg);
         ArtemisHuntingTargets.init(cfg);
+        ArtemisLasso.init(cfg);
         registerRenderer(ArtemisHuntingTargets::draw);
     }
     @Override public void registerHud(HudManager hud){
         ArtemisConfig cfg=(ArtemisConfig)config;
         hud.register(new com.froggylord.constellation.hud.HuntingProfitHudWidget(
             HudPosition.of(78,10),()->cfg.enabled&&cfg.huntingProfitTracker&&cfg.huntingProfitHud));
+        hud.register(new com.froggylord.constellation.hud.LassoHudWidget(
+            HudPosition.of(78,22),()->cfg.enabled&&cfg.lassoDisplay));
     }
     @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         ArtemisHuntingProfit.registerCommands(dispatcher);
         ArtemisHuntingTargets.registerCommands(dispatcher);
+        ArtemisLasso.registerCommands(dispatcher);
     }
 }
