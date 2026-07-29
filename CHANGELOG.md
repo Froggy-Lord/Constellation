@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.708 (2026-07-30) — Heart of the Forest
+
+- added exact parsing for all 29 current HOTF perks, levels, states, tokens and Forest Whispers
+- added enabled, disabled and locked perk highlights plus perk-level and unused-token slot text
+- added exact per-perk spent, percentage, current balance and Shift-for-ten-level tooltip guidance
+- added a movable HOTF summary HUD, display controls, cost design choices and `/hotfhelper` options
+
 ## 0.9.707 (2026-07-30) — Moonglade Beacon solver
 
 - added normal and dual-track Upgrade Signal Strength color, speed and pitch solving

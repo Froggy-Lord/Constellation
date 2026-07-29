@@ -288,4 +288,27 @@ public class ArtemisConfig extends BaseConfigGroup {
     public int moongladeBeaconReadyColor = 0xFF55FF55;
     public int moongladeBeaconPitchToleranceMillis = 150;
     public int moongladeBeaconSpeedSamples = 10;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/foraging/HotfConfig.kt
+    public boolean hotfHelper = true;
+    public boolean hotfHighlightEnabledPerks = true;
+    public boolean hotfLevelStackSize = true;
+    public boolean hotfTokenStackSize = true;
+    public boolean hotfWhispersSpent = true;
+    public boolean hotfWhispersFor10Levels = true;
+    public boolean hotfCurrentWhispers = true;
+    public boolean hotfHud = true;
+    public boolean hotfHudTokens = true;
+    public boolean hotfHudWhispers = true;
+    public boolean hotfHudSpent = true;
+    public boolean hotfHudPerks = true;
+    public boolean hotfHudMaxed = true;
+    public boolean hotfHideMaxedTooltipDetails = false;
+    public int hotfEnabledColor = 0x8855FF55;
+    public int hotfDisabledColor = 0x88FF5555;
+    public int hotfLockedColor = 0x88666666;
+    public int hotfMaxLevelTextColor = 0xFFFFAA00;
+    public int hotfLevelTextColor = 0xFFFFFF55;
+    public int hotfTokenTextColor = 0xFF55FFFF;
+    public String hotfWhispersSpentDesign = "NUMBER_AND_PERCENTAGE";
 }

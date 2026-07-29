@@ -374,3 +374,14 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Optional user-initiated middle-click conversion and over-click protection with Control bypass
 - Stereo Pants interference warning and optional ready chat, title and sound alerts
 - Full `/moongladebeacon` status, option, tolerance and sample controls
+
+## Artemis: Heart of the Forest
+
+- Exact `Heart of the Forest` title gating and all 29 current perk names and level caps
+- Enabled, disabled and locked perk highlighting with independent saved colors
+- Perk levels and unused Tokens of the Forest rendered directly on their menu slots
+- Exact SkyHanni cost curves for allocated/max Whispers and next-ten-level calculations
+- Number, percentage or combined spent design plus current-balance/next-level guidance
+- Shift-held ten-level tooltip projection bounded by each perk's actual maximum
+- Menu-only movable HUD for Whispers, tokens, allocated cost and perk completion
+- Full `/hotfhelper` status, design and presentation controls

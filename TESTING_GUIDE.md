@@ -1324,6 +1324,21 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Run `/moongladebeacon tolerance 200`, `/moongladebeacon samples 6` and toggle HUD/reference/current/offset/highlight options. Expected: settings save and only their intended presentation or detector tolerance changes.
 - [ ] Enable `/moongladebeacon option alert on` and one or more alert channels, then match every setting. Expected: one ready alert fires and does not repeat until a setting becomes wrong again.
 - [ ] Leave Galatea or close the menu. Expected: HUD and solver state disappear immediately and no other inventory is highlighted or click-modified.
+
+## Heart of the Forest
+
+- [ ] Enable Artemis, open `/hotf`, then run `/hotfhelper`. Expected: the exact menu is recognized and status reports the read perk count, available Whispers and unused tokens.
+- [ ] Inspect unlocked enabled, unlocked disabled and locked perks. Expected: they use green, red and gray overlays respectively; unrelated menu slots are untouched.
+- [ ] Inspect a partly levelled numeric perk. Expected: its current level is rendered on the slot. Maxed perks follow the reference behavior and do not receive redundant level text.
+- [ ] Inspect the Heart of the Forest item. Expected: its unused Token of the Forest count is rendered when nonzero.
+- [ ] Hover Sweep, Foraging Fortune, Strength Boost, Speed Boost, Luck of the Forest, Daily Wishes, Deep Waters, Efficient Forager, Collector, Forest Strength, Hunter's Luck, Galatea's Might, Essence Fortune, Forest Speed, Half Empty, Ricochet and Half Full. Expected: each uses its own authoritative cost curve and shows spent Whispers.
+- [ ] Run `/hotfhelper design number`, `percentage`, then `number_and_percentage`. Expected: only the spent line presentation changes and the choice persists.
+- [ ] Hold Shift while hovering a non-maxed numeric perk. Expected: the tooltip shows the cost of the next ten levels or the exact smaller number remaining before max.
+- [ ] Hover an unlocked non-maxed numeric perk. Expected: current Forest Whispers and either enough-for-next or the exact shortfall appear.
+- [ ] Toggle `/hotfhelper option current off`, `ten off`, `spent off`, `highlight off`, `levels off` and `tokens off`. Expected: each affects only its named overlay or tooltip section.
+- [ ] Observe the movable HOTF HUD. Expected: it shows only while the exact menu is open and its Whispers, tokens, allocated, perk and maxed rows obey independent options.
+- [ ] Click a perk and wait for only its lore to change. Expected: state, highlights, level text, HUD totals and tooltip costs refresh without reopening the menu.
+- [ ] Close `/hotf` and open unrelated inventories. Expected: every HOTF overlay, tooltip addition and HUD row disappears.
 - [ ] Toggle next, second, remaining, dim-wrong, labels, tooltip hiding, pair memory and pair highlights independently. Expected: each changes only its documented presentation or safeguard.
 - [ ] Toggle Hypixel-only and Private-Island-only scope. Expected: exact experiment screens outside selected scope remain untouched.
 - [ ] Close and reopen an experiment or run `/experiments reset`. Expected: sequence, pair and click state clears without affecting items.
