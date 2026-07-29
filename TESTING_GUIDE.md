@@ -25,7 +25,27 @@ You do not need to test everything in one sitting. Start with the five-minute ch
 
 If all seven pass, the shared framework is healthy. Continue with whichever area you actually play.
 
-## Garden pest waypoint: test this release first
+## Garden plot sprays: test this release first
+
+### Enable
+
+1. Enable Hercules and `Spray Tracker`.
+2. Keep `Spray Expiry Notification`, `Spray Expiry Chat`, `Spray Show Not Sprayed` and `Spray Notify While Away` enabled.
+3. The live-profile default leaves `Spray Hud` and `Spray New Notification` disabled. Enable them only for the HUD/new-spray checks.
+
+### State and expiry
+
+- [ ] Stand in a non-Barn Garden plot and check the Pests tab widget. Expected: its spray type and remaining time become the saved state for that physical plot.
+- [ ] Use the Sprayonator. Expected: the exact plot and spray type are stored for 30 minutes without duplicating Hypixel's message.
+- [ ] Enable `Spray Hud`. Expected: the movable HUD shows the current plot's spray and countdown, or `Not sprayed`.
+- [ ] Disable `Spray Only Current Plot`. Expected: all known active sprayed plots are listed.
+- [ ] Enable `Spray New Notification`, then enter a plot with a newly detected or substantially extended spray. Expected: one configurable local message appears, not one per tab refresh.
+- [ ] Let a spray expire. Expected: the configured chat/title/sound channels fire once and include the affected plot names.
+- [ ] Leave before expiry and return afterward. Expected: the message says it expired while away when that option is enabled.
+- [ ] Use a Portable Washer. Expected: every stored active spray clears immediately.
+- [ ] Run `/sprays`, `/sprays option`, `/sprays duration`, `/sprays warning`, and the template commands. Expected: settings persist and status reports the active count.
+
+## Garden pest waypoint
 
 ### Enable
 

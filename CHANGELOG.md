@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.652 (2026-07-29) — Garden plot sprays
+
+- added persistent per-plot Sprayonator type and expiry tracking from exact use messages, the Pests tab widget, current plot detection, and Portable Washer clearing
+- added a movable current/all-plot spray HUD, optional not-sprayed state, expiry and away notifications, new-spray messages, title/chat/sound channels, templates and timing controls
+- matched the live profile defaults: expiry notifications enabled, display and new-spray duplication disabled, with every behavior available through Hercules config and `/sprays`
+
 ## 0.9.651 (2026-07-29) — Garden pest waypoint
 
 - added vacuum-activated pest trajectory fitting with a predicted pest waypoint, plot-middle detection, arrival and timeout cleanup, and Garden-only lifecycle gating

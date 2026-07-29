@@ -156,6 +156,28 @@ public class HerculesConfig extends BaseConfigGroup {
     public int pestWaypointPlotMiddleColor = 0xFFFFFF55;
     public String pestWaypointLabelTemplate = "Pest Guess {distance}";
 
+    public boolean sprayTracker = true;
+    public boolean sprayHud = false;
+    public boolean sprayShowNotSprayed = true;
+    public boolean sprayExpiryNotification = true;
+    public boolean sprayNewNotification = false;
+    public boolean sprayExpiryChat = true;
+    public boolean sprayExpiryTitle = false;
+    public boolean sprayExpirySound = false;
+    public boolean sprayNotifyWhileAway = true;
+    public boolean sprayIncludePlotNames = true;
+    public boolean sprayShowType = true;
+    public boolean sprayShowTime = true;
+    public boolean sprayOnlyCurrentPlot = true;
+    public int sprayDurationMinutes = 30;
+    public int sprayExpiryWarningSeconds = 0;
+    public int sprayTitleTicks = 80;
+    public String sprayExpiryTemplate = "{plots} spray expired";
+    public String sprayNewTemplate = "Plot {plot} sprayed with {spray} for {time}";
+    public Map<String, Long> sprayExpiryTimes = new HashMap<>();
+    public Map<String, String> sprayTypes = new HashMap<>();
+    public Map<String, Boolean> sprayNotified = new HashMap<>();
+
     public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
     public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
     public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;
