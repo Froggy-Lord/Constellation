@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.788 (2026-07-30) — Complete Profile Overview
+
+- replaced the seven-row legacy Overview with exact cross-profile summary models
+- separated purse, personal bank, profile bank, Motes and recent bank transactions
+- added Cookie, profile age, active co-op, skill, combat and selected-pet summaries
+- added ordered current Essence balances plus future-ID preservation
+- added Maxwell power/MP/bag/tunings, Rift Prism and Abiphone state with full controls
+
 ## 0.9.787 (2026-07-30) — Complete Profile Saved Loadouts
 
 - added all 27 Loadout template positions with locked, saved-empty and configured states

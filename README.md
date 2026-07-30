@@ -65,6 +65,7 @@ garden mutation records cover all 41 maintained crops with discovery/analysis st
 garden summary records include exact level and visitor milestones, crop unlocks/Personal Bests, Jacob perk costs, Larva cap and maintained Barn skins.
 mob records preserve every lifetime kill/death API ID with optional numeric-variant grouping, K/D, filtering, search and sorting.
 saved Loadouts preserve all 27 template positions, exact armor/equipment links, pets, HOTM/HOTF presets, power stones and tuning slots.
+the profile Overview separates every liquid balance and adds Cookie, profile age, co-op, skills, combat, pet, Essence and Maxwell summaries.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

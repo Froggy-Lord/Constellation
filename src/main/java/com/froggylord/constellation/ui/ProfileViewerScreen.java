@@ -19,6 +19,7 @@ import com.froggylord.constellation.api.ProfileFishingCalculator;
 import com.froggylord.constellation.api.ProfileChocolateData;
 import com.froggylord.constellation.api.ProfileForagingCalculator;
 import com.froggylord.constellation.api.ProfileMobCalculator;
+import com.froggylord.constellation.api.ProfileOverviewCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -1539,14 +1540,99 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private List<Row> overview(JsonObject profile, JsonObject m) {
+        var cfg = ConstellationClient.cfg().lyra;
         List<Row> out = new ArrayList<>();
-        out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
-        out.add(row("Purse", coins(number(number(path(m, "currencies.coin_purse")), number(path(m, "coin_purse"))))));
-        out.add(row("Bank", coins(number(path(profile, "banking.balance")))));
-        out.add(row("Fairy souls", whole(number(number(path(m, "fairy_soul.total_collected")), number(path(m, "fairy_souls_collected"))))));
-        out.add(row("First joined", date((long) number(number(path(m, "profile.first_join")), number(path(m, "first_join"))))));
-        out.add(row("Profile type", string(profile, "game_mode", "normal")));
-        out.add(row("Co-op members", Integer.toString(object(profile, "members").size())));
+        if (!cfg.profileOverview) {
+            out.add(row("Overview", "Disabled"));
+            return out;
+        }
+        ProfileOverviewCalculator.Result data = ProfileOverviewCalculator.calculate(profile, m);
+        int decimals = Math.clamp(cfg.profileOverviewDecimals, 0, 4);
+        if (cfg.profileOverviewShowLevel) {
+            long level = data.skyBlockExperience() / 100;
+            long progress = data.skyBlockExperience() % 100;
+            out.add(row("SkyBlock level", level + (progress == 0 ? "" : "."
+                + String.format(Locale.ROOT, "%02d", progress))));
+            out.add(row("SkyBlock level XP", whole(data.skyBlockExperience())));
+        }
+        if (cfg.profileOverviewShowCurrencies) {
+            out.add(row("Purse", coins(data.purse())));
+            if (data.motes() > 0) out.add(row("Motes", whole(data.motes())));
+        }
+        if (cfg.profileOverviewShowBank) {
+            out.add(row("Personal bank", coins(data.soloBank())));
+            out.add(row("Profile bank", coins(data.profileBank())));
+            out.add(row("Liquid coins", coins(data.purse() + data.soloBank() + data.profileBank())));
+            if (cfg.profileOverviewShowBankHistory) {
+                int limit = Math.clamp(cfg.profileOverviewBankHistoryLimit, 0, 50);
+                int shown = 0;
+                for (ProfileOverviewCalculator.Transaction transaction : data.transactions()) {
+                    if (limit > 0 && shown >= limit) break;
+                    shown++;
+                    String action = title(transaction.action());
+                    String amount = (transaction.amount() >= 0 ? "+" : "-")
+                        + coins(Math.abs(transaction.amount()));
+                    out.add(row("  " + action + " by " + transaction.initiator(),
+                        amount + "  " + date(transaction.timestamp())));
+                }
+            }
+        }
+        if (cfg.profileOverviewShowCookie)
+            out.add(new Row("Booster Cookie", data.cookieBuffActive() ? "Active" : "Inactive",
+                data.cookieBuffActive() ? 0xFF55FF55 : 0xFFFF7777));
+        if (cfg.profileOverviewShowProfile) {
+            out.add(row("Fairy souls", whole(data.fairySouls())));
+            out.add(row("First joined", date(data.firstJoin())));
+            if (data.firstJoin() > 0)
+                out.add(row("Profile age", whole(Math.max(0,
+                    (System.currentTimeMillis() - data.firstJoin()) / 86_400_000L)) + " days"));
+            out.add(row("Profile type", title(data.profileType())));
+            out.add(row("Active co-op members", Integer.toString(data.coopMembers())));
+        }
+        if (cfg.profileOverviewShowSkills) {
+            out.add(row("Skill average", fixed(data.skillAverage(), decimals)));
+            out.add(row("Total skill XP", compact(data.totalSkillXp())));
+        }
+        if (cfg.profileOverviewShowCombat) {
+            out.add(row("Lifetime mob kills", whole(data.mobKills())));
+            out.add(row("Lifetime mob deaths", whole(data.mobDeaths())));
+            out.add(row("Lifetime K/D", mobRatio(data.mobKills(), data.mobDeaths(), decimals)));
+        }
+        if (cfg.profileOverviewShowPet) {
+            ProfilePetCalculator.Pet pet = data.activePet();
+            out.add(row("Active pet", pet == null ? "None or API disabled"
+                : title(pet.type()) + "  " + pet.effectiveTier() + "  Level "
+                    + fixed(pet.level().level(), decimals)));
+        }
+        if (cfg.profileOverviewShowEssence) {
+            int limit = Math.clamp(cfg.profileOverviewEssenceLimit, 0, 100);
+            int shown = 0;
+            for (ProfileOverviewCalculator.Essence essence : data.essence()) {
+                if (cfg.profileOverviewHideZeroEssence && essence.amount() == 0) continue;
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                out.add(row("  " + essence.name() + " Essence", whole(essence.amount())));
+            }
+        }
+        if (cfg.profileOverviewShowMaxwell) {
+            out.add(row("Selected power", data.selectedPower().isBlank()
+                ? "None" : title(data.selectedPower())));
+            out.add(row("Highest Magical Power", whole(data.highestMagicalPower())));
+            out.add(row("Accessory bag upgrades", whole(data.bagUpgrades())));
+            out.add(row("Rift Prism consumed", data.consumedRiftPrism() ? "Yes" : "No"));
+            out.add(row("Abiphone contacts", whole(data.abiphoneContacts())));
+            if (cfg.profileOverviewShowTunings) {
+                int limit = Math.clamp(cfg.profileOverviewTuningLimit, 0, 100);
+                int shown = 0;
+                for (var tuning : data.tunings().entrySet().stream()
+                    .sorted(java.util.Map.Entry.comparingByKey()).toList()) {
+                    if (limit > 0 && shown >= limit) break;
+                    shown++;
+                    out.add(row("  " + title(tuning.getKey()) + " tuning",
+                        whole(tuning.getValue()) + " points"));
+                }
+            }
+        }
         return out;
     }
 

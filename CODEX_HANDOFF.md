@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.787 Complete Profile Saved Loadouts.
+Last updated: 2026-07-30 for version 0.9.788 Complete Profile Overview.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.787`.
+- Current artifact version: `0.9.788`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3194,7 +3194,23 @@ All eight items reuse the existing Skyblocker-derived legacy item fixer, so nati
 
 Version `0.9.787` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2dd71c54a00ba4f864e81be54fd81a9b16481850ca99c4cee042c8ddc1fe1900`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-184222-0.9.787/`; only `constellation-0.9.787.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-184222-0.9.787/`; only `constellation-0.9.787.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `4cc1af2222`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.788 Complete Profile Overview
+
+`ProfileOverviewCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` replace the seven-row legacy Overview with complete cross-profile summaries. Currency, bank and Cookie models, first-join, Fairy Soul and level parsing, Essence ordering, active pet, skill and combat summaries, and Maxwell state port SkyBlockPv modified-MIT `data/api/Currency.kt`, `data/api/Maxwell.kt`, `api/data/profile/SkyBlockProfile.kt` and `screens/windowed/tabs/MainScreen.kt`. Required notices are beside the derived blocks.
+
+Purse, personal bank and profile bank remain separate; Liquid Coins is their exact sum. Motes, Booster Cookie, newest-first bank transactions, signed amounts, initiators, actions and timestamps are independently visible. The zero-to-50 history limit treats zero as unlimited.
+
+Overview also shows exact two-decimal SkyBlock level, raw level XP, Fairy Souls, first join, age, type, active co-op members excluding deletion notices, licensed skill average and total XP, summed lifetime kills, deaths and K/D, and the exact active pet. Essence rows use maintained order, preserve future IDs, allow zero hiding and have a zero-to-100 limit.
+
+Maxwell shows selected power, highest MP, bag upgrades and every tuning stat in slot zero. Rift Prism consumption and Abiphone active contacts use their profile fields. All sections, tuning rows, precision and limits are independent. This page reads the selected cached profile and adds no endpoint.
+
+A deterministic fixture validated every cross-object join, deletion filtering, future Essence, transaction ordering, combat sums and Maxwell, Rift and Abiphone fields. The drip helper allowlist now includes `ProfileOverviewCalculator.java`.
+
+Release verification passed on July 30: `./gradlew build -q` completed with 11 tests successful and zero failed. The 160-second headless client run ended with the expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report or fatal-error signature. The exact tested jar SHA-256 is `2ca13853ac41de37f2aa862cc3334f646dab11a87dc03a491395aaae201c0faa`.
+
+The tested `constellation-0.9.788.jar` is deployed to the Gather instance. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-185133-0.9.788/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
 
 ## Required dedicated visual-design pass
 

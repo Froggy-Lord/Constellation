@@ -47,6 +47,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Foraging profile progression includes gifts, personal bests, Whispers, Heart of the Forest loadouts, attributes, shards, fusions and traps
 - Mob Records includes every lifetime kill/death counter, optional numeric-variant grouping, K/D, percentages, filters, search, sorting and limits
 - Saved Loadouts includes 27 locked/empty/configured templates, armor/equipment items, pets, skill-tree presets, power stones and tuning slots
+- Overview includes exact level, liquid balances/history, Cookie, age/co-op, skills, combat, active pet, Essence and Maxwell state
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

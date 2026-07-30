@@ -2398,3 +2398,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Test the zero-to-100 limit and scroll over the selector. Expected: zero is unlimited, the limit is deterministic and the selector reaches every included template.
 - [ ] Switch profiles and press Refresh. Expected: decoded sets/templates reset and reload for only the selected profile with no state leakage.
 - [ ] Disable `profileLoadouts` or open a profile with Loadout API disabled. Expected: a readable state appears and no unnecessary decode starts.
+
+### Profile Overview
+
+- [ ] Enable `profileOverview`, open `/pv` and compare SkyBlock level plus raw level XP. Expected: level uses experience divided by 100 with an exact two-digit fractional remainder.
+- [ ] Compare Purse, Personal Bank and Profile Bank. Expected: each uses its distinct field and Liquid Coins is their exact sum; co-op bank is never presented as personal bank.
+- [ ] Compare Motes and Booster Cookie state. Expected: Motes appear only when positive and Cookie Active/Inactive matches `profile.cookie_buff_active`.
+- [ ] Compare up to seven recent bank transactions. Expected: newest entries appear first with action, initiator, signed amount and timestamp; the zero-to-50 limit treats zero as unlimited.
+- [ ] Compare Fairy Souls, first joined, profile age, type and co-op count. Expected: deleted members are excluded and age derives from the exact first-join timestamp.
+- [ ] Compare Skill Average/XP, lifetime kills/deaths/KD and active pet. Expected: combat values are sums rather than the largest individual mob; pet type, effective rarity and level match the selected pet.
+- [ ] Compare every current Essence balance. Expected: maintained types appear in canonical order, future IDs remain visible, zero hiding and the zero-to-100 limit compose.
+- [ ] Compare selected power, highest Magical Power, bag upgrades, Rift Prism and Abiphone contacts. Expected: each matches the selected profile.
+- [ ] Compare tuning slot zero. Expected: every stat and point count appears, including future stat IDs, sorted deterministically and bounded by the zero-to-100 limit.
+- [ ] Toggle every `profileOverviewShow...` section independently and change decimal precision from zero through four. Expected: only the selected rows or precision change.
+- [ ] Switch profiles and Refresh. Expected: every cross-profile value updates immediately with no previous-member state.
+- [ ] Disable `profileOverview`. Expected: one readable disabled row replaces the page.
