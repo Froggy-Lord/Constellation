@@ -58,6 +58,7 @@ hud elements are draggable — open `/cn hud` and move stuff where you want it. 
 For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. For a staged in-game checklist, see `TESTING_GUIDE.md`.
 
 the profile viewer calculates exact skill levels and progress from hypixel's published curves, including hunting, the current foraging cap and profile-specific farming/taming caps.
+garden crop records use the maintained licensed 46-level milestone tables and exact nine-upgrade copper costs, with validated offline caching.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

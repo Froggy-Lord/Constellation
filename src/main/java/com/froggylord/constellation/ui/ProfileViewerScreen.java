@@ -13,6 +13,7 @@ import com.froggylord.constellation.api.ProfileMiningCalculator;
 import com.froggylord.constellation.api.ProfileMuseumData;
 import com.froggylord.constellation.api.ProfileCrimsonCalculator;
 import com.froggylord.constellation.api.ProfileGardenCalculator;
+import com.froggylord.constellation.api.ProfileGardenData;
 import com.froggylord.constellation.api.ProfileRiftCalculator;
 import com.froggylord.constellation.api.ProfileFishingCalculator;
 import com.froggylord.constellation.api.ProfileChocolateData;
@@ -81,6 +82,9 @@ public final class ProfileViewerScreen extends Screen {
     private String gardenError = "";
     private boolean gardenLoading;
     private int gardenProfile = -1;
+    private ProfileGardenData.Catalogue gardenData;
+    private boolean gardenDataLoading;
+    private String gardenDataError = "";
     private ProfileChocolateData.Catalogue chocolateData;
     private String chocolateError = "";
     private boolean chocolateLoading;
@@ -757,6 +761,7 @@ public final class ProfileViewerScreen extends Screen {
     private ProfileGardenCalculator.Result gardenRows() {
         var cfg = ConstellationClient.cfg().lyra;
         return ProfileGardenCalculator.calculate(member(profile()), gardenResult,
+            gardenData,
             cfg.profileGardenCropSort, cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors);
     }
 
@@ -777,13 +782,27 @@ public final class ProfileViewerScreen extends Screen {
             rows.add(row("Crops collected", values ? whole(data.cropsCollected()) : ""));
         }
         if (cfg.profileGardenShowCrops) {
+            if (gardenDataLoading && gardenData == null)
+                rows.add(row("Crop progression catalogue", values ? "Loading..." : ""));
+            else if (gardenData == null)
+                rows.add(new Row("Crop progression catalogue", values ? "Unavailable" : "", 0xFFFFAA55));
+            else
+                rows.add(row("Crop progression catalogue", values
+                    ? "13 crops  46 milestones" + (gardenData.cached() ? "  cached" : "") : ""));
             int limit = Math.clamp(cfg.profileGardenCropLimit, 0, 100);
             int shown = 0;
             for (ProfileGardenCalculator.Crop crop : data.crops()) {
                 if (limit > 0 && shown >= limit) break;
                 shown++;
                 String value = whole(crop.collected()) + " collected";
+                if (cfg.profileGardenShowCropMilestones && crop.maxMilestone() > 0) {
+                    value += "  milestone " + crop.milestone() + "/" + crop.maxMilestone();
+                    if (crop.milestoneRequired() > 0)
+                        value += "  " + whole(crop.milestoneRequired() - crop.milestoneProgress()) + " to next";
+                }
                 if (cfg.profileGardenShowCropUpgrades) value += "  upgrade " + crop.upgrade() + "/9";
+                if (cfg.profileGardenShowCropCopper && crop.copperTotal() > 0)
+                    value += "  " + crop.copperPaid() + "/" + crop.copperTotal() + " Copper";
                 rows.add(new Row((crop.unknown() ? "Unknown  " : "") + crop.name(), values ? value : "",
                     crop.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
             }
@@ -1749,6 +1768,7 @@ public final class ProfileViewerScreen extends Screen {
 
     private void startGarden(boolean refresh) {
         if (result == null || gardenLoading || !ConstellationClient.cfg().lyra.profileGarden) return;
+        startGardenCatalogue(refresh);
         int requestedProfile = profileIndex;
         String profileId = string(profile(), "profile_id", "");
         gardenLoading = true;
@@ -1769,6 +1789,20 @@ public final class ProfileViewerScreen extends Screen {
                     gardenError = "Garden data is unavailable.";
                 }
             }));
+    }
+
+    private void startGardenCatalogue(boolean refresh) {
+        if (gardenDataLoading || !ConstellationClient.cfg().lyra.profileGarden) return;
+        gardenDataLoading = true;
+        gardenDataError = "";
+        ProfileGardenData.load(refresh).whenComplete((loaded, failure) -> Minecraft.getInstance().execute(() -> {
+            gardenDataLoading = false;
+            if (failure == null) gardenData = loaded;
+            else {
+                gardenData = null;
+                gardenDataError = "Crop progression catalogue is unavailable.";
+            }
+        }));
     }
 
     private void startChocolate(boolean refresh) {

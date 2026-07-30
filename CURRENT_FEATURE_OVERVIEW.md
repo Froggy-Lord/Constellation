@@ -35,6 +35,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Crimson shows every Dojo test, grade and time plus total points and belt progression, with independent filters, sorts and limits
 - Garden loads the separate authenticated profile endpoint and shows exact level progress, Copper, plots, skins and Larva
 - Garden includes every crop total/upgrade, visitor history, Jacob contests/medals/perks, composter state/upgrades and greenhouse progression
+- Every Garden crop includes all 46 cumulative milestones, exact next progress and 7,685-Copper upgrade completion
 - Rift profile progression includes Motes, visits, Souls, eyes, Montezuma cats, Grubber stacks and complete Timecharm discovery records
 - Fishing profile progression includes every Trophy Fish/tier, rank, Dolphin milestones, sharks, sea creatures and lifetime catch counters
 - Chocolate Factory profile progression includes Prestige, employees/production, upgrades, Time Tower, Hitman and all 512 categorized rabbits

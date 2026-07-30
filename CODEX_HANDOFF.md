@@ -3094,7 +3094,21 @@ Attribute stacks remain separate from owned shard records because the public pro
 
 Version `0.9.780` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `253823a012a42d10bdc5f7dc0547992528348bcee3baa6ed73733319fe000c8a`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175001-0.9.780/`; only `constellation-0.9.780.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175001-0.9.780/`; only `constellation-0.9.780.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `f8f7b9d749`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.781 Exact Profile Garden Crop Progression
+
+`ProfileGardenData.java`, `ProfileGardenCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` complete the missing Crop subpage depth. The maintained milestone/cost repository, cumulative-list codec semantics, current/next/max milestone calculation and Copper-paid model port SkyBlockPv modified-MIT `data/repo/StaticGardenData.kt`, `utils/codecs/CodecUtils.kt` and `screens/windowed/tabs/farming/CropScreen.kt`. Required notices are beside the derived blocks.
+
+The two live licensed resources are fetched independently and only installed together after validation. The July 30 probe confirmed exactly 13 crop IDs, 46 increments for every crop, nine upgrade costs and 7,685 total Copper; it was archived under `~/Desktop/To-Delete/constellation-probes/20260730-175232-garden-progression/`. Milestone increments are accumulated exactly like SkyBlockPv's codec before level/progress calculations.
+
+Each crop now shows current milestone out of 46, remaining collection to the next milestone, exact upgrade out of nine and Copper paid out of 7,685. Milestone sorting joins canonical/collected/upgrade/name sorts. Milestone and Copper details are independent. Unknown future crops retain raw totals/upgrades without pretending a milestone table exists.
+
+The combined catalogue is validated before writing `config/constellation-garden-progression.json`, cached for one to 168 configurable hours and retained as last-good offline data. A catalogue failure does not take down the separately authenticated Garden endpoint or any non-progression section.
+
+Version `0.9.781` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `c596f5e81580f1201129f28070a8f8671047f963a75780e85346f41751f56158`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175618-0.9.781/`; only `constellation-0.9.781.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

@@ -2292,13 +2292,17 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Enable `profileGarden`, open `/pv` and select Garden. Expected: the separate Garden request loads asynchronously for the selected profile while the screen remains responsive.
 - [ ] Compare Garden level and XP, Copper, unlocked plots, selected/unlocked barn skins and Larva with the in-game Garden. Expected: every value matches and level progress targets the next exact cumulative threshold.
 - [ ] Compare all standard crops. Expected: Wheat through Wild Rose show exact lifetime collection totals and crop-upgrade levels; future unknown crop IDs remain visible and marked.
-- [ ] Toggle crop-upgrade details, zero-crop hiding, DEFAULT/COLLECTED/UPGRADE/NAME sorting and the crop limit. Expected: rows change independently without changing totals.
+- [ ] Compare several crops immediately below and on milestone thresholds. Expected: current level out of 46 and remaining crops advance exactly; the repository increments are accumulated rather than treated as absolute values.
+- [ ] Compare crop upgrades from zero through nine. Expected: Copper paid sums the first N costs and reaches 7,685/7,685 at upgrade nine.
+- [ ] Toggle milestone, crop-upgrade and Copper details, zero-crop hiding, DEFAULT/COLLECTED/UPGRADE/MILESTONE/NAME sorting and the crop limit. Expected: rows change independently without changing totals.
 - [ ] Compare visitor totals and several visitors. Expected: total offers, unique visitors, per-NPC visits/completions, zero hiding and the visitor limit match the Garden API.
 - [ ] Compare Jacob contests, claimed contests, Bronze/Silver/Gold medals, Farming cap, Double Drops and Personal Bests perk. Expected: each matches the profile.
 - [ ] Compare organic matter, fuel, compost units/items, conversion ticks, last save and all five composter upgrades. Expected: exact stored values and levels appear.
 - [ ] Compare greenhouse spaces and Growth Speed, Yield and Plot Limit upgrades. Expected: spaces include the twelve initial slots and cap at 100.
 - [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
 - [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.
+- [ ] Refresh online, restart offline and reopen Garden. Expected: the validated 13-crop/46-milestone/nine-cost catalogue survives for the configured one-to-168-hour cache period.
+- [ ] Force the progression catalogue unavailable with no cache. Expected: core Garden totals, visitors, contests, composter and greenhouse still render; crop progression says unavailable.
 
 ### Profile Rift
 

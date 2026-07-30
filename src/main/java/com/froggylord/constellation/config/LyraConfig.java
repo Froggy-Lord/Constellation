@@ -316,6 +316,8 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileGardenShowSummary = true;
     public boolean profileGardenShowCrops = true;
     public boolean profileGardenShowCropUpgrades = true;
+    public boolean profileGardenShowCropMilestones = true;
+    public boolean profileGardenShowCropCopper = true;
     public boolean profileGardenShowVisitors = true;
     public boolean profileGardenShowVisitorBreakdown = true;
     public boolean profileGardenShowContests = true;
@@ -326,6 +328,7 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileGardenHideZeroVisitors = true;
     public int profileGardenCropLimit = 0;
     public int profileGardenVisitorLimit = 10;
+    public int profileGardenCatalogueCacheHours = 24;
     public String profileGardenCropSort = "DEFAULT";
     public boolean profileRift = true;
     public boolean profileRiftShowSummary = true;

@@ -24,6 +24,7 @@ public final class ProfileGardenCalculator {
     private ProfileGardenCalculator() {}
 
     public static Result calculate(JsonObject member, ProfileViewerApi.GardenResult response,
+                                   ProfileGardenData.Catalogue catalogue,
                                    String cropSort, boolean hideZeroCrops, boolean hideZeroVisitors) {
         JsonObject garden = response.garden();
         JsonObject player = object(member, "garden_player_data");
@@ -40,10 +41,10 @@ public final class ProfileGardenCalculator {
         JsonObject upgrades = object(garden, "crop_upgrade_levels");
         List<Crop> crops = new ArrayList<>();
         Set<String> known = new HashSet<>(CROPS);
-        for (String id : CROPS) crops.add(crop(id, resources, upgrades, false));
+        for (String id : CROPS) crops.add(crop(id, resources, upgrades, catalogue, false));
         for (var entry : resources.entrySet())
             if (!known.contains(entry.getKey()))
-                crops.add(crop(entry.getKey(), resources, upgrades, true));
+                crops.add(crop(entry.getKey(), resources, upgrades, catalogue, true));
         crops.removeIf(value -> hideZeroCrops && value.collected() == 0 && value.upgrade() == 0);
         crops.sort(cropComparator(cropSort));
 
@@ -92,8 +93,22 @@ public final class ProfileGardenCalculator {
             greenhouseRows, response.cached());
     }
 
-    private static Crop crop(String id, JsonObject resources, JsonObject upgrades, boolean unknown) {
-        return new Crop(id, cropName(id), whole(resources.get(id)), integer(upgrades.get(id)), unknown);
+    private static Crop crop(String id, JsonObject resources, JsonObject upgrades,
+                             ProfileGardenData.Catalogue catalogue, boolean unknown) {
+        long collected = whole(resources.get(id));
+        int upgrade = integer(upgrades.get(id));
+        List<Long> milestones = catalogue == null ? List.of() : catalogue.milestones().getOrDefault(id, List.of());
+        int milestone = 0;
+        while (milestone < milestones.size() && collected >= milestones.get(milestone)) milestone++;
+        long start = milestone == 0 ? 0 : milestones.get(milestone - 1);
+        long next = milestone >= milestones.size() ? 0 : milestones.get(milestone);
+        int copperPaid = catalogue == null ? 0 : catalogue.cropUpgradeCosts().stream()
+            .limit(Math.clamp(upgrade, 0, catalogue.cropUpgradeCosts().size())).mapToInt(Integer::intValue).sum();
+        int copperTotal = catalogue == null ? 0 : catalogue.cropUpgradeCosts().stream().mapToInt(Integer::intValue).sum();
+        return new Crop(id, cropName(id), collected, upgrade, milestone, milestones.size(),
+            milestone >= milestones.size() ? 0 : collected - start,
+            milestone >= milestones.size() ? 0 : next - start,
+            milestones.isEmpty() ? 0 : milestones.getLast(), copperPaid, copperTotal, unknown);
     }
 
     private static Comparator<Crop> cropComparator(String sort) {
@@ -104,6 +119,7 @@ public final class ProfileGardenCalculator {
         return switch (sort == null ? "" : sort.toUpperCase(Locale.ROOT)) {
             case "COLLECTED" -> Comparator.comparingLong(Crop::collected).reversed().thenComparing(Crop::name);
             case "UPGRADE" -> Comparator.comparingInt(Crop::upgrade).reversed().thenComparing(Crop::name);
+            case "MILESTONE" -> Comparator.comparingInt(Crop::milestone).reversed().thenComparing(Crop::name);
             case "NAME" -> Comparator.comparing(Crop::name);
             default -> canonical.thenComparing(Crop::name);
         };
@@ -163,7 +179,9 @@ public final class ProfileGardenCalculator {
         return out.toString();
     }
 
-    public record Crop(String id, String name, long collected, int upgrade, boolean unknown) {}
+    public record Crop(String id, String name, long collected, int upgrade, int milestone, int maxMilestone,
+                       long milestoneProgress, long milestoneRequired, long maximumRequired,
+                       int copperPaid, int copperTotal, boolean unknown) {}
     public record Visitor(String id, String name, int visits, int completed) {}
     public record Upgrade(String id, String name, int level) {}
     public record Result(boolean available, long gardenXp, int gardenLevel, long levelProgress, long levelRequired,

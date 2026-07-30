@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.781 (2026-07-30) — Exact Profile Garden Crop Progression
+
+- added all 46 exact cumulative milestones for each of the 13 current Garden crops
+- added current milestone, next-milestone remaining and full milestone target per crop
+- added exact crop-upgrade Copper paid out of 7,685 across all nine upgrades
+- added milestone sorting plus independent milestone/Copper details
+- added validated one-to-168-hour last-good catalogue caching with core Garden fallback
+
 ## 0.9.780 (2026-07-30) — Complete Profile Foraging Progression
 
 - added Fig/Mangrove gifts, Personal Bests, Fortune perks and Forest Whispers
