@@ -9,6 +9,7 @@ import com.froggylord.constellation.api.ProfilePetCalculator;
 import com.froggylord.constellation.api.ProfileBestiaryData;
 import com.froggylord.constellation.api.ProfileCollectionData;
 import com.froggylord.constellation.api.ProfileMinionCalculator;
+import com.froggylord.constellation.api.ProfileMiningCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -36,7 +37,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -134,6 +135,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 9) {
             drawMinions(g);
+            return;
+        }
+        if (tab == 10) {
+            drawMining(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -457,6 +462,75 @@ public final class ProfileViewerScreen extends Screen {
         g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
     }
 
+    private void drawMining(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileMining) {
+            g.text(font, "Mining viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileMiningCalculator.Result data = miningRows();
+        if (!data.available()) {
+            g.text(font, "Mining API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileMiningShowHotm) {
+            String hotm = "Level " + data.hotmLevel() + "  " + whole(data.hotmXp()) + " XP";
+            if (data.hotmRequired() > 0)
+                hotm += "  " + whole(data.hotmRequired() - data.hotmProgress()) + " left";
+            rows.add(row("Heart of the Mountain", hotm));
+        }
+        if (cfg.profileMiningShowTree) {
+            rows.add(row("Selected mining tree", data.selectedTree() + "  " + title(data.selectedAbility())));
+            rows.add(row("Tree nodes", data.unlockedNodes() + " unlocked  " + data.nodeLevels() + " total levels"
+                + (data.disabledNodes() > 0 ? "  " + data.disabledNodes() + " disabled" : "")));
+        }
+        if (cfg.profileMiningShowPowder) {
+            for (ProfileMiningCalculator.Powder powder : List.of(data.mithril(), data.gemstone(), data.glacite()))
+                rows.add(row(powder.name() + " powder", whole(powder.available()) + " available  "
+                    + whole(powder.spent()) + " spent  " + whole(powder.total()) + " total"));
+        }
+        rows.add(row("Crystal Nucleus runs", whole(data.nucleusRuns())));
+        if (cfg.profileMiningShowCrystals) {
+            int limit = Math.clamp(cfg.profileMiningCrystalLimit, 0, 100);
+            int shown = 0;
+            for (ProfileMiningCalculator.Crystal crystal : data.crystals()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                StringBuilder value = new StringBuilder();
+                if (cfg.profileMiningShowCrystalState) value.append(title(crystal.state()));
+                if (cfg.profileMiningShowCrystalFound)
+                    value.append(value.isEmpty() ? "" : "  ").append(crystal.totalFound()).append(" found");
+                if (cfg.profileMiningShowCrystalPlaced)
+                    value.append(value.isEmpty() ? "" : "  ").append(crystal.totalPlaced()).append(" placed");
+                rows.add(new Row((crystal.unknown() ? "Unknown  " : "") + crystal.name() + " Crystal",
+                    value.toString(), crystal.unknown() ? 0xFFFFAA55
+                        : crystal.active() ? 0xFF55FF55 : ConstellationTheme.TEXT));
+            }
+        }
+        if (cfg.profileMiningShowRock) {
+            String value = data.rock().rarity() + "  " + whole(data.oresMined()) + " ores";
+            if (data.rock().remaining() > 0) value += "  " + whole(data.rock().remaining()) + " left";
+            rows.add(row("Rock Pet milestone", value));
+        }
+        if (cfg.profileMiningShowGlacite) {
+            rows.add(row("Glacite Mineshafts entered", whole(data.mineshaftsEntered())));
+            rows.add(row("Fossil Dust", whole(data.fossilDust())));
+        }
+        if (cfg.profileMiningShowFossils) {
+            rows.add(row("Fossils donated", data.fossilsDonated() + "/" + data.fossils().size()));
+            for (ProfileMiningCalculator.Fossil fossil : data.fossils())
+                rows.add(new Row("  " + fossil.name(), fossil.donated() ? "Donated" : "Missing",
+                    fossil.donated() ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+        }
+        if (cfg.profileMiningShowCorpses) {
+            rows.add(row("Corpses looted", whole(data.corpsesLooted())));
+            for (ProfileMiningCalculator.Corpse corpse : data.corpses())
+                rows.add(row("  " + corpse.name(), whole(corpse.looted())));
+        }
+        drawRows(g, rows);
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -737,6 +811,11 @@ public final class ProfileViewerScreen extends Screen {
             else itemPage = Math.max(0, itemPage - (int) sy);
             return true;
         }
+        if (tab == 10) {
+            int max = Math.max(0, miningDisplayRows().size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
         if (tab == 6) {
             int max = Math.max(0, wealthLines().size() * 21 - (height - 154));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
@@ -883,6 +962,54 @@ public final class ProfileViewerScreen extends Screen {
         return ProfileMinionCalculator.calculate(profile(), result.uuid().toString().replace("-", ""),
             cfg.profileMinionsCategory, cfg.profileMinionsSearch, cfg.profileMinionsSort,
             cfg.profileMinionsPersonalOnly, cfg.profileMinionsHideUncrafted, cfg.profileMinionsHideMaxed);
+    }
+
+    private ProfileMiningCalculator.Result miningRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileMiningCalculator.calculate(member(profile()), cfg.profileMiningCrystalFilter,
+            cfg.profileMiningCrystalSort, cfg.profileMiningHideNeverFoundCrystals,
+            cfg.profileMiningHideInactiveCrystals);
+    }
+
+    private List<Row> miningDisplayRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileMiningCalculator.Result data = miningRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileMiningShowHotm) rows.add(row("Heart of the Mountain", ""));
+        if (cfg.profileMiningShowTree) { rows.add(row("Selected mining tree", "")); rows.add(row("Tree nodes", "")); }
+        if (cfg.profileMiningShowPowder) { rows.add(row("Mithril powder", "")); rows.add(row("Gemstone powder", "")); rows.add(row("Glacite powder", "")); }
+        rows.add(row("Crystal Nucleus runs", ""));
+        if (cfg.profileMiningShowCrystals) {
+            int limit = cfg.profileMiningCrystalLimit <= 0 ? data.crystals().size()
+                : Math.min(data.crystals().size(), cfg.profileMiningCrystalLimit);
+            for (int i = 0; i < limit; i++) rows.add(row("Crystal", ""));
+        }
+        if (cfg.profileMiningShowRock) rows.add(row("Rock Pet milestone", ""));
+        if (cfg.profileMiningShowGlacite) { rows.add(row("Glacite Mineshafts entered", "")); rows.add(row("Fossil Dust", "")); }
+        if (cfg.profileMiningShowFossils) {
+            rows.add(row("Fossils donated", ""));
+            for (int i = 0; i < data.fossils().size(); i++) rows.add(row("Fossil", ""));
+        }
+        if (cfg.profileMiningShowCorpses) {
+            rows.add(row("Corpses looted", ""));
+            for (int i = 0; i < data.corpses().size(); i++) rows.add(row("Corpse", ""));
+        }
+        return rows;
+    }
+
+    private void drawRows(GuiGraphicsExtractor g, List<Row> rows) {
+        int y = 108 - scroll;
+        for (Row row : rows) {
+            if (y > 98 && y < height - 22) {
+                g.fill(12, y, width - 12, y + 18, 0xA0181825);
+                g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
+                String value = font.width(row.value) > width / 2
+                    ? font.plainSubstrByWidth(row.value, width / 2 - 24) + "..." : row.value;
+                g.text(font, value, width - 19 - font.width(value), y + 6, row.color, false);
+            }
+            y += 21;
+        }
+        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
     }
 
     private void startCollections(boolean refresh) {

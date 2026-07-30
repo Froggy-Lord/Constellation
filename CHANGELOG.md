@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.773 (2026-07-30) — Complete Profile Mining Progression
+
+- added exact Heart of the Mountain level/progress, selected tree, ability and node-state summaries
+- added available, spent and lifetime Mithril, Gemstone and Glacite Powder totals
+- added all nucleus, other and Glacite Crystal states, found/placed totals and nucleus-run count
+- added Rock Pet ore milestones, mineshafts, Fossil Dust, fossil donations and corpse totals
+- added independent section controls plus crystal filters, hiding, sorting and limits
+
 ## 0.9.772 (2026-07-30) — Complete Profile Minions
 
 - added all 60 current minion families with exact XI/XII caps and per-tier crafted progress

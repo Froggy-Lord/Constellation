@@ -2239,3 +2239,20 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle summary, category, personal comparison, completion, missing and slot-progress fields independently. Expected: each changes only its own presentation.
 - [ ] Inject or encounter a generator family newer than the catalogue. Expected: it remains visible in amber under Unknown with its observed highest tier and no guessed maximum.
 - [ ] Disable `profileMinions`. Expected: the tab reports disabled and performs no extra work.
+
+### Profile mining
+
+- [ ] Enable `profileMining`, open `/pv`, then select Mining. Expected: the selected profile's Heart of the Mountain, powder, crystal, Rock and Glacite sections appear without another network request.
+- [ ] Compare Heart of the Mountain level, total XP and remaining XP with Hypixel. Expected: cumulative thresholds through level ten are exact and max level shows no fabricated next target.
+- [ ] Switch among profiles with different selected mining-tree slots. Expected: selected slot, selected ability, unlocked nodes, total node levels and disabled-node count all update from that profile.
+- [ ] Compare Mithril, Gemstone and Glacite Powder. Expected: available equals the live balance, spent equals the API spent field and total is their exact sum.
+- [ ] Compare Jade, Amethyst, Topaz, Sapphire and Amber counts. Expected: state, total found and total placed match the API; Crystal Nucleus runs equal the minimum placed count across those five crystals.
+- [ ] Check Ruby, Jasper, Opal and all four Glacite crystals. Expected: they remain separate from the five nucleus-run crystals and preserve their own state and counters.
+- [ ] Test ALL, NUCLEUS, GLACITE and OTHER filters with never-found and inactive hiding. Expected: filters compose and summaries remain unchanged.
+- [ ] Test DEFAULT, FOUND, PLACED and STATE sorting plus zero and positive crystal limits. Expected: default follows the licensed canonical order, zero is unlimited and unknown future crystals sort last by default.
+- [ ] Toggle crystal state, found and placed fields independently. Expected: the row remains present and only the chosen values change.
+- [ ] Compare ores mined and Rock Pet rarity. Expected: Common, Uncommon, Rare, Epic and Legendary thresholds are 2,500, 7,500, 20,000, 100,000 and 250,000 with exact remaining ores.
+- [ ] Compare Glacite Mineshafts entered, Fossil Dust, all eight fossil donation states and Lapis/Tungsten/Umber/Vanguard corpse counts. Expected: each exact API field is displayed and the corpse total is their sum.
+- [ ] Toggle HotM, tree, powder, crystals, Rock, Glacite, fossils and corpses independently. Expected: scrolling remains bounded and each option controls only its section.
+- [ ] Open a Stranded or API-restricted profile. Expected: genuinely missing mining data reports unavailable rather than borrowing another profile or inventing zero progress.
+- [ ] Disable `profileMining`. Expected: the tab reports disabled and does no calculation.

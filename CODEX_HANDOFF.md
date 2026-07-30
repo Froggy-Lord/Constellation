@@ -2984,7 +2984,21 @@ Personal/co-op scope, category/search, uncrafted/maxed hiding, category/name/tie
 
 Version `0.9.772` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `be4f06eb2eaebd922f0abe9ce66b1d77b696af1d6fdedb2f4372f71a85fc35d0`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-164736-0.9.772/`; only `constellation-0.9.772.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-164736-0.9.772/`; only `constellation-0.9.772.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `4830513271`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.773 Complete Profile Mining Progression
+
+`ProfileMiningCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Mining page. Mining-core, crystal, powder, Glacite and Rock milestone parsing ports SkyBlockPv modified-MIT `data/api/skills/MiningData.kt`, `data/api/skills/SkillTree.kt`, `screens/windowed/tabs/mining/MainMiningScreen.kt` and `GlaciteScreen.kt`; its required notice sits beside the implementation. Raw-field behavior is cross-checked with Skyblocker LGPL `profileviewer2/model/MiningCore.java` and `GlacitePlayerData.java`.
+
+Heart of the Mountain uses the licensed cumulative level-one-to-ten XP table and the profile's selected one-of-five mining tree. The page reports exact total/progress/remaining XP, selected ability, distinct unlocked nodes, summed node levels and explicitly disabled toggles. Available, spent and lifetime totals remain separate for Mithril, Gemstone and Glacite Powder.
+
+All five nucleus-run crystals, Ruby/Jasper/Opal and four Glacite crystals retain state, total-found and total-placed values. Nucleus completions use SkyBlockPv's conservative minimum placed count across Jade, Amethyst, Topaz, Sapphire and Amber. Canonical/nucleus/Glacite/other filters, never-found/inactive hiding, canonical/found/placed/state sorts, limits and each crystal field are configurable. Unknown future crystal IDs remain visible rather than being discarded.
+
+The page also ports exact Rock Pet ore thresholds, current and remaining ores, Glacite Mineshaft entries, Fossil Dust, all eight fossil donations and four corpse types plus their total. Every major section has an independent visibility toggle. Forge estimates are deliberately deferred: exact completion requires the item-duration catalogue and Quick Forge adjustment, and showing a raw start time as an ETA would be incorrect.
+
+Version `0.9.773` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d94cbbf9aaccdf880b46547e0275c85c9f769245c8937a51dcab5a1af8b84475`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-165616-0.9.773/`; only `constellation-0.9.773.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
 
 ## Required dedicated visual-design pass
 
