@@ -18,6 +18,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - All returned profiles are switchable, with the selected profile used by default
 - Overview shows SkyBlock level, purse, bank, Fairy Souls, first join, profile type and co-op size
 - Skills, Dungeons, Slayers and Pets provide scrollable detailed pages and preserve unavailable API fields honestly
+- Items decodes and renders the real Inventory, Armor, Equipment, Ender Chest, Accessory Bag, Potion Bag, Fishing Bag, Quiver and Personal Vault contents
+- Every backpack, wardrobe page and equipment-set page is independently selectable with native stack counts and item tooltips
+- Legacy 1.8 item NBT is upgraded through the maintained 26.2 data fixer; a malformed or disabled container is isolated without hiding valid containers
+- The item menu and item pages scroll independently, grid height is configurable from one to six rows, and tooltips, decorations and slot colors can be changed separately
 - Requests run off-thread, use bounded timeouts, share in-flight authentication state and cache profiles for a configurable one to 60 minutes
 - Refresh bypasses both local and service caches; lookup and service failures remain on the screen without closing it
 

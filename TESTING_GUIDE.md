@@ -2122,3 +2122,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Search an invalid name, a nonexistent name and retry while offline. Expected: a readable error remains in the screen and no crash, token, stack trace or raw response appears in chat.
 - [ ] Set `profileCacheMinutes` from 1 to 60 and reopen a profile. Expected: cached requests say `cached`; Refresh always bypasses the local cache.
 - [ ] Disable `profileViewer` and run `/pv`. Expected: a local disabled message appears and no network request starts.
+
+### Profile inventory and storage
+
+- [ ] Open `/pv` for a player with inventory APIs enabled, then select Items. Expected: decoding runs asynchronously and the player Inventory, Armor and Equipment appear as selectable containers.
+- [ ] Compare the Inventory grid with the player's public API inventory. Expected: the three main rows and corrected hotbar ordering match exactly; stack counts and native tooltips render.
+- [ ] Inspect Ender Chest, Accessory Bag, Potion Bag, Fishing Bag, Quiver and Personal Vault. Expected: only API-enabled containers appear and multi-page contents remain in exact slot order.
+- [ ] Inspect every Backpack entry. Expected: each API backpack has its own named selector, paging is bounded and a malformed backpack reports unavailable without hiding other containers.
+- [ ] Inspect Wardrobe and Equipment Sets. Expected: pieces are grouped by slot across rows like the in-game pages, empty unlocked positions remain empty, and later pages are selectable.
+- [ ] Hover modern, legacy, enchanted, reforged, recombobulated and pet items. Expected: item icons and formatted names/lore survive data fixing, ExtraAttributes remain available to Constellation tooltips, and no placeholder or decode error appears for valid items.
+- [ ] Switch profiles while Items is decoding. Expected: old-profile contents never appear under the new profile and the new profile starts its own lazy decode.
+- [ ] Set `profileViewerInventoryRows` from 1 to 6, toggle tooltips/decorations and change both inventory colors. Expected: each option changes only the item browser and remains saved after restart.
+- [ ] Test a player with inventory APIs disabled. Expected: Items states that data is unavailable while Overview and other public pages continue working.

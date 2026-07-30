@@ -12,6 +12,7 @@ repositories {
     maven { url = 'https://maven.terraformersmc.com/' }
     maven { url = 'https://maven.isxander.dev/releases' }
     maven { url = 'https://api.modrinth.com/maven' }
+    maven { url = 'https://maven.azureaaron.net/releases' }
 }
 
 dependencies {
@@ -21,6 +22,7 @@ dependencies {
 
     // ModMenu for config button integration
     implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    include implementation("net.azureaaron:legacy-item-dfu:1.0.4+26.2")
 
     // test deps — patterns test doesn't touch minecraft, just pure java
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'

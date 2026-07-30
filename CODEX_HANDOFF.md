@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.763 SkyBlock Profile Viewer.
+Last updated: 2026-07-30 for version 0.9.764 Profile Inventory Browser.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.763`.
+- Current artifact version: `0.9.764`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2882,4 +2882,16 @@ The screen defaults to the API-selected profile and exposes every returned profi
 
 Version `0.9.763` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `1bd8da7bb0540b89b87b04ca6165c25f12198ca7d2229d0f379e3ef278b4ba99`.
 
-The previous `0.9.762` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-153241-0.9.763/`; only `constellation-0.9.763.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.762` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-153241-0.9.763/`; only `constellation-0.9.763.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `3c8adbcb60`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.764 Profile Inventory Browser
+
+`ProfileItemDecoder.java`, `ProfileViewerScreen.java`, `LyraConfig.java` and `build.gradle` deepen the authenticated viewer with real profile items. Base64/gzip NBT loading, legacy-stack upgrading, empty-slot preservation, hotbar correction, armor reversal, wardrobe ordering and storage records port Skyblocker LGPL `skyblock/profileviewer2/utils/ItemLoader.java`, `ProfileItemStorage.java`, `pages/InventoryPage.java`, `widgets/InventoryWidget.java`, `utils/datafixer/LegacyItemStackFixer.java` and `utils/TextTransformer.java`. The maintained Apache-2.0 `net.azureaaron:legacy-item-dfu:1.0.4+26.2` library is included so old Hypixel item IDs/components are upgraded through the actual 26.2 data-fixer schema rather than guessed.
+
+The Items tab exposes Inventory, Armor, Equipment, all Ender Chest pages, all individual Backpacks, Accessory Bag pages, Potion Bag, Fishing Bag, Quiver, Personal Vault, ordered Wardrobe pages and ordered Equipment Set pages. It uses actual `ItemStack` rendering, native stack decorations and full native item tooltips. The left container menu and item pages scroll independently; one-to-six visible rows, tooltip visibility, decorations and slot/hover colors are configurable.
+
+Decoding is lazy per selected SkyBlock profile and happens off the render thread. Every encoded container has an independent failure boundary, so a malformed backpack does not discard the inventory or other bags. Disabled inventory APIs produce an explicit unavailable state. Profile changes clear decoded state before starting the next profile. The browser never moves an item, opens storage, clicks, equips, withdraws or sends a gameplay packet.
+
+Version `0.9.764` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures, and the nested legacy item data fixer loaded without an error. Main-jar SHA-256: `aa119625c4a0543b50bf271ff68c68b93be29af9bf4a5971d564696215dc2601`.
+
+The previous `0.9.763` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-154121-0.9.764/`; only `constellation-0.9.764.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

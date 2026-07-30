@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.764 (2026-07-30) — Profile Inventory Browser
+
+- ported Skyblocker's 26.2 legacy item decoding, hotbar correction, wardrobe ordering and native item-grid rendering
+- added Inventory, Armor, Equipment, Ender Chest, Accessory Bag, Potion Bag, Fishing Bag, Quiver and Personal Vault views
+- added separately selectable backpack, wardrobe and equipment-set pages with native item tooltips and stack decorations
+- added bounded asynchronous decoding, per-container failure isolation, paging, scrolling, row controls and configurable slot colors
+
 ## 0.9.763 (2026-07-30) — SkyBlock Profile Viewer
 
 - ported SkyBlockPv's Minecraft-session-authenticated profile transport, bounded request flow and five-minute cache

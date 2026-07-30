@@ -164,6 +164,12 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileCommand = true; 
     public boolean profileViewer = true;
     public int profileCacheMinutes = 5;
+    public boolean profileViewerInventory = true;
+    public boolean profileViewerInventoryTooltips = true;
+    public boolean profileViewerInventoryDecorations = true;
+    public int profileViewerInventoryRows = 5;
+    public int profileViewerInventorySlotColor = 0xD020202C;
+    public int profileViewerInventoryHoverColor = 0xE03C3C55;
     public boolean auctionHelper = true;
     public boolean auctionOutbidAlert = true;
     public boolean auctionOutbidTitle = true;

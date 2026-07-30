@@ -1,6 +1,8 @@
 package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.api.ProfileViewerApi;
+import com.froggylord.constellation.api.ProfileItemDecoder;
+import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 import java.time.Instant;
@@ -26,7 +29,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -36,6 +39,12 @@ public final class ProfileViewerScreen extends Screen {
     private int profileIndex;
     private int tab;
     private int scroll;
+    private ProfileItemDecoder.Result itemResult;
+    private boolean itemLoading;
+    private int itemProfile = -1;
+    private int itemContainer;
+    private int itemContainerScroll;
+    private int itemPage;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -89,6 +98,10 @@ public final class ProfileViewerScreen extends Screen {
             chip(g, tx, 80, bw, TABS[i], i == tab, mx, my);
             tx += bw + 4;
         }
+        if (tab == 5) {
+            drawItems(g, mx, my);
+            return;
+        }
         List<Row> rows = rows(profile, member);
         int y = 108 - scroll;
         for (Row row : rows) {
@@ -110,6 +123,72 @@ public final class ProfileViewerScreen extends Screen {
             case 4 -> pets(member);
             default -> overview(profile, member);
         };
+    }
+
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/profileviewer2/widgets/InventoryWidget.java
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/profileviewer2/pages/InventoryPage.java
+    private void drawItems(GuiGraphicsExtractor g, int mx, int my) {
+        if (itemProfile != profileIndex && !itemLoading) startItemDecode();
+        if (itemLoading) {
+            g.text(font, "Decoding profile items...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (itemResult == null || itemResult.containers().isEmpty()) {
+            g.text(font, "Inventory API disabled or no item data was returned.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        var cfg = ConstellationClient.cfg().lyra;
+        List<ProfileItemDecoder.Container> containers = itemResult.containers();
+        itemContainer = Math.clamp(itemContainer, 0, containers.size() - 1);
+        int visibleMenus = Math.max(2, (height - 136) / 18);
+        itemContainerScroll = Math.clamp(itemContainerScroll, 0, Math.max(0, containers.size() - visibleMenus));
+        int menuY = 108;
+        for (int i = itemContainerScroll; i < Math.min(containers.size(), itemContainerScroll + visibleMenus); i++) {
+            String name = containers.get(i).name();
+            boolean active = i == itemContainer;
+            g.fill(12, menuY, 118, menuY + 16, active ? 0xFF34506A : inside(mx, my, 12, menuY, 106, 16) ? 0xFF303044 : 0xFF20202C);
+            String shown = font.width(name) > 94 ? font.plainSubstrByWidth(name, 88) + "..." : name;
+            g.text(font, shown, 18, menuY + 5, active ? 0xFFFFFFFF : ConstellationTheme.TEXT_MUTED, false);
+            menuY += 18;
+        }
+        if (!itemResult.failures().isEmpty())
+            g.text(font, itemResult.failures().size() + " unavailable", 14, height - 13, 0xFFFFAA55, false);
+
+        ProfileItemDecoder.Container container = containers.get(itemContainer);
+        int rows = Math.clamp(cfg.profileViewerInventoryRows, 1, 6);
+        rows = Math.min(rows, Math.max(1, (height - 154) / 18));
+        int pageSize = rows * 9;
+        int pages = Math.max(1, (container.items().size() + pageSize - 1) / pageSize);
+        itemPage = Math.clamp(itemPage, 0, pages - 1);
+        int gridX = Math.max(130, (width + 118 - 162) / 2);
+        int gridY = 126;
+        String heading = container.name() + "  " + (itemPage + 1) + "/" + pages;
+        g.text(font, heading, gridX, 109, ConstellationTheme.TEXT, false);
+        int from = itemPage * pageSize;
+        int to = Math.min(container.items().size(), from + pageSize);
+        ItemStack hovered = null;
+        for (int local = 0; local < pageSize; local++) {
+            int slotX = gridX + (local % 9) * 18;
+            int row = local / 9;
+            int hotbarShift = container.hotbar() && rows >= 4 && row == rows - 1 ? 3 : 0;
+            int slotY = gridY + row * 18 + hotbarShift;
+            boolean over = inside(mx, my, slotX, slotY, 18, 18);
+            g.fill(slotX, slotY, slotX + 18, slotY + 18, over ? cfg.profileViewerInventoryHoverColor : cfg.profileViewerInventorySlotColor);
+            int index = from + local;
+            if (index >= to) continue;
+            ItemStack stack = container.items().get(index);
+            if (!stack.isEmpty()) {
+                g.fakeItem(stack, slotX + 1, slotY + 1);
+                if (cfg.profileViewerInventoryDecorations) g.itemDecorations(font, stack, slotX + 1, slotY + 1);
+                if (over) hovered = stack;
+            }
+        }
+        if (pages > 1) {
+            button(g, gridX, gridY + rows * 18 + 8, 56, "Previous", mx, my);
+            button(g, gridX + 106, gridY + rows * 18 + 8, 56, "Next", mx, my);
+        }
+        if (hovered != null && cfg.profileViewerInventoryTooltips)
+            g.setComponentTooltipForNextFrame(font, Screen.getTooltipFromItem(Minecraft.getInstance(), hovered), mx, my);
     }
 
     private List<Row> overview(JsonObject profile, JsonObject m) {
@@ -187,14 +266,28 @@ public final class ProfileViewerScreen extends Screen {
             int x = 12;
             for (int i = 0; i < result.profiles().size(); i++) {
                 int bw = Math.max(52, font.width(string(result.profiles().get(i).getAsJsonObject(), "cute_name", Integer.toString(i + 1))) + 14);
-                if (inside(mx, my, x, 58, bw, 16)) { profileIndex = i; scroll = 0; return true; }
+                if (inside(mx, my, x, 58, bw, 16)) { profileIndex = i; scroll = 0; resetItems(); if (tab == 5) startItemDecode(); return true; }
                 x += bw + 4;
             }
             x = 12;
             for (int i = 0; i < TABS.length; i++) {
                 int bw = font.width(TABS[i]) + 16;
-                if (inside(mx, my, x, 80, bw, 16)) { tab = i; scroll = 0; return true; }
+                if (inside(mx, my, x, 80, bw, 16)) { tab = i; scroll = 0; if (tab == 5 && itemProfile != profileIndex) startItemDecode(); return true; }
                 x += bw + 4;
+            }
+            if (tab == 5 && itemResult != null && !itemResult.containers().isEmpty()) {
+                int visibleMenus = Math.max(2, (height - 136) / 18);
+                int y = 108;
+                for (int i = itemContainerScroll; i < Math.min(itemResult.containers().size(), itemContainerScroll + visibleMenus); i++) {
+                    if (inside(mx, my, 12, y, 106, 16)) { itemContainer = i; itemPage = 0; return true; }
+                    y += 18;
+                }
+                int rows = Math.clamp(ConstellationClient.cfg().lyra.profileViewerInventoryRows, 1, 6);
+                rows = Math.min(rows, Math.max(1, (height - 154) / 18));
+                int gridX = Math.max(130, (width + 118 - 162) / 2);
+                int gridY = 126;
+                if (inside(mx, my, gridX, gridY + rows * 18 + 8, 56, 18)) { itemPage = Math.max(0, itemPage - 1); return true; }
+                if (inside(mx, my, gridX + 106, gridY + rows * 18 + 8, 56, 18)) { itemPage++; return true; }
             }
         }
         return super.mouseClicked(event, dbl);
@@ -202,6 +295,13 @@ public final class ProfileViewerScreen extends Screen {
 
     @Override public boolean mouseScrolled(double mx, double my, double sx, double sy) {
         if (result == null) return true;
+        if (tab == 5) {
+            if (mx < 124 && itemResult != null)
+                itemContainerScroll = Math.clamp(itemContainerScroll - (int) sy, 0,
+                    Math.max(0, itemResult.containers().size() - Math.max(2, (height - 136) / 18)));
+            else itemPage = Math.max(0, itemPage - (int) sy);
+            return true;
+        }
         int max = Math.max(0, rows(profile(), member(profile())).size() * 21 - (height - 132));
         scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
         return true;
@@ -227,8 +327,29 @@ public final class ProfileViewerScreen extends Screen {
                 result = loaded;
                 player.setValue(loaded.name());
                 profileIndex = selectedIndex(loaded.profiles());
+                resetItems();
             }
         }));
+    }
+
+    private void startItemDecode() {
+        if (result == null || itemLoading || !ConstellationClient.cfg().lyra.profileViewerInventory) return;
+        int requestedProfile = profileIndex;
+        itemLoading = true;
+        itemResult = null;
+        ProfileItemDecoder.decode(member(profile())).whenComplete((decoded, failure) -> Minecraft.getInstance().execute(() -> {
+            if (requestedProfile != profileIndex) return;
+            itemLoading = false;
+            itemProfile = requestedProfile;
+            itemResult = failure == null ? decoded : null;
+        }));
+    }
+
+    private void resetItems() {
+        itemResult = null;
+        itemLoading = false;
+        itemProfile = -1;
+        itemContainer = itemContainerScroll = itemPage = 0;
     }
 
     private JsonObject profile() { return result.profiles().get(Math.clamp(profileIndex, 0, result.profiles().size() - 1)).getAsJsonObject(); }
