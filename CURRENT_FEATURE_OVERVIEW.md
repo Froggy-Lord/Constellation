@@ -200,6 +200,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Movable experiment type, phase, step, remaining and remembered-item HUD
 - Independent solver, scope, tooltip, memory, overlay, label and color controls
 - `/experiments` status, reset and complete main option commands
+- Missing-progress highlighting across SkyBlock Guide tasks, menus, Abiphone contacts, minions, consumables, Jacob crops, storylines, collections, Essence Shops and one-time objectives
+- Power Stone Guide missing-state highlighting, nine-stone Bazaar price tooltips and deliberate click-to-Bazaar routing
+- Independent Guide category, overlay, marker, tooltip, click, price, text and color controls with `/skyblockguide` commands
 - Exact Chocolate Factory screen helper with live rabbit and coach efficiency ranking
 - Best and best-affordable highlights, affordability/payback tooltips and prestige guidance
 - Stray and Golden Rabbit alerts, Hitman status and a movable factory HUD

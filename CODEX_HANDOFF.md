@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.750 Bazaar Order Competition.
+Last updated: 2026-07-30 for version 0.9.751 Complete SkyBlock Guide Highlights.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.750`.
+- Current artifact version: `0.9.751`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2710,4 +2710,16 @@ Only exact `Your Bazaar Orders` and `Co-op Bazaar Orders` screens create snapsho
 
 Version `0.9.750` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `57dc731b1acc5abe7750085d7c914fbbfd1ce9dcb7f1040c507875b396271421`.
 
-The previous `0.9.749` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133717-0.9.750/`; only `constellation-0.9.750.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.749` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133717-0.9.750/`; only `constellation-0.9.750.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `4ae1977cb0`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.751 Complete SkyBlock Guide Highlights
+
+The live 26.1.2 profile has every major SkyHanni SkyBlock Guide option enabled except Collections and Essence, while Constellation had no equivalent. `AurigaSkyblockGuide.java`, `AurigaConfig.java`, `AurigaMisc.java` and `ItemProtectionScreenMixin.java` port SkyHanni LGPL-3.0-or-later `features/inventory/SkyblockGuideHighlightFeature.kt`, `PowerStoneGuideFeatures.kt` and `config/features/inventory/SkyblockGuideConfig.kt`. Source defaults are preserved, including normally-off Collections and Essence highlights.
+
+Exact menu-title and cleaned-lore rules cover top-level tasks/categories, missing level-guide tasks, Abiphone contacts, bank upgrades, Fast Travels, Spooky Festival, Dojo belts, Jacob crops, Slayer one-time tasks, Story objectives, Rock/Dolphin milestones, Essence Shops, uncrafted minions, Harp Songs, consumables, dungeon floors/layers and Collections. Overview slot four and player inventory slots are excluded. Category toggles, missing overlay, marker text, tooltip and both colors are independent.
+
+The exact `Power Stones Guide` requires `Learned: Not Yet` plus a following `Power stone:` name. Missing entries get their own color; tooltips optionally show nine times current Bazaar replacement cost. Only a deliberate left click can cancel the Guide click and send `/bz <stone name>`; disabling click routing preserves normal menu behavior. `/skyblockguide` exposes status and all Boolean surfaces. Nothing opens, clicks or sends a command without the user's direct click.
+
+Version `0.9.751` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `0629fada9e6ffa9e455aa4942785a1e009e87351dd2911148d998654d8a9fee8`.
+
+The previous `0.9.750` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-134446-0.9.751/`; only `constellation-0.9.751.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

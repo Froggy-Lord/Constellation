@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.751 (2026-07-30) — Complete SkyBlock Guide Highlights
+
+- ported SkyHanni's missing-progress rules for task, menu, Abiphone, minion, consumable, Jacob, story, collection, essence and one-time Guide views
+- ported Power Stone Guide missing-state highlights, nine-stone Bazaar costs and deliberate click-to-Bazaar routing
+- added independent feature-category, overlay, marker, tooltip, price, click and color/text controls
+- added full `/skyblockguide` status and option commands
+
 ## 0.9.750 (2026-07-30) — Bazaar Order Competition
 
 - ported live buy-order and sell-offer competitiveness checks from SkyHanni

@@ -1528,6 +1528,12 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 ## Rift, events and general HUD
 
 - [ ] Enable Auriga, `experimentSolver` and all three experiment types, then open each exact Experimentation Table game on the Private Island. Expected: no solver activates in similarly named or unrelated containers.
+- [ ] Enable Auriga and `skyblockGuideHelper`, then open `/sblevels` and browse Guide task/category pages. Expected: only entries whose exact progress lore matches an incomplete rule receive the configured missing overlay and marker; overview slot 4 and player inventory slots remain untouched.
+- [ ] Visit Abiphone Contacts, Crafted Minions, Consumable Items, Jacob's Farming Contest, Story objectives, Fast Travels, Harp Songs, Essence Shops and representative one-time completion pages. Expected: each category follows its independent toggle and completed entries are not marked.
+- [ ] Enable `skyblockGuideCollections` and inspect Collections. Expected: undiscovered/incomplete collection entries match the licensed lore rules; disabling the normally-off option removes only these markers.
+- [ ] Open `Power Stones Guide`. Expected: only entries with `Learned: Not Yet` are highlighted, and their tooltip shows the cost of nine stones when a current Bazaar price is known.
+- [ ] Left-click a missing Power Stone with `skyblockGuidePowerStoneClick` enabled. Expected: the original Guide click is cancelled and the deliberate user action opens `/bz <stone name>` once. Disabling click restores the ordinary Guide behavior.
+- [ ] Toggle `/skyblockguide option menu|tasks|powerstones|collections|abiphone|minions|essence|consumables|jacob|story|onetime|highlight|marker|tooltip|price|click on|off`. Expected: each setting persists and affects only its named surface.
 - [ ] Start Chronomatron. Expected: every glowing color is remembered once during replay, then slots matching the next color highlight when the timer begins.
 - [ ] Click the correct Chronomatron color. Expected: step and remaining counts advance once and next/second/later colors update.
 - [ ] Start Ultrasequencer. Expected: the full numbered pattern is captured during Remember, preserved during Wait, and revealed in numeric order during Timer.

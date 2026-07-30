@@ -31,6 +31,7 @@ public abstract class ItemProtectionScreenMixin {
         if (com.froggylord.constellation.constellation.AurigaExperiments.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaAnvilHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaReforgeHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
+        if (com.froggylord.constellation.constellation.AurigaSkyblockGuide.onSlotClick(screen, slot, button)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.HerculesDnaAnalyzer.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AquilaFossils.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
@@ -76,6 +77,7 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.AurigaChocolateFactory.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AurigaAnvilHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AurigaReforgeHelper.drawSlot(graphics, screen, slot);
+        com.froggylord.constellation.constellation.AurigaSkyblockGuide.drawSlot(graphics, screen, slot);
         // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/HuntingBoxValue.kt
         com.froggylord.constellation.constellation.ArtemisHuntingBoxValue.drawSlot(graphics, screen, slot);
         // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/attribute/AttributesShardsInventory.kt
@@ -111,7 +113,8 @@ public abstract class ItemProtectionScreenMixin {
             cir.setReturnValue(List.of());
             return;
         }
-        cir.setReturnValue(com.froggylord.constellation.constellation.AndromedaRiftCore.appendSoulMenuTooltip(screen, stack,
+        cir.setReturnValue(com.froggylord.constellation.constellation.AurigaSkyblockGuide.appendTooltip(screen, stack,
+            com.froggylord.constellation.constellation.AndromedaRiftCore.appendSoulMenuTooltip(screen, stack,
             com.froggylord.constellation.constellation.AquilaTunnelMaps.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.AquilaHotmHelper.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.AquilaFossils.appendTooltip(screen, stack,
@@ -137,6 +140,6 @@ public abstract class ItemProtectionScreenMixin {
             com.froggylord.constellation.constellation.HerculesVisitorHelper.appendTooltip(screen, stack,
                 com.froggylord.constellation.constellation.LyraAuctionHelper.appendTooltip(screen, stack,
                     com.froggylord.constellation.constellation.LyraBazaarHelper.appendTooltip(screen, stack,
-                        ItemProtection.appendTooltip(stack, cir.getReturnValue()))))))))))))))))))))))))))));
+                        ItemProtection.appendTooltip(stack, cir.getReturnValue())))))))))))))))))))))))))))));
     }
 }

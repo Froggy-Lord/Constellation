@@ -19,6 +19,7 @@ public class AurigaMisc extends BaseConstellation {
         AurigaAnvilHelper.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaBuffStatus.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaReforgeHelper.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaSkyblockGuide.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
@@ -48,5 +49,6 @@ public class AurigaMisc extends BaseConstellation {
         AurigaAnvilHelper.registerCommands(dispatcher);
         AurigaBuffStatus.registerCommands(dispatcher);
         AurigaReforgeHelper.registerCommands(dispatcher);
+        AurigaSkyblockGuide.registerCommands(dispatcher);
     }
 }

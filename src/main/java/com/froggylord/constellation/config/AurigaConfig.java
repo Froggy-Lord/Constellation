@@ -34,6 +34,29 @@ public class AurigaConfig extends BaseConfigGroup {
     public int superpairsCurrentMatchColor = 0x8055FF55;
     public int superpairsPowerupColor = 0x80FF55FF;
 
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/SkyblockGuideHighlightFeature.kt
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/PowerStoneGuideFeatures.kt
+    public boolean skyblockGuideHelper = true;
+    public boolean skyblockGuideMenu = true;
+    public boolean skyblockGuideMissingTasks = true;
+    public boolean skyblockGuidePowerStones = true;
+    public boolean skyblockGuideCollections = false;
+    public boolean skyblockGuideAbiphone = true;
+    public boolean skyblockGuideMinions = true;
+    public boolean skyblockGuideEssence = false;
+    public boolean skyblockGuideConsumables = true;
+    public boolean skyblockGuideJacob = true;
+    public boolean skyblockGuideStory = true;
+    public boolean skyblockGuideOneTime = true;
+    public boolean skyblockGuideHighlight = true;
+    public boolean skyblockGuideMarker = true;
+    public boolean skyblockGuideTooltip = true;
+    public boolean skyblockGuidePowerStonePrice = true;
+    public boolean skyblockGuidePowerStoneClick = true;
+    public int skyblockGuideMissingColor = 0xA0FF5555;
+    public int skyblockGuidePowerStoneColor = 0xA0FFAA00;
+    public String skyblockGuideMarkerText = "!";
+
     // ported from Skyblocker (LGPL-3.0-or-later): skyblock/chocolatefactory/ChocolateFactorySolver.java, TimeTowerReminder.java
     public boolean chocolateFactoryHelper = true;
     public boolean chocolateFactoryHud = true;
