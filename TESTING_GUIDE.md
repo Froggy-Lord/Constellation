@@ -1958,3 +1958,17 @@ Enable Perseus, keep `vampireHelper` enabled, and enter Stillgore Chateau or Oub
 - [ ] With Killer Spring sound-spam protection enabled and Vampire sound muting disabled, trigger duplicate Wither-spawn sounds in one tick. Expected: the first remains and same-tick duplicates are suppressed.
 - [ ] Test `/vampirehelper message`, `color`, `number` and `option`. Expected: every change persists and affects only its named feature.
 - [ ] Leave Stillgore/Oubliette, leave the Rift, or disable Perseus. Expected: alerts, entity scans, highlights and sound filtering stop immediately.
+
+## Complete McGrubber Detection
+
+Enable Andromeda and Motes tooltips. Run `/riftmotes`; status should show the current zero-to-five McGrubber count and its last detection source.
+
+- [ ] Enter the Rift and open `Motes Grubber` with a sellable Rift item in player inventory. Expected: its displayed Motes price is compared with the authoritative base price and the solved stack count is learned.
+- [ ] Outside the Rift, open `/sblevels`, then `Miscellaneous ➜ Consumable Items`. Expected: `MCGRUBBER_BURGER` `Total Progress` is divided by twenty and learned.
+- [ ] Pick up a Motes Orb. Expected: only the exact `5 + 60 × stacks` payout message updates the count; malformed or out-of-range payouts are ignored.
+- [ ] Consume a McGrubber Burger. Expected: the exact `You have n Grubber Stacks` message remains an independent learning path.
+- [ ] After each path, run `/riftmotes`. Expected: status identifies `Motes Grubber`, `Consumable Items`, `orb pickup`, or `consumption`.
+- [ ] Verify an NPC Motes tooltip and Rift Storage total before and after a stack-count change. Expected: every valuation updates by five percent per stack.
+- [ ] Toggle `grubbermenu`, `consumables`, `orblearn`, and `consumption` independently. Expected: only the disabled source stops learning.
+- [ ] Run `/riftmotes burgers 0` through `5`. Expected: this deliberately sets a manual value and status reports `manual`.
+- [ ] Leave menus and reconnect. Expected: learned configuration persists, while transient menu signatures do not create duplicate saves or notices.

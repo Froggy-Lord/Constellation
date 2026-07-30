@@ -124,6 +124,11 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean motesTooltipBurgerStacks = true;
     public boolean motesLearnBurgerStacks = true;
     public boolean motesBurgerLearnChat = true;
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/rift/McGrubberUpdater.java
+    public boolean motesBurgerDetectGrubberMenu = true;
+    public boolean motesBurgerDetectConsumablesMenu = true;
+    public boolean motesBurgerDetectOrbPickup = true;
+    public boolean motesBurgerDetectConsumptionChat = true;
     public int motesBurgerStacks = 0;
     public boolean motesStorageValue = true;
     public boolean motesStorageItemCount = true;

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.747 (2026-07-30) — Complete McGrubber Detection
+
+- ported Skyblocker's automatic McGrubber detection from Motes Grubber sale prices, SkyBlock Levels consumable progress and exact orb payouts
+- retained consumption-message learning and manual override as independent paths
+- added per-source toggles, bounded validation, source-aware status and deduplicated persistence/notifications
+- all 73 Motes prices, storage totals and tooltips now update from the learned stack count without manual maintenance
+
 ## 0.9.746 (2026-07-30) — Complete Vampire Slayer Guidance
 
 - replaced a stale advertised-only toggle with working Healing Melon, Steak Stake, Twinclaws/Holy Ice and Mania alerts

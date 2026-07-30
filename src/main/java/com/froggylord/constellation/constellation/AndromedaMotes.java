@@ -27,6 +27,7 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -42,15 +43,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/motes/MotesSession.kt, ShowMotesNpcSellPrice.kt, RiftMotesOrb.kt
+// McGrubber detection ported from Skyblocker (LGPL-3.0-or-later): skyblock/rift/McGrubberUpdater.java
 public final class AndromedaMotes {
     private record Price(String name,double base){}
     private static final class Orb{Vec3 pos;int count;long started,last;boolean valid,picked;Orb(Vec3 pos,long now){this.pos=pos;started=last=now;}}
     private static final Pattern LIFETIME=Pattern.compile("\\s*Lifetime Motes:\\s*([\\d,.]+)",Pattern.CASE_INSENSITIVE);
     private static final Pattern BURGERS=Pattern.compile(".*You have (\\d+) Grubber Stacks.*",Pattern.CASE_INSENSITIVE);
     private static final Pattern PICKUP=Pattern.compile("ORB!\\s*Picked up\\s*\\+.* Motes.*",Pattern.CASE_INSENSITIVE);
+    private static final Pattern ORB_MOTES=Pattern.compile("ORB! Picked up \\+([\\d,]+) Motes, recovered \\+2ф Rift Time!",Pattern.CASE_INSENSITIVE);
+    private static final Pattern MOTES_PRICE=Pattern.compile("([\\d,.]+) Motes",Pattern.CASE_INSENSITIVE);
+    private static final Pattern BURGER_PROGRESS=Pattern.compile("Total Progress:\\s*(\\d+)%",Pattern.CASE_INSENSITIVE);
     private static final Map<String,Price> PRICES=new LinkedHashMap<>();
     private static final List<Orb> ORBS=new ArrayList<>();
-    private static AndromedaConfig cfg;private static boolean initialized,wasActive;private static long initial=-1,lifetime=-1,enteredAt,storageValue;private static int storageStacks,storageItems;private static String storageSignature="";
+    private static AndromedaConfig cfg;private static boolean initialized,wasActive;private static long initial=-1,lifetime=-1,enteredAt,storageValue;private static int storageStacks,storageItems;private static String storageSignature="",burgerSignature="",burgerSource="manual";
     private AndromedaMotes(){}
 
     public static void init(AndromedaConfig config){
@@ -73,6 +78,7 @@ public final class AndromedaMotes {
     }
     private static boolean active(){return cfg!=null&&cfg.enabled&&ConstellationClient.loc().area()==SkyblockArea.THE_RIFT;}
     private static void tick(){
+        detectBurgerMenu();
         boolean active=active();
         if(!active){if(wasActive)finishVisit();wasActive=false;clearOrbs();clearStorage();return;}
         wasActive=true;if(cfg.motesSessionTracking)readLifetime();readStorage();expireOrbs();
@@ -86,9 +92,19 @@ public final class AndromedaMotes {
         initial=-1;lifetime=-1;enteredAt=0;
     }
     private static void onChat(String message){
-        if(!active())return;Matcher burger=BURGERS.matcher(message);if(cfg.motesLearnBurgerStacks&&burger.matches()){int value=Math.clamp(Integer.parseInt(burger.group(1)),0,5);if(cfg.motesBurgerStacks!=value){cfg.motesBurgerStacks=value;ConstellationClient.saveConfig();if(cfg.motesBurgerLearnChat)local("McGrubber stacks set to "+value+".");}}
+        if(!active())return;Matcher burger=BURGERS.matcher(message);if(cfg.motesLearnBurgerStacks&&cfg.motesBurgerDetectConsumptionChat&&burger.matches())learnBurger(Integer.parseInt(burger.group(1)),"consumption");
+        Matcher orbMotes=ORB_MOTES.matcher(message);if(cfg.motesLearnBurgerStacks&&cfg.motesBurgerDetectOrbPickup&&orbMotes.matches()){long motes=number(orbMotes.group(1));if(motes>=5&&(motes-5)%60==0)learnBurger((int)((motes-5)/60),"orb pickup");}
         if(PICKUP.matcher(message).matches()&&!ORBS.isEmpty()){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)ORBS.stream().min(Comparator.comparingDouble(orb->orb.pos.distanceToSqr(mc.player.position()))).ifPresent(orb->orb.picked=true);}
     }
+    private static void detectBurgerMenu(){
+        if(cfg==null||!cfg.enabled||!cfg.motesLearnBurgerStacks||!ConstellationClient.loc().onHypixel())return;Minecraft mc=Minecraft.getInstance();if(!(mc.gui.screen() instanceof AbstractContainerScreen<?> screen)||mc.player==null){burgerSignature="";return;}String title=clean(screen.getTitle().getString());boolean grubber=active()&&cfg.motesBurgerDetectGrubberMenu&&title.equals("Motes Grubber"),consumables=!active()&&cfg.motesBurgerDetectConsumablesMenu&&title.equals("Miscellaneous ➜ Consumable Items");if(!grubber&&!consumables){burgerSignature="";return;}String signature=title+screen.getMenu().slots.stream().map(slot->LyraTooltips.marketId(slot.getItem())+":"+lore(slot.getItem())).toList();if(signature.equals(burgerSignature))return;burgerSignature=signature;
+        if(grubber)for(Slot slot:screen.getMenu().slots){if(slot.container!=mc.player.getInventory())continue;ItemStack stack=slot.getItem();Price base=PRICES.get(LyraTooltips.marketId(stack));if(base==null||base.base<=0)continue;Matcher price=find(lore(stack),MOTES_PRICE);if(price==null)continue;double shown=decimal(price.group(1)),raw=20*shown/base.base-20;int stacks=(int)Math.round(raw);if(stacks>=0&&stacks<=5&&Math.abs(raw-stacks)<.15){learnBurger(stacks,"Motes Grubber");return;}}
+        if(consumables)for(Slot slot:screen.getMenu().slots){ItemStack stack=slot.getItem();if(!LyraTooltips.marketId(stack).equals("MCGRUBBER_BURGER"))continue;Matcher progress=find(lore(stack),BURGER_PROGRESS);if(progress!=null){learnBurger(Math.clamp(Integer.parseInt(progress.group(1))/20,0,5),"Consumable Items");return;}}
+    }
+    private static void learnBurger(int value,String source){value=Math.clamp(value,0,5);burgerSource=source;if(cfg.motesBurgerStacks==value)return;cfg.motesBurgerStacks=value;save();if(cfg.motesBurgerLearnChat)local("McGrubber stacks set to "+value+" from "+source+".");}
+    private static List<String> lore(ItemStack stack){ItemLore lore=stack==null?null:stack.get(DataComponents.LORE);return lore==null?List.of():lore.lines().stream().map(Component::getString).map(AndromedaMotes::clean).toList();}
+    private static Matcher find(List<String> lines,Pattern pattern){for(String line:lines){Matcher matcher=pattern.matcher(line);if(matcher.find())return matcher;}return null;}
+    private static double decimal(String value){try{return Double.parseDouble(value.replace(",",""));}catch(Exception ignored){return-1;}}
 
     public static boolean onParticle(ClientboundLevelParticlesPacket packet){
         if(!active()||!cfg.motesOrbEnabled||packet.getParticle().getType()!=ParticleTypes.ENTITY_EFFECT)return false;
@@ -130,16 +146,16 @@ public final class AndromedaMotes {
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("riftmotes").executes(c->status())
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status").executes(c->status()))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reset").executes(c->{initial=lifetime>=0?lifetime:-1;enteredAt=System.currentTimeMillis();return status();}))
-            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("burgers").then(RequiredArgumentBuilder.<FabricClientCommandSource,Integer>argument("stacks",IntegerArgumentType.integer(0,5)).executes(c->{cfg.motesBurgerStacks=IntegerArgumentType.getInteger(c,"stacks");save();return status();})))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("burgers").then(RequiredArgumentBuilder.<FabricClientCommandSource,Integer>argument("stacks",IntegerArgumentType.integer(0,5)).executes(c->{cfg.motesBurgerStacks=IntegerArgumentType.getInteger(c,"stacks");burgerSource="manual";save();return status();})))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("color").then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("target",StringArgumentType.word()).then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("argb",StringArgumentType.word()).executes(c->color(StringArgumentType.getString(c,"target"),StringArgumentType.getString(c,"argb"))))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("number").then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("name",StringArgumentType.word()).then(RequiredArgumentBuilder.<FabricClientCommandSource,Integer>argument("value",IntegerArgumentType.integer(0)).executes(c->numberOption(StringArgumentType.getString(c,"name"),IntegerArgumentType.getInteger(c,"value"))))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("option").then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("name",StringArgumentType.word()).then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("state",StringArgumentType.word()).executes(c->option(StringArgumentType.getString(c,"name"),StringArgumentType.getString(c,"state")))))));
     }
-    private static int status(){local("Lifetime "+(lifetime<0?"unknown":format(lifetime))+", gained "+(gained()<0?"unknown":format(gained()))+", rate "+(rate()<0?"unknown":format(rate())+"/h")+", prices "+PRICES.size()+", orbs "+ORBS.stream().filter(orb->orb.valid).count()+".");return 1;}
+    private static int status(){local("Lifetime "+(lifetime<0?"unknown":format(lifetime))+", gained "+(gained()<0?"unknown":format(gained()))+", rate "+(rate()<0?"unknown":format(rate())+"/h")+", prices "+PRICES.size()+", orbs "+ORBS.stream().filter(orb->orb.valid).count()+", McGrubber "+cfg.motesBurgerStacks+" ("+burgerSource+").");return 1;}
     private static int numberOption(String name,int value){switch(name.toLowerCase(Locale.ROOT)){case"summaryminimum"->cfg.motesSessionSummaryMinimum=Math.clamp(value,1,1_000_000_000);case"highlightminimum"->cfg.motesStorageHighlightMinimum=Math.clamp(value,0,1_000_000_000);case"orbrange"->cfg.motesOrbRange=Math.clamp(value,5,100);case"orbsize"->cfg.motesOrbSize=Math.clamp(value,1,5);case"validation"->cfg.motesOrbValidationMillis=Math.clamp(value,250,2000);case"expiry"->cfg.motesOrbExpiryMillis=Math.clamp(value,500,5000);case"pickupdelay"->cfg.motesOrbPickupDelayMillis=Math.clamp(value,100,1000);case"minpps"->cfg.motesOrbMinParticlesPerSecond=Math.clamp(value,20,120);case"maxpps"->cfg.motesOrbMaxParticlesPerSecond=Math.clamp(value,30,180);case"groupsize"->cfg.motesOrbGroupRangeTenths=Math.clamp(value,10,60);case"beamheight"->cfg.motesOrbBeamHeight=Math.clamp(value,2,50);default->{local("Unknown Motes number.");return 0;}}save();return status();}
-    private static int option(String name,String state){Boolean value=switch(state.toLowerCase(Locale.ROOT)){case"on","true","yes","1"->true;case"off","false","no","0"->false;default->null;};if(value==null){local("State must be on or off.");return 0;}switch(name.toLowerCase(Locale.ROOT)){case"tracking"->cfg.motesSessionTracking=value;case"summary"->cfg.motesSessionSummary=value;case"lifetime"->cfg.motesHudLifetime=value;case"gained"->cfg.motesHudGained=value;case"rate"->cfg.motesHudRate=value;case"duration"->cfg.motesHudDuration=value;case"tooltip"->cfg.motesNpcTooltip=value;case"stackbreakdown"->cfg.motesTooltipStackBreakdown=value;case"burgertext"->cfg.motesTooltipBurgerStacks=value;case"learnburgers"->cfg.motesLearnBurgerStacks=value;case"burgerchat"->cfg.motesBurgerLearnChat=value;case"storage"->cfg.motesStorageValue=value;case"storageitems"->cfg.motesStorageItemCount=value;case"storagemarkers"->cfg.motesStorageSlotMarkers=value;case"orbs"->cfg.motesOrbEnabled=value;case"hideparticles"->cfg.motesOrbHideParticles=value;case"orbbox"->cfg.motesOrbBox=value;case"orbbeam"->cfg.motesOrbBeam=value;case"orbline"->cfg.motesOrbLine=value;case"orblabel"->cfg.motesOrbLabel=value;case"orbdistance"->cfg.motesOrbDistance=value;case"orbwalls"->cfg.motesOrbThroughWalls=value;default->{local("Unknown Motes option.");return 0;}}save();return status();}
+    private static int option(String name,String state){Boolean value=switch(state.toLowerCase(Locale.ROOT)){case"on","true","yes","1"->true;case"off","false","no","0"->false;default->null;};if(value==null){local("State must be on or off.");return 0;}switch(name.toLowerCase(Locale.ROOT)){case"tracking"->cfg.motesSessionTracking=value;case"summary"->cfg.motesSessionSummary=value;case"lifetime"->cfg.motesHudLifetime=value;case"gained"->cfg.motesHudGained=value;case"rate"->cfg.motesHudRate=value;case"duration"->cfg.motesHudDuration=value;case"tooltip"->cfg.motesNpcTooltip=value;case"stackbreakdown"->cfg.motesTooltipStackBreakdown=value;case"burgertext"->cfg.motesTooltipBurgerStacks=value;case"learnburgers"->cfg.motesLearnBurgerStacks=value;case"burgerchat"->cfg.motesBurgerLearnChat=value;case"grubbermenu"->cfg.motesBurgerDetectGrubberMenu=value;case"consumables"->cfg.motesBurgerDetectConsumablesMenu=value;case"orblearn"->cfg.motesBurgerDetectOrbPickup=value;case"consumption"->cfg.motesBurgerDetectConsumptionChat=value;case"storage"->cfg.motesStorageValue=value;case"storageitems"->cfg.motesStorageItemCount=value;case"storagemarkers"->cfg.motesStorageSlotMarkers=value;case"orbs"->cfg.motesOrbEnabled=value;case"hideparticles"->cfg.motesOrbHideParticles=value;case"orbbox"->cfg.motesOrbBox=value;case"orbbeam"->cfg.motesOrbBeam=value;case"orbline"->cfg.motesOrbLine=value;case"orblabel"->cfg.motesOrbLabel=value;case"orbdistance"->cfg.motesOrbDistance=value;case"orbwalls"->cfg.motesOrbThroughWalls=value;default->{local("Unknown Motes option.");return 0;}}save();return status();}
     private static int color(String target,String raw){try{String value=raw.trim().replaceFirst("^(?:#|0[xX])","");long parsed=Long.parseUnsignedLong(value,16);if(value.length()<=6)parsed|=0xFF000000L;switch(target.toLowerCase(Locale.ROOT)){case"active"->cfg.motesOrbActiveColor=(int)parsed;case"picked"->cfg.motesOrbPickedColor=(int)parsed;case"storage"->cfg.motesStorageHighlightColor=(int)parsed;default->{local("Color target must be active, picked, or storage.");return 0;}}save();return status();}catch(Exception e){local("Color must be ARGB hex, such as FFFF55FF.");return 0;}}
-    private static void reset(){wasActive=false;initial=-1;lifetime=-1;enteredAt=0;clearOrbs();clearStorage();}
+    private static void reset(){wasActive=false;initial=-1;lifetime=-1;enteredAt=0;burgerSignature="";burgerSource="manual";clearOrbs();clearStorage();}
     private static void save(){ConstellationClient.saveConfig();}
     private static long number(String value){try{return Long.parseLong(value.replace(",","").replace(".",""));}catch(Exception ignored){return-1;}}
     private static String format(long value){return String.format(Locale.ROOT,"%,d",value);}

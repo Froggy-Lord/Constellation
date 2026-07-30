@@ -24,7 +24,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 - Live Rift time, Motes, session gains, found-soul and unbroken-effigy HUD rows
 - Authoritative lifetime Motes from Rift Info with visit gain, duration, hourly rate and configurable leave summaries
-- All 73 current Hypixel Motes NPC prices with McGrubber-stack learning, stack breakdowns and transferred-item exclusion
+- All 73 current Hypixel Motes NPC prices with automatic McGrubber detection from sale prices, consumable progress, orb payouts or consumption chat
+- Independent McGrubber detectors, manual override, source-aware status, stack breakdowns and transferred-item exclusion
 - Movable Rift Storage total-value HUD with item/stack counts and configurable high-value slot markers
 - Particle-rate-validated Motes Orb boxes, labels, distance, pickup state, optional beams/lines and optional original-particle hiding
 - Configurable low-time chat, title and sound warning with normal, warning and danger colors
