@@ -535,6 +535,16 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`. You do not need that document for normal testing.
 
+## Hoppity island-graph navigation
+
+- Complete walking topology for all 14 islands with known Hoppity egg locations, loaded only when its island is visited
+- Weighted shortest paths from the nearest player graph node to the Egglocator guess
+- Optional nearest-uncollected fallback when no Egglocator guess exists
+- Live rerouting after configurable movement or interval, with a bounded visited-node safety limit
+- Configurable path color, width, through-walls state and rendered look-ahead
+- Route node count, graph support and walking distance in `/hoppitywaypoints`
+- Advisory rendering only: no movement, rotation, warp, click or command automation
+
 ## Artemis: Moonglade Beacon
 
 - Exact `Tune Frequency` and `Upgrade Signal Strength` menu gating on Galatea

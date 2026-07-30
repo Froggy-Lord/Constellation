@@ -132,7 +132,7 @@ public class AurigaConfig extends BaseConfigGroup {
     public int chocolateFactoryStrayTimerDingSeconds = 3;
     public int chocolateFactoryStrayTimerColor = 0xFF55FFFF;
     public int chocolateFactoryStrayTimerDangerColor = 0xFFFF5555;
-    // ported from SkyHanni (LGPL-3.0-or-later): features/event/hoppity/HoppityEggLocations.kt, HoppityEggLocator.kt
+    // ported from SkyHanni (LGPL-3.0-or-later): features/event/hoppity/HoppityEggLocations.kt, HoppityEggLocator.kt, data/IslandGraphs.kt, utils/GraphUtils.kt
     public boolean hoppityEggWaypoints = true;
     public boolean hoppityEggWaypointsShowAll = true;
     public boolean hoppityEggWaypointsHideCollected = true;
@@ -148,6 +148,9 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean hoppityEggLocatorSolver = true;
     public boolean hoppityEggLocatorOnlyGuess = true;
     public boolean hoppityEggLocationsPersistProfiles = true;
+    public boolean hoppityEggPath = true;
+    public boolean hoppityEggPathOnlyGuess = true;
+    public boolean hoppityEggPathThroughWalls = true;
     public int hoppityEggWaypointRange = 1200;
     public int hoppityEggWaypointBeamHeight = 8;
     public int hoppityEggWaypointColor = 0xD055FF55;
@@ -155,6 +158,12 @@ public class AurigaConfig extends BaseConfigGroup {
     public int hoppityEggLocatorParticleGapTenths = 30;
     public int hoppityEggLocatorTimeoutSeconds = 5;
     public int hoppityEggLocationClaimRadius = 10;
+    public int hoppityEggPathWidth = 3;
+    public int hoppityEggPathLookAheadNodes = 5000;
+    public int hoppityEggPathRecalculateBlocks = 3;
+    public int hoppityEggPathRecalculateTicks = 10;
+    public int hoppityEggPathMaxVisitedNodes = 20000;
+    public int hoppityEggPathColor = 0xFF5599FF;
     public java.util.Map<String, Boolean> hoppityCollectedEggLocations = new java.util.LinkedHashMap<>();
     public boolean chocolateFactoryShowLevels = true;
     public boolean chocolateFactoryShowAllAffordable = true;

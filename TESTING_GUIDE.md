@@ -1671,6 +1671,11 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Toggle `all`, `hidecollected`, `collected`, `nearest`, `box`, `beam`, `label`, `names`, `distance`, `line`, `walls`, `locator`, `guessonly` and `persist`. Expected: every presentation and state option changes independently.
 - [ ] Test `/hoppitywaypoints range`, `beamheight`, `particlegap`, `timeout`, `claimradius`, `color egg`, `color collected`, `resetlocator`, and `clear confirm`. Expected: values persist, only the current profile cache clears, and malformed colors are rejected.
 - [ ] Confirm boxes occupy the exact known block, beams and labels use the selected wall behavior, and lines are drawn only for a locator guess or nearest-only mode.
+- [ ] With `path` and `pathguessonly` enabled, solve an Egglocator trail on each supported island. Expected: a blue graph-following walking route starts at the player and ends at the guessed egg, while only the current island graph is loaded.
+- [ ] Walk away from the route or move farther than `pathmovement`. Expected: the route recalculates without freezing the client; `/hoppitywaypoints` reports its node count and approximate walking distance.
+- [ ] Disable `pathguessonly` before solving a locator trail. Expected: the route selects the nearest uncollected candidate; collected locations are skipped.
+- [ ] Test `pathwidth`, `pathlookahead`, `pathmovement`, `pathinterval`, `pathlimit`, `color path`, and options `path`, `pathguessonly`, and `pathwalls`. Expected: each value persists independently and route changes recalculate safely.
+- [ ] Set a deliberately small `pathlimit` on a long route. Expected: no route is drawn when the bounded search cannot reach the destination, and normal waypoint rendering remains available.
 - [ ] Confirm the system never rotates, walks, warps, clicks, or sends a gameplay command.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.

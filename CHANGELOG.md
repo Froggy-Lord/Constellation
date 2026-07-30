@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.759 (2026-07-30) — Hoppity Island-Graph Navigation
+
+- ported all 14 complete MIT SkyHanni island graphs used by the 212 Hoppity egg locations
+- ported the licensed nearest-node, weighted Dijkstra and first-node shortcut behavior
+- added lazy per-island loading, movement/interval rerouting, route-distance diagnostics and bounded graph visits
+- added advisory walking-path rendering with guess-only mode, nearest-uncollected fallback and complete `/hoppitywaypoints` controls
+
 ## 0.9.758 (2026-07-30) — Hoppity Egg Waypoints and Locator
 
 - ported all 212 MIT SkyHanni repository egg locations across 14 supported islands
