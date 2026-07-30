@@ -3080,7 +3080,21 @@ Summary, employees, employee production, upgrades, Time Tower, Hitman and rarity
 
 Version `0.9.779` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `11d75ab56e73f0c156cd5ba9fad4efc628a25216c23858185f82a0eb13492d27`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-174320-0.9.779/`; only `constellation-0.9.779.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-174320-0.9.779/`; only `constellation-0.9.779.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `d8f77bf19f`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.780 Complete Profile Foraging Progression
+
+`ProfileForagingCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add complete persistent Foraging/Galatea progression. The `foraging`, `foraging_core`, `skill_tree`, `attributes.stacks` and `shards` models port SkyBlockPv modified-MIT `data/api/skills/ForagingCore.kt`, `SkillTree.kt`, `data/api/AttributesData.kt` and the `MainForagingScreen.kt`, `AttributeScreen.kt` and `ForagingSkillTreeScreen.kt` views. Required notices are beside every derived block.
+
+Fig and Mangrove show total gifts, seven claimed milestones, Personal Best unlock/value, exact 100,000 target and Agatha Fortune level out of 50. Forest Whispers remain current/spent/total instead of losing spent currency. Daily trees, distinct log types, gifts and their API day markers are preserved.
+
+All five Heart of the Forest loadouts are parsed from the selected slot. The selected ability, exact ten-level XP curve, progress/remaining, last reset, unlocked-node count, total node levels, disabled toggles and optional per-node levels are visible. Nodes enumerate raw API keys so future additions remain visible.
+
+Attribute stacks remain separate from owned shard records because the public profile does not provide a safe universal ID mapping between them. Every raw syphoned attribute, owned shard amount/capture time, fusion count and active trap item/mode/shard/location/capture/placement state is retained. Attributes support name/syphoned sort and zero hiding; shards support empty hiding; nodes, attributes, shards and traps have independent limits. Every section and dates can be disabled independently.
+
+Version `0.9.780` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `253823a012a42d10bdc5f7dc0547992528348bcee3baa6ed73733319fe000c8a`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175001-0.9.780/`; only `constellation-0.9.780.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

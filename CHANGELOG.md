@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.780 (2026-07-30) — Complete Profile Foraging Progression
+
+- added Fig/Mangrove gifts, Personal Bests, Fortune perks and Forest Whispers
+- added daily trees/log types/gifts plus all five Heart of the Forest loadouts and exact level progress
+- added selected ability, node levels, disabled state and last-reset records
+- added raw attribute syphons, owned shards/capture times, fusions and active trap state
+- added independent sections, dates, hiding, sorts and per-section limits
+
 ## 0.9.779 (2026-07-30) — Complete Profile Chocolate Factory
 
 - added Chocolate totals, Prestige progress, Barn capacity and last-viewed time

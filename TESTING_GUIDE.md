@@ -2334,3 +2334,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Refresh online, restart offline and reopen Chocolate. Expected: a validated one-to-168-hour catalogue cache remains usable; an incomplete response never replaces it.
 - [ ] Force the catalogue unavailable with no cache. Expected: core Factory data still renders and the rarity section says unavailable rather than failing the page.
 - [ ] Disable `profileChocolate` or switch to a profile without Easter data. Expected: readable disabled/unavailable states appear without request loops.
+
+### Profile Foraging
+
+- [ ] Enable `profileForaging`, open `/pv` and page to Foraging. Expected: Fig/Mangrove gift totals and claimed tiers, Forest Whispers and fish-family discoveries match the selected profile.
+- [ ] Compare Fig and Mangrove Personal Best, unlock state and Agatha Fortune level. Expected: each uses its separate perk and caps at the licensed 100,000/50 targets.
+- [ ] Compare daily trees, unique log types and gifts. Expected: values and API day markers match current Foraging daily state.
+- [ ] Compare Heart of the Forest level at 0, 3,000, 12,000, 37,000, 97,000, 197,000, 347,000, 557,000, 847,000 and 1,247,000 XP. Expected: level/progress/remaining advances exactly.
+- [ ] Switch among all five in-game Forest loadouts, reopen the profile and Refresh. Expected: selected slot, selected ability, unlocked nodes, node-level sum, disabled count and optional node rows match.
+- [ ] Compare attribute stacks. Expected: every raw attribute ID and syphoned count appears, including future IDs; zero hiding, NAME/SYPHONED sorting and the limit work independently.
+- [ ] Compare owned shards and fusions. Expected: owned amount, optional last-captured date, empty hiding and shard limit match the profile.
+- [ ] Compare active traps. Expected: item, mode, shard, location, captured/waiting state and optional placed date match; the trap limit is bounded.
+- [ ] Toggle every `profileForagingShow...` section and disable the page. Expected: gifts, Personal Bests, daily, tree/nodes, attributes, shards and traps hide independently with readable disabled/unavailable states.

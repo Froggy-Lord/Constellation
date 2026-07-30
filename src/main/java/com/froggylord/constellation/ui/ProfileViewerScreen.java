@@ -16,6 +16,7 @@ import com.froggylord.constellation.api.ProfileGardenCalculator;
 import com.froggylord.constellation.api.ProfileRiftCalculator;
 import com.froggylord.constellation.api.ProfileFishingCalculator;
 import com.froggylord.constellation.api.ProfileChocolateData;
+import com.froggylord.constellation.api.ProfileForagingCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -43,7 +44,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -185,6 +186,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 16) {
             drawChocolate(g);
+            return;
+        }
+        if (tab == 17) {
+            drawForaging(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -1060,6 +1065,113 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/foraging/MainForagingScreen.kt, AttributeScreen.kt, ForagingSkillTreeScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawForaging(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileForaging) {
+            g.text(font, "Foraging viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileForagingCalculator.Result data = foragingRows();
+        if (!data.available()) {
+            g.text(font, "Foraging API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, foragingDisplayRows(true));
+    }
+
+    private ProfileForagingCalculator.Result foragingRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileForagingCalculator.calculate(member(profile()), cfg.profileForagingAttributeSort,
+            cfg.profileForagingHideZeroAttributes, cfg.profileForagingHideEmptyShards);
+    }
+
+    private List<Row> foragingDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileForagingCalculator.Result data = foragingRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileForagingShowSummary) {
+            rows.add(row("Forest Whispers", values ? data.availableWhispers() + " available  "
+                + data.spentWhispers() + " spent  " + data.totalWhispers() + " total" : ""));
+            rows.add(row("Fish family discovered", values ? whole(data.fishFamily()) : ""));
+            rows.add(row("Shard fusions", values ? whole(data.fusions()) : ""));
+        }
+        if (cfg.profileForagingShowGifts) {
+            for (ProfileForagingCalculator.Gift gift : List.of(data.figGifts(), data.mangroveGifts()))
+                rows.add(row(gift.name() + " Gifts", values ? gift.claimedTier() + "/" + gift.maxTier()
+                    + " tiers  " + gift.total() + " total" : ""));
+        }
+        if (cfg.profileForagingShowPersonalBests) {
+            for (ProfileForagingCalculator.PersonalBest best : List.of(data.figBest(), data.mangroveBest())) {
+                String value = (best.unlocked() ? best.value() + "/" + best.maximum() : "Locked")
+                    + "  fortune " + best.fortuneLevel() + "/" + best.fortuneMaximum();
+                rows.add(row(best.name() + " Personal Best", values ? value : ""));
+            }
+        }
+        if (cfg.profileForagingShowDaily) {
+            rows.add(row("Daily trees cut", values ? data.dailyTrees() + "  day " + data.dailyTreesDay() : ""));
+            rows.add(row("Daily log types", values ? data.dailyLogTypes() + "  day " + data.dailyLogDay() : ""));
+            rows.add(row("Daily gifts", values ? whole(data.dailyGifts()) : ""));
+        }
+        if (cfg.profileForagingShowForestTree) {
+            String level = "Level " + data.forestLevel() + "  " + whole(data.forestXp()) + " XP";
+            if (data.forestRequired() > 0)
+                level += "  " + whole(data.forestRequired() - data.forestProgress()) + " left";
+            rows.add(row("Heart of the Forest", values ? level : ""));
+            rows.add(row("Selected Forest tree", values ? data.selectedTree() + "  " + title(data.selectedAbility()) : ""));
+            rows.add(row("Forest nodes", values ? data.unlockedNodes() + " unlocked  "
+                + data.nodeLevels() + " levels  " + data.disabledNodes() + " disabled" : ""));
+            if (cfg.profileForagingShowDates && data.lastReset() > 0)
+                rows.add(row("Forest tree last reset", values ? date(data.lastReset()) : ""));
+            if (cfg.profileForagingShowNodes) {
+                int limit = Math.clamp(cfg.profileForagingNodeLimit, 0, 200);
+                int shown = 0;
+                for (ProfileForagingCalculator.Node node : data.nodes()) {
+                    if (limit > 0 && shown >= limit) break;
+                    shown++;
+                    rows.add(row("  " + node.name(), values ? "Level " + node.level() : ""));
+                }
+            }
+        }
+        if (cfg.profileForagingShowAttributes) {
+            rows.add(row("Syphoned attributes", values ? whole(data.attributes().size()) : ""));
+            int limit = Math.clamp(cfg.profileForagingAttributeLimit, 0, 500);
+            int shown = 0;
+            for (ProfileForagingCalculator.Attribute attribute : data.attributes()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                rows.add(row("  " + attribute.name(), values ? whole(attribute.syphoned()) + " syphoned" : ""));
+            }
+        }
+        if (cfg.profileForagingShowShards) {
+            rows.add(row("Owned shard types", values ? whole(data.shards().size()) : ""));
+            int limit = Math.clamp(cfg.profileForagingShardLimit, 0, 500);
+            int shown = 0;
+            for (ProfileForagingCalculator.Shard shard : data.shards()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = shard.owned() + " owned";
+                if (cfg.profileForagingShowDates && shard.capturedAt() > 0) value += "  " + date(shard.capturedAt());
+                rows.add(row("  " + shard.name(), values ? value : ""));
+            }
+        }
+        if (cfg.profileForagingShowTraps) {
+            rows.add(row("Active shard traps", values ? whole(data.traps().size()) : ""));
+            int limit = Math.clamp(cfg.profileForagingTrapLimit, 0, 100);
+            int shown = 0;
+            for (ProfileForagingCalculator.Trap trap : data.traps()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = trap.mode() + "  " + trap.location() + "  " + trap.shard()
+                    + (trap.captured() ? "  captured" : "  waiting");
+                if (cfg.profileForagingShowDates && trap.placedAt() > 0) value += "  " + date(trap.placedAt());
+                rows.add(row("  " + title(trap.item()), values ? value : ""));
+            }
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1385,6 +1497,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 16) {
             int max = Math.max(0, chocolateDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 17) {
+            int max = Math.max(0, foragingDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
