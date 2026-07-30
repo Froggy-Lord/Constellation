@@ -217,6 +217,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Exact Rabbit Hitman menu synchronization with all 28 slot prices, purchased/remaining totals, guarded profile cache, movable cost HUD and `/hitmancosts` controls
 - Profile- and SkyBlock-year-safe Hoppity event statistics for meal/Hitman eggs, unique/duplicate rarities, purchases, Garden gifts, Rabbit the Fish, duplicate Chocolate and Factory time
 - Configurable event-end chat summary, optional movable live display, year browsing and safe per-year `/hoppitysummary` controls
+- Six-meal Hoppity egg schedule with normal/alternate days, exact Breakfast/Lunch/Dinner reset hours, profile/year/cycle-safe claims and observed-state warning guard
+- Movable ready/claimed/next-spawn/event-end HUD, configurable ordering and optional chat/title/sound reminders through `/hoppityeggs`
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips

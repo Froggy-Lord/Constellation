@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.756 (2026-07-30) — Unclaimed Hoppity Egg Schedule
+
+- ported SkyHanni's normal/alternate meal-day schedule, exact reset hours and spawn/claim messages
+- added exact claimed-cycle persistence by profile, SkyBlock year and meal without stale-day leakage
+- added ready, claimed, next-spawn and event-end timing with schedule or soonest/ready-first ordering
+- added guarded optional chat/title/sound reminders, chat timing responses and full `/hoppityeggs` controls
+
 ## 0.9.755 (2026-07-30) — Hoppity Event Statistics
 
 - ported SkyHanni's exact meal, Hitman, rabbit rarity, unique, duplicate, purchase, visitor, Side Dish, milestone and Rabbit-the-Fish event signals

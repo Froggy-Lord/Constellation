@@ -1635,6 +1635,18 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Run `/hoppitysummary clear` without `confirm`. Expected: nothing changes. Run `/hoppitysummary clear confirm`; only the selected profile/year is cleared.
 - [ ] At the Spring-to-Summer boundary with `endsummary` enabled, verify one summary is emitted and restart/reconnect. Expected: the same profile/year is not summarized twice.
 - [ ] Move and resize `Hoppity Event Summary` in `/cn hud`. Expected: only the content is shown over the translucent editor, with no extra editor chrome.
+
+### Unclaimed Hoppity meal eggs
+
+- [ ] Enable Auriga, `Hoppity Unclaimed Eggs` and its HUD during Spring. Expected: Breakfast/Lunch/Dinner appear on normal days and Brunch/Déjeuner/Supper on alternate days using the 7:00, 14:00 and 21:00 SkyBlock-hour resets.
+- [ ] Before a meal reset, compare the displayed countdown with the server clock. Expected: it reaches zero at the exact reset and changes to `Ready`; the following cycle remains two SkyBlock days away.
+- [ ] Collect each meal type. Expected: only that exact spawn cycle changes to `Claimed`; the next cycle is unaffected and profile/year data cannot leak into another cycle.
+- [ ] Trigger the server's already-collected and no-nearby-eggs messages. Expected: the relevant current cycle or all current cycles synchronize, followed by a next-spawn time when `chattime` is enabled.
+- [ ] Log in or switch profiles mid-event before observing an egg message. Expected: the schedule appears, but all-six-ready warnings remain silent until a real spawn, find, already-collected or no-eggs signal establishes current state.
+- [ ] Enable warnings and leave all six current cycles unclaimed. Expected: enabled chat/title/sound channels fire at the configured repeat interval; each channel can be disabled independently.
+- [ ] Toggle `soonest`, `readyfirst`, `claimed`, `future`, `eventtime`, `eventonly`, `chattime`, `warnings`, warning channels and `persist` through `/hoppityeggs option <name> <on|off>`. Expected: each surface changes independently.
+- [ ] Run `/hoppityeggs warningminutes <1-60>` and `/hoppityeggs clear confirm`. Expected: the repeat interval persists and only the current profile's claim-cycle cache clears.
+- [ ] Move and resize `Unclaimed Hoppity Eggs` in `/cn hud`. Expected: the display remains chrome-free in the editor and no row sends a warp, click or gameplay packet.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

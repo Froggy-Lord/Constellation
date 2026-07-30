@@ -100,6 +100,26 @@ public class AurigaConfig extends BaseConfigGroup {
     public int hoppityEventSummaryHudRows = 8;
     public java.util.Map<String, Long> hoppityEventStats = new java.util.LinkedHashMap<>();
     public java.util.Map<String, Boolean> hoppityEventSummarized = new java.util.LinkedHashMap<>();
+    // ported from SkyHanni (LGPL-3.0-or-later): features/event/hoppity/HoppityEggType.kt, HoppityEggDisplayManager.kt
+    public boolean hoppityUnclaimedEggs = true;
+    public boolean hoppityUnclaimedEggsHud = true;
+    public boolean hoppityUnclaimedEggsEventOnly = true;
+    public boolean hoppityUnclaimedEggsSoonestFirst = true;
+    public boolean hoppityUnclaimedEggsReadyFirst = true;
+    public boolean hoppityUnclaimedEggsShowClaimed = true;
+    public boolean hoppityUnclaimedEggsShowFuture = true;
+    public boolean hoppityUnclaimedEggsShowEventTime = true;
+    public boolean hoppityUnclaimedEggsChatTime = true;
+    public boolean hoppityUnclaimedEggsWarnings = false;
+    public boolean hoppityUnclaimedEggsWarningChat = true;
+    public boolean hoppityUnclaimedEggsWarningTitle = true;
+    public boolean hoppityUnclaimedEggsWarningSound = true;
+    public boolean hoppityUnclaimedEggsPersistProfiles = true;
+    public int hoppityUnclaimedEggsWarningMinutes = 1;
+    public int hoppityUnclaimedEggsReadyColor = 0xFF55FF55;
+    public int hoppityUnclaimedEggsClaimedColor = 0xFFAAAAAA;
+    public int hoppityUnclaimedEggsFutureColor = 0xFFFFFFFF;
+    public java.util.Map<String, Long> hoppityEggClaimCycles = new java.util.LinkedHashMap<>();
     public boolean chocolateFactoryShowLevels = true;
     public boolean chocolateFactoryShowAllAffordable = true;
     public boolean chocolateFactoryBarnWarning = true;

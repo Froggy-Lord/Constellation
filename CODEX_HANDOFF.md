@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.755 Hoppity Event Statistics.
+Last updated: 2026-07-30 for version 0.9.756 Unclaimed Hoppity Egg Schedule.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.755`.
+- Current artifact version: `0.9.756`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2770,4 +2770,18 @@ Every counter is scoped by the current SkyBlock profile and derived SkyBlock yea
 
 Version `0.9.755` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `17e3500331f434a54dff76b3213f59634595a12413e6b2122d36a8c03ff44b0c`.
 
-The previous `0.9.754` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-141517-0.9.755/`; only `constellation-0.9.755.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
+The previous `0.9.754` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-141517-0.9.755/`; only `constellation-0.9.755.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `b15267ff7f`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.756 Unclaimed Hoppity Egg Schedule
+
+`AurigaUnclaimedEggs.java`, `UnclaimedEggsHudWidget.java`, `AurigaConfig.java` and `AurigaMisc.java` port SkyHanni LGPL `features/event/hoppity/HoppityEggType.kt`, `HoppityEggsManager.kt` and `HoppityEggDisplayManager.kt`.
+
+The authoritative six-meal model keeps Breakfast/Lunch/Dinner on normal days and Brunch/Déjeuner/Supper on alternate days, with exact SkyBlock hours 7, 14 and 21. Spawn timestamps derive from the same real SkyBlock epoch and 124-hour year used by the existing custom scoreboard. Each claim stores the exact spawn-cycle timestamp beneath profile, SkyBlock year and meal keys, so a previous day, profile or event can never mark a new egg claimed.
+
+Exact found, spawned, already-collected, no-nearby-eggs and not-active messages synchronize state. The movable HUD distinguishes Ready, Claimed plus next reset, future reset and event end; it supports ready-first or chronological/schedule ordering and independent claimed/future/event rows. Warning chat/title/sound and repeat interval are independent and disabled by default to match the live profile. Warnings cannot start from inferred login state alone: a real observed spawn or claim signal must establish state first. Optional chat responses report the next spawn or hunt. `/hoppityeggs` exposes status, explicit-confirm current-profile clearing, repeat interval and all Boolean controls.
+
+Unlike the reference display, no row is clickable and no warp or gameplay packet is sent. The feature is advisory only.
+
+Version `0.9.756` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2aef5019ed2fdd72578b63c90dcb77ca93dac8f5d150415a60619fdaf848a796`.
+
+The previous `0.9.755` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142235-0.9.756/`; only `constellation-0.9.756.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
