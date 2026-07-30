@@ -2275,3 +2275,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Refresh online, restart offline and reopen Museum. Expected: a validated one-to-168-hour official catalogue cache survives offline; incomplete resources never replace it.
 - [ ] Open a profile with Museum API disabled. Expected: a readable unavailable message appears without borrowing another profile's data.
 - [ ] Disable `profileMuseum`. Expected: the tab reports disabled and starts neither endpoint nor catalogue work.
+
+### Profile Crimson Isle
+
+- [ ] Enable `profileCrimson`, open `/pv` and select Crimson. Expected: the selected faction, both faction reputations, current ranks and highest reputation-unlocked Kuudra tier appear from the selected profile.
+- [ ] Compare Basic through Infernal Kuudra completions and highest waves with the Hypixel profile. Expected: each tier matches, total completions are summed, and collection points weight tiers from one through five.
+- [ ] Check collection values immediately below and on 10, 100, 500, 2,000 and 5,000 points. Expected: the displayed collection tier advances exactly at each threshold and the remaining value targets the next threshold.
+- [ ] Compare all seven Dojo tests. Expected: Force, Stamina, Mastery, Swiftness, Discipline, Tenacity and Control show their points, grade and recorded time; total score produces White, Yellow, Green, Blue, Brown or Black Belt at the configured game thresholds.
+- [ ] Toggle every `profileCrimsonShow...` option. Expected: reputation, Kuudra summaries/tiers/waves and Dojo summaries/tests/times hide independently.
+- [ ] Test `profileCrimsonHideZeroKuudra`, `profileCrimsonHideUnattemptedDojo`, both limits and DEFAULT/COMPLETIONS/WAVE/NAME or DEFAULT/POINTS/TIME/NAME sorts. Expected: only the intended rows change and scrolling remains bounded.
+- [ ] Switch between profiles. Expected: all Crimson rows update immediately from the selected member and no state leaks from the previous profile.
+- [ ] Open a profile without `nether_island_player_data`, then disable `profileCrimson`. Expected: readable unavailable and disabled messages appear without a crash.

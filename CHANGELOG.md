@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.775 (2026-07-30) — Complete Profile Crimson Isle Progression
+
+- added selected faction plus Mage and Barbarian reputation, rank, next rank and highest unlocked Kuudra tier
+- added all Kuudra tier completions, highest waves, total runs and correctly thresholded collection progress
+- added all seven Dojo tests with points, grades, recorded times, total score and belt progression
+- added independent sections, details, zero-state hiding, limits and sorting while preserving unknown future API IDs
+
 ## 0.9.774 (2026-07-30) — Complete Profile Museum
 
 - added the separately authenticated Museum endpoint with profile-safe caching and refresh

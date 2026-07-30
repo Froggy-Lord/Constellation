@@ -3014,7 +3014,21 @@ Category/display-name/canonical-ID/armor-piece search, direct/borrowed/parent/mi
 
 Version `0.9.774` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `5620147c6ed9652f0e98885753def95996f963b9f9d90e69f3431801b3d6920a`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-170650-0.9.774/`; only `constellation-0.9.774.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-170650-0.9.774/`; only `constellation-0.9.774.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `618896834a`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.775 Complete Profile Crimson Isle Progression
+
+`ProfileCrimsonCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add a complete persistent Crimson Isle page. The raw `nether_island_player_data` model, two faction reputations, selected faction, five Kuudra tiers and seven Dojo tests port SkyBlockPv modified-MIT `data/api/skills/combat/CrimsonIsleData.kt`, `data/repo/CrimsonIsleCodecs.kt` and `screens/windowed/tabs/combat/CrimsonIsleScreen.kt`, cross-checked with Skyblocker LGPL `profileviewer2/model/NetherIslandPlayerData.java`. Required SkyBlockPv notices are beside every derived block.
+
+Mage and Barbarian reputation rows include exact Neutral, Friendly, Trusted, Honored and Hero thresholds, remaining reputation and the highest reputation-unlocked Kuudra tier. Kuudra records include Basic through Infernal completions and highest waves, total runs and tier-weighted collection points. Collection level uses the highest threshold at or below the score, correcting the reference screen's ascending `indexOfFirst` error at higher tiers.
+
+Dojo records include Force, Stamina, Mastery, Swiftness, Discipline, Tenacity and Control points, F through S grades, recorded times, total points and White through Black Belt progression. Section/detail toggles, zero/unattempted hiding, independent limits and four sorts per section are saved in Lyra. Unknown future Kuudra and Dojo IDs remain visible and marked instead of being discarded.
+
+The profile page needs no extra endpoint and switches immediately with the selected profile member. It is advisory and read-only.
+
+Version `0.9.775` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `6c9cff32cad5b8349c80965abaa9df72a7a56c5fab7e10d815c3cd1c2a04154b`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-171501-0.9.775/`; only `constellation-0.9.775.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

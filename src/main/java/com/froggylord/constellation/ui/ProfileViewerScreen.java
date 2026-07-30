@@ -11,6 +11,7 @@ import com.froggylord.constellation.api.ProfileCollectionData;
 import com.froggylord.constellation.api.ProfileMinionCalculator;
 import com.froggylord.constellation.api.ProfileMiningCalculator;
 import com.froggylord.constellation.api.ProfileMuseumData;
+import com.froggylord.constellation.api.ProfileCrimsonCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -38,7 +39,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -149,6 +150,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 11) {
             drawMuseum(g);
+            return;
+        }
+        if (tab == 12) {
+            drawCrimson(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -613,6 +618,84 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/combat/CrimsonIsleScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawCrimson(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileCrimson) {
+            g.text(font, "Crimson Isle viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileCrimsonCalculator.Result data = crimsonRows();
+        if (!data.available()) {
+            g.text(font, "Crimson Isle API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, crimsonDisplayRows(true));
+    }
+
+    private ProfileCrimsonCalculator.Result crimsonRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileCrimsonCalculator.calculate(member(profile()), cfg.profileCrimsonKuudraSort,
+            cfg.profileCrimsonDojoSort, cfg.profileCrimsonHideZeroKuudra,
+            cfg.profileCrimsonHideUnattemptedDojo);
+    }
+
+    private List<Row> crimsonDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileCrimsonCalculator.Result data = crimsonRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileCrimsonShowReputation) {
+            rows.add(row("Selected faction", values ? data.selectedFaction() : ""));
+            for (ProfileCrimsonCalculator.Reputation reputation : List.of(data.mage(), data.barbarian())) {
+                String value = reputation.reputation() + "  " + reputation.rank();
+                if (reputation.remaining() > 0) value += "  " + reputation.remaining() + " to next rank";
+                rows.add(row(reputation.name() + " reputation", values ? value : ""));
+            }
+            rows.add(row("Highest unlocked Kuudra", values ? data.highestKuudra() : ""));
+        }
+        if (cfg.profileCrimsonShowKuudraSummary) {
+            rows.add(row("Kuudra completions", values ? whole(data.kuudraRuns()) : ""));
+            String collection = data.collectionPoints() + " points  tier " + data.collectionTier()
+                + "/" + data.collectionMaxTier();
+            if (data.collectionRemaining() > 0) collection += "  " + data.collectionRemaining() + " to next";
+            rows.add(row("Kuudra collection", values ? collection : ""));
+            rows.add(row("Highest Kuudra wave", values ? whole(data.highestWave()) : ""));
+        }
+        if (cfg.profileCrimsonShowKuudraTiers) {
+            int limit = Math.clamp(cfg.profileCrimsonKuudraLimit, 0, 100);
+            int shown = 0;
+            for (ProfileCrimsonCalculator.Kuudra kuudra : data.kuudra()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = kuudra.completions() + " completions";
+                if (cfg.profileCrimsonShowKuudraWaves) value += "  wave " + kuudra.highestWave();
+                rows.add(new Row((kuudra.unknown() ? "Unknown  " : "") + kuudra.name(),
+                    values ? value : "", kuudra.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            }
+        }
+        if (cfg.profileCrimsonShowDojoSummary) {
+            String points = data.dojoPoints() < 0 ? "Not attempted" : data.dojoPoints() + " points";
+            String belt = data.belt().name() + " Belt";
+            if (data.belt().remaining() > 0) belt += "  " + data.belt().remaining() + " to next";
+            rows.add(row("Dojo total", values ? points : ""));
+            rows.add(row("Dojo belt", values ? belt : ""));
+        }
+        if (cfg.profileCrimsonShowDojoTests) {
+            int limit = Math.clamp(cfg.profileCrimsonDojoLimit, 0, 100);
+            int shown = 0;
+            for (ProfileCrimsonCalculator.Dojo dojo : data.dojo()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = dojo.points() < 0 ? "Not attempted" : dojo.points() + " points  grade " + dojo.grade();
+                if (cfg.profileCrimsonShowDojoTimes && dojo.time() >= 0) value += "  " + dojo.time() + " ms";
+                rows.add(new Row((dojo.unknown() ? "Unknown  " : "") + dojo.name(),
+                    values ? value : "", dojo.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            }
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -901,6 +984,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 11 && museumData != null && museumResult != null && museumProfile == profileIndex) {
             int max = Math.max(0, museumDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 12) {
+            int max = Math.max(0, crimsonDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
