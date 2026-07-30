@@ -674,3 +674,13 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Tier-correct kill and optional raw attempt counts without inventing a success-rate meaning
 - Claimed reward totals and amber unclaimed-reward warnings when the API field is available
 - Independent summary, XP, progress, remaining, overflow, kills, tiers, attempts, rewards and unplayed visibility
+
+## Profile pet progression
+
+- Exact MIT NEU rarity-offset XP curves with Tier Boost applied before curve selection
+- Bingo's Common curve and exact 200-level Golden, Jade and Rose Dragon overrides
+- Fractional next-level progress, total-max progress, remaining XP, max state and overflow
+- Active marker, actual/effective rarity, candy, held item, skin and optional API UUID details
+- Total, maxed and total-XP profile summaries without collapsing duplicate pets
+- Rarity, level, XP or name sorting plus active-first, active-only, search, minimum-rarity and row-limit filters
+- Independent XP, progress, remaining, overflow, candy, item, skin, UUID and summary visibility

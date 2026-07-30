@@ -2938,7 +2938,17 @@ The page covers Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire with t
 
 Version `0.9.768` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `81d4f0dd75a245815a9f256cf35e3583ef82f54ce54580c9b62dc187b97fde86`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-161251-0.9.768/`; only `constellation-0.9.768.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-161251-0.9.768/`; only `constellation-0.9.768.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `7ed5fd58d4`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.769 Complete Profile Pet Progression
+
+`ProfilePetCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` replace the raw-XP Pets list. Model parsing, Tier Boost rarity behavior, leveling and metadata semantics port Skyblocker LGPL `skyblock/profileviewer2/utils/PetLoader.java` and `model/PetsData.java`. The exact curve, rarity offsets, Bingo behavior and Golden/Jade/Rose Dragon overrides come directly from current NotEnoughUpdates-REPO MIT `constants/pets.json` at commit `1fa24d3ee172ab82e85418551da77ef252e1a66c`. Progress, list sorting and details cross-check SkyBlockPv modified-MIT `data/api/skills/PetsData.kt`, `data/repo/PetCodecs.kt` and `screens/windowed/tabs/PetScreen.kt`; its required notice sits beside the calculator.
+
+The page calculates fractional level, next-level and total-max progress, XP remaining, max state and overflow for every pet without merging duplicates. It supports exact level-200 dragon transitions and Tier Boost before rarity-offset selection. Active state, actual/effective rarity, candy, held item, skin and optional UUID are retained. Summary totals are independent of active-only, search, minimum-rarity and limit filters. Rarity, level, XP and name sorting, active-first behavior, zero-to-two decimals and every detail group are configurable.
+
+Version `0.9.769` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `6140bcaeb2f939bfc3039289c2b81e5a059510bc64b0d1c509fe639f2c34eeb3`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-162155-0.9.769/`; only `constellation-0.9.769.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
 
 ## Required dedicated visual-design pass
 

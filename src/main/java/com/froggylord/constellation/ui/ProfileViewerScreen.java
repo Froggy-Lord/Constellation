@@ -5,6 +5,7 @@ import com.froggylord.constellation.api.ProfileItemDecoder;
 import com.froggylord.constellation.api.ProfileDungeonCalculator;
 import com.froggylord.constellation.api.ProfileSkillCalculator;
 import com.froggylord.constellation.api.ProfileSlayerCalculator;
+import com.froggylord.constellation.api.ProfilePetCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -25,7 +26,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -413,15 +413,67 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private List<Row> pets(JsonObject m) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfilePetCalculator.Result data = ProfilePetCalculator.calculate(m, cfg.profilePetsSort, cfg.profilePetsActiveFirst);
         List<Row> out = new ArrayList<>();
-        JsonArray pets = array(path(m, "pets_data"), "pets");
-        if (pets.isEmpty()) pets = array(m, "pets");
-        pets.asList().stream().filter(JsonElement::isJsonObject).map(JsonElement::getAsJsonObject)
-            .sorted(Comparator.comparing((JsonObject p) -> bool(p, "active")).reversed().thenComparing(p -> string(p, "type", "")))
-            .forEach(p -> out.add(new Row((bool(p, "active") ? "Active  " : "") + title(string(p, "type", "Unknown").replace('_', ' ')),
-                string(p, "tier", "Unknown") + "  " + compact(number(p.get("exp"))) + " XP", bool(p, "active") ? 0xFF55FF55 : ConstellationTheme.TEXT)));
-        if (out.isEmpty()) out.add(row("Pets", "API disabled or none"));
+        if (!data.available()) {
+            out.add(row("Pets", "API disabled"));
+            return out;
+        }
+        int decimals = Math.clamp(cfg.profilePetsDecimals, 0, 2);
+        if (cfg.profilePetsShowSummary) {
+            out.add(row("Pets", whole(data.count())));
+            out.add(row("Maxed pets", whole(data.maxed())));
+            out.add(row("Total pet XP", compact(data.totalXp())));
+        }
+        int shown = 0;
+        int limit = Math.clamp(cfg.profilePetsLimit, 0, 500);
+        String search = cfg.profilePetsSearch == null ? "" : cfg.profilePetsSearch.trim().toLowerCase(Locale.ROOT);
+        int minimumRarity = petRarity(cfg.profilePetsMinimumRarity);
+        for (ProfilePetCalculator.Pet pet : data.pets()) {
+            if (cfg.profilePetsOnlyActive && !pet.active()) continue;
+            if (!search.isEmpty() && !pet.type().toLowerCase(Locale.ROOT).contains(search)) continue;
+            if (petRarity(pet.effectiveTier()) < minimumRarity) continue;
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            ProfilePetCalculator.Level level = pet.level();
+            String label = (pet.active() ? "Active  " : "") + title(pet.type().replace('_', ' '));
+            StringBuilder value = new StringBuilder(pet.effectiveTier()).append("  Level ")
+                .append(fixed(level.level(), decimals)).append("/").append(level.cap());
+            if (cfg.profilePetsShowNextProgress && !level.maxed())
+                value.append("  ").append(Math.round(level.progress() * 100)).append("%");
+            if (cfg.profilePetsShowXp) value.append("  ").append(compact(pet.xp())).append(" XP");
+            if (cfg.profilePetsShowMaxProgress)
+                value.append("  ").append(Math.round(Math.clamp(level.progressToMax(), 0, 1) * 100)).append("% max");
+            if (cfg.profilePetsShowRemainingToMax && !level.maxed())
+                value.append("  ").append(compact(level.remainingToMax())).append(" left");
+            if (cfg.profilePetsShowOverflow && level.overflow() > 0)
+                value.append("  +").append(compact(level.overflow()));
+            out.add(new Row(label, value.toString(), pet.active() ? 0xFF55FF55
+                : level.maxed() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            if (cfg.profilePetsShowCandy && pet.candyUsed() > 0)
+                out.add(row("  Candy used", pet.candyUsed() + "/10"));
+            if (cfg.profilePetsShowHeldItem && pet.heldItem() != null)
+                out.add(row("  Held item", title(pet.heldItem().replace('_', ' '))));
+            if (cfg.profilePetsShowSkin && pet.skin() != null)
+                out.add(row("  Skin", title(pet.skin().replace('_', ' '))));
+            if (cfg.profilePetsShowUuid && (pet.uniqueId() != null || pet.uuid() != null))
+                out.add(row("  Pet UUID", pet.uniqueId() != null ? pet.uniqueId() : pet.uuid()));
+        }
+        if (data.pets().isEmpty()) out.add(row("Pets", "None"));
         return out;
+    }
+
+    private static int petRarity(String rarity) {
+        if (rarity == null) return 0;
+        return switch (rarity.toUpperCase(Locale.ROOT)) {
+            case "UNCOMMON" -> 1;
+            case "RARE" -> 2;
+            case "EPIC" -> 3;
+            case "LEGENDARY" -> 4;
+            case "MYTHIC" -> 5;
+            default -> 0;
+        };
     }
 
     @Override public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {

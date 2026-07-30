@@ -2180,3 +2180,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Hide unplayed Slayers and zero-count tiers. Expected: untouched types and empty tier rows disappear without changing totals.
 - [ ] Toggle every `profileSlayersShow*` option and decimal precision. Expected: each controls only its documented rows and persists after restart.
 - [ ] Open a profile with no Slayer data. Expected: one unavailable row appears and no zero-filled progression table is fabricated.
+
+### Profile pet progression
+
+- [ ] Open Pets for a profile with public pet data. Expected: every pet has an exact fractional level, effective rarity and cap; duplicate pets remain separate.
+- [ ] Compare Common through Mythic pets with the in-game Pets menu. Expected: each rarity uses its own XP offset and next-level progress matches.
+- [ ] Check a pet holding Tier Boost below Legendary. Expected: its effective rarity rises once and its level uses that rarity's curve; Legendary/Mythic pets are not raised.
+- [ ] Check Bingo, Golden Dragon, Jade Dragon and Rose Dragon. Expected: Bingo uses the Common offset regardless of tier and each dragon has its exact level-200 curve.
+- [ ] Check levels 99–103 and 199–200 on a dragon where data is available. Expected: the transition costs follow NEU's base tail, zero, 5,555 and repeated 1,886,700 sequence without an off-by-one level.
+- [ ] Compare next-level percentage, progress to max, remaining-to-max, total XP and overflow. Expected: each is independently correct and maxed pets turn amber.
+- [ ] Inspect active status, candy, held item, skin and UUID. Expected: only API-present metadata appears and the active pet remains green.
+- [ ] Test RARITY, LEVEL, XP and NAME sorting, active-first/active-only, search, minimum rarity and zero/nonzero limits. Expected: each filter composes without altering the summary totals.
+- [ ] Toggle every `profilePetsShow*` option and decimal precision. Expected: each controls only its documented values and persists after restart.
+- [ ] Open a profile with pet APIs disabled and one with an empty pet list. Expected: the former says API disabled while the latter honestly says None.

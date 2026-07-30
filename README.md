@@ -63,6 +63,8 @@ its dungeon page includes exact catacombs and class progression, selected class,
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.
 
+the pet page uses the current licensed neu leveling data, including tier boost, bingo and all three level-200 dragons, with full progression, metadata, sorting and filtering controls.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.

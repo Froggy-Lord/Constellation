@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.769 (2026-07-30) — Complete Profile Pet Progression
+
+- replaced raw pet XP with exact rarity-offset levels, next/max progress, remaining XP and overflow
+- added exact Tier Boost handling, Bingo leveling and 200-level Golden, Jade and Rose Dragon curves
+- added active, rarity, candy, held-item, skin and optional UUID details with profile summaries
+- added active-only, active-first, rarity, search, limit, sort, precision and detail controls
+
 ## 0.9.768 (2026-07-30) — Complete Profile Slayer Progression
 
 - replaced raw Slayer XP with exact Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire levels
