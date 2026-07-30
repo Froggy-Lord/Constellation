@@ -32,6 +32,7 @@ public abstract class ItemProtectionScreenMixin {
         if (com.froggylord.constellation.constellation.AurigaAnvilHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaReforgeHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaSkyblockGuide.onSlotClick(screen, slot, button)) { ci.cancel(); return; }
+        com.froggylord.constellation.constellation.AurigaHoppityEventSummary.onSlotClick(screen, slot);
         if (com.froggylord.constellation.constellation.HerculesDnaAnalyzer.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AquilaFossils.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }

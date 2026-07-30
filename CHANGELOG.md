@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.755 (2026-07-30) — Hoppity Event Statistics
+
+- ported SkyHanni's exact meal, Hitman, rabbit rarity, unique, duplicate, purchase, visitor, Side Dish, milestone and Rabbit-the-Fish event signals
+- added profile- and SkyBlock-year-safe counts, duplicate Chocolate totals and exact Chocolate Factory time
+- added configurable end-of-event summaries, year selection, safe per-year clearing and persistence
+- added an independently optional movable live HUD with configurable content and row limit
+
 ## 0.9.754 (2026-07-30) — Rabbit Hitman Slot Costs
 
 - ported SkyHanni's exact Rabbit Hitman inventory detection and non-border cost-lore parsing

@@ -85,6 +85,21 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean chocolateFactoryHitmanPersistProfiles = true;
     public int chocolateFactoryHitmanNextRows = 5;
     public java.util.Map<String, Integer> chocolateFactoryHitmanOwnedSlots = new java.util.LinkedHashMap<>();
+    // ported from SkyHanni (LGPL-3.0-or-later): features/event/hoppity/summary/HoppityEventSummary.kt
+    public boolean hoppityEventSummary = true;
+    public boolean hoppityEventSummaryHud = false;
+    public boolean hoppityEventSummaryOnlyDuringEvent = true;
+    public boolean hoppityEventSummaryShowMeals = true;
+    public boolean hoppityEventSummaryShowRabbits = true;
+    public boolean hoppityEventSummaryShowSources = true;
+    public boolean hoppityEventSummaryShowChocolate = true;
+    public boolean hoppityEventSummaryShowFactoryTime = true;
+    public boolean hoppityEventSummaryShowRarities = true;
+    public boolean hoppityEventSummaryPersistProfiles = true;
+    public boolean hoppityEventSummaryChatOnEventEnd = true;
+    public int hoppityEventSummaryHudRows = 8;
+    public java.util.Map<String, Long> hoppityEventStats = new java.util.LinkedHashMap<>();
+    public java.util.Map<String, Boolean> hoppityEventSummarized = new java.util.LinkedHashMap<>();
     public boolean chocolateFactoryShowLevels = true;
     public boolean chocolateFactoryShowAllAffordable = true;
     public boolean chocolateFactoryBarnWarning = true;

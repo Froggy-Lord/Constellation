@@ -1622,6 +1622,19 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Run `/hitmancosts`, `/hitmancosts next 3`, and toggle `purchased`, `paid`, `remaining`, `remainingcost`, `next`, `outside` and `persist` through `/hitmancosts option <name> <on|off>`. Expected: each row and cache behavior changes independently and persists.
 - [ ] Run `/hitmancosts clear`. Expected: only the current profile cache clears; reopening Rabbit Hitman safely restores it.
 - [ ] Move and resize `Hitman Slot Costs` in `/cn hud`. Expected: it is visible in the exact menu by default, remains chrome-free in the editor, and appears outside the menu only when `outside` is enabled and a valid profile snapshot exists.
+
+### Hoppity event statistics
+
+- [ ] Enable Auriga and `Hoppity Event Summary`, then collect each available normal and alternate meal egg. Expected: `/hoppitysummary` increases `Meal eggs` once per real find and ignores duplicate delivery of the same chat packet.
+- [ ] Find a new rabbit and a duplicate rabbit. Expected: the proper rarity count increases; unique and duplicate totals remain separate; duplicate Chocolate matches the reward chat.
+- [ ] Recover a Hitman egg, buy a Hoppity rabbit, accept Hoppity as a Garden visitor, claim a Side Dish and both milestone types, and find Rabbit the Fish where available. Expected: only the matching source counter increases.
+- [ ] Stay in the exact `Chocolate Factory` inventory for at least two minutes, then close it. Expected: Factory time increases by about two minutes, does not count time in similarly named screens, and survives restart when persistence is enabled.
+- [ ] Switch SkyBlock profiles and run `/hoppitysummary`. Expected: statistics do not cross profiles.
+- [ ] Run `/hoppitysummary year <year>`, `current`, `show`, `rows <1-20>`, and each `/hoppitysummary option <name> <on|off>` setting. Expected: browsing never modifies historical data and every HUD section changes independently.
+- [ ] Enable the summary HUD and test `eventonly` both ways. Expected: by default it appears only in Spring during Hoppity's Hunt; disabling `eventonly` allows the selected saved year outside the event.
+- [ ] Run `/hoppitysummary clear` without `confirm`. Expected: nothing changes. Run `/hoppitysummary clear confirm`; only the selected profile/year is cleared.
+- [ ] At the Spring-to-Summer boundary with `endsummary` enabled, verify one summary is emitted and restart/reconnect. Expected: the same profile/year is not summarized twice.
+- [ ] Move and resize `Hoppity Event Summary` in `/cn hud`. Expected: only the content is shown over the translucent editor, with no extra editor chrome.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

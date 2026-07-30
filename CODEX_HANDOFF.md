@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.754 Rabbit Hitman Slot Costs.
+Last updated: 2026-07-30 for version 0.9.755 Hoppity Event Statistics.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.754`.
+- Current artifact version: `0.9.755`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2758,4 +2758,16 @@ Snapshots are profile-safe and persisted only when enabled. The movable HUD defa
 
 Version `0.9.754` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `c54c52c4e0b76178222352d509fb8e1f94fba281b1256cfb01edb294b974053b`.
 
-The previous `0.9.753` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-140644-0.9.754/`; only `constellation-0.9.754.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
+The previous `0.9.753` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-140644-0.9.754/`; only `constellation-0.9.754.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `0ed900c771`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.755 Hoppity Event Statistics
+
+`AurigaHoppityEventSummary.java`, `HoppityEventHudWidget.java`, `AurigaConfig.java` and `AurigaMisc.java` port SkyHanni LGPL `features/event/hoppity/HoppityEggsManager.kt`, `features/event/hoppity/summary/HoppityEventSummary.kt` and `features/event/hoppity/summary/HoppityLiveDisplay.kt`.
+
+The tracker consumes exact Hoppity chat signals for normal and alternate meal eggs, Hitman recovery, rabbit rarity, new/duplicate outcome, duplicate Chocolate, purchases, Garden visitor gifts and Rabbit the Fish. It also ports SkyHanni's exact click-time Side Dish and claimable Factory/Shop milestone recognition without cancelling or generating the click. A one-second identical-message guard prevents duplicated client delivery from double counting. Exact `Chocolate Factory` inventory residence is accumulated only during Spring, capped per tick against pause spikes and persisted at a bounded interval.
+
+Every counter is scoped by the current SkyBlock profile and derived SkyBlock year. A Spring-to-Summer transition can emit one end summary per profile/year, with a persisted summarized marker preventing repeat output after reconnect. The movable display is independently disabled by default to match the live 26.1.2 profile, supports event-only visibility, configurable meal/rabbit/source/Chocolate/time/rarity sections and a one-to-twenty row limit. `/hoppitysummary` provides current or historical year selection, explicit-confirm per-year clearing and every display/persistence control. It observes messages and screen state only and sends no gameplay packet.
+
+Version `0.9.755` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `17e3500331f434a54dff76b3213f59634595a12413e6b2122d36a8c03ff44b0c`.
+
+The previous `0.9.754` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-141517-0.9.755/`; only `constellation-0.9.755.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
