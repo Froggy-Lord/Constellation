@@ -323,11 +323,17 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileGardenShowContests = true;
     public boolean profileGardenShowComposter = true;
     public boolean profileGardenShowComposterUpgrades = true;
+    public boolean profileGardenShowPlots = true;
+    public boolean profileGardenShowLockedPlots = true;
+    public boolean profileGardenShowPlotCoordinates = true;
     public boolean profileGardenShowGreenhouse = true;
+    public boolean profileGardenShowGreenhouseRewards = true;
+    public boolean profileGardenShowGreenhouseCosts = true;
     public boolean profileGardenHideZeroCrops = false;
     public boolean profileGardenHideZeroVisitors = true;
     public int profileGardenCropLimit = 0;
     public int profileGardenVisitorLimit = 10;
+    public int profileGardenPlotLimit = 0;
     public int profileGardenCatalogueCacheHours = 24;
     public String profileGardenCropSort = "DEFAULT";
     public String profileGardenVisitorFilter = "ALL";

@@ -82,9 +82,50 @@ public final class ProfileGardenCalculator {
             return new Upgrade(id, definition == null ? title(id) : definition.name(), upgradeLevel, maximum,
                 paid.getOrDefault("copper", 0), total.getOrDefault("copper", 0));
         }).toList();
+
+        // ported from SkyBlockPv (modified MIT): data/api/skills/farming/GardenProfile.kt, screens/windowed/tabs/farming/ComposterScreen.kt
+        // Portions of this code are from the SkyBlockPv mod.
+        Set<String> unlockedPlotIds = new HashSet<>();
+        JsonElement rawUnlockedPlots = garden.get("unlocked_plots_ids");
+        if (rawUnlockedPlots != null && rawUnlockedPlots.isJsonArray())
+            for (JsonElement value : rawUnlockedPlots.getAsJsonArray())
+                if (value.isJsonPrimitive()) unlockedPlotIds.add(value.getAsString());
+        Map<String, Integer> unlockedByType = new java.util.HashMap<>();
+        if (catalogue != null)
+            for (String id : unlockedPlotIds) {
+                ProfileGardenData.Plot plot = catalogue.plots().get(id);
+                if (plot != null) unlockedByType.merge(plot.type(), 1, Integer::sum);
+            }
+        List<Plot> plotRows = catalogue == null ? List.of() : catalogue.plots().values().stream()
+            .sorted(Comparator.comparingInt(ProfileGardenData.Plot::number))
+            .map(plot -> {
+                boolean unlocked = unlockedPlotIds.contains(plot.id());
+                List<ProfileGardenData.PlotCost> costs = catalogue.plotCosts()
+                    .getOrDefault(plot.type(), List.of());
+                int unlockedType = unlockedByType.getOrDefault(plot.type(), 0);
+                ProfileGardenData.PlotCost nextCost = unlocked || unlockedType >= costs.size()
+                    ? null : costs.get(unlockedType);
+                return new Plot(plot.id(), plot.type(), plot.number(), plot.x(), plot.z(), unlocked,
+                    nextCost == null ? "" : nextCost.item(), nextCost == null ? 0 : nextCost.amount());
+            }).toList();
+
         JsonObject greenhouse = object(garden, "garden_upgrades");
-        List<Upgrade> greenhouseRows = List.of("GROWTH_SPEED", "YIELD", "PLOT_LIMIT").stream()
-            .map(id -> new Upgrade(id, title(id), integer(greenhouse.get(id)), 0, 0, 0)).toList();
+        List<GreenhouseUpgrade> greenhouseRows = List.of("GROWTH_SPEED", "YIELD", "PLOT_LIMIT").stream()
+            .map(id -> {
+                int upgradeLevel = integer(greenhouse.get(id));
+                ProfileGardenData.Greenhouse definition = catalogue == null ? null : catalogue.greenhouse().get(id);
+                int maximum = definition == null ? 0 : definition.maximum();
+                Map<String, Integer> paid = definition == null || upgradeLevel <= 0 ? Map.of()
+                    : definition.costs().get(Math.min(upgradeLevel, maximum) - 1);
+                Map<String, Integer> total = definition == null ? Map.of() : definition.costs().getLast();
+                int reward = switch (id) {
+                    case "GROWTH_SPEED" -> 5 * upgradeLevel + (upgradeLevel >= 9 ? 5 : 0);
+                    case "YIELD" -> 2 * upgradeLevel + (upgradeLevel >= 9 ? 2 : 0);
+                    default -> upgradeLevel;
+                };
+                return new GreenhouseUpgrade(id, definition == null ? title(id) : definition.name(),
+                    upgradeLevel, maximum, reward, Map.copyOf(paid), Map.copyOf(total));
+            }).toList();
 
         JsonObject medals = object(contests, "medals_inv");
         JsonObject perks = object(contests, "perks");
@@ -105,8 +146,8 @@ public final class ProfileGardenCalculator {
             bool(perks.get("personal_bests")), decimal(composter.get("organic_matter")),
             decimal(composter.get("fuel_units")), decimal(composter.get("compost_units")),
             integer(composter.get("compost_items")), integer(composter.get("conversion_ticks")),
-            whole(composter.get("last_save")), composterRows, arraySize(garden, "greenhouse_slots"),
-            greenhouseRows, response.cached());
+            whole(composter.get("last_save")), composterRows, plotRows,
+            arraySize(garden, "greenhouse_slots"), greenhouseRows, response.cached());
     }
 
     private static Crop crop(String id, JsonObject resources, JsonObject upgrades,
@@ -222,6 +263,10 @@ public final class ProfileGardenCalculator {
                        int copperPaid, int copperTotal, boolean unknown) {}
     public record Visitor(String id, String name, String rarity, int visits, int completed, boolean unknown) {}
     public record Upgrade(String id, String name, int level, int maximum, int copperPaid, int copperTotal) {}
+    public record Plot(String id, String type, int number, int x, int z, boolean unlocked,
+                       String nextCostItem, int nextCostAmount) {}
+    public record GreenhouseUpgrade(String id, String name, int level, int maximum, int reward,
+                                    Map<String, Integer> paid, Map<String, Integer> total) {}
     public record Result(boolean available, long gardenXp, int gardenLevel, long levelProgress, long levelRequired,
                          int copper, int larvaConsumed, int unlockedPlots, String selectedBarnSkin,
                          int unlockedBarnSkins, List<Crop> crops, long cropsCollected, int visitorsCompleted,
@@ -229,6 +274,7 @@ public final class ProfileGardenCalculator {
                          int bronzeMedals, int silverMedals, int goldMedals, int farmingCapUpgrades,
                          int doubleDropUpgrades, boolean personalBests, double organicMatter, double fuel,
                          double compostUnits, int compostItems, int conversionTicks, long composterLastSave,
-                         List<Upgrade> composterUpgrades, int greenhouseSlots, List<Upgrade> greenhouseUpgrades,
+                         List<Upgrade> composterUpgrades, List<Plot> plots,
+                         int greenhouseSlots, List<GreenhouseUpgrade> greenhouseUpgrades,
                          boolean cached) {}
 }

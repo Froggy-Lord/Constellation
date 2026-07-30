@@ -60,6 +60,7 @@ For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. 
 the profile viewer calculates exact skill levels and progress from hypixel's published curves, including hunting, the current foraging cap and profile-specific farming/taming caps.
 garden crop records use the maintained licensed 46-level milestone tables and exact nine-upgrade copper costs, with validated offline caching.
 garden visitor and composter records use all 139 maintained visitor identities and exact 25-level cumulative upgrade costs.
+garden plots use the maintained 24-plot layout and tier-aware unlock costs; greenhouse records include exact reward and cumulative material progress.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

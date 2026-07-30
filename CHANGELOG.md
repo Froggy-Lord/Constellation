@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.783 (2026-07-30) — Exact Profile Garden Plots and Greenhouse
+
+- added all 24 numbered plots with exact 5×5 catalogue coordinates and unlock state
+- added tier-aware next unlock costs across Compost and Enchanted Compost
+- added exact Growth Speed, Crop Yield and Plot Limit maximums and rewards
+- added cumulative Copper, Compost, Enchanted Compost and Ethereal Vine upgrade costs
+- added independent locked-plot, coordinate, reward, cost and row-limit controls
+
 ## 0.9.782 (2026-07-30) — Exact Profile Garden Visitors and Composter
 
 - added all 139 current visitor identities and five rarity groups

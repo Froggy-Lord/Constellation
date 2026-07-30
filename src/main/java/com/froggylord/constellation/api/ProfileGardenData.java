@@ -32,6 +32,12 @@ public final class ProfileGardenData {
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/visitors.json");
     private static final URI COMPOSTER = URI.create(
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/composter_data.json");
+    private static final URI PLOTS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/plots.json");
+    private static final URI PLOT_COSTS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/plot_cost.json");
+    private static final URI GREENHOUSE = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/greenhouse_upgrades.json");
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static volatile Catalogue catalogue;
     private static volatile CompletableFuture<Catalogue> loading;
@@ -55,6 +61,9 @@ public final class ProfileGardenData {
                 root.add("misc", fetch(MISC));
                 root.add("visitors", fetch(VISITORS));
                 root.add("composter", fetch(COMPOSTER));
+                root.add("plots", fetch(PLOTS));
+                root.add("plot_costs", fetch(PLOT_COSTS));
+                root.add("greenhouse", fetch(GREENHOUSE));
                 String body = root.toString();
                 Catalogue loaded = parse(body, System.currentTimeMillis(), false);
                 Files.writeString(cachePath(), body, StandardCharsets.UTF_8);
@@ -96,6 +105,9 @@ public final class ProfileGardenData {
         JsonObject misc = object(root, "misc");
         JsonArray rawVisitors = array(root.get("visitors"));
         JsonObject rawComposter = object(root, "composter");
+        JsonArray rawPlots = array(root.get("plots"));
+        JsonObject rawPlotCosts = object(root, "plot_costs");
+        JsonObject rawGreenhouse = object(root, "greenhouse");
         Map<String, List<Long>> milestones = new LinkedHashMap<>();
         for (var entry : rawMilestones.entrySet()) {
             if (!entry.getValue().isJsonArray()) continue;
@@ -129,8 +141,53 @@ public final class ProfileGardenData {
         if (visitors.size() < 130 || composter.size() != 5
             || composter.values().stream().anyMatch(value -> value.maximum() != 25))
             throw new IllegalArgumentException("Garden visitor or composter catalogue is incomplete.");
+
+        // ported from SkyBlockPv (modified MIT): data/repo/StaticGardenData.kt, screens/windowed/tabs/farming/ComposterScreen.kt
+        // Portions of this code are from the SkyBlockPv mod.
+        Map<String, Plot> plots = new LinkedHashMap<>();
+        for (JsonElement value : rawPlots) {
+            if (!value.isJsonObject()) continue;
+            JsonObject plot = value.getAsJsonObject();
+            String id = string(plot.get("id"), "");
+            JsonArray location = array(plot.get("location"));
+            if (id.isBlank() || location.size() != 2) continue;
+            int separator = id.indexOf('_');
+            plots.put(id, new Plot(id, separator < 0 ? id : id.substring(0, separator), plot.get("number").getAsInt(),
+                location.get(0).getAsInt(), location.get(1).getAsInt()));
+        }
+        Map<String, List<PlotCost>> plotCosts = new LinkedHashMap<>();
+        for (var entry : rawPlotCosts.entrySet()) {
+            if (!entry.getValue().isJsonArray()) continue;
+            List<PlotCost> costs = new ArrayList<>();
+            for (JsonElement value : entry.getValue().getAsJsonArray()) {
+                if (value.isJsonPrimitive()) costs.add(new PlotCost(value.getAsInt(), false));
+                else if (value.isJsonObject()) {
+                    JsonObject cost = value.getAsJsonObject();
+                    costs.add(new PlotCost(cost.get("amount").getAsInt(),
+                        cost.has("bundle") && cost.get("bundle").getAsBoolean()));
+                }
+            }
+            plotCosts.put(entry.getKey(), List.copyOf(costs));
+        }
+        Map<String, Greenhouse> greenhouse = new LinkedHashMap<>();
+        for (var entry : rawGreenhouse.entrySet()) {
+            if (!entry.getValue().isJsonObject()) continue;
+            JsonObject definition = entry.getValue().getAsJsonObject();
+            List<Map<String, Integer>> costs = cumulativeMaps(array(definition.get("upgrades")));
+            greenhouse.put(entry.getKey(), new Greenhouse(entry.getKey(),
+                plain(string(definition.get("name"), entry.getKey())),
+                string(definition.get("reward_formula"), "level"), costs.size(), List.copyOf(costs)));
+        }
+        if (plots.size() != 24 || plotCosts.size() != 4
+            || plotCosts.values().stream().mapToInt(List::size).sum() != 24
+            || greenhouse.size() != 3
+            || greenhouse.get("GROWTH_SPEED") == null || greenhouse.get("GROWTH_SPEED").maximum() != 9
+            || greenhouse.get("YIELD") == null || greenhouse.get("YIELD").maximum() != 9
+            || greenhouse.get("PLOT_LIMIT") == null || greenhouse.get("PLOT_LIMIT").maximum() != 2)
+            throw new IllegalArgumentException("Garden plot or greenhouse catalogue is incomplete.");
         return new Catalogue(Map.copyOf(milestones), List.copyOf(upgradeCosts), Map.copyOf(visitors),
-            Map.copyOf(composter), loadedAt, cached);
+            Map.copyOf(composter), Map.copyOf(plots), Map.copyOf(plotCosts), Map.copyOf(greenhouse),
+            loadedAt, cached);
     }
 
     private static List<Long> cumulative(JsonArray steps) {
@@ -160,6 +217,9 @@ public final class ProfileGardenData {
         try { return value == null ? fallback : value.getAsString(); }
         catch (RuntimeException ignored) { return fallback; }
     }
+    private static String plain(String value) {
+        return value.replaceAll("<[^>]+>", "");
+    }
     private static JsonObject object(JsonObject root, String key) {
         JsonElement value = root.get(key);
         return value != null && value.isJsonObject() ? value.getAsJsonObject() : new JsonObject();
@@ -170,7 +230,15 @@ public final class ProfileGardenData {
 
     public record Visitor(String id, String name, String rarity) {}
     public record Composter(String id, String name, int maximum, List<Map<String, Integer>> costs) {}
+    public record Plot(String id, String type, int number, int x, int z) {}
+    public record PlotCost(int amount, boolean bundle) {
+        public String item() { return bundle ? "Enchanted Compost" : "Compost"; }
+    }
+    public record Greenhouse(String id, String name, String rewardFormula, int maximum,
+                             List<Map<String, Integer>> costs) {}
     public record Catalogue(Map<String, List<Long>> milestones, List<Integer> cropUpgradeCosts,
                             Map<String, Visitor> visitors, Map<String, Composter> composter,
+                            Map<String, Plot> plots, Map<String, List<PlotCost>> plotCosts,
+                            Map<String, Greenhouse> greenhouse,
                             long loadedAt, boolean cached) {}
 }

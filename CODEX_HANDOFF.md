@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.765 Profile Wealth Breakdown.
+Last updated: 2026-07-30 for version 0.9.783 Exact Profile Garden Plots and Greenhouse.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.765`.
+- Current artifact version: `0.9.783`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3122,7 +3122,21 @@ Composter Speed, Multi Drop, Fuel Cap, Organic Matter Cap and Cost Reduction now
 
 Version `0.9.782` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `65ccc5f1568175ebd3007e2cbf8e6032faeee2c231c4f248f09dd2b4f6f261f9`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-180253-0.9.782/`; only `constellation-0.9.782.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-180253-0.9.782/`; only `constellation-0.9.782.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `a8062018fe`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.783 Exact Profile Garden Plots and Greenhouse
+
+`ProfileGardenData.java`, `ProfileGardenCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` complete the Plot and Greenhouse subpage depth. The plot catalogue/either-shaped cost codec, type-relative next-cost behavior, Greenhouse static upgrades, cumulative resource maps and reward formulas port SkyBlockPv modified-MIT `data/repo/StaticGardenData.kt`, `data/api/skills/farming/GardenProfile.kt` and `screens/windowed/tabs/farming/ComposterScreen.kt`. Required notices are beside the derived blocks.
+
+All 24 plots preserve their canonical number and 5×5 coordinate. Unlock state comes from `unlocked_plots_ids`; next cost uses the number already unlocked within Beginner, Intermediate, Advanced or Expert exactly like the licensed view. Plain numeric costs mean Compost and bundled costs mean Enchanted Compost. Locked rows, coordinates and the zero-to-24 limit are independent.
+
+Growth Speed, Crop Yield and Plot Limit show exact level out of 9, 9 and 2, current reward, cumulative resources paid and full maximum resources. Maximum rewards are 50%, 20% and +2 plots. Each percentage upgrade totals 15,900 Copper, 20 Compost and 15 Enchanted Compost; Plot Limit totals 30 Enchanted Compost and 250 Ethereal Vines. Reward and cost details are independent.
+
+The live July 30 probe validated 24 unique plot numbers/locations; four cost tiers containing 24 entries; and three Greenhouse definitions containing 9, 9 and 2 levels. It was archived under `~/Desktop/To-Delete/constellation-probes/20260730-180735-garden-plots-greenhouse/`. These resources join the existing all-or-nothing validated Garden cache, so old partial caches refresh and core endpoint records remain available if the catalogue cannot load.
+
+Version `0.9.783` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `606e8953279c48ee3f2865580a3062ccfd3f7aa0c9000fa90bf1f2a5c63bf9cc`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181142-0.9.783/`; only `constellation-0.9.783.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

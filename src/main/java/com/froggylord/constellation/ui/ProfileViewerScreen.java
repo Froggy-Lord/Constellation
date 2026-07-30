@@ -847,12 +847,45 @@ public final class ProfileViewerScreen extends Screen {
                         + (upgrade.copperTotal() > 0 ? "  " + upgrade.copperPaid() + "/"
                             + upgrade.copperTotal() + " Copper" : "") : ""));
         }
+        if (cfg.profileGardenShowPlots) {
+            rows.add(row("Garden plots", values ? data.unlockedPlots() + "/24 unlocked" : ""));
+            int limit = Math.clamp(cfg.profileGardenPlotLimit, 0, 24);
+            int shown = 0;
+            for (ProfileGardenCalculator.Plot plot : data.plots()) {
+                if (!cfg.profileGardenShowLockedPlots && !plot.unlocked()) continue;
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = plot.unlocked() ? "Unlocked" : plot.nextCostAmount() > 0
+                    ? "Next " + title(plot.type()) + " unlock: " + plot.nextCostAmount() + " " + plot.nextCostItem()
+                    : "Locked";
+                if (cfg.profileGardenShowPlotCoordinates)
+                    value += "  grid " + plot.x() + "," + plot.z();
+                rows.add(new Row("  Plot " + plot.number(), values ? value : "",
+                    plot.unlocked() ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED));
+            }
+        }
         if (cfg.profileGardenShowGreenhouse) {
             rows.add(row("Greenhouse spaces", values ? (data.greenhouseSlots() + 12) + "/100" : ""));
-            for (ProfileGardenCalculator.Upgrade upgrade : data.greenhouseUpgrades())
-                rows.add(row("  " + upgrade.name(), values ? "Level " + upgrade.level() : ""));
+            for (ProfileGardenCalculator.GreenhouseUpgrade upgrade : data.greenhouseUpgrades()) {
+                String value = "Level " + upgrade.level()
+                    + (upgrade.maximum() > 0 ? "/" + upgrade.maximum() : "");
+                if (cfg.profileGardenShowGreenhouseRewards)
+                    value += "  " + (upgrade.id().equals("PLOT_LIMIT") ? "+" + upgrade.reward() + " plots"
+                        : "+" + upgrade.reward() + "%");
+                if (cfg.profileGardenShowGreenhouseCosts && !upgrade.total().isEmpty())
+                    value += "  paid " + gardenCost(upgrade.paid()) + " / " + gardenCost(upgrade.total());
+                rows.add(row("  " + upgrade.name(), values ? value : ""));
+            }
         }
         return rows;
+    }
+
+    private static String gardenCost(java.util.Map<String, Integer> costs) {
+        if (costs.isEmpty()) return "none";
+        return costs.entrySet().stream()
+            .sorted(java.util.Map.Entry.comparingByKey())
+            .map(entry -> whole(entry.getValue()) + " " + title(entry.getKey()))
+            .collect(java.util.stream.Collectors.joining(", "));
     }
 
     // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/rift/MainRiftScreen.kt
