@@ -12,6 +12,7 @@ import com.froggylord.constellation.api.ProfileMinionCalculator;
 import com.froggylord.constellation.api.ProfileMiningCalculator;
 import com.froggylord.constellation.api.ProfileMuseumData;
 import com.froggylord.constellation.api.ProfileCrimsonCalculator;
+import com.froggylord.constellation.api.ProfileGardenCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -39,7 +40,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -71,6 +72,10 @@ public final class ProfileViewerScreen extends Screen {
     private String museumError = "";
     private boolean museumLoading;
     private int museumProfile = -1;
+    private ProfileViewerApi.GardenResult gardenResult;
+    private String gardenError = "";
+    private boolean gardenLoading;
+    private int gardenProfile = -1;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -120,7 +125,7 @@ public final class ProfileViewerScreen extends Screen {
         }
         int tx = 12;
         for (int i = 0; i < TABS.length; i++) {
-            int bw = font.width(TABS[i]) + 16;
+            int bw = font.width(TABS[i]) + 10;
             chip(g, tx, 80, bw, TABS[i], i == tab, mx, my);
             tx += bw + 4;
         }
@@ -154,6 +159,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 12) {
             drawCrimson(g);
+            return;
+        }
+        if (tab == 13) {
+            drawGarden(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -696,6 +705,103 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/farming/FarmingScreen.kt, CropScreen.kt, ComposterScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawGarden(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileGarden) {
+            g.text(font, "Garden viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if ((gardenResult == null || gardenProfile != profileIndex) && !gardenLoading && gardenError.isEmpty())
+            startGarden(false);
+        if (gardenLoading && gardenResult == null) {
+            g.text(font, "Loading Garden...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (gardenResult == null || gardenProfile != profileIndex) {
+            g.text(font, gardenError.isEmpty() ? "Garden data is unavailable." : gardenError,
+                14, 112, 0xFFFF7777, false);
+            return;
+        }
+        drawRows(g, gardenDisplayRows(true));
+    }
+
+    private ProfileGardenCalculator.Result gardenRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileGardenCalculator.calculate(member(profile()), gardenResult,
+            cfg.profileGardenCropSort, cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors);
+    }
+
+    private List<Row> gardenDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileGardenCalculator.Result data = gardenRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileGardenShowSummary) {
+            String level = "Level " + data.gardenLevel() + "  " + whole(data.gardenXp()) + " XP";
+            if (data.levelRequired() > 0)
+                level += "  " + whole(data.levelRequired() - data.levelProgress()) + " left";
+            rows.add(row("Garden", values ? level : ""));
+            rows.add(row("Copper", values ? whole(data.copper()) : ""));
+            rows.add(row("Plots unlocked", values ? Integer.toString(data.unlockedPlots()) : ""));
+            rows.add(row("Barn skin", values ? title(data.selectedBarnSkin()) + "  "
+                + data.unlockedBarnSkins() + " unlocked" : ""));
+            rows.add(row("Larva consumed", values ? data.larvaConsumed() + "/5" : ""));
+            rows.add(row("Crops collected", values ? whole(data.cropsCollected()) : ""));
+        }
+        if (cfg.profileGardenShowCrops) {
+            int limit = Math.clamp(cfg.profileGardenCropLimit, 0, 100);
+            int shown = 0;
+            for (ProfileGardenCalculator.Crop crop : data.crops()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = whole(crop.collected()) + " collected";
+                if (cfg.profileGardenShowCropUpgrades) value += "  upgrade " + crop.upgrade() + "/9";
+                rows.add(new Row((crop.unknown() ? "Unknown  " : "") + crop.name(), values ? value : "",
+                    crop.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            }
+        }
+        if (cfg.profileGardenShowVisitors) {
+            rows.add(row("Visitor offers completed", values ? whole(data.visitorsCompleted()) : ""));
+            rows.add(row("Unique visitors served", values ? whole(data.uniqueVisitors()) : ""));
+            if (cfg.profileGardenShowVisitorBreakdown) {
+                int limit = Math.clamp(cfg.profileGardenVisitorLimit, 0, 200);
+                int shown = 0;
+                for (ProfileGardenCalculator.Visitor visitor : data.visitors()) {
+                    if (limit > 0 && shown >= limit) break;
+                    shown++;
+                    rows.add(row("  " + visitor.name(), values
+                        ? visitor.completed() + " completed  " + visitor.visits() + " visits" : ""));
+                }
+            }
+        }
+        if (cfg.profileGardenShowContests) {
+            rows.add(row("Jacob contests", values ? data.contests() + " participated  "
+                + data.claimedContests() + " claimed" : ""));
+            rows.add(row("Jacob medals", values ? data.bronzeMedals() + " bronze  " + data.silverMedals()
+                + " silver  " + data.goldMedals() + " gold" : ""));
+            rows.add(row("Farming cap upgrades", values ? whole(data.farmingCapUpgrades()) : ""));
+            rows.add(row("Double Drops upgrades", values ? whole(data.doubleDropUpgrades()) : ""));
+            rows.add(row("Personal Bests perk", values ? (data.personalBests() ? "Unlocked" : "Locked") : ""));
+        }
+        if (cfg.profileGardenShowComposter) {
+            rows.add(row("Composter storage", values ? compact(data.organicMatter()) + " organic  "
+                + compact(data.fuel()) + " fuel  " + compact(data.compostUnits()) + " compost" : ""));
+            rows.add(row("Compost items", values ? whole(data.compostItems()) : ""));
+            rows.add(row("Composter conversion ticks", values ? whole(data.conversionTicks()) : ""));
+            rows.add(row("Composter last save", values ? date(data.composterLastSave()) : ""));
+            if (cfg.profileGardenShowComposterUpgrades)
+                for (ProfileGardenCalculator.Upgrade upgrade : data.composterUpgrades())
+                    rows.add(row("  " + upgrade.name(), values ? "Level " + upgrade.level() : ""));
+        }
+        if (cfg.profileGardenShowGreenhouse) {
+            rows.add(row("Greenhouse spaces", values ? (data.greenhouseSlots() + 12) + "/100" : ""));
+            for (ProfileGardenCalculator.Upgrade upgrade : data.greenhouseUpgrades())
+                rows.add(row("  " + upgrade.name(), values ? "Level " + upgrade.level() : ""));
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -927,7 +1033,7 @@ public final class ProfileViewerScreen extends Screen {
             }
             x = 12;
             for (int i = 0; i < TABS.length; i++) {
-                int bw = font.width(TABS[i]) + 16;
+                int bw = font.width(TABS[i]) + 10;
                 if (inside(mx, my, x, 80, bw, 16)) {
                     tab = i; scroll = 0;
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
@@ -935,6 +1041,7 @@ public final class ProfileViewerScreen extends Screen {
                     if (tab == 7 && bestiaryData == null) startBestiary(false);
                     if (tab == 8 && collectionData == null) startCollections(false);
                     if (tab == 11 && (museumResult == null || museumProfile != profileIndex)) startMuseum(false);
+                    if (tab == 13 && (gardenResult == null || gardenProfile != profileIndex)) startGarden(false);
                     return true;
                 }
                 x += bw + 4;
@@ -989,6 +1096,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 12) {
             int max = Math.max(0, crimsonDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 13 && gardenResult != null && gardenProfile == profileIndex) {
+            int max = Math.max(0, gardenDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
@@ -1063,6 +1175,7 @@ public final class ProfileViewerScreen extends Screen {
                 if (tab == 7) startBestiary(refresh);
                 if (tab == 8) startCollections(refresh);
                 if (tab == 11) startMuseum(refresh);
+                if (tab == 13) startGarden(refresh);
             }
         }));
     }
@@ -1232,6 +1345,30 @@ public final class ProfileViewerScreen extends Screen {
             }));
     }
 
+    private void startGarden(boolean refresh) {
+        if (result == null || gardenLoading || !ConstellationClient.cfg().lyra.profileGarden) return;
+        int requestedProfile = profileIndex;
+        String profileId = string(profile(), "profile_id", "");
+        gardenLoading = true;
+        gardenError = "";
+        ProfileViewerApi.loadGarden(profileId, refresh)
+            .whenComplete((loaded, failure) -> Minecraft.getInstance().execute(() -> {
+                if (requestedProfile != profileIndex) {
+                    gardenLoading = false;
+                    return;
+                }
+                gardenLoading = false;
+                if (failure == null) {
+                    gardenResult = loaded;
+                    gardenProfile = requestedProfile;
+                } else {
+                    gardenResult = null;
+                    gardenProfile = -1;
+                    gardenError = "Garden data is unavailable.";
+                }
+            }));
+    }
+
     private void resetItems() {
         itemResult = null;
         itemLoading = false;
@@ -1246,6 +1383,10 @@ public final class ProfileViewerScreen extends Screen {
         museumLoading = false;
         museumProfile = -1;
         museumError = "";
+        gardenResult = null;
+        gardenLoading = false;
+        gardenProfile = -1;
+        gardenError = "";
     }
 
     private JsonObject profile() { return result.profiles().get(Math.clamp(profileIndex, 0, result.profiles().size() - 1)).getAsJsonObject(); }

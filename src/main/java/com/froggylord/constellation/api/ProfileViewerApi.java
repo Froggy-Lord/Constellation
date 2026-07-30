@@ -27,6 +27,7 @@ public final class ProfileViewerApi {
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static final Map<UUID, Cached> CACHE = new ConcurrentHashMap<>();
     private static final Map<String, CachedMuseum> MUSEUM_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, CachedGarden> GARDEN_CACHE = new ConcurrentHashMap<>();
     private static volatile String key;
 
     private ProfileViewerApi() {}
@@ -77,6 +78,32 @@ public final class ProfileViewerApi {
                 long time = System.currentTimeMillis();
                 MUSEUM_CACHE.put(cacheKey, new CachedMuseum(member, special.ids(), special.failures(), time));
                 return new MuseumResult(member, special.ids(), special.failures(), time, false);
+            } catch (Exception e) {
+                throw new RuntimeException(readable(e), e);
+            }
+        });
+    }
+
+    // Portions of this code are from the SkyBlockPv mod.
+    // ported from SkyBlockPv (modified MIT): api/CachedApis.kt, data/api/skills/farming/GardenProfile.kt
+    public static CompletableFuture<GardenResult> loadGarden(String profileId, boolean refresh) {
+        String cleanProfile = profileId == null ? "" : profileId.replace("-", "");
+        if (!cleanProfile.matches("[0-9a-fA-F]{32}"))
+            return CompletableFuture.failedFuture(new IllegalArgumentException("This profile has no valid Garden identifier."));
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                long ttl = Math.clamp(ConstellationClient.cfg().lyra.profileCacheMinutes, 1, 60) * 60_000L;
+                CachedGarden cached = GARDEN_CACHE.get(cleanProfile);
+                if (!refresh && cached != null && System.currentTimeMillis() - cached.time < ttl)
+                    return new GardenResult(cached.garden, cached.time, true);
+                ensureAuthenticated(false);
+                JsonObject response = get("/garden/" + cleanProfile);
+                JsonObject garden = response.has("garden") && response.get("garden").isJsonObject()
+                    ? response.getAsJsonObject("garden") : new JsonObject();
+                if (garden.isEmpty()) throw new IllegalStateException("No Garden data was returned for this profile.");
+                long time = System.currentTimeMillis();
+                GARDEN_CACHE.put(cleanProfile, new CachedGarden(garden, time));
+                return new GardenResult(garden, time, false);
             } catch (Exception e) {
                 throw new RuntimeException(readable(e), e);
             }
@@ -139,7 +166,9 @@ public final class ProfileViewerApi {
     public record Result(String name, UUID uuid, JsonArray profiles, long fetchedAt, boolean cached) {}
     public record MuseumResult(JsonObject member, java.util.Set<String> specialIds, int specialFailures,
                                long fetchedAt, boolean cached) {}
+    public record GardenResult(JsonObject garden, long fetchedAt, boolean cached) {}
     private record Cached(JsonArray profiles, long time) {}
     private record CachedMuseum(JsonObject member, java.util.Set<String> specialIds, int specialFailures, long time) {}
+    private record CachedGarden(JsonObject garden, long time) {}
     private record GameProfile(String name, UUID uuid) {}
 }

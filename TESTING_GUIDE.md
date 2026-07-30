@@ -2286,3 +2286,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Test `profileCrimsonHideZeroKuudra`, `profileCrimsonHideUnattemptedDojo`, both limits and DEFAULT/COMPLETIONS/WAVE/NAME or DEFAULT/POINTS/TIME/NAME sorts. Expected: only the intended rows change and scrolling remains bounded.
 - [ ] Switch between profiles. Expected: all Crimson rows update immediately from the selected member and no state leaks from the previous profile.
 - [ ] Open a profile without `nether_island_player_data`, then disable `profileCrimson`. Expected: readable unavailable and disabled messages appear without a crash.
+
+### Profile Garden
+
+- [ ] Enable `profileGarden`, open `/pv` and select Garden. Expected: the separate Garden request loads asynchronously for the selected profile while the screen remains responsive.
+- [ ] Compare Garden level and XP, Copper, unlocked plots, selected/unlocked barn skins and Larva with the in-game Garden. Expected: every value matches and level progress targets the next exact cumulative threshold.
+- [ ] Compare all standard crops. Expected: Wheat through Wild Rose show exact lifetime collection totals and crop-upgrade levels; future unknown crop IDs remain visible and marked.
+- [ ] Toggle crop-upgrade details, zero-crop hiding, DEFAULT/COLLECTED/UPGRADE/NAME sorting and the crop limit. Expected: rows change independently without changing totals.
+- [ ] Compare visitor totals and several visitors. Expected: total offers, unique visitors, per-NPC visits/completions, zero hiding and the visitor limit match the Garden API.
+- [ ] Compare Jacob contests, claimed contests, Bronze/Silver/Gold medals, Farming cap, Double Drops and Personal Bests perk. Expected: each matches the profile.
+- [ ] Compare organic matter, fuel, compost units/items, conversion ticks, last save and all five composter upgrades. Expected: exact stored values and levels appear.
+- [ ] Compare greenhouse spaces and Growth Speed, Yield and Plot Limit upgrades. Expected: spaces include the twelve initial slots and cap at 100.
+- [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
+- [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.

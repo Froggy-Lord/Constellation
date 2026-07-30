@@ -33,6 +33,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Museum supports category/search/status filters, four sorts, limits, borrowed-item policy, cache age and independent detail controls
 - Crimson shows faction reputation and ranks, unlocked Kuudra tier, completions, waves and collection progress
 - Crimson shows every Dojo test, grade and time plus total points and belt progression, with independent filters, sorts and limits
+- Garden loads the separate authenticated profile endpoint and shows exact level progress, Copper, plots, skins and Larva
+- Garden includes every crop total/upgrade, visitor history, Jacob contests/medals/perks, composter state/upgrades and greenhouse progression
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

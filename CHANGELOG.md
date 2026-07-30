@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.776 (2026-07-30) — Complete Profile Garden Progression
+
+- added the separately authenticated Garden endpoint with profile-safe caching and refresh
+- added exact Garden level progress, Copper, plots, barn skins, Larva and all crop totals/upgrades
+- added visitor visits/completions, Jacob contests, medals, perks and configurable breakdowns
+- added complete composter storage/state/upgrades and greenhouse spaces/upgrades
+- added independent sections, zero-state hiding, limits, crop sorting and unknown future API rows
+
 ## 0.9.775 (2026-07-30) — Complete Profile Crimson Isle Progression
 
 - added selected faction plus Mage and Barbarian reputation, rank, next rank and highest unlocked Kuudra tier

@@ -3028,7 +3028,21 @@ The profile page needs no extra endpoint and switches immediately with the selec
 
 Version `0.9.775` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `6c9cff32cad5b8349c80965abaa9df72a7a56c5fab7e10d815c3cd1c2a04154b`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-171501-0.9.775/`; only `constellation-0.9.775.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-171501-0.9.775/`; only `constellation-0.9.775.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `4246aca9ed`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.776 Complete Profile Garden Progression
+
+`ProfileGardenCalculator.java`, `ProfileViewerApi.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the complete persistent Garden page. The separately authenticated `/garden/{profileId}` request, profile-ID cache, Garden parser, cumulative level model, crop resources/upgrades, visitor commissions, composter and greenhouse fields port SkyBlockPv modified-MIT `api/CachedApis.kt`, `data/api/skills/farming/GardenProfile.kt`, `FarmingData.kt`, and the `FarmingScreen.kt`, `CropScreen.kt` and `ComposterScreen.kt` views. Required notices are beside every derived block.
+
+The page combines that endpoint with `garden_player_data` and `jacobs_contest` from the selected profile member. It shows exact cumulative Garden XP level/progress, Copper, Larva, unlocked plots, selected/unlocked barn skins and aggregate crop collection. All 13 canonical crop IDs from Wheat through Wild Rose show lifetime collection and upgrade level; unknown future crop IDs remain visible and marked. Crops support zero hiding, four sorts and a limit.
+
+Visitor totals include completed offers, unique NPCs and unioned per-visitor visit/completion records with zero hiding and a configurable limit. Jacob records include participation, claimed rewards, Bronze/Silver/Gold inventory, Farming cap, Double Drops and Personal Bests unlock. Composter rows include organic matter, fuel, compost units/items, conversion ticks, last save and all five upgrades. Greenhouse rows include the twelve base spaces, unlocked slots and all three upgrade levels.
+
+Each section and subordinate detail can be hidden independently. Garden cache lifetime follows the existing one-to-60-minute profile setting, profile switching is isolated, and Refresh bypasses it. The profile page is read-only.
+
+Version `0.9.776` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `94b5b6c494ca9b8b2d1c481eeebcbbcaac402ada21192fb51a175a283198f6b4`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172224-0.9.776/`; only `constellation-0.9.776.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 
