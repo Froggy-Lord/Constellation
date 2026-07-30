@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.741 Complete Rift Mountaintop Suite.
+Last updated: 2026-07-30 for version 0.9.742 Complete Rift Wyld Woods Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.741`.
+- Current artifact version: `0.9.742`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2606,4 +2606,16 @@ Rose's End guidance uses the exact source AABB `(25,165,90)` to `(52,185,120)` a
 
 Version `0.9.741` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `308aa6f358490aa63e71f484300b44d86c054a5d0cb9abd5426c76b8e20c6d78`.
 
-The previous `0.9.740` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123056-0.9.741/`; only `constellation-0.9.741.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.
+The previous `0.9.740` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123056-0.9.741/`; only `constellation-0.9.741.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `8032155ef1`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.742 Complete Rift Wyld Woods Suite
+
+`AndromedaWyldWoods.java`, `AndromedaConfig.java` and `AndromedaRift.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/wyldwoods/RiftLarva.kt`, `RiftOdonata.kt`, `ShyCruxWarnings.kt` and all three Wyld Woods configuration classes. The exact texture hashes come from SkyHanni Repo MIT `constants/Skulls.json`: Larva `4ceb0ed8fc2272b3d3d820676d52a38e7b2e8da8c687a233e0dabaa16c0e96df` and Odonata `9fd806defdfdf59b1f2609c8ee364666de66127a623415b5430c9358c601ef7c`. Defaults match the live 26.1.2 profile: Larvas, Odonatas and Shy warnings enabled with source blue alpha-120 target colors.
+
+Larvas require an ArmorStand wearing the exact head texture; Odonatas require one holding the exact texture in either hand. The live-default held-item gates require `LARVA_HOOK` and `EMPTY_ODONATA_BOTTLE`, respectively. Both retain the source's whole-Rift scope because valid target textures are authoritative, while bounded ten-to-150-block range prevents unnecessary rendering. Box, beam, label, distance, color and wall state are independently configurable per target.
+
+Shy recognition accepts only the source's four exact cleaned names: `I'm ugly! :(`, `Eek!`, `Don't look at me!` and `Look away!`. Detection is bounded from three to twenty blocks and repeats at a configurable 50-to-2,000-millisecond interval, defaulting to the source's 150 milliseconds. Title is live-default; subtitle, local chat, sound, entity box and label are optional independent channels. `/wyldwoods` exposes local status, range/cooldown tuning and primary toggles. No Wyld Woods helper attacks, moves, aims, clicks, sends server chat, issues a command or constructs a gameplay packet.
+
+Version `0.9.742` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `574cccc3e3757cca8f1af043ede6ff6a3ec78f7d15426caf224197740265316f`.
+
+The previous `0.9.741` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123753-0.9.742/`; only `constellation-0.9.742.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.

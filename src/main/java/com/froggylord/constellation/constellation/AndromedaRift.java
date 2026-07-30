@@ -44,6 +44,7 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaColosseum.init(cfg);
         AndromedaStillgore.init(cfg);
         AndromedaMountaintop.init(cfg);
+        AndromedaWyldWoods.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
@@ -53,6 +54,7 @@ public class AndromedaRift extends BaseConstellation {
         registerRenderer(AndromedaColosseum::draw);
         registerRenderer(AndromedaStillgore::draw);
         registerRenderer(AndromedaMountaintop::draw);
+        registerRenderer(AndromedaWyldWoods::draw);
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AndromedaRift extends BaseConstellation {
             AndromedaMountaintop::evolutionHud,HudPosition.of(126,48),()->cfg.enabled&&cfg.mountainTimiteEvolution));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);AndromedaMountaintop.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);AndromedaMountaintop.registerCommands(dispatcher);AndromedaWyldWoods.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

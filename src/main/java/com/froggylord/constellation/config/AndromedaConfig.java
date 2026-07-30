@@ -346,5 +346,35 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean mountainUbikChat = true;
     public boolean mountainUbikSound = true;
     public long mountainUbikReadyAt = -1;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/area/wyldwoods/
+    public boolean wyldLarvas = true;
+    public boolean wyldLarvaRequireHook = true;
+    public boolean wyldLarvaBox = true;
+    public boolean wyldLarvaBeam = false;
+    public boolean wyldLarvaLabel = false;
+    public boolean wyldLarvaDistance = false;
+    public boolean wyldLarvaThroughWalls = true;
+    public int wyldLarvaRange = 60;
+    public int wyldLarvaColor = 0x780D31FF;
+    public boolean wyldOdonata = true;
+    public boolean wyldOdonataRequireBottle = true;
+    public boolean wyldOdonataBox = true;
+    public boolean wyldOdonataBeam = false;
+    public boolean wyldOdonataLabel = false;
+    public boolean wyldOdonataDistance = false;
+    public boolean wyldOdonataThroughWalls = true;
+    public int wyldOdonataRange = 60;
+    public int wyldOdonataColor = 0x780D31FF;
+    public boolean wyldShyWarning = true;
+    public boolean wyldShyTitle = true;
+    public boolean wyldShySubtitle = false;
+    public boolean wyldShyChat = false;
+    public boolean wyldShySound = false;
+    public boolean wyldShyBox = false;
+    public boolean wyldShyLabel = false;
+    public boolean wyldShyThroughWalls = true;
+    public int wyldShyRange = 8;
+    public int wyldShyAlertCooldownMillis = 150;
+    public int wyldShyColor = 0xFFFFFF55;
     public java.util.Map<String, java.util.Set<String>> riftFoundSouls = new java.util.LinkedHashMap<>();
 }

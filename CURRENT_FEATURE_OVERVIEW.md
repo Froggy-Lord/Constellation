@@ -69,6 +69,11 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Rose's End flowerpot drop box/beam/label shown only inside its parkour bounds
 - Profile-persistent Ubik cooldown correction, ready notification, movable HUD, ready-only mode and post-game click-to-close
 - Full `/mountaintop` status, transient/tracker reset, range/timing and primary feature controls
+- Exact Rift Larva head-texture recognition, optionally limited to holding the Larva Hook
+- Exact Odonata held-head texture recognition, optionally limited to holding an Empty Odonata Bottle
+- Independent Larva/Odonata boxes, beams, labels, distance, range, color and wall behavior
+- Exact four-name Shy Crux proximity warning with independent title, subtitle, chat, sound, box and label channels
+- Configurable Shy range/cooldown and full `/wyldwoods` status, timing and primary feature controls
 - Crux Talisman progress and bonuses
 - Motes and area information
 - West Village and Rift activity helpers

@@ -1882,3 +1882,18 @@ Enable Andromeda and enter any Mountaintop subarea. Run `/mountaintop`; it shoul
 - [ ] Let Ubik become ready. Expected: one local chat/sound reminder fires according to settings, the HUD shows Ready, and ready-only mode hides all earlier countdown state.
 - [ ] Run `/mountaintop reset` and `/mountaintop resettracker`. Expected: transient combat/ore state and persistent collection totals reset independently.
 - [ ] Move to a non-Mountaintop Rift area. Expected: all Mountaintop world and HUD overlays hide.
+
+## Rift Wyld Woods suite
+
+Enable Andromeda and enter the Rift. Run `/wyldwoods`; it should report Larva, Odonata and Shy warning state locally.
+
+- [ ] Hold a Larva Hook near tree Larvas. Expected: only armor stands wearing the exact Rift Larva head receive the configured highlight.
+- [ ] Switch away from the Larva Hook. Expected: Larva guidance hides immediately with the live-default require-hook option; disabling that option makes it always visible in the Rift.
+- [ ] Hold an Empty Odonata Bottle near flying Odonatas. Expected: only armor stands holding the exact Odonata head receive guidance.
+- [ ] Switch away from the bottle. Expected: Odonata guidance hides immediately with require-bottle enabled.
+- [ ] Independently toggle Larva and Odonata box, beam, label, distance and through-wall options and change their range/color. Expected: the two target types do not share presentation state.
+- [ ] Approach a Shy Crux displaying `I'm ugly! :(`, `Eek!`, `Don't look at me!` or `Look away!`. Expected: the title refreshes while it remains inside the default eight-block range.
+- [ ] Enable Shy subtitle, chat, sound, box and label one at a time. Expected: each channel works independently and uses the configured alert color.
+- [ ] Change Shy range between three and twenty blocks and cooldown between 50 and 2,000 milliseconds. Expected: detection and repeat frequency remain bounded to those values.
+- [ ] Approach another named entity that is not one of the exact four phrases. Expected: it never triggers the Shy warning.
+- [ ] Leave the Rift or disable Andromeda. Expected: all Larva, Odonata and Shy rendering/alerts stop immediately.

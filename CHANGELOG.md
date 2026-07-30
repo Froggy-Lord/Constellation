@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.742 (2026-07-30) — Complete Rift Wyld Woods Suite
+
+- replaced the inactive Wyld Woods placeholder toggles with exact texture-identified Larva and Odonata guidance
+- added held Larva Hook and Empty Odonata Bottle gating plus independent box, beam, label, distance, range, color and wall controls
+- added exact four-name Shy Crux proximity recognition with configurable title, subtitle, chat, sound and world guidance channels
+- added bounded alert timing and complete `/wyldwoods` status, tuning and feature controls
+
 ## 0.9.741 (2026-07-30) — Complete Rift Mountaintop Suite
 
 - added Sun Gecko health, combo, combo-expiry and all seven modifier states plus separately configurable real/clone highlights
