@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.771 (2026-07-30) — Complete Profile Collections
+
+- added all 87 current Farming, Mining, Combat, Foraging, Fishing and Rift collections
+- added exact co-op totals, personal contribution, tiers, next thresholds, completion and upcoming unlocks
+- added category/search filtering, zero/maxed hiding, six sorting modes, limits and independent presentation controls
+- added validated official Hypixel resource caching with visible unknown future collection IDs
+
 ## 0.9.770 (2026-07-30) — Complete Profile Bestiary
 
 - added a full Bestiary page backed by the current MIT NEU family, category, bracket and cap catalogue

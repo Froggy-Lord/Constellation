@@ -7,6 +7,7 @@ import com.froggylord.constellation.api.ProfileSkillCalculator;
 import com.froggylord.constellation.api.ProfileSlayerCalculator;
 import com.froggylord.constellation.api.ProfilePetCalculator;
 import com.froggylord.constellation.api.ProfileBestiaryData;
+import com.froggylord.constellation.api.ProfileCollectionData;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -34,7 +35,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -58,6 +59,9 @@ public final class ProfileViewerScreen extends Screen {
     private ProfileBestiaryData.Catalogue bestiaryData;
     private String bestiaryError = "";
     private boolean bestiaryLoading;
+    private ProfileCollectionData.Catalogue collectionData;
+    private String collectionError = "";
+    private boolean collectionLoading;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -121,6 +125,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 7) {
             drawBestiary(g);
+            return;
+        }
+        if (tab == 8) {
+            drawCollections(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -318,6 +326,73 @@ public final class ProfileViewerScreen extends Screen {
                 g.fill(12, y, width - 12, y + 18, 0xA0181825);
                 g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
                 g.text(font, row.value, width - 19 - font.width(row.value), y + 6, row.color, false);
+            }
+            y += 21;
+        }
+        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
+    }
+
+    private void drawCollections(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileCollections) {
+            g.text(font, "Collections viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if (collectionData == null && !collectionLoading && collectionError.isEmpty()) startCollections(false);
+        if (collectionLoading && collectionData == null) {
+            g.text(font, "Loading Collections catalogue...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (collectionData == null) {
+            g.text(font, collectionError.isEmpty() ? "Collection data is unavailable." : collectionError,
+                14, 112, 0xFFFF7777, false);
+            return;
+        }
+        ProfileCollectionData.Result data = collectionRows();
+        if (!data.available()) {
+            g.text(font, "Collection API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        int decimals = Math.clamp(cfg.profileCollectionsDecimals, 0, 2);
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileCollectionsShowSummary) {
+            rows.add(row("Collection tiers", data.tiers() + "/" + data.maxTiers()));
+            rows.add(row("Maxed collections", data.maxed() + "/" + data.known()));
+            rows.add(row("Catalogue", data.known() + " collections  " + (collectionData.cached() ? "cached" : "current")));
+            if (data.unknown() > 0) rows.add(new Row("Uncatalogued collections", whole(data.unknown()), 0xFFFFAA55));
+        }
+        int limit = Math.clamp(cfg.profileCollectionsLimit, 0, 1000);
+        int shown = 0;
+        int unlockLimit = Math.clamp(cfg.profileCollectionsUnlockLimit, 0, 10);
+        for (ProfileCollectionData.Collection collection : data.collections()) {
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            String label = cfg.profileCollectionsShowCategory
+                ? collection.category() + "  " + collection.name() : collection.name();
+            StringBuilder value = new StringBuilder(collection.unknown() ? "Unknown tiers"
+                : "Tier " + collection.tier() + "/" + collection.maxTier());
+            if (cfg.profileCollectionsShowTotal) value.append("  ").append(compact(collection.total()));
+            if (cfg.profileCollectionsShowPersonal && collection.personal() != collection.total())
+                value.append("  ").append(compact(collection.personal())).append(" personal");
+            if (cfg.profileCollectionsShowCompletion && !collection.unknown())
+                value.append("  ").append(fixed(collection.completion() * 100, decimals)).append("%");
+            if (cfg.profileCollectionsShowNext && collection.nextThreshold() > 0)
+                value.append("  ").append(compact(collection.remaining())).append(" left");
+            rows.add(new Row(label, value.toString(), collection.unknown() ? 0xFFFFAA55
+                : collection.tier() >= collection.maxTier() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            if (cfg.profileCollectionsShowNextUnlocks && unlockLimit > 0 && !collection.nextUnlocks().isEmpty()) {
+                String unlocks = String.join(", ", collection.nextUnlocks().stream().limit(unlockLimit).toList());
+                rows.add(row("  Next unlock", unlocks));
+            }
+        }
+        int y = 108 - scroll;
+        for (Row row : rows) {
+            if (y > 98 && y < height - 22) {
+                g.fill(12, y, width - 12, y + 18, 0xA0181825);
+                g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
+                String value = font.width(row.value) > width / 2
+                    ? font.plainSubstrByWidth(row.value, width / 2 - 24) + "..." : row.value;
+                g.text(font, value, width - 19 - font.width(value), y + 6, row.color, false);
             }
             y += 21;
         }
@@ -561,6 +636,7 @@ public final class ProfileViewerScreen extends Screen {
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
                     if (tab == 6 && wealthProfile != profileIndex) startWealth();
                     if (tab == 7 && bestiaryData == null) startBestiary(false);
+                    if (tab == 8 && collectionData == null) startCollections(false);
                     return true;
                 }
                 x += bw + 4;
@@ -620,6 +696,18 @@ public final class ProfileViewerScreen extends Screen {
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
+        if (tab == 8 && collectionData != null) {
+            var cfg = ConstellationClient.cfg().lyra;
+            ProfileCollectionData.Result data = collectionRows();
+            int summary = cfg.profileCollectionsShowSummary ? (data.unknown() > 0 ? 4 : 3) : 0;
+            int shown = cfg.profileCollectionsLimit <= 0 ? data.collections().size()
+                : Math.min(data.collections().size(), cfg.profileCollectionsLimit);
+            int unlocks = cfg.profileCollectionsShowNextUnlocks && cfg.profileCollectionsUnlockLimit > 0
+                ? (int) data.collections().stream().limit(shown).filter(value -> !value.nextUnlocks().isEmpty()).count() : 0;
+            int max = Math.max(0, (summary + shown + unlocks) * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
         int max = Math.max(0, rows(profile(), member(profile())).size() * 21 - (height - 132));
         scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
         return true;
@@ -647,6 +735,7 @@ public final class ProfileViewerScreen extends Screen {
                 profileIndex = selectedIndex(loaded.profiles());
                 resetItems();
                 if (tab == 7) startBestiary(refresh);
+                if (tab == 8) startCollections(refresh);
             }
         }));
     }
@@ -706,6 +795,29 @@ public final class ProfileViewerScreen extends Screen {
             } else {
                 bestiaryData = null;
                 bestiaryError = "Bestiary catalogue is unavailable.";
+            }
+        }));
+    }
+
+    private ProfileCollectionData.Result collectionRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileCollectionData.calculate(collectionData, profile(),
+            result.uuid().toString().replace("-", ""), cfg.profileCollectionsCategory,
+            cfg.profileCollectionsSearch, cfg.profileCollectionsSort,
+            cfg.profileCollectionsHideZero, cfg.profileCollectionsHideMaxed);
+    }
+
+    private void startCollections(boolean refresh) {
+        if (collectionLoading || !ConstellationClient.cfg().lyra.profileCollections) return;
+        collectionLoading = true;
+        collectionError = "";
+        ProfileCollectionData.load(refresh).whenComplete((loaded, failure) -> Minecraft.getInstance().execute(() -> {
+            collectionLoading = false;
+            if (failure == null) {
+                collectionData = loaded;
+            } else {
+                collectionData = null;
+                collectionError = "Collection catalogue is unavailable.";
             }
         }));
     }

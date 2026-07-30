@@ -2208,3 +2208,19 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Refresh online, restart offline and corrupt a temporary copy of the cache. Expected: validated current data becomes a last-good cache, offline uses it, and incomplete data never replaces it.
 - [ ] Set cache age from one to 168 hours and press viewer Refresh. Expected: normal opens respect the TTL while Refresh attempts a bounded source update.
 - [ ] Disable `profileBestiary`. Expected: the tab reports disabled and starts no request.
+
+### Profile Collections
+
+- [ ] Enable `profileCollections`, open `/pv`, then select Collections. Expected: the official catalogue loads asynchronously and reports 87 collections across six categories.
+- [ ] Test a solo profile. Expected: total and personal amounts match and the redundant personal suffix stays hidden.
+- [ ] Test a co-op profile with contributions from multiple members. Expected: total equals the sum of every member while personal shows only the viewed player.
+- [ ] Compare collection tier, maximum, next threshold and remaining amount against Hypixel. Expected: exact official cumulative `amountRequired` values are used.
+- [ ] Check a collection below tier one, between tiers and maxed. Expected: tier and completion are exact and maxed rows turn amber.
+- [ ] Enable next unlocks and vary `profileCollectionsUnlockLimit` from zero to ten. Expected: zero hides unlock rows and positive values bound official unlock text without changing progression.
+- [ ] Test ALL and every named category, partial name/ID search, hide-zero and hide-maxed together. Expected: all filters compose and Rift collections remain separate.
+- [ ] Test CATEGORY, AMOUNT, TIER, REMAINING, COMPLETION and NAME sorts. Expected: ties are stable by display name and maxed rows sort last under REMAINING.
+- [ ] Set the result limit to zero and positive values. Expected: zero is unlimited and summary totals are unaffected.
+- [ ] Toggle total, personal, category, next, completion, unlock and summary rows plus zero-to-two decimals. Expected: each affects only its documented presentation.
+- [ ] Inject or encounter a collection ID newer than the catalogue. Expected: it remains visible in amber with its API amount and no guessed tier.
+- [ ] Refresh online and restart offline. Expected: current validated data becomes the last-good cache, offline keeps it and incomplete responses never replace it.
+- [ ] Disable `profileCollections`. Expected: the tab reports disabled and starts no collection request.

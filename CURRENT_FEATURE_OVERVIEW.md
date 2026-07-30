@@ -695,3 +695,14 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Category, kills, level, remaining or completion sorting and a configurable result limit
 - One-to-168-hour cache age, bounded network timeouts, validated last-good disk fallback and manual viewer refresh
 - No network work in rendering and no unknown family assigned to a guessed category or cap
+
+## Profile Collections
+
+- All 87 current official Hypixel collections across Farming, Mining, Combat, Foraging, Fishing and Rift
+- SkyBlockPv-compatible summation of every co-op member with separate viewed-player contribution
+- Exact tier, maximum, next threshold, remaining amount, total-cap completion and next-tier unlock text
+- Total/max family-tier and maxed-collection summaries calculated before filters
+- Category and ID/name search plus independent zero and maxed hiding
+- Category, amount, tier, remaining, completion or name sorting and a configurable result limit
+- One-to-168-hour validated official-resource cache with bounded timeouts and manual Refresh
+- Unknown future API collection IDs remain amber and visible without guessed tiers or categories

@@ -2960,7 +2960,19 @@ Every family sums all API mob aliases exactly once, then calculates its cap-boun
 
 The current NEU catalogue was parsed through Constellation's own validator and produced exactly 268 families across 19 categories. Version `0.9.770` then built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `bc9812f0a3a849ce0ff9d4b87599cbae2e5a6082334a158ecc8b11ed17c3ab87`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163102-0.9.770/`; only `constellation-0.9.770.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163102-0.9.770/`; only `constellation-0.9.770.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `090c572b1b`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.771 Complete Profile Collections
+
+`ProfileCollectionData.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Collections page. Resource parsing, exact tier requirements and progress behavior port Skyblocker LGPL `skyblock/profileviewer/utils/Collection.java` and `collections/GenericCategory.java`. Official-resource loading, collection models, per-member extraction, co-op summation and presentation port SkyBlockPv modified-MIT `api/CollectionAPI.kt`, `data/api/CollectionData.kt`, `api/data/profile/SkyBlockProfile.kt` and `screens/windowed/tabs/collection/CommonCollectionScreen.kt`; its required notice sits beside the implementation.
+
+The keyless official `https://api.hypixel.net/v2/resources/skyblock/collections` response is loaded asynchronously with eight/15-second timeouts. The loader requires a successful response, at least six categories and at least 80 collections before writing `config/constellation-collections.json`. Cache age is configurable from one to 168 hours, defaults to 24, and viewer Refresh requests current data while retaining a valid last-good response on failure. Constellation's own parser validated the live response as exactly 87 collections across six categories.
+
+Every co-op member's `collection` contribution is summed exactly as SkyBlockPv does, while the viewed member's contribution remains separately available. Official cumulative thresholds produce tier, maximum, next target, remaining amount, full-cap completion and next unlock text. Unknown IDs are not discarded or assigned guessed tiers. Summaries precede filters; category/search, zero/maxed, six sorts, limits, decimals and every detail group are configurable.
+
+Version `0.9.771` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `81b1c0848c98d053ee5089523f6f400cb6e1663032c20b5e8f5f6984e465fc12`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163850-0.9.771/`; only `constellation-0.9.771.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
 
 ## Required dedicated visual-design pass
 

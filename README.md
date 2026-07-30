@@ -67,6 +67,8 @@ the pet page uses the current licensed neu leveling data, including tier boost, 
 
 the bestiary page follows the current licensed neu family catalogue, aggregates every mob alias correctly and exposes levels, kills, deaths, next thresholds, completion, categories and uncatalogued api kills.
 
+the collections page follows hypixel's current official resource, sums co-op contributions correctly and shows personal contribution, exact tiers, next requirements and upcoming unlocks for all six categories.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.
