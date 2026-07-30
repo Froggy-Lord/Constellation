@@ -464,6 +464,15 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 - Remaining Garden progression depth
 - Additional non-dungeon gaps from the active 26.1.2 instance
+- Cohesive hand-designed icon pack and a focused visual pass over legacy configuration screens; preserve the chrome-free, translucent HUD editor
+
+## Rift-wide Progression
+
+- Crux Talisman inventory parsing with per-Crux tier/progress, total percentage, bonuses, compact-maxed mode and movable HUD
+- Punchcard Artifact session tracking with configurable artifact requirement, unpunched or punched player highlights, box/label/distance/range controls and movable count/remaining HUD
+- Missing Rift Guide entries marked directly in the guide menu
+- Optional Horsezooka horse-render hiding
+- Local `/riftprogress` status, reset, Boolean and numeric controls
 
 ## Scatha Mining
 

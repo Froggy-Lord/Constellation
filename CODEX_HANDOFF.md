@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.743 Rift Mirrorverse Dance and Craft Suite.
+Last updated: 2026-07-30 for version 0.9.744 Rift-wide Progression Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.743`.
+- Current artifact version: `0.9.744`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2630,4 +2630,16 @@ Craft scope is the exact normalized AABB from `(-117,51,-128)` to `(-108,58,-106
 
 Version `0.9.743` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, exactly 49 Dance Room instructions, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `ca32198d0fb3cdcbeed6977cb50d9888edcc2028e7051463df0343a49b06d1dc`.
 
-The previous `0.9.742` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-124552-0.9.743/`; only `constellation-0.9.743.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.
+The previous `0.9.742` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-124552-0.9.743/`; only `constellation-0.9.743.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `0213901869`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.744 Rift-wide Progression Suite
+
+`AndromedaEverywhere.java`, `RiftProgressHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java`, `EntityRenderDispatcherMixin.java` and `ItemProtectionScreenMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/everywhere/CruxTalismanDisplay.kt`, `PunchcardHighlight.kt`, `HighlightRiftGuide.kt`, `RiftHorsezookaHider.kt` and their configuration classes. Defaults match the live Froggy__Lord 26.1.2 profile: Crux and both Punchcard surfaces disabled, missing Rift Guide entry highlighting enabled, and Horsezooka hiding disabled.
+
+Crux tracking reads only a real `CRUX_TALISMAN` inventory item, parses tier/name/current/required or MAXED lore rows, extracts the Total Bonuses section, and exposes percentage, tier, bonus, compact-maxed and color controls through a movable HUD. It intentionally hides in Mirrorverse to match the source. Punchcard tracking is session-only and confirms a player only from Hypixel's successful or already-punched chat responses after the user attacks that real network player. The Artifact requirement, missing-item warning, normal/reverse highlight, count/remaining HUD, box, label, distance, range, wall state, color and reset are independently configurable.
+
+Rift Guide marking requires the exact slot-40 `To Rift Guide` signature and only outlines entries whose final lore line says `Not completed yet!`; optional `M` text can be disabled. Horsezooka filtering requires the exact held item ID and suppresses only Horse rendering while the player is in the Rift. No progression helper attacks, moves, aims, automatically clicks, sends chat, issues a server command, removes an entity or constructs a gameplay packet. `/riftprogress` exposes local status, session reset, range/limit and primary Boolean controls.
+
+Version `0.9.744` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `bdac68b9dd7aff4d41239e9c97e07dc384ad49281b2a660b6cd2e620a6d01613`.
+
+The previous `0.9.743` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-125425-0.9.744/`; only `constellation-0.9.744.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. A cohesive hand-designed icon pack and legacy UI visual pass remain requested upcoming work; preserve the existing translucent, chrome-free HUD editor.

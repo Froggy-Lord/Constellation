@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.744 (2026-07-30) — Rift-wide Progression Suite
+
+- ported SkyHanni's Crux Talisman progress/bonus display with compact-maxed, percentage, tier and color controls
+- ported Punchcard Artifact session tracking with unpunched/reverse player highlighting, movable count HUD, artifact guard and range/render controls
+- ported missing Rift Guide entry marking and the optional Horsezooka horse-render filter
+- added `/riftprogress` status, reset and primary option controls; all behavior is passive and Rift-gated
+
 ## 0.9.743 (2026-07-30) — Rift Mirrorverse Dance and Craft Suite
 
 - added the authoritative 49-step Dance Room sequence with exact sound-driven advancement, one-second countdown and failure reset

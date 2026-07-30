@@ -95,6 +95,7 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.AquilaHotmHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AquilaTunnelMaps.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AndromedaRiftCore.drawSoulMenuSlot(graphics, screen, slot);
+        com.froggylord.constellation.constellation.AndromedaEverywhere.drawGuideSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AndromedaMotes.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AndromedaWestVillage.drawSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt

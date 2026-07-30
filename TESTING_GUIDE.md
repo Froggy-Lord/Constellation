@@ -1916,3 +1916,16 @@ Enable Andromeda and enter Mirrorverse. Run `/mirrorverse`; it should report Dan
 - [ ] Enable Craft player hiding. Expected: other real players hide only while the local player is in the exact Craft Room bounds.
 - [ ] Approach unsupported mobs or supported mobs on the wrong side of the mirror plane. Expected: no mirrored guidance is produced.
 - [ ] Leave Mirrorverse or disconnect. Expected: Dance index/countdown and room flags clear, all hiding stops, and no stale Craft silhouettes remain.
+## Rift-wide Progression
+
+Enable Andromeda and enter the Rift. Run `/riftprogress`; it should report Crux, Punchcard, Guide and Horsezooka states locally without sending a server command.
+
+- [ ] Put a Crux Talisman with progress lore in your inventory and enable `/riftprogress option crux on`. Expected: the movable Crux Talisman HUD shows the parsed Crux rows and total percentage; it disappears outside the Rift and inside Mirrorverse.
+- [ ] Toggle `cruxcompact` and `bonuses`, then inspect a fully maxed talisman. Expected: compact mode reduces the display to MAXED while bonus rows independently follow their toggle.
+- [ ] Equip a Punchcard Artifact and enable `punchhighlight` and `punchhud`. Expected: eligible players inside the configured range are highlighted until a successful punch message confirms them; the HUD count updates.
+- [ ] Disable the Artifact requirement only for comparison. Expected: tracking remains available without the item. Re-enable it and remove the Artifact; tracking pauses and the bounded local warning appears.
+- [ ] Test reverse, remaining, box, label, distance and through-wall settings. Expected: each option changes only its named presentation behavior.
+- [ ] Run `/riftprogress resetpunchcard`. Expected: the current session set clears immediately. Disconnecting or changing worlds also starts a fresh session.
+- [ ] Open the Rift Guide. Expected: incomplete entries receive a colored border and optional `M`; completed entries and unrelated inventories are untouched.
+- [ ] Hold a Horsezooka with Horsezooka hiding enabled. Expected: horses stop rendering only while in the Rift and holding that exact item; no entities are removed or modified.
+- [ ] Leave the Rift or disable Andromeda. Expected: both HUDs, player highlights, Guide marks and Horsezooka filtering stop immediately.

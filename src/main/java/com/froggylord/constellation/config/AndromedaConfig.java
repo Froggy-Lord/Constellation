@@ -402,5 +402,32 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean mirrorCraftThroughWalls = true;
     public int mirrorCraftRange = 25;
     public int mirrorCraftColor = 0x8055FFFF;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/CruxTalismanDisplayConfig.kt, PunchcardConfig.kt, RiftConfig.kt
+    public boolean riftCruxDisplay = false;
+    public boolean riftCruxCompactMaxed = false;
+    public boolean riftCruxBonuses = true;
+    public boolean riftCruxShowPercent = true;
+    public boolean riftCruxShowTier = true;
+    public int riftCruxProgressColor = 0xFF55FF55;
+    public int riftCruxMaxedColor = 0xFF55FF55;
+    public boolean riftPunchHighlight = false;
+    public boolean riftPunchHud = false;
+    public boolean riftPunchCompact = false;
+    public boolean riftPunchRemaining = false;
+    public boolean riftPunchReverseHighlight = false;
+    public boolean riftPunchBox = true;
+    public boolean riftPunchLabel = false;
+    public boolean riftPunchDistance = false;
+    public boolean riftPunchThroughWalls = true;
+    public boolean riftPunchRequireArtifact = true;
+    public boolean riftPunchMissingWarning = true;
+    public int riftPunchRange = 80;
+    public int riftPunchLimit = 20;
+    public int riftPunchColor = 0xA37A0B8F;
+    public java.util.Set<String> riftPunchedPlayers = new java.util.LinkedHashSet<>();
+    public boolean riftGuideHighlights = true;
+    public boolean riftGuideHighlightText = true;
+    public int riftGuideMissingColor = 0xFFFFFF55;
+    public boolean riftHorsezookaHider = false;
     public java.util.Map<String, java.util.Set<String>> riftFoundSouls = new java.util.LinkedHashMap<>();
 }
