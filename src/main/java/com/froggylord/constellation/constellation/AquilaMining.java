@@ -62,6 +62,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaDeepCavernsGuide.init(cfg);
         AquilaScathaMining.init(cfg);
         AquilaCrystalWaypoints.init(cfg);
+        AquilaHotmHelper.init(cfg);
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) AquilaOrderedWaypoints.draw(context); });
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaScathaMining.draw(context); AquilaCrystalWaypoints.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
@@ -111,6 +112,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.scathaAlert && c.scathaCounter && c.scathaMiningSuite && c.scathaHud));
         hud.register(new com.froggylord.constellation.hud.CrystalWaypointsHudWidget(HudPosition.of(78, 222),
             () -> c.enabled && c.wishingCompassHelper && c.crystalWaypointsSuite && c.crystalWaypointsHud));
+        hud.register(new com.froggylord.constellation.hud.HotmHudWidget(HudPosition.of(78, 236),
+            () -> c.enabled && c.hotmHelper && c.hotmHelperHud));
     }
 
     @Override
@@ -131,6 +134,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaDeepCavernsGuide.registerCommands(dispatcher);
         AquilaScathaMining.registerCommands(dispatcher);
         AquilaCrystalWaypoints.registerCommands(dispatcher);
+        AquilaHotmHelper.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

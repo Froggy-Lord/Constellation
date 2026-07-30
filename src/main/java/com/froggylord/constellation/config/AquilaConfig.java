@@ -475,4 +475,29 @@ public class AquilaConfig extends BaseConfigGroup {
     public int forgeReadyColor = 0xFF55FF55;
     public int forgeEmptyColor = 0xFFAAAAAA;
     public int forgeLockedColor = 0xFFFF5555;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/mining/HotmConfig.kt
+    public boolean hotmHelper = true;
+    public boolean hotmHighlightEnabledPerks = true;
+    public boolean hotmLevelStackSize = true;
+    public boolean hotmTokenStackSize = true;
+    public boolean hotmPowderSpent = true;
+    public boolean hotmPowderFor10Levels = true;
+    public boolean hotmCurrentPowder = true;
+    public boolean hotmHideMaxedTooltipDetails = false;
+    public boolean hotmHelperHud = true;
+    public boolean hotmHudPowder = true;
+    public boolean hotmHudTokens = true;
+    public boolean hotmHudSpent = true;
+    public boolean hotmHudPerks = true;
+    public boolean hotmHudMaxed = true;
+    public boolean hotmHudSkyMall = true;
+    public String hotmSkyMallDisplay = "MINING_ONLY";
+    public java.util.Map<String, String> hotmSkyMallPerProfile = new java.util.HashMap<>();
+    public int hotmEnabledColor = 0x8855FF55;
+    public int hotmDisabledColor = 0x88FF5555;
+    public int hotmLockedColor = 0x88666666;
+    public int hotmLevelTextColor = 0xFFFFFF55;
+    public int hotmTokenTextColor = 0xFF55FFFF;
+    public String hotmPowderSpentDesign = "NUMBER_AND_PERCENTAGE";
 }

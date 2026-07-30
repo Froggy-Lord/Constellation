@@ -82,6 +82,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Aquila: mining
 
+- Complete 46-perk Heart of the Mountain parsing with enabled, disabled and locked slot highlights
+- Exact Mithril, Gemstone and Glacite perk-cost totals, ten-level planning and current-powder guidance
+- Perk-level and unused-token slot text, selectable spent display design and a movable menu summary
+- Profile-safe Sky Mall effect learning with mining-only or everywhere display modes
 - Exact 92-point Deep Caverns route from the Gunpowder Mines Lift to Rhys with locked-Lift activation, ground-aware progress, nearest recovery, start guidance, rainbow/monochrome rendering and movable progress HUD
 - Commission HUD, progress parsing and destination guidance
 - Crystal Hollows crystal progress and waypoint guidance

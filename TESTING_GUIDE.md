@@ -23,6 +23,23 @@ Enable Aquila and Deep Caverns Guide. Defaults match the live profile: 30 points
 - [ ] Toggle each HUD row independently, then move and resize Deep Caverns Guide in `/cn hud`. Expected: placement and scale persist independently.
 - [ ] Reach point 92 near Rhys. Expected: the route closes and the optional local completion message appears once.
 - [ ] Leave the Deep Caverns, switch worlds or disconnect midway. Expected: route, Lift prompt and progress clear immediately.
+
+## Heart of the Mountain Helper
+
+Enable Aquila and Heart of the Mountain Helper, then open the exact `Heart of the Mountain` menu.
+
+- [ ] Inspect unlocked enabled, unlocked disabled and locked perks. Expected: they use the configured green, red and gray overlays respectively; unrelated menus receive nothing.
+- [ ] Inspect every tree tier, including Mining V3 Glacite perks, abilities and Core of the Mountain. Expected: all 46 licensed perks are recognized and locked perks are never inferred as owned.
+- [ ] Compare partially levelled and maxed perks. Expected: only levels between zero and max receive compact slot text; maxed and level-zero slots retain their normal stack presentation.
+- [ ] Inspect the Heart item. Expected: its unused Token of the Mountain count appears only when nonzero.
+- [ ] Hover Mithril, Gemstone and Glacite powder perks. Expected: powder spent and maximum use the perk's exact licensed exponent and powder type.
+- [ ] Hold Shift over a non-maxed powder perk. Expected: the additional row totals the next ten levels or the exact smaller remainder to max.
+- [ ] Compare the current-powder row with the Heart item. Expected: it uses the correct powder type and reports the exact deficit for the next level.
+- [ ] Test number, percentage and number-and-percentage designs with `/hotmhelper design`. Expected: only the spent row changes and maxed perks remain clearly labelled.
+- [ ] Trigger a new Sky Mall day or reopen HOTM on the Sky Mall perk. Expected: the recognized effect persists by SkyBlock profile and updates without retaining another profile's effect.
+- [ ] Test `/hotmhelper skymall off|mining_only|everywhere`. Expected: the Sky Mall row follows the selected scope; the full summary remains menu-only.
+- [ ] Toggle every `/hotmhelper option`, set each `/hotmhelper color`, and reopen the menu. Expected: all options persist independently.
+- [ ] Move and resize Heart of the Mountain in `/cn hud`. Expected: its placement and scale persist and the widget appears only in its configured useful scope.
 - [ ] Observe the entire run. Expected: no movement, jump, aim, click, warp, item use, chat or gameplay packet is generated automatically.
 
 ## Crystal Nucleus barriers

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.728 (2026-07-30) — Heart of the Mountain Helper
+
+- added exact all-perk HOTM parsing with enabled, disabled and locked highlights plus perk-level and unused-token slot text
+- added Mithril, Gemstone and Glacite powder-spent calculations, selectable number/percentage layouts, current-powder guidance and shift-for-ten-level planning
+- added profile-safe Sky Mall effect learning with off, mining-only and everywhere display modes
+- added a movable menu summary, independent rows, colors and complete `/hotmhelper` controls
+
 ## 0.9.727 (2026-07-30) — Crystal Hollows Waypoints
 
 - replaced the dead Wishing Compass flag with exact two-trail particle solving and reliable forward-ray intersection
