@@ -2423,3 +2423,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Scroll the Hub and reopen it. Expected: icons follow their cards exactly with no flicker, clipping or stale texture.
 - [ ] Resize the window while the Hub or config is open. Expected: icons remain 28 pixels on cards and 24 pixels in config headers without stretching neighboring text.
 - [ ] Verify the HUD editor separately. Expected: it remains a mostly transparent, chrome-free overlay and receives no module-card decoration from this icon release.
+
+## Complete typed configuration browser
+
+- [ ] Open every constellation's config and select `All settings`. Expected: the matching icon/name remain visible and the browser lists that module's public toggles, numbers, text and colors.
+- [ ] Search by camel-case field words, spaced display words, type and current value. Expected: results update immediately and the count reports visible versus total settings.
+- [ ] Cycle All types, Toggles, Numbers, Text and Colors. Expected: each filter shows only the selected kind and returns to the complete list.
+- [ ] Left-click several Boolean rows. Expected: On/Off changes immediately, persists after reopening and affects the same setting as its ordinary module card.
+- [ ] Edit representative `int`, `long`, `float` and `double` fields. Expected: Enter or Save accepts valid finite values; malformed, overflowing, NaN and infinite values show an error and do not alter config.
+- [ ] Edit a String field containing spaces and formatting variables. Expected: its exact content persists without forced trimming.
+- [ ] Edit colors with `#RRGGBB`, `#AARRGGBB`, `0xRRGGBB` and `0xAARRGGBB`. Expected: six digits gain full alpha, eight digits preserve alpha and malformed input is rejected.
+- [ ] Right-click changed rows. Expected: each restores the value from a fresh default instance of that module config.
+- [ ] Scroll a module containing hundreds of settings, then change search/filter. Expected: scrolling remains bounded and resets safely when the result set shrinks.
+- [ ] Open a number/text editor and press Escape. Expected: the edit cancels without closing the browser; a second Escape returns to the normal module config.
+- [ ] Check structured profile maps, history lists and editor-backed collections. Expected: raw complex state is absent and its existing purpose-built screen or command remains authoritative.
+- [ ] Restart the client after several edits. Expected: saved values reload from the normal Constellation config with no parallel settings file.

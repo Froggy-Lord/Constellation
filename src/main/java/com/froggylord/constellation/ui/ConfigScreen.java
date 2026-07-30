@@ -629,7 +629,12 @@ public class ConfigScreen extends Screen {
             .map(com.froggylord.constellation.core.BaseConstellation::displayName)
             .orElse(constellationId);
         g.text(mc.font, constellationName, 36, 10, ConstellationTheme.ACCENT_BRIGHT, false);
-        String esc = "esc to close  ·  right-click for settings";
+        int allX = Math.max(sw + 6, w - 265);
+        boolean allHover = mx >= allX && mx < allX + 72 && my >= 7 && my < 27;
+        g.fill(allX, 7, allX + 72, 27, allHover ? 0xFF30304A : 0xFF202033);
+        g.text(mc.font, "All settings", allX + 7, 13,
+            allHover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
+        String esc = "esc close  ·  right-click details";
         g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
 
         var vis = visibleModules();
@@ -734,6 +739,12 @@ public class ConfigScreen extends Screen {
         int w = panelW(fullW), h = panelH(fullH);
         int px = (fullW - w) / 2, py = (fullH - h) / 2;
         mx -= px; my -= py;
+
+        int allX = Math.max(sideW(w) + 6, w - 265);
+        if (mx >= allX && mx < allX + 72 && my >= 7 && my < 27) {
+            Minecraft.getInstance().setScreenAndShow(new AdvancedConfigScreen(this, constellationId));
+            return true;
+        }
 
         
         if (openModule != null) {

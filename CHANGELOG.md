@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.790 (2026-07-30) — Complete Typed Configuration Browser
+
+- added one searchable browser for every primitive and text option in each module
+- added direct Boolean toggles plus validated integer, long, float, double and text editing
+- added ARGB color detection, previews and six/eight-digit hexadecimal input
+- added type filtering, value search, scrolling and right-click default restoration
+- retained purpose-built editors for structured maps and lists instead of exposing unsafe raw state
+
 ## 0.9.789 (2026-07-30) — Constellation Icon Foundation
 
 - added a hand-authored fifteen-icon star-map family for every constellation

@@ -10,6 +10,8 @@ this is just one jar. one config file. one hud editor. everythings in the same p
 
 the main hub now uses a hand-drawn star-map icon family for all 15 constellations, with the same visual identity carried into each module's config header.
 
+each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
+
 ## what it does
 
 15 constellations, each one handles a different part of the game:
