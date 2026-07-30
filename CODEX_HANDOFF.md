@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.759 Hoppity Island-Graph Navigation.
+Last updated: 2026-07-30 for version 0.9.760 Profile-Safe Active Pet Display.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.759`.
+- Current artifact version: `0.9.760`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2828,4 +2828,18 @@ This is an advisory line renderer only. It never rotates, moves, warps, clicks, 
 
 Version `0.9.759` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded exactly 212 Hoppity egg locations across 14 islands and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load, transformer-error or Hoppity-resource-load failure signatures. Graph resources are intentionally lazy and therefore do not load at the disconnected title screen. Main-jar SHA-256: `f9e7c7a8b86c69d8656394fd90a7b94a40696c4a7320907bd3faffbe8b3d8750`.
 
-The previous `0.9.758` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-144756-0.9.759/`; only `constellation-0.9.759.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release is enqueued through the drip script, authored only as Froggy-Lord.
+The previous `0.9.758` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-144756-0.9.759/`; only `constellation-0.9.759.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `7df48dc814`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.760 Profile-Safe Active Pet Display
+
+`PhoenixPetDisplay.java`, `PetDisplayHudWidget.java`, `PhoenixConfig.java` and `PhoenixQol.java` port Devonian GPL `features/misc/PetDisplay.kt`, `ShowSelectedPet.kt` and `tooltip/PetXP.kt`, cross-checked with NoammAddons CC0 `features/impl/visual/PetDisplay.kt` and Skyblocker LGPL `skyblock/PetCache.java`.
+
+The feature has four complementary state sources. The exact Pets inventory locates only a real PET item whose lore says `Click to despawn!`, parses its level/cosmetic-level name, `petInfo` rarity, held item, skin and total XP, reads exact next-level percentage from lore, caches its real head stack and highlights that selected slot. Hypixel's Pet widget restores name and level after reconnect. Exact summon/despawn chat updates or clears the active state, while exact Autopet messages update name, level, cosmetic level and skin marker. A lower-detail source preserves previously known details for the same normalized name and never invents missing data.
+
+Active state persists beneath the Minecraft account and cleaned SkyBlock profile name. Switching profiles resets transient icon, selection and rate samples before reading that profile's own state; an unknown profile fails closed rather than sharing data. Current-profile clearing is explicit-confirm only. Exact Pet-menu progress reads form session samples: rate and ETA appear only after progress actually increases across two reads and stay absent for unchanged, decreasing or insufficient data.
+
+The chrome-free movable HUD independently exposes icon, level, Golden Dragon cosmetic level, skin marker, rarity, held item, level progress, rate, ETA and source. PET tooltips can append exact `petInfo.exp`; the Pets menu selected-slot fill, four colors, optional Autopet title and dungeon-only title scope are independent. `/petdisplay` exposes status, explicit current-profile clearing, all Boolean controls and ARGB colors. The feature observes UI/widget/chat state only; it never selects, summons, despawns, clicks or sends a gameplay packet.
+
+Version `0.9.760` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded exactly 212 Hoppity egg locations across 14 islands and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `241a83e69bb9240ba0fa4f352321732dca977d499f68e7339c5ff02ab3255774`.
+
+The previous `0.9.759` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-145855-0.9.760/`; only `constellation-0.9.760.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release is enqueued through the drip script, authored only as Froggy-Lord.

@@ -1677,6 +1677,20 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Test `pathwidth`, `pathlookahead`, `pathmovement`, `pathinterval`, `pathlimit`, `color path`, and options `path`, `pathguessonly`, and `pathwalls`. Expected: each value persists independently and route changes recalculate safely.
 - [ ] Set a deliberately small `pathlimit` on a long route. Expected: no route is drawn when the bounded search cannot reach the destination, and normal waypoint rendering remains available.
 - [ ] Confirm the system never rotates, walks, warps, clicks, or sends a gameplay command.
+
+### Active pet display
+
+- [ ] Enable Phoenix, `Pet Display` and its HUD, then open the exact `Pets` inventory. Expected: the slot whose lore says `Click to despawn!` is highlighted and its pet name, level, rarity, held item, skin state, XP progress and real head icon synchronize.
+- [ ] Visit each page of a multi-page Pets inventory. Expected: scanning non-selected pets does not replace the active pet; the selected slot remains the only highlighted entry.
+- [ ] Summon and despawn a pet normally. Expected: summon chat selects the matching cached pet details when available; despawn removes only the current profile's active state and hides the HUD.
+- [ ] Trigger an Autopet rule. Expected: the exact Autopet message updates name, level, cosmetic level and skin marker. The optional title fires only when enabled and respects `dungeononly`.
+- [ ] Enable Hypixel's Pet widget, reconnect without opening the Pets menu and wait one second. Expected: the widget restores the active name and level; unknown rarity, item, XP and icon fields remain absent rather than guessed.
+- [ ] Switch SkyBlock profiles with different active pets. Expected: each profile restores only its own saved state and a profile with no observation shows nothing.
+- [ ] Reopen the selected pet after its exact level progress increases. Expected: a positive session `%/h` and ETA appear only after the second trustworthy sample; unchanged or decreasing samples do not manufacture a rate.
+- [ ] Hover a PET item with `tooltip` enabled. Expected: `Total Pet XP` matches its `petInfo.exp`; malformed/non-pet items receive no extra line.
+- [ ] Toggle `hud`, `icon`, `level`, `cosmetic`, `skin`, `rarity`, `item`, `xp`, `rate`, `eta`, `source`, `persist`, `highlight`, `tooltip`, `autopettitle`, and `dungeononly` through `/petdisplay option`, then test `color name|info|progress|highlight <ARGB>`. Expected: each surface changes independently and malformed colors are rejected.
+- [ ] Run `/petdisplay clear confirm`. Expected: only the current profile's active-pet state clears, with no pet click, despawn command or packet generated.
+- [ ] Move and resize `Active Pet` in `/cn hud`. Expected: only the icon and text are shown with no decorative panel or editor chrome.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

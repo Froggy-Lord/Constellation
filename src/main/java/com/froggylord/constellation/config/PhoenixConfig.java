@@ -138,11 +138,48 @@ public class PhoenixConfig extends BaseConfigGroup {
     public String speedPresetsSelectedProfile = "default";
     public java.util.Map<String, java.util.Map<String,Integer>> speedPresetProfiles = new java.util.LinkedHashMap<>();
 
+    // ported from Devonian (GPL-3.0-only): features/misc/PetDisplay.kt, ShowSelectedPet.kt, tooltip/PetXP.kt
+    public boolean petDisplay = true;
+    public boolean petDisplayHud = true;
+    public boolean petDisplayIcon = true;
+    public boolean petDisplayLevel = true;
+    public boolean petDisplayCosmeticLevel = true;
+    public boolean petDisplaySkin = true;
+    public boolean petDisplayRarity = true;
+    public boolean petDisplayHeldItem = true;
+    public boolean petDisplayXp = true;
+    public boolean petDisplayRate = true;
+    public boolean petDisplayEta = true;
+    public boolean petDisplaySource = false;
+    public boolean petDisplayPersistProfiles = true;
+    public boolean petDisplayHighlightSelected = true;
+    public boolean petDisplayTooltipTotalXp = true;
+    public boolean petDisplayAutopetTitle = false;
+    public boolean petDisplayAutopetTitleDungeonOnly = true;
+    public int petDisplayHighlightColor = 0x8055FFFF;
+    public int petDisplayNameColor = 0xFFFFAA00;
+    public int petDisplayProgressColor = 0xFF55FF55;
+    public int petDisplayInfoColor = 0xFF55FFFF;
+    public java.util.Map<String, PetDisplayData> activePetsByProfile = new java.util.LinkedHashMap<>();
+
     // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
     public static class SlotBindingProfile {
         public String area = "";
         public java.util.Map<Integer, java.util.List<Integer>> binds = new java.util.LinkedHashMap<>();
         public java.util.Map<Integer, Integer> last = new java.util.LinkedHashMap<>();
         public java.util.Map<Integer, Integer> colors = new java.util.LinkedHashMap<>();
+    }
+
+    public static class PetDisplayData {
+        public String name = "";
+        public int level = -1;
+        public int cosmeticLevel = -1;
+        public String rarity = "";
+        public String heldItem = "";
+        public boolean skinned;
+        public double totalXp = -1;
+        public double levelProgress = -1;
+        public String source = "";
+        public long updatedAt;
     }
 }

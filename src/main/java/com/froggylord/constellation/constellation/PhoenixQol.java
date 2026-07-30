@@ -28,6 +28,7 @@ public class PhoenixQol extends BaseConstellation {
         PhoenixWorldAge.init((PhoenixConfig) config);
         PhoenixScreenshotClipboard.init((PhoenixConfig) config);
         PhoenixSpeedPresets.init((PhoenixConfig) config);
+        PhoenixPetDisplay.init((PhoenixConfig) config);
     }
 
     @Override
@@ -38,6 +39,7 @@ public class PhoenixQol extends BaseConstellation {
         PhoenixWorldAge.registerCommands(dispatcher);
         PhoenixScreenshotClipboard.registerCommands(dispatcher);
         PhoenixSpeedPresets.registerCommands(dispatcher);
+        PhoenixPetDisplay.registerCommands(dispatcher);
     }
 
     @Override
@@ -49,6 +51,8 @@ public class PhoenixQol extends BaseConstellation {
             HudPosition.of(2, 26), () -> cfg.enabled && cfg.worldAge && cfg.worldAgeHud));
         hud.register(new com.froggylord.constellation.hud.SpeedPresetHudWidget(
             HudPosition.of(76, 32), () -> cfg.enabled && cfg.speedPresets && cfg.speedPresetsHud));
+        hud.register(new com.froggylord.constellation.hud.PetDisplayHudWidget(
+            HudPosition.of(76, 38), () -> cfg.enabled && cfg.petDisplay && cfg.petDisplayHud));
     }
 
     private static long lastSaveAt = 0;

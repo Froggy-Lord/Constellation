@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.760 (2026-07-30) — Profile-Safe Active Pet Display
+
+- ported Devonian's active-pet menu, widget, summon, Autopet and selected-slot synchronization
+- added profile-safe pet name, level, cosmetic level, rarity, held item, skin, icon, total XP and level-progress state
+- added exact-read progress rate and ETA estimation that remains absent until sufficient authoritative samples exist
+- added a chrome-free movable HUD, selected-pet highlight, total-XP tooltip, optional Autopet title and full `/petdisplay` controls
+
 ## 0.9.759 (2026-07-30) — Hoppity Island-Graph Navigation
 
 - ported all 14 complete MIT SkyHanni island graphs used by the 212 Hoppity egg locations

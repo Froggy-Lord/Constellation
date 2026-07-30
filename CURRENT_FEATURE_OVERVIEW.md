@@ -535,6 +535,18 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`. You do not need that document for normal testing.
 
+## Active Pet Display
+
+- Active-pet synchronization from the Pets menu, Hypixel Pet widget, summon/despawn chat and Autopet messages
+- Profile-safe persistence that cannot leak an active pet between SkyBlock profiles
+- Pet name, level, Golden Dragon cosmetic level, rarity, held item, skin state, exact total XP and next-level progress
+- Real selected pet head icon when the Pets menu has supplied one
+- Chrome-free movable HUD with independent content controls
+- Selected-pet slot highlight and total Pet XP inventory tooltip
+- Exact-read session progress rate and ETA; both stay hidden until more than one trustworthy progress sample exists
+- Optional Autopet title with dungeon-only scope
+- Full status, current-profile clearing and Boolean controls under `/petdisplay`
+
 ## Hoppity island-graph navigation
 
 - Complete walking topology for all 14 islands with known Hoppity egg locations, loaded only when its island is visited
