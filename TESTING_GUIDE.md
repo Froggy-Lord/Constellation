@@ -1647,6 +1647,18 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Toggle `soonest`, `readyfirst`, `claimed`, `future`, `eventtime`, `eventonly`, `chattime`, `warnings`, warning channels and `persist` through `/hoppityeggs option <name> <on|off>`. Expected: each surface changes independently.
 - [ ] Run `/hoppityeggs warningminutes <1-60>` and `/hoppityeggs clear confirm`. Expected: the repeat interval persists and only the current profile's claim-cycle cache clears.
 - [ ] Move and resize `Unclaimed Hoppity Eggs` in `/cn hud`. Expected: the display remains chrome-free in the editor and no row sends a warp, click or gameplay packet.
+
+### Chocolate Factory Stray timer
+
+- [ ] Enable Auriga and `Chocolate Factory Stray Timer`, then collect a meal egg, Hitman egg or Hoppity Garden-visitor rabbit outside the Factory. Expected: the timer arms but does not count down until the exact `Chocolate Factory` inventory opens.
+- [ ] Keep the Factory open. Expected: the timer counts from 30.00 seconds to zero using real elapsed time, with no similarly named menu activating it.
+- [ ] Close the Factory before zero and reopen it. Expected: the timer resets to the configured full duration rather than continuing from the premature close.
+- [ ] Catch a newly appeared Stray during the window. Expected: the timer immediately disappears; an already-caught rabbit present when the Factory first opens does not falsely complete it.
+- [ ] Set `/straytimer dingseconds 3`. Expected: one pling per second during the final three seconds, with no sound at zero or when `ding` is disabled.
+- [ ] Use `/straytimer seconds <5-120>`, `dingseconds <0-30>`, `reset`, and options `hud`, `ding`, `hundredths`, `blockclose`, `blockslots`, and `shift`. Expected: each setting changes independently and persists.
+- [ ] Enable close protection during an active timer. Expected: Escape and normal destructive slots 47-51/53 are blocked with clear local feedback; holding either Shift key bypasses both when enabled.
+- [ ] Disable `blockslots` while leaving `blockclose` enabled. Expected: destructive clicks are sent normally, while other close attempts remain protected.
+- [ ] Move and resize `Stray Timer` in `/cn hud`. Expected: it appears only for an active timer in the exact Factory and remains chrome-free in the editor.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

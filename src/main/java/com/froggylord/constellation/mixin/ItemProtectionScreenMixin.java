@@ -33,6 +33,7 @@ public abstract class ItemProtectionScreenMixin {
         if (com.froggylord.constellation.constellation.AurigaReforgeHelper.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaSkyblockGuide.onSlotClick(screen, slot, button)) { ci.cancel(); return; }
         com.froggylord.constellation.constellation.AurigaHoppityEventSummary.onSlotClick(screen, slot);
+        if (com.froggylord.constellation.constellation.AurigaStrayTimer.shouldBlockClick(screen, slot)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.HerculesDnaAnalyzer.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AquilaFossils.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
@@ -47,6 +48,12 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.LyraBazaarHelper.onSlotClick(screen, slot, slotId);
         if (!com.froggylord.constellation.constellation.LyraAuctionHelper.consumeProtectionBypass()
             && ItemProtection.shouldBlockClick(screen, slot, slotId, input)) ci.cancel();
+    }
+
+    @Inject(method = "onClose", at = @At("HEAD"), cancellable = true)
+    private void constellation$protectStrayTimerClose(CallbackInfo ci) {
+        AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
+        if (com.froggylord.constellation.constellation.AurigaStrayTimer.shouldBlockClose(screen)) ci.cancel();
     }
 
     @Inject(method = "extractSlot", at = @At("RETURN"))

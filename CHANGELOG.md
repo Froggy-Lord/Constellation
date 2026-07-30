@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.757 (2026-07-30) — Chocolate Factory Stray Timer
+
+- ported SkyHanni's exact meal/Hitman/visitor trigger set and Factory-only 30-second countdown state machine
+- added new-caught-slot detection that ends the timer without mistaking existing caught rabbits for a new catch
+- added configurable countdown precision, duration, danger colors and per-second final-window dings
+- added optional destructive-slot and close protection with Shift bypass, movable HUD and `/straytimer` controls
+
 ## 0.9.756 (2026-07-30) — Unclaimed Hoppity Egg Schedule
 
 - ported SkyHanni's normal/alternate meal-day schedule, exact reset hours and spawn/claim messages

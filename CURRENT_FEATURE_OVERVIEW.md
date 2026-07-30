@@ -219,6 +219,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Configurable event-end chat summary, optional movable live display, year browsing and safe per-year `/hoppitysummary` controls
 - Six-meal Hoppity egg schedule with normal/alternate days, exact Breakfast/Lunch/Dinner reset hours, profile/year/cycle-safe claims and observed-state warning guard
 - Movable ready/claimed/next-spawn/event-end HUD, configurable ordering and optional chat/title/sound reminders through `/hoppityeggs`
+- Exact Chocolate Factory Stray window: meal/Hitman/visitor triggers, paused-until-Factory countdown, premature-close reset and new-caught-slot completion
+- Movable fractional timer, configurable final-second dings and optional Shift-bypass close/destructive-slot protection through `/straytimer`
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.756 Unclaimed Hoppity Egg Schedule.
+Last updated: 2026-07-30 for version 0.9.757 Chocolate Factory Stray Timer.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.756`.
+- Current artifact version: `0.9.757`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2784,4 +2784,18 @@ Unlike the reference display, no row is clickable and no warp or gameplay packet
 
 Version `0.9.756` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2aef5019ed2fdd72578b63c90dcb77ca93dac8f5d150415a60619fdaf848a796`.
 
-The previous `0.9.755` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142235-0.9.756/`; only `constellation-0.9.756.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
+The previous `0.9.755` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142235-0.9.756/`; only `constellation-0.9.756.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `a99b6fbd41`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.757 Chocolate Factory Stray Timer
+
+`AurigaStrayTimer.java`, `StrayTimerHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and the existing container-screen mixin port SkyHanni LGPL `features/inventory/chocolatefactory/stray/CFStrayTimer.kt`. The close-sensitive slot set ports the MIT SkyHanni repository `constants/HoppityEggLocations.json`.
+
+The exact meal-egg, Hitman-egg and Hoppity Garden-visitor messages arm the configured 30-second window. Time advances only while the exact `Chocolate Factory` inventory is open. Opening the Factory begins the countdown; leaving early resets it to the full duration and pauses it until re-entry, matching the reference state machine. Existing caught entries are snapshotted at entry, and only a newly caught slot ends the timer, avoiding false completion from an old rabbit.
+
+The movable HUD supports tenths or hundredths, normal/danger colors and configurable five-to-120-second duration. Final-window plings are independent with a zero-to-30-second threshold and one-second rate limit. Optional close protection is disabled by default to match the live profile; when enabled it protects Escape and authoritative destructive slots 47-51/53, with independently configurable slot blocking and either-Shift bypass. Feedback is local. `/straytimer` exposes reset, duration, ding threshold and every Boolean control.
+
+The timer observes messages and the inventory. It does not synthesize a click; optional protection only cancels the user's close/destructive click until the configured Shift bypass is held.
+
+Version `0.9.757` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `9e94c103e92b236cad00fdd3167a1b5365f287af304b82592c69f4c1ad02d3b4`.
+
+The previous `0.9.756` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142926-0.9.757/`; only `constellation-0.9.757.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.

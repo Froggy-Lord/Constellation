@@ -24,6 +24,7 @@ public class AurigaMisc extends BaseConstellation {
         AurigaHitmanCosts.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaHoppityEventSummary.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaUnclaimedEggs.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaStrayTimer.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
@@ -47,6 +48,9 @@ public class AurigaMisc extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.UnclaimedEggsHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(80, 32),
             () -> cfg.enabled && cfg.hoppityUnclaimedEggs && cfg.hoppityUnclaimedEggsHud));
+        hud.register(new com.froggylord.constellation.hud.StrayTimerHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(80, 44),
+            () -> cfg.enabled && cfg.chocolateFactoryStrayTimer && cfg.chocolateFactoryStrayTimerHud));
         hud.register(new com.froggylord.constellation.hud.AnvilHelperHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 44),
             () -> cfg.enabled && cfg.anvilHelper && cfg.anvilHud));
@@ -70,5 +74,6 @@ public class AurigaMisc extends BaseConstellation {
         AurigaHitmanCosts.registerCommands(dispatcher);
         AurigaHoppityEventSummary.registerCommands(dispatcher);
         AurigaUnclaimedEggs.registerCommands(dispatcher);
+        AurigaStrayTimer.registerCommands(dispatcher);
     }
 }

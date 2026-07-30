@@ -120,6 +120,18 @@ public class AurigaConfig extends BaseConfigGroup {
     public int hoppityUnclaimedEggsClaimedColor = 0xFFAAAAAA;
     public int hoppityUnclaimedEggsFutureColor = 0xFFFFFFFF;
     public java.util.Map<String, Long> hoppityEggClaimCycles = new java.util.LinkedHashMap<>();
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/chocolatefactory/stray/CFStrayTimer.kt
+    public boolean chocolateFactoryStrayTimer = true;
+    public boolean chocolateFactoryStrayTimerHud = true;
+    public boolean chocolateFactoryStrayTimerDing = true;
+    public boolean chocolateFactoryStrayTimerBlockClosing = false;
+    public boolean chocolateFactoryStrayTimerBlockDestructiveSlots = true;
+    public boolean chocolateFactoryStrayTimerShiftBypass = true;
+    public boolean chocolateFactoryStrayTimerShowHundredths = true;
+    public int chocolateFactoryStrayTimerSeconds = 30;
+    public int chocolateFactoryStrayTimerDingSeconds = 3;
+    public int chocolateFactoryStrayTimerColor = 0xFF55FFFF;
+    public int chocolateFactoryStrayTimerDangerColor = 0xFFFF5555;
     public boolean chocolateFactoryShowLevels = true;
     public boolean chocolateFactoryShowAllAffordable = true;
     public boolean chocolateFactoryBarnWarning = true;
