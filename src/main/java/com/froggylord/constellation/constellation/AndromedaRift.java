@@ -42,6 +42,7 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaDreadfarm.init(cfg);
         AndromedaLivingCave.init(cfg);
         AndromedaColosseum.init(cfg);
+        AndromedaStillgore.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
@@ -49,6 +50,7 @@ public class AndromedaRift extends BaseConstellation {
         registerRenderer(AndromedaDreadfarm::draw);
         registerRenderer(AndromedaLivingCave::draw);
         registerRenderer(AndromedaColosseum::draw);
+        registerRenderer(AndromedaStillgore::draw);
     }
 
     @Override
@@ -65,7 +67,7 @@ public class AndromedaRift extends BaseConstellation {
             AndromedaColosseum::phaseHud,HudPosition.of(126,96),()->cfg.enabled&&cfg.colosseumPhaseHud));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

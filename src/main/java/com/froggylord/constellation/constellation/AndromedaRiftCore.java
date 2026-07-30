@@ -115,7 +115,6 @@ public final class AndromedaRiftCore {
         if(!active())return;Minecraft mc=Minecraft.getInstance();if(mc.player==null)return;
         if(cfg.enigmaSoulWaypoints)drawSouls(ctx,mc);
         if(cfg.mirrorverseWaypoints)drawMirror(ctx,mc);
-        if(cfg.effigyWaypoints)drawEffigies(ctx,mc);
     }
     private static void drawSouls(WorldRenderer.Ctx ctx,Minecraft mc){
         double max=Math.clamp(cfg.enigmaSoulRange,10,500),maxSq=max*max;List<Point> visible=SOULS.stream().filter(p->p.pos.distToCenterSqr(mc.player.position())<=maxSq).filter(p->!cfg.enigmaSoulCurrentAreaOnly||lastArea.isBlank()||areaMatches(p.area,lastArea)).filter(p->cfg.enigmaSoulShowFound||!found().contains(key(p.pos))).sorted(Comparator.comparingDouble(p->p.pos.distToCenterSqr(mc.player.position()))).toList();if(cfg.enigmaSoulNearestOnly&&!visible.isEmpty())visible=List.of(visible.getFirst());
@@ -148,9 +147,6 @@ public final class AndromedaRiftCore {
     private static void drawMirror(WorldRenderer.Ctx ctx,Minecraft mc){
         for(var entry:MIRROR.entrySet()){String section=entry.getKey();if(section.equals("Lava Path")&&!cfg.mirrorverseLavaPath||section.equals("Upside Down Parkour")&&!cfg.mirrorverseUpsideDown||section.equals("Turbulator Parkour")&&!cfg.mirrorverseTurbulator)continue;int color=section.equals("Lava Path")?cfg.mirrorverseLavaColor:section.equals("Upside Down Parkour")?cfg.mirrorverseUpsideColor:cfg.mirrorverseTurbulatorColor;double range=Math.clamp(cfg.mirrorverseRange,10,200),rangeSq=range*range;List<Point> points=entry.getValue().stream().filter(p->p.pos.distToCenterSqr(mc.player.position())<=rangeSq).sorted(Comparator.comparingDouble(p->p.pos.distToCenterSqr(mc.player.position()))).toList();for(Point point:points){if(cfg.mirrorverseBoxes)ctx.highlight(new AABB(point.pos),color,cfg.mirrorverseThroughWalls);if(cfg.mirrorverseLabels)ctx.label(Vec3.atCenterOf(point.pos).add(0,1,0),section,color,cfg.mirrorverseThroughWalls);}if(cfg.mirrorverseNearestLine&&!points.isEmpty())ctx.line(mc.player.position().add(0,1,0),Vec3.atCenterOf(points.getFirst().pos),color,cfg.mirrorverseThroughWalls);}
     }
-    private static void drawEffigies(WorldRenderer.Ctx ctx,Minecraft mc){
-        if(unbrokenEffigies.isEmpty())return;double range=Math.clamp(cfg.effigyRange,25,500),rangeSq=range*range;for(int index:unbrokenEffigies){BlockPos source=EFFIGIES.get(index),pos=cfg.effigyCompact?source.below(6):source;if(pos.distToCenterSqr(mc.player.position())>rangeSq)continue;Vec3 center=Vec3.atCenterOf(pos);if(cfg.effigyBox)ctx.highlight(new AABB(pos),cfg.effigyColor,cfg.effigyThroughWalls);if(cfg.effigyBeam)ctx.beam(center.x,center.y,center.z,cfg.effigyColor,Math.clamp(cfg.effigyBeamHeight,2,100),cfg.effigyThroughWalls);if(cfg.effigyLabel){String label="Unbroken Effigy "+(index+1);if(cfg.effigyDistance)label+=" "+Math.round(Math.sqrt(pos.distToCenterSqr(mc.player.position())))+"m";ctx.label(center.add(0,1.2,0),label,cfg.effigyColor,cfg.effigyThroughWalls);}}
-    }
     private static void updateEffigies(){
         Minecraft mc=Minecraft.getInstance();if(mc.level==null)return;Set<Integer> next=new LinkedHashSet<>();
         try{var scoreboard=mc.level.getScoreboard();var objective=scoreboard.getDisplayObjective(net.minecraft.world.scores.DisplaySlot.SIDEBAR);if(objective==null)return;for(var holder:scoreboard.getTrackedPlayers()){if(!scoreboard.listPlayerScores(holder).containsKey(objective))continue;var team=scoreboard.getPlayersTeam(holder.getScoreboardName());if(team==null)continue;Component line=Component.empty().append(team.getPlayerPrefix()).append(team.getPlayerSuffix());if(!line.getString().contains("Effigies"))continue;List<Component> leaves=new ArrayList<>();flatten(line,leaves);int marker=0;for(Component leaf:leaves){var color=leaf.getStyle().getColor();if(color==null)continue;String text=leaf.getString();for(int i=0;i<text.length()&&marker<EFFIGIES.size();i++){char c=text.charAt(i);if(Character.isWhitespace(c)||Character.isLetterOrDigit(c)||c==':'||c=='/')continue;if(color.getValue()==0xAAAAAA)next.add(marker);marker++;}}}}catch(Exception ignored){return;}if(!next.isEmpty()||!unbrokenEffigies.isEmpty()){unbrokenEffigies.clear();unbrokenEffigies.addAll(next);}
@@ -165,6 +161,8 @@ public final class AndromedaRiftCore {
     public static String hudEffigies(){return cfg.riftHudEffigies&&!unbrokenEffigies.isEmpty()?unbrokenEffigies.size()+" unbroken":null;}
     public static String hudArea(){return cfg.riftHudArea&&!lastArea.isBlank()?lastArea:null;}
     public static String currentArea(){return lastArea;}
+    public static Set<Integer> unbrokenEffigies(){return Set.copyOf(unbrokenEffigies);}
+    public static BlockPos effigyPosition(int index){return index>=0&&index<EFFIGIES.size()?EFFIGIES.get(index):null;}
     public static boolean isActive(){return active();}
     public static int soulCount(){return SOULS.size();}
     public static BlockPos soulPosition(int index){return index>=0&&index<SOULS.size()?SOULS.get(index).pos:null;}

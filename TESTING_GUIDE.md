@@ -1846,3 +1846,18 @@ Enable Andromeda and enter the Rift Colosseum. Run `/colosseum`; it should repor
 - [ ] Test Tentacle box, beam, label, distance, range, height, color and through-wall options independently.
 - [ ] Run `/colosseum reset`, every number control and every option, then restart. Expected: transient fight state clears and saved preferences remain bounded and persistent.
 - [ ] Leave Colosseum or reconnect mid-fight. Expected: phase, warnings and Tentacles clear immediately.
+
+## Rift Stillgore suite
+
+Enable Andromeda and enter Stillgore Chateau or Oubliette. Run `/stillgore`; it should report the current unbroken count and local Effigy/heart settings.
+
+- [ ] Compare all six Effigy markers against the sidebar. Expected: only gray/unbroken sidebar markers render as red `Break Effigy` waypoints.
+- [ ] Break an Effigy and remain nearby. Expected: its red waypoint disappears and its armor-stand countdown becomes the exact respawn deadline.
+- [ ] Move away after breaking an Effigy. Expected: the learned deadline continues locally and the waypoint turns yellow only within the configured final one-to-fifteen minutes.
+- [ ] Observe another player breaking an Effigy while its prior state was visible. Expected: a 20-minute deadline starts from the scoreboard transition.
+- [ ] Enable Unknown and reconnect in Stillgore without approaching every Effigy. Expected: unresolved broken states use gray guidance; disabling Unknown hides them.
+- [ ] Enable Nearby Broken Labels. Expected: a broken Effigy within 15 blocks has a quiet identifying label even when it is not yet respawning soon.
+- [ ] Kill a Splatter Crux and watch its heart particles. Expected: only the three-heart, zero-speed Splatter pattern gets a short red block-sized highlight.
+- [ ] Change heart lifetime between 100 and 2,000 milliseconds and toggle box, beam, label and wall visibility. Expected: each option changes independently and unrelated heart particles remain untouched.
+- [ ] Run `/stillgore reset`. Expected: transient Effigy deadlines and heart locations clear without changing settings.
+- [ ] Leave Stillgore for another Rift area. Expected: no Effigy or Splatter Heart overlay renders there.

@@ -59,6 +59,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
 - Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
 - Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes
+- Exact Blood Effigy break/respawn lifecycle with nearby armor-stand time correction, configurable respawning-soon threshold and optional unknown-state guidance
+- Exact Splatter Crux heart-particle recognition with short-lived configurable boxes, beams, labels and wall visibility
+- Full `/stillgore` status, reset, threshold, lifetime and feature controls
 - Crux Talisman progress and bonuses
 - Motes and area information
 - West Village and Rift activity helpers

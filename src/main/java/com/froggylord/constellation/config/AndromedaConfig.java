@@ -97,6 +97,20 @@ public class AndromedaConfig extends BaseConfigGroup {
     public int effigyRange = 250;
     public int effigyBeamHeight = 20;
     public int effigyColor = 0xFFFF5555;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/area/stillgorechateau/EffigiesConfig.kt, StillgoreChateauConfig.kt
+    public boolean effigyRespawningSoon = true;
+    public int effigyRespawningSoonMinutes = 3;
+    public boolean effigyUnknownTime = false;
+    public boolean effigyNearbyBrokenLabels = true;
+    public int effigyRespawningColor = 0xFFFFFF55;
+    public int effigyUnknownColor = 0xFFAAAAAA;
+    public boolean splatterHearts = true;
+    public boolean splatterHeartBox = true;
+    public boolean splatterHeartBeam = false;
+    public boolean splatterHeartLabel = false;
+    public boolean splatterHeartThroughWalls = true;
+    public int splatterHeartLifetimeMillis = 300;
+    public int splatterHeartColor = 0x64FF5555;
     // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/motes/MotesSession.kt, ShowMotesNpcSellPrice.kt, RiftMotesOrb.kt
     public boolean motesSessionTracking = true;
     public boolean motesSessionSummary = true;

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.739 Complete Rift Colosseum Suite.
+Last updated: 2026-07-30 for version 0.9.740 Complete Rift Stillgore Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.739`.
+- Current artifact version: `0.9.740`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2580,4 +2580,16 @@ Tentacles require a live `Bacte Tentacle` armor-stand label paired within five b
 
 Version `0.9.739` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `626820e7e505471b7dc818beb79b9d690bfaa9f4fc1751b5c900762ddd553202`.
 
-The previous `0.9.738` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-121205-0.9.739/`; only `constellation-0.9.739.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
+The previous `0.9.738` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-121205-0.9.739/`; only `constellation-0.9.739.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `716bbd164b`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.740 Complete Rift Stillgore Suite
+
+`AndromedaStillgore.java`, `AndromedaRiftCore.java`, `AndromedaConfig.java`, `AndromedaRift.java` and the passive particle hook in `ClientPacketListenerMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/stillgorechateau/RiftBloodEffigies.kt`, `SplatterHearts.kt`, `config/features/rift/area/stillgorechateau/EffigiesConfig.kt` and `StillgoreChateauConfig.kt`. The implementation also cross-checked Doc GPL-3.0 `features/rift/EffigiesWaypoint.js` for the same six-coordinate scoreboard mapping. Defaults match the observed 26.1.2 profile: Effigies, three-minute respawning-soon state and Splatter Hearts enabled; unknown-time waypoints disabled.
+
+The prior core remains the single scoreboard decoder and coordinate owner. `AndromedaStillgore` consumes its immutable unbroken-index snapshot, observes transitions, assigns the source's 20-minute break deadline, and corrects it whenever a nearby armor stand matches `Respawn <time> (or click!)`. `Break it!` restores the unbroken state. Red waypoints mean breakable; yellow means inside the configured one-to-fifteen-minute respawn threshold; optional gray means unresolved; otherwise a broken Effigy stays hidden except for the independently configurable nearby label. Stillgore scope includes the exact cleaned `Stillgore Chateau`, accented `Stillgore Château` and `Oubliette` area names.
+
+Splatter Hearts accept only `ParticleTypes.HEART` packets with count three and zero maximum speed, apply the source's `(-0.5, +0.3, -0.5)` block correction and expire after a bounded 100-to-2,000 milliseconds. Box, beam, label, color and wall state are independent. The hook observes particles only; it never cancels them. `/stillgore` exposes local status, transient reset, threshold/lifetime tuning and primary toggles. No Stillgore helper attacks, moves, aims, clicks, chats to the server, issues a command or creates a gameplay packet.
+
+Version `0.9.740` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `60c7ded94851b98403dece3daeaf2034da333ae95dc02bd8940146afe252c25b`.
+
+The previous `0.9.739` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-122002-0.9.740/`; only `constellation-0.9.740.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.

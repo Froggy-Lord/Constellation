@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.740 (2026-07-30) — Complete Rift Stillgore Suite
+
+- upgraded all six Blood Effigies with scoreboard state, exact nearby armor-stand timers and transition-derived 20-minute respawns
+- added configurable respawning-soon, unknown-state and nearby broken-effigy presentation without duplicating the existing waypoint source
+- added the exact Splatter Crux three-heart particle signature with short-lived boxes, optional beams/labels and independent wall behavior
+- added complete timing and presentation controls plus `/stillgore` status, tuning and reset commands
+
 ## 0.9.739 (2026-07-30) — Complete Rift Colosseum Suite
 
 - added exact Blobbercyst recognition with configurable boxes, labels, range and wall behavior
