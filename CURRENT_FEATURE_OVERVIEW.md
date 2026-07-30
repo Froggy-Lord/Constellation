@@ -413,7 +413,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Rare-drop alerts
 - Enderman beacon, glyph, Nukekubi and laser guidance
 - Blaze attunement and special-state guidance
-- Vampire effigy, Mania, Holy Ice, Healing Melon and Steak Stake indicators
+- Complete Vampire combat suite: Healing Melon threshold, Steak readiness, delayed Twinclaws/Holy Ice and floor-aware Mania alerts
+- Own, attacked-other and configurable co-op Bloodfiend highlighting with low-health recolor, box, label, distance and player line
+- Optional health percentage, HP-until-Steak and Mania Circles countdown labels
+- Exact-texture Blood Ichor and Killer Spring boxes, labels, Ichor beam, boss lines and same-tick Killer Spring sound-spam protection
 - Cocoon timing and alerts
 - Slayer carry integration
 

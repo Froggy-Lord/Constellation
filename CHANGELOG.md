@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.746 (2026-07-30) — Complete Vampire Slayer Guidance
+
+- replaced a stale advertised-only toggle with working Healing Melon, Steak Stake, Twinclaws/Holy Ice and Mania alerts
+- added own, tagged-other and configurable co-op Bloodfiend highlighting with low-health color, labels, distances and player lines
+- added optional health percentage, HP-until-Steak and Mania Circles countdown information
+- added exact-texture Blood Ichor and Killer Spring boxes, labels, beams/lines and same-tick sound-spam protection
+- added independent alert channels, messages, colors, delays, thresholds, ranges and complete `/vampirehelper` controls
+
 ## 0.9.745 (2026-07-30) — Temporal Pillar Navigation
 
 - ported SkyHanni's Temporal Pillar dodge into the complete Rift graph router

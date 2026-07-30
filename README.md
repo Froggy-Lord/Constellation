@@ -25,7 +25,7 @@ this is just one jar. one config file. one hud editor. everythings in the same p
 - **lyra** — economy. purse tracking, market tooltips, storage previews, inventory search/buttons, Bazaar orders, Auction House comparisons and safeguards
 - **orion** — dungeons. score hud, secret waypoints, ALL puzzle solvers (terminals, blaze, boulder, ice fill, waterboard, silverfish, tic tac toe, creeper beams, trivia, etc), combat esp (starred mobs, minibosses, livid finder), complete Spirit Mask alerts/cooldown/immunity/HUD/item state, m7 phase tracking, spirit leap, blessings, chest profit, dungeon map
 - **pegasus** — party. /rp reparty, party triggers, carry mode, ready checker, friend list hud, marked players
-- **perseus** — slayers. boss timer, xp bar, miniboss alerts, bestiary milestones, broodmother, relics, rng meter
+- **perseus** — slayers. boss timer, xp bar, miniboss alerts, bestiary milestones, broodmother, relics, rng meter; complete Vampire Slayer Healing Melon, Steak, Twinclaws/Holy Ice and Mania alerts; own/tagged/co-op Bloodfiend guidance, HP/percentage/countdown information, Blood Ichor and Killer Spring rendering
 - **phoenix** — qol. fullbright, auto sprint, etherwarp overlay, hide lightning/fire/falling blocks, instant sneak, full armor/equipment wardrobe keybinds with page, swap, labels and unequip protection; multi-profile inventory slot bindings with graphical editor, protected shift-click swaps and area switching; profile-aware Century Cake timer, missing-cake helper and expiry alerts; server world age, clock, phase and transition HUD; automatic screenshot clipboard copying and retry; named farming speed presets with profiles, editor, sign aliases, keybinds, feedback and HUD; auto save reminder, sign calculator, hotbar lock
 
 ## install

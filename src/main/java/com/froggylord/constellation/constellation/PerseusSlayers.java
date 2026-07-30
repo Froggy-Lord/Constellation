@@ -76,6 +76,7 @@ public class PerseusSlayers extends BaseConstellation {
         BigSlayerDrops.init(cfg);
         SlayerCocoon.init(cfg);
         SlayerSounds.init(cfg);
+        VampireSlayerHelper.init(cfg);
         SlayerState.listen(new SlayerState.Listener() {
             @Override public void onSpawn(SlayerState.Boss boss) { spawned(boss); }
             @Override public void onDeath(SlayerState.Boss boss, double seconds, int ticks) { died(boss, seconds); }
@@ -90,6 +91,7 @@ public class PerseusSlayers extends BaseConstellation {
         registerRenderer(this::drawInfo);
         registerRenderer(SlayerHighlights::draw);
         registerRenderer(SlayerSpecialInfo::draw);
+        registerRenderer(VampireSlayerHelper::draw);
     }
 
     @Override
@@ -109,6 +111,7 @@ public class PerseusSlayers extends BaseConstellation {
         BigSlayerDrops.registerCommands(dispatcher);
         SlayerCocoon.registerCommands(dispatcher);
         SlayerSounds.registerCommands(dispatcher);
+        VampireSlayerHelper.registerCommands(dispatcher);
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("slayertimes")
             .executes(c -> status())
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status").executes(c -> status()))

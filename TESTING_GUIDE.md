@@ -1941,3 +1941,20 @@ Enable Andromeda, enable Rift pathfinding, select a missing soul with `/riftnav 
 - [ ] Test `pillarbox`, `pillarbeam`, `pillarlabel`, `pillardistance` and `pillarwalls`. Expected: each affects only its named visual channel.
 - [ ] Test `/riftnav pillarradius 10`, `/riftnav pillarrange 100`, `/riftnav pillarbeamheight 12` and `/riftnav pillarcolor 80FF5555`. Expected: status remains local, routing uses the new radius, and rendering follows the new range/height/color.
 - [ ] Leave the Rift, disable Andromeda or disable Rift pathfinding. Expected: discovery, graph blocking and all danger rendering stop immediately.
+
+## Complete Vampire Slayer Guidance
+
+Enable Perseus, keep `vampireHelper` enabled, and enter Stillgore Chateau or Oubliette. Run `/vampirehelper`; it should report every major helper locally.
+
+- [ ] Lower your health to the configured `/vampirehelper number hearts 4` threshold. Expected: `Heal now!` uses the enabled title/chat/sound channels and stops when health recovers.
+- [ ] Fight your own Bloodfiend. Expected: it receives the own-boss color, box and optional label/distance/line only inside the valid Rift areas.
+- [ ] Attack another player's Bloodfiend after enabling `other`. Expected: only that deliberately tagged boss receives other-boss guidance.
+- [ ] Run `/vampirehelper coop Name1,Name2` and enable `coop`. Expected: bosses whose parsed owner matches either name use the independent co-op color and controls.
+- [ ] Reach the final twenty percent. Expected: the boss changes to the Steak color and `Steak now!` appears when either health or the authoritative Stake marker confirms readiness.
+- [ ] Trigger Twinclaws. Expected: `Use Holy Ice!` appears after the configured zero-to-40-tick delay and uses its independent channels/message/color.
+- [ ] Trigger Mania while standing on and off the safe green terracotta. Expected: `Mania!` switches between the configured safe and danger colors.
+- [ ] Enable `countdown`, `hptillsteak` and `percentage`. Expected: the boss labels show the vehicle-timed Mania countdown, sub-300 HP Steak countdown/readiness and current percentage.
+- [ ] Enable `ichor` and `spring`. Expected: only the exact Blood Ichor and Killer Spring head textures receive their independently configured boxes/labels; Ichor beam and optional boss lines follow their toggles.
+- [ ] With Killer Spring sound-spam protection enabled and Vampire sound muting disabled, trigger duplicate Wither-spawn sounds in one tick. Expected: the first remains and same-tick duplicates are suppressed.
+- [ ] Test `/vampirehelper message`, `color`, `number` and `option`. Expected: every change persists and affects only its named feature.
+- [ ] Leave Stillgore/Oubliette, leave the Rift, or disable Perseus. Expected: alerts, entity scans, highlights and sound filtering stop immediately.

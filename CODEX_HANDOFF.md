@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.745 Temporal Pillar Navigation.
+Last updated: 2026-07-30 for version 0.9.746 Complete Vampire Slayer Guidance.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.745`.
+- Current artifact version: `0.9.746`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2654,4 +2654,18 @@ The feature adds a bounded 20-to-256-block scan range, two-to-20-block avoidance
 
 Version `0.9.745` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded the 2,201-node/5,293-edge Rift graph and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `b81fc0bee4ecb2483b423d8db18d27bb0f7427e345b1cf7053711943d5fe6e96`.
 
-The previous `0.9.744` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-130107-0.9.745/`; only `constellation-0.9.745.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
+The previous `0.9.744` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-130107-0.9.745/`; only `constellation-0.9.745.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `00f4ecc66f`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.746 Complete Vampire Slayer Guidance
+
+The audit found that `CURRENT_FEATURE_OVERVIEW.md` advertised Vampire Mania, Holy Ice, Healing Melon and Steak indicators even though no implementation consumed the old `vampireHelper` toggle. `VampireSlayerHelper.java`, `PerseusConfig.java`, `PerseusSlayers.java` and `ClientPacketListenerMixin.java` now replace that false surface with working behavior ported from Skyblocker LGPL-3.0-or-later `skyblock/slayers/boss/vampire/ManiaIndicator.java`, `StakeIndicator.java`, `TwinClawsIndicator.java`, `skyblock/rift/HealingMelonIndicator.java` and `skyblock/slayers/SlayerType.java`. Boss/auxiliary guidance also ports SkyHanni LGPL-3.0-or-later `features/slayer/VampireSlayerFeatures.kt`, its Vampire config classes and `features/combat/damageindicator/DamageIndicatorManager.kt`.
+
+Scope is exact Stillgore Chateau, accented Stillgore Château and Oubliette inside the Rift. Healing uses the source's four-heart default against real local health. Steak accepts the authoritative name-tag marker and the source-derived twenty-percent health threshold. Twinclaws accepts a nearby exact `TWINCLAWS` tag after a configurable zero-to-40-tick delay. Mania accepts a nearby exact `MANIA` tag and changes from danger to safe color only when the player's block below is green dyed terracotta. Alert priority is Steak, Twinclaws, Mania, then Healing. Title, local chat, sound, editable message and color are independent per alert.
+
+The authoritative Bloodfiend tier maxima are 625/1,100/1,800/2,400/3,000. Own bosses are identified from the shared SlayerState owner link. Other bosses require a deliberate user attack before highlighting; configured comma-separated co-op owners are independent. Own/other/co-op enablement and colors, low-health recolor, box, label, distance, player line, width, wall state and range are configurable. Optional percentage, sub-300 HP-until-Steak and vehicle-timed 26-second Mania Circles rows port SkyHanni's damage display logic.
+
+Blood Ichor and Killer Spring require the exact SkyHanni Repo texture hashes `c0340923a6de4825a176813d133503eff186db0896e32b6704928c2a2bf68422` and `77f7a7bc8ac86f23ca7bf98afeb76960227e1832fe209a3026f6ceb8bde74f54`. Both support independent boxes, labels, colors and optional boss lines; Ichor also supports a beam. The Killer Spring fix suppresses only duplicate Wither-spawn packets received in the same client-world tick and preserves the first sound. `/vampirehelper` exposes status, co-op names, messages, colors, timing/range/threshold numbers and primary toggles. No helper attacks, moves, aims, automatically clicks, sends server chat, issues a command or constructs a gameplay packet.
+
+Version `0.9.746` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `de96ff6054596779ca928687d72bad0a575e9f0e762a80352e673283f1d52b59`.
+
+The previous `0.9.745` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-131055-0.9.746/`; only `constellation-0.9.746.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

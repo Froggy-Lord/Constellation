@@ -97,6 +97,7 @@ public class ClientPacketListenerMixin {
         // ported from Skyblocker (LGPL-3.0-only): skyblock/hunting/SilencePhantoms.java
         // fusion filter ported from SkyHanni (LGPL-3.0-or-later): features/foraging/MuteFusionMachine.kt
         if (com.froggylord.constellation.constellation.ArtemisGalateaSounds.shouldCancel(packet)
+            || com.froggylord.constellation.constellation.VampireSlayerHelper.shouldCancelSound(packet)
             || com.froggylord.constellation.constellation.SlayerSounds.shouldCancel(packet)
             || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)
             || com.froggylord.constellation.constellation.AquilaMiningAwareness.shouldCancel(packet)
