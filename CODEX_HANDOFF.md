@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.735 Complete Rift Motes Suite.
+Last updated: 2026-07-30 for version 0.9.736 Rift West Village Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.735`.
+- Current artifact version: `0.9.736`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -61,6 +61,21 @@ Official repositories already present include:
 No relevant installed dungeon mod currently needs decompilation because official source is available. SkyOcean code is MIT, but its non-code assets/data are all-rights-reserved and must not be copied.
 
 The six additional repositories above are cloned read-only under `/home/zadenz/projects/minecraft/cryptkit-refs/`. Before choosing a future release, include them in feature-gap searches. Prefer an existing user-selected source when duplicate behavior is already mature, but use these newer 26.2 implementations where they provide more current APIs or a genuinely deeper missing vertical. Never infer copy permission from popularity: preserve the Bazaar Utils reimplementation-only boundary.
+
+### Additional player mod-list leads
+
+A second experienced 26.1.2 player supplied the following list on 2026-07-30. Treat it as a feature-discovery lead, not as blanket copy permission or a requirement to absorb general-purpose mods into Constellation.
+
+- High-priority SkyBlock comparison sources already in the corpus: Enhanced Storage, NoFrills, Odin, Skyblocker, SkyHanni, SkyOcean and Stella.
+- Additional SkyBlock/QOL projects worth locating and license-checking before using: Modern Warp Menu, Reliable Recipe Viewer, SBO, SkyBlock Enhancements, SkyBlock Profile Viewer, SkyBlock CollectionTracker, SkyCoFL, SkyRecipes and STFU. Record the exact repository, commit and license before copying anything.
+- Platform/API dependencies to evaluate only when a Constellation feature genuinely needs them: Hypixel Mod API, Mod Menu, UI Lib and tr7zw library modules.
+- General client, rendering, performance and compatibility ideas: 3D Skin Layers, Bandanas, BetterF3, Bobby, Cape Provider, Continuity, Catharsis, Controlling, Cubes Without Borders, Debugify, BetterBlockEntities or Optimized Block Entities, Detexturify, EntityCulling, FerriteCore, FPS Display, ImmediatelyFast, Iris, Language Reload, Lithium, ModernFix, More Culling, Network Protocol Disconnect, No Chat Reports, Particle Core, ScaleMe, Sciophobia, Skyboxify, Sodium, Sodium Shadowy Path Blocks, Sound Controller, WaveyCapes and Zoomify. These are normally better left as separate specialist mods; use them to find compatibility gaps or small SkyBlock-aware conveniences, not to duplicate whole rendering engines.
+- Account switching/authentication and cosmetic account services, including Auth Me, are out of Constellation's normal feature scope. Never handle or migrate player credentials.
+- PlayerFinder-style player ESP is a risky optional lead. Do not add through-wall player tracking by default; any future implementation needs an explicit user request, strict island/party scope and clear configuration.
+- Private auction-sniper mods were mentioned but no source was shared. They are not reference implementations. Do not decompile, imitate private behavior, or invent automation from their names.
+- The Fabric force-close loading-screen utility is a general crash/recovery convenience, not a SkyBlock priority. Prefer a compatible standalone mod unless a concrete Constellation loading hang is demonstrated.
+
+When scanning this list, prioritize missing SkyBlock collection tracking, recipe/inventory navigation, profile inspection, warp usability and message filtering over cosmetic or generic FPS duplication. Popularity does not establish license compatibility, correctness or safety.
 
 Room-data source split is locked:
 
@@ -2500,3 +2515,19 @@ Orb detection follows SkyHanni's proven grouping and timing: raw entity-effect p
 Version `0.9.735` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded 73 Motes prices, all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2b10958dc8f7d39cbc7ecd8b533e1a5b5dd95bedfce5970d6fb828815a966801`.
 
 The previous `0.9.734` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-113343-0.9.735/`; only `constellation-0.9.735.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The next feature selection must search the six newly added reference repositories as well as the established corpus.
+
+## July 30 version 0.9.736 Rift West Village Suite
+
+`AndromedaWestVillage.java`, `WestVerminHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java`, `AndromedaRiftCore.java` and the shared slot-render hook in `ItemProtectionScreenMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/westvillage/kloon/KloonHacking.kt`, `KloonTerminal.kt`, `VerminHighlighter.kt`, `VerminTracker.kt`, `RiftGunthersRace.kt` and their four configuration classes. The complete 52-point ordered route is ported from SkyHanni Repo MIT `constants/rift/RiftRace.json`.
+
+The Kloon solver preserves the reference's five source slots, five independent choice rows, diagonal answer cells and yellow alternate-match guidance. It supports both exact Hacking titles. The Color Picker compares lore only against the nearest of the eight authoritative terminal coordinates inside eight blocks. Terminal completion is accepted only when the exact server confirmation color agrees with that nearby terminal; it persists in config and can be deliberately reset. Waypoints require the Retro-Encabulating Visor by default and have independent completed visibility, box, beam, label, distance, range, height, wall mode and colors. Unlike the reference, Constellation never converts a real click to middle-click and never clicks a choice.
+
+Vermin recognition uses SkyHanni Repo's exact Fly and Spider skull texture hashes plus the exact eight-health Silverfish condition. The default world highlight requires a held Turbomax Vacuum and exact West Village or Infested House area. Fly, Spider and Silverfish chat observations increment three persistent counters shown in a separate movable HUD; outside-area, without-vacuum and chat hiding are independent options. The tracker deliberately does not guess current Vermin Bin totals until its modern menu and Vacuum custom-data layout are observed and verified.
+
+Gunther's exact start, finish and cancel events own a connection-safe ordered race state. Crossing a point within the configurable default five-block radius advances in order, including adjacent points already inside the radius. Rendering supports one-to-thirty point look-ahead, rainbow or monochrome color, box, current-point line, label, distance and wall mode. Leaving the Rift, disconnecting, finishing or cancelling clears transient state. `/westvillage` exposes status, both deliberate resets, numeric tuning and primary toggles. No West Village helper moves, aims, attacks, clicks, sends chat, issues a server command or constructs a gameplay packet.
+
+The user separately requested a proper icon pack and a complete UI/UX redesign because the present interface reads as generated. Treat this as a dedicated upcoming design-system release: first audit all main screens and existing assets, then establish a coherent Minecraft/SkyBlock-compatible icon family, typography, spacing, colors, focus/hover/disabled states and interaction patterns. Replace screens systematically and validate at native GUI scales; do not scatter unrelated generic icons into feature releases. Prefer repo-native SVG/code/vector assets where appropriate and use the project visual-direction rules. Keep the HUD editor's intentionally chrome-free transparent behavior unchanged.
+
+Version `0.9.736` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded 73 Motes prices, all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `fbecb2e3547eeb904f203bf44a0bc6b88a6d07d1e0b6be051fb74211158591c8`.
+
+The previous `0.9.735` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-114511-0.9.736/`; only `constellation-0.9.736.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.

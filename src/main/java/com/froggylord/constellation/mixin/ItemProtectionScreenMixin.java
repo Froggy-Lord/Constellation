@@ -95,6 +95,7 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.AquilaTunnelMaps.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AndromedaRiftCore.drawSoulMenuSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AndromedaMotes.drawSlot(graphics, screen, slot);
+        com.froggylord.constellation.constellation.AndromedaWestVillage.drawSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         com.froggylord.constellation.constellation.PhoenixSlotBinding.drawSlot(graphics, screen, slot, mouseX, mouseY);
         if (slot != null && ItemProtection.showMarker(slot.getItem()))

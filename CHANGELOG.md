@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.736 (2026-07-30) — Rift West Village Suite
+
+- added the five-row Kloon hacking solver, terminal color guide and all eight visor-gated terminal waypoints
+- added persistent Fly, Spider and Silverfish vacuum tracking plus exact vermin entity highlighting
+- added the complete ordered 52-point Gunther race guide with progress recovery and look-ahead controls
+- added independent rendering, range, visibility, color, HUD and `/westvillage` controls while keeping all interaction advisory
+
 ## 0.9.735 (2026-07-30) — Complete Rift Motes Suite
 
 - added authoritative lifetime Motes, session gain, hourly rate, visit duration and leave-summary tracking

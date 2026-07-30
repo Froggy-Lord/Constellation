@@ -164,6 +164,7 @@ public final class AndromedaRiftCore {
     public static String hudSouls(){return cfg.riftHudSouls?found().size()+"/"+SOULS.size():null;}
     public static String hudEffigies(){return cfg.riftHudEffigies&&!unbrokenEffigies.isEmpty()?unbrokenEffigies.size()+" unbroken":null;}
     public static String hudArea(){return cfg.riftHudArea&&!lastArea.isBlank()?lastArea:null;}
+    public static String currentArea(){return lastArea;}
     public static boolean isActive(){return active();}
     public static int soulCount(){return SOULS.size();}
     public static BlockPos soulPosition(int index){return index>=0&&index<SOULS.size()?SOULS.get(index).pos:null;}

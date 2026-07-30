@@ -1754,3 +1754,24 @@ One issue at a time is ideal. You do not need to retest unrelated sections after
 - [ ] Listen for other creaking, block, mob and environmental sounds. Expected: none are affected.
 - [ ] Run `/treecleanup`, `resetstats` and every `/treecleanup option <name> <on|off>` setting. Expected: status reports current choices and session counts, and every choice persists.
 - [ ] Change world or reconnect. Expected: hidden-display diagnostics reset and no stale entity UUIDs remain.
+
+## Rift West Village suite
+
+Enable Andromeda, enter the Rift and travel to West Village. Run `/westvillage` first; it should report terminal, vermin and race state without sending a server command.
+
+- [ ] Equip the Retro-Encabulating Visor. Expected: unfinished Kloon terminals receive red boxes, beams and labels; removing the visor hides them by default.
+- [ ] Complete a terminal color selection. Expected: only the nearby terminal matching the confirmed color becomes persistently complete and disappears when Hide Completed is enabled.
+- [ ] Run `/westvillage resetterminals`. Expected: all eight terminal waypoints become eligible again without changing server progress.
+- [ ] Open `Hacking` and `Hacking (As seen on CSI)`. Expected: each row's target slot is green when correct or red when wrong, while another matching choice in that row is yellow.
+- [ ] Click highlighted hacking choices. Expected: Constellation does not convert, repeat, cancel or generate the click.
+- [ ] Open `Hacked Terminal Color Picker` within eight blocks of a terminal. Expected: only a choice whose lore contains that terminal's color receives a green marker.
+- [ ] Hold a Turbomax Vacuum near a Rift Silverfish, Fly and Spider. Expected: exact vermin receive the configured box; unrelated armor stands and normal Silverfish do not.
+- [ ] Put the vacuum away. Expected: entity highlighting hides by default. Toggle Holding Vacuum off and confirm it returns only in West Village or Infested House.
+- [ ] Vacuum one of each vermin. Expected: the movable HUD increments the correct independent count. Chat remains visible unless Hide Chat is enabled.
+- [ ] Open the Vermin Bin. Expected: this release does not fabricate totals from unverified modern menu data; observed vacuum counts remain intact.
+- [ ] Toggle Outside and Without Vacuum independently. Expected: the tracker HUD follows each visibility rule without enabling world highlighting outside West Village.
+- [ ] Run `/westvillage resetvermin`. Expected: all three saved local counters return to zero.
+- [ ] Start Gunther's Rift race. Expected: the first of the complete 52 ordered points appears, with the configured number of look-ahead points.
+- [ ] Cross checkpoints normally and skip close enough across two adjacent points. Expected: progress advances in order within the configured detection radius and never rewinds from ordinary movement.
+- [ ] Finish, cancel, leave the Rift or reconnect. Expected: race rendering and transient progress clear immediately.
+- [ ] Test `/westvillage number terminalrange|beamheight|verminrange|lookahead|detection` and `/westvillage option`. Expected: bounded values and every exposed choice persist after restart.

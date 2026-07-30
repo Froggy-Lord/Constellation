@@ -33,6 +33,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Optional current-area-only filtering and area names in waypoint labels
 - Closest/all found or missing correction commands, found visibility, nearest-only mode and bounded box/beam/line/label rendering
 - Complete 2,201-node connected Rift navigation graph with weighted shortest paths to any or the nearest missing soul
+- Five-row Kloon hacking highlights, nearest-terminal color-picker guidance and all eight visor-gated terminal waypoints with persistent completion
+- Persistent Fly, Spider and Silverfish vacuum counts with a movable HUD, exact entity recognition and Turbomax-held highlighting
+- Complete ordered 52-point Gunther race route with automatic checkpoint progress, configurable detection, look-ahead, colors and presentation
+- Full `/westvillage` status, reset, range and feature controls; all hacking and race behavior remains advisory
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
 - Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
 - Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes
