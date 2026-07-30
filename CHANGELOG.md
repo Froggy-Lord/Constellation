@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.743 (2026-07-30) — Rift Mirrorverse Dance and Craft Suite
+
+- added the authoritative 49-step Dance Room sequence with exact sound-driven advancement, one-second countdown and failure reset
+- added a movable Dance HUD with configurable visible depth, line spacing, prefixes and per-action/countdown formatting
+- added optional original-title and real-player hiding strictly inside the exact Dance Room bounds
+- added exact mirrored Craft Room Zombie, Slime and Cave Spider silhouettes with independent name, health, box, beam, range and wall controls
+- added Craft Room player hiding and complete `/mirrorverse` status, reset, tuning and feature controls
+
 ## 0.9.742 (2026-07-30) — Complete Rift Wyld Woods Suite
 
 - replaced the inactive Wyld Woods placeholder toggles with exact texture-identified Larva and Odonata guidance

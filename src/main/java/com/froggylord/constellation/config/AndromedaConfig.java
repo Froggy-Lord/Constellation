@@ -376,5 +376,31 @@ public class AndromedaConfig extends BaseConfigGroup {
     public int wyldShyRange = 8;
     public int wyldShyAlertCooldownMillis = 150;
     public int wyldShyColor = 0xFFFFFF55;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/area/mirrorverse/
+    public boolean mirrorDanceHelper = false;
+    public int mirrorDanceLines = 3;
+    public int mirrorDanceSpacing = 0;
+    public boolean mirrorDanceHidePlayers = false;
+    public boolean mirrorDanceHideOriginalTitle = false;
+    public String mirrorDanceNow = "&7Now:";
+    public String mirrorDanceNext = "&7Next:";
+    public String mirrorDanceLater = "&7Later:";
+    public String mirrorDanceMove = "&e";
+    public String mirrorDanceStand = "&e";
+    public String mirrorDanceSneak = "&5";
+    public String mirrorDanceJump = "&b";
+    public String mirrorDancePunch = "&d";
+    public String mirrorDanceCountdown = "&f";
+    public String mirrorDanceFallback = "&f";
+    public boolean mirrorCraftHelper = true;
+    public boolean mirrorCraftShowName = true;
+    public boolean mirrorCraftShowHealth = true;
+    public boolean mirrorCraftHidePlayers = true;
+    public boolean mirrorCraftBox = true;
+    public boolean mirrorCraftBeam = false;
+    public boolean mirrorCraftLabel = true;
+    public boolean mirrorCraftThroughWalls = true;
+    public int mirrorCraftRange = 25;
+    public int mirrorCraftColor = 0x8055FFFF;
     public java.util.Map<String, java.util.Set<String>> riftFoundSouls = new java.util.LinkedHashMap<>();
 }

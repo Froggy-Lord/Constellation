@@ -45,6 +45,7 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaStillgore.init(cfg);
         AndromedaMountaintop.init(cfg);
         AndromedaWyldWoods.init(cfg);
+        AndromedaMirrorverse.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
@@ -55,6 +56,7 @@ public class AndromedaRift extends BaseConstellation {
         registerRenderer(AndromedaStillgore::draw);
         registerRenderer(AndromedaMountaintop::draw);
         registerRenderer(AndromedaWyldWoods::draw);
+        registerRenderer(AndromedaMirrorverse::draw);
     }
 
     @Override
@@ -74,9 +76,11 @@ public class AndromedaRift extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.MountaintopHudWidget("ubik",HudPosition.of(126,60),()->cfg.enabled&&cfg.mountainUbikHud));
         hud.register(new HudWidget("andromeda-mountaintop-evolution","Timite Evolution",
             AndromedaMountaintop::evolutionHud,HudPosition.of(126,48),()->cfg.enabled&&cfg.mountainTimiteEvolution));
+        hud.register(new com.froggylord.constellation.hud.MirrorverseDanceHudWidget(
+            HudPosition.of(126,36),()->cfg.enabled&&cfg.mirrorDanceHelper));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);AndromedaMountaintop.registerCommands(dispatcher);AndromedaWyldWoods.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);AndromedaMountaintop.registerCommands(dispatcher);AndromedaWyldWoods.registerCommands(dispatcher);AndromedaMirrorverse.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

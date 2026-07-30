@@ -93,6 +93,7 @@ public class ClientPacketListenerMixin {
         shift = At.Shift.AFTER), cancellable = true)
     private void constellation$onSound(ClientboundSoundPacket packet, CallbackInfo ci) {
         ConstellationClient.instance().packets().fire(packet);
+        com.froggylord.constellation.constellation.AndromedaMirrorverse.onSound(packet);
         // ported from Skyblocker (LGPL-3.0-only): skyblock/hunting/SilencePhantoms.java
         // fusion filter ported from SkyHanni (LGPL-3.0-or-later): features/foraging/MuteFusionMachine.kt
         if (com.froggylord.constellation.constellation.ArtemisGalateaSounds.shouldCancel(packet)
@@ -137,6 +138,10 @@ public class ClientPacketListenerMixin {
         shift = At.Shift.AFTER), cancellable = true)
     private void constellation$filterGoldorTitle(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
         com.froggylord.constellation.constellation.AndromedaLivingCave.onTitle(packet.text());
+        if (com.froggylord.constellation.constellation.AndromedaMirrorverse.shouldHideTitle()) {
+            ci.cancel();
+            return;
+        }
         // ported from Athen (BSD-3-Clause): modules/impl/kuudra/KuudraTitles.kt Supply.Progress cancellation
         if (com.froggylord.constellation.constellation.KuudraTitles.onTitle(packet.text())) {
             ci.cancel();

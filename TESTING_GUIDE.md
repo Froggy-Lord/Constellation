@@ -1897,3 +1897,22 @@ Enable Andromeda and enter the Rift. Run `/wyldwoods`; it should report Larva, O
 - [ ] Change Shy range between three and twenty blocks and cooldown between 50 and 2,000 milliseconds. Expected: detection and repeat frequency remain bounded to those values.
 - [ ] Approach another named entity that is not one of the exact four phrases. Expected: it never triggers the Shy warning.
 - [ ] Leave the Rift or disable Andromeda. Expected: all Larva, Odonata and Shy rendering/alerts stop immediately.
+
+## Rift Mirrorverse Dance and Craft suite
+
+Enable Andromeda and enter Mirrorverse. Run `/mirrorverse`; it should report Dance progress and Craft state locally. Dance defaults off and Craft defaults on to match the live 26.1.2 profile.
+
+- [ ] Enable Dance and enter the exact room around x-267 to -260, y32-40, z-110 to -102. Expected: the movable HUD begins at step one of 49 and remains hidden outside those bounds.
+- [ ] Compare the opening sequence. Expected: the first five instructions are Move, followed by Sneak, Stand and the authoritative remaining order.
+- [ ] Complete one correct dance instruction. Expected: either exact bass success pitch advances one step and starts a one-second millisecond countdown.
+- [ ] Deliberately fail after advancing. Expected: the exact burp or high-pitch level-up failure sound resets to step one and clears the countdown.
+- [ ] Change visible lines from one to 49 and spacing from -5 to 10. Expected: the movable HUD resizes and retains Now, Next and Later ordering.
+- [ ] Edit Now/Next/Later and Move/Stand/Sneak/Jump/Punch/countdown/fallback formatting. Expected: ampersand color codes render as Minecraft formatting without changing instruction logic.
+- [ ] Enable Hide Original Title. Expected: title packets hide only while Dance is enabled and the player is inside its exact bounds.
+- [ ] Enable Hide Players. Expected: other real players hide only inside Dance; local player and non-player entities remain.
+- [ ] Enter Craft Room around x-117 to -108, y51-58, z-128 to -106. Expected: source-side Zombies, Slimes and Cave Spiders at or behind z-116.5 produce mirrored guidance at equal distance across that plane.
+- [ ] Move a supported mob on the source side. Expected: its mirrored silhouette follows without moving or creating a world entity.
+- [ ] Toggle Craft name, health, box, beam, label, color, range and wall options independently. Expected: only presentation changes; source mobs remain untouched.
+- [ ] Enable Craft player hiding. Expected: other real players hide only while the local player is in the exact Craft Room bounds.
+- [ ] Approach unsupported mobs or supported mobs on the wrong side of the mirror plane. Expected: no mirrored guidance is produced.
+- [ ] Leave Mirrorverse or disconnect. Expected: Dance index/countdown and room flags clear, all hiding stops, and no stale Craft silhouettes remain.

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.742 Complete Rift Wyld Woods Suite.
+Last updated: 2026-07-30 for version 0.9.743 Rift Mirrorverse Dance and Craft Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.742`.
+- Current artifact version: `0.9.743`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2618,4 +2618,16 @@ Shy recognition accepts only the source's four exact cleaned names: `I'm ugly! :
 
 Version `0.9.742` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `574cccc3e3757cca8f1af043ede6ff6a3ec78f7d15426caf224197740265316f`.
 
-The previous `0.9.741` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123753-0.9.742/`; only `constellation-0.9.742.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.
+The previous `0.9.741` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123753-0.9.742/`; only `constellation-0.9.742.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `fcada99516`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.743 Rift Mirrorverse Dance and Craft Suite
+
+`AndromedaMirrorverse.java`, `MirrorverseDanceHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java`, `ClientPacketListenerMixin.java`, `EntityRenderDispatcherMixin.java` and `dance_room_instructions.json` port SkyHanni LGPL-3.0-or-later `features/rift/area/mirrorverse/DanceRoomHelper.kt`, `CraftRoomHolographicMob.kt` and all Dance/Craft configuration classes. The exact 49-step instruction asset is copied from SkyHanni Repo MIT `constants/DanceRoomInstructions.json` with SHA-256 `15a9ebf8b0fc1bb8b23e3bccca12b3fa884bdad35dfb606ecb423e661b5ef64a`. Defaults match the live 26.1.2 profile: Dance disabled with three look-ahead lines and no hiding; Craft enabled with name, health and other-player hiding enabled.
+
+Dance scope is the exact normalized AABB from `(-267,32,-110)` to `(-260,40,-102)`. Success requires `block.note_block.bass`, volume one and pitch `0.6984127` or `0.52380955`; failure requires `entity.player.burp` at volume `0.8`, or `entity.player.levelup` at pitch `1.8412699` and volume one. Success advances one of 49 steps and starts 20 ticks; failure or leaving resets. The movable HUD supports one-to-49 visible lines, -5-to-10 spacing, editable Now/Next/Later prefixes and independent action/countdown/fallback formatting. Title and RemotePlayer hiding are exact-room and independently optional.
+
+Craft scope is the exact normalized AABB from `(-117,51,-128)` to `(-108,58,-106)`. Only non-player Zombie, Slime and Cave Spider entities at `z <= -116.5` are accepted. Their bounding geometry mirrors across `z = -116.5` without moving, cloning or adding any entity to the world. Name, current health, box, beam, label, ten-to-50-block range, color and wall state are configurable; RemotePlayer hiding is separately optional. This 26.2 port intentionally uses renderer-native mirrored silhouettes rather than mutating or instantiating client world entities. `/mirrorverse` exposes local state, reset, spacing/depth/range and primary toggles. No Mirrorverse helper attacks, moves, aims, clicks, sends server chat, issues a command or constructs a gameplay packet.
+
+Version `0.9.743` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, exactly 49 Dance Room instructions, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `ca32198d0fb3cdcbeed6977cb50d9888edcc2028e7051463df0343a49b06d1dc`.
+
+The previous `0.9.742` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-124552-0.9.743/`; only `constellation-0.9.743.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.

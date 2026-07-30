@@ -74,6 +74,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Independent Larva/Odonata boxes, beams, labels, distance, range, color and wall behavior
 - Exact four-name Shy Crux proximity warning with independent title, subtitle, chat, sound, box and label channels
 - Configurable Shy range/cooldown and full `/wyldwoods` status, timing and primary feature controls
+- Authoritative ordered 49-step Mirrorverse Dance Room sequence with exact success/failure sound recognition
+- Sound-driven step advancement, one-second millisecond countdown, failure reset and room-leave reset
+- Movable Dance HUD with configurable line depth/spacing, Now/Next/Later prefixes and independent Move/Stand/Sneak/Jump/Punch/countdown formatting
+- Optional original-title and real-player hiding restricted to the exact Dance Room bounds
+- Exact Craft Room Zombie, Slime and Cave Spider discovery mirrored across the source's `z = -116.5` plane
+- Configurable mirrored Craft silhouettes with name, health, box, beam, range, color, wall and player-hiding controls
+- Full `/mirrorverse` status, dance reset, line/spacing/range and primary feature controls
 - Crux Talisman progress and bonuses
 - Motes and area information
 - West Village and Rift activity helpers
