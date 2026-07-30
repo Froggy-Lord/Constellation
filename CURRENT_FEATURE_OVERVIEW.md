@@ -24,7 +24,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 - Live Rift time, Motes, session gains, found-soul and unbroken-effigy HUD rows
 - Configurable low-time chat, title and sound warning with normal, warning and danger colors
-- All 52 Enigma Soul waypoints with SkyBlock-profile-aware collected state and automatic collection detection
+- All 52 Enigma Soul waypoints with authoritative names and areas, SkyBlock-profile-aware state, collection detection and exact Rift Guide menu synchronization
+- Right-click route selection inside Enigma Souls, found/missing/routed slot markers, contextual tooltips and named soul commands
+- Optional current-area-only filtering and area names in waypoint labels
 - Closest/all found or missing correction commands, found visibility, nearest-only mode and bounded box/beam/line/label rendering
 - Complete 2,201-node connected Rift navigation graph with weighted shortest paths to any or the nearest missing soul
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance

@@ -51,6 +51,12 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean enigmaSoulLabel = true;
     public boolean enigmaSoulDistance = true;
     public boolean enigmaSoulThroughWalls = true;
+    public boolean enigmaSoulGuideSync = true;
+    public boolean enigmaSoulGuideSyncChat = true;
+    public boolean enigmaSoulMenuTracking = true;
+    public boolean enigmaSoulMenuHighlights = true;
+    public boolean enigmaSoulCurrentAreaOnly = false;
+    public boolean enigmaSoulAreaInLabel = false;
     public int enigmaSoulRange = 150;
     public int enigmaSoulBeamHeight = 12;
     public int enigmaSoulMissingColor = 0xFF55FF55;

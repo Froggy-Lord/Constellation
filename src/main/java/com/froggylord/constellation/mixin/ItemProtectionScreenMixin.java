@@ -33,6 +33,8 @@ public abstract class ItemProtectionScreenMixin {
         if (com.froggylord.constellation.constellation.HerculesDnaAnalyzer.shouldBlockClick(screen, slot, slotId, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.ArtemisMoongladeBeacon.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AquilaFossils.shouldBlockClick(screen, slot, button, input)) { ci.cancel(); return; }
+        // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/EnigmaSoulWaypoints.kt
+        if (com.froggylord.constellation.constellation.AndromedaRiftCore.onSoulMenuClick(screen, slot, button, input)) { ci.cancel(); return; }
         com.froggylord.constellation.constellation.AquilaTunnelMaps.onSlotClick(screen, slot, button, input);
         // ported from SkyHanni (LGPL-3.0-or-later): features/mining/DeepCavernsGuide.kt
         if (com.froggylord.constellation.constellation.AquilaDeepCavernsGuide.shouldStartClick(screen, slot, slotId)) { ci.cancel(); return; }
@@ -91,6 +93,7 @@ public abstract class ItemProtectionScreenMixin {
         // ported from SkyHanni (LGPL-3.0-or-later): features/mining/HotxFeatures.kt
         com.froggylord.constellation.constellation.AquilaHotmHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.AquilaTunnelMaps.drawSlot(graphics, screen, slot);
+        com.froggylord.constellation.constellation.AndromedaRiftCore.drawSoulMenuSlot(graphics, screen, slot);
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         com.froggylord.constellation.constellation.PhoenixSlotBinding.drawSlot(graphics, screen, slot, mouseX, mouseY);
         if (slot != null && ItemProtection.showMarker(slot.getItem()))
@@ -104,7 +107,8 @@ public abstract class ItemProtectionScreenMixin {
             cir.setReturnValue(List.of());
             return;
         }
-        cir.setReturnValue(com.froggylord.constellation.constellation.AquilaTunnelMaps.appendTooltip(screen, stack,
+        cir.setReturnValue(com.froggylord.constellation.constellation.AndromedaRiftCore.appendSoulMenuTooltip(screen, stack,
+            com.froggylord.constellation.constellation.AquilaTunnelMaps.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.AquilaHotmHelper.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.AquilaFossils.appendTooltip(screen, stack,
             com.froggylord.constellation.constellation.ArtemisStarlyn.appendTooltip(screen, stack,
@@ -129,6 +133,6 @@ public abstract class ItemProtectionScreenMixin {
             com.froggylord.constellation.constellation.HerculesVisitorHelper.appendTooltip(screen, stack,
                 com.froggylord.constellation.constellation.LyraAuctionHelper.appendTooltip(screen, stack,
                     com.froggylord.constellation.constellation.LyraBazaarHelper.appendTooltip(screen, stack,
-                        ItemProtection.appendTooltip(stack, cir.getReturnValue())))))))))))))))))))))))))));
+                        ItemProtection.appendTooltip(stack, cir.getReturnValue()))))))))))))))))))))))))))));
     }
 }

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.725 Deep Caverns Guide.
+Last updated: 2026-07-30 for version 0.9.734 Rift Guide Soul Synchronization.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.725`.
+- Current artifact version: `0.9.734`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2464,4 +2464,16 @@ Manual `/riftnav soul <1-52>` or `/riftnav nearest` selects a target; optional a
 
 Version `0.9.733` built with exactly 11 successful tests and zero failures. Its full enabled-Andromeda headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded all 52 souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `8fe78884d41099b9ca570f6c381c44d6b3398a1dd2b421967409c45df825dae2`.
 
-Gather's Andromeda constellation was disabled before deployment, so the new Rift surfaces remain inactive until deliberately enabled. The previous `0.9.732` jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-110955-0.9.733/`; only `constellation-0.9.733.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so existing preferences were not rewritten. Enqueue this verified release through the drip helper, record the resulting commit, then continue deepening the still-advertised but inactive Andromeda area helpers.
+Gather's Andromeda constellation was disabled before deployment, so the new Rift surfaces remain inactive until deliberately enabled. The previous `0.9.732` jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-110955-0.9.733/`; only `constellation-0.9.733.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so existing preferences were not rewritten. The verified release was enqueued as drip commit `a9e9e3b058c00292389e2d1c33e40c54dd61c575`, authored only as Froggy-Lord. Continue deepening the still-advertised but inactive Andromeda area helpers.
+
+## July 30 version 0.9.734 Rift Guide Soul Synchronization
+
+`AndromedaRiftCore.java`, `AndromedaRiftNavigation.java`, `AndromedaConfig.java`, `ItemProtectionScreenMixin.java` and `enigma_souls_named.json` port SkyHanni LGPL-3.0-or-later `features/rift/everywhere/EnigmaSoulWaypoints.kt` and SkyHanni Repo MIT `constants/EnigmaSouls.json`. The authoritative dataset contains exactly 52 named coordinates across Wyld Woods, Black Lagoon, West Village, Dreadfarm, Village Plaza, Living Cave, Colosseum, Stillgore Chateau and Mountaintop; its exact checksum is `2daa46dae9b99751b7d06eedbaba23fff0660492f03bc670bde6762c32dedf54`.
+
+Opening `Enigma Souls` now parses the exact `Enigma: <name>`, `Not completed yet!` and `To Rift Guide` formats. Every displayed entry synchronizes found or missing state into the active SkyBlock profile, with deduplicated page reads and optional local summary. This authoritative correction supplements the immediate nearby collection message without fabricating unseen page state.
+
+Right-clicking a named menu entry is deliberately intercepted and starts the existing local graph route; ordinary left-click server navigation remains unchanged. The menu draws separate found, missing and routed markers and adds a contextual area/state/action tooltip without replacing server items. `/riftnav named <name>` supports named and area-qualified partial selection. World labels now use real soul names, with independent current-area filtering and area-label controls. Sync, sync feedback, menu routing, menu markers, current-area filtering and area labels are separately configurable. No interaction is automatic and the feature sends no chat, command, movement, aim or gameplay packet.
+
+Version `0.9.734` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `1584294ad5c623cd83c8d3b1118f7a9f0f73d1fda23e7e8dfbbb886e61f68660`.
+
+The previous `0.9.733` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-112144-0.9.734/`; only `constellation-0.9.734.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Continue Andromeda with the live-enabled Motes session/value/orb vertical or the highest-use missing area helper after another licensed-source check.

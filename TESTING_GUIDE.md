@@ -1637,6 +1637,12 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Stand within four blocks of a soul and collect it normally. Expected: the closest waypoint becomes found for the active SkyBlock profile and hides immediately unless found visibility is enabled.
 - [ ] Run closest-found, closest-missing, all-found and all-missing corrections. Expected: only the current profile changes and state persists after restart.
 - [ ] Switch SkyBlock profiles. Expected: found-soul sets remain independent; an unknown profile starts with no fabricated collection state.
+- [ ] Open the real Enigma Souls menu and visit several area pages containing both completed and missing souls. Expected: each displayed named soul synchronizes to the active profile from its exact completion lore, with one optional local summary per changed page.
+- [ ] Compare completed and missing menu entries. Expected: each receives an `F` or `M` edge marker in the configured color, without changing or replacing the server item.
+- [ ] Right-click a named soul in the menu. Expected: the server click is cancelled locally, that entry gains an `R` marker and a route starts to its exact named location; normal left-click Rift Guide navigation still works.
+- [ ] Hover a soul entry. Expected: the tooltip names its area, current found/missing state and right-click route action.
+- [ ] Run `/riftnav named tough bark`, then try an area-qualified partial name. Expected: a matching named soul routes with its name and area; unknown text fails locally without sending a command.
+- [ ] Toggle Soul Sync, Sync Chat, Menu Tracking, Menu Highlights, Current Area and Area Label independently. Expected: menu authority, feedback, right-click interception, markers and world filtering each change separately.
 - [ ] Run `/riftnav soul 1`, then `/riftnav nearest`. Expected: a blue path follows the actual Rift graph from the closest node to the selected or closest missing soul, followed by a bounded final segment.
 - [ ] Walk along a route and deviate by several blocks. Expected: shortest path recalculates from the new nearest graph node without teleporting, moving or aiming the player.
 - [ ] Test `/riftnav width`, `lookahead`, `arrival`, `beamheight`, `color` and every option. Expected: each affects only its saved presentation or arrival behavior.

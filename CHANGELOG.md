@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.734 (2026-07-30) — Rift Guide Soul Synchronization
+
+- replaced numbered Enigma Soul labels with the authoritative 52-name, nine-area Rift Guide dataset
+- added profile-aware completion synchronization from the real Enigma Souls menu with exact missing-state parsing
+- added right-click menu routing, found/missing/routed slot markers and contextual soul tooltips
+- added named soul routing, current-area filtering, area labels and independent sync/menu/config controls
+
 ## 0.9.733 (2026-07-30) — Rift Core and Navigation
 
 - rebuilt the previously inactive Andromeda core with a live Rift time, Motes, session, soul and effigy HUD
