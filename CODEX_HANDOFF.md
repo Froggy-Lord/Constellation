@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.764 Profile Inventory Browser.
+Last updated: 2026-07-30 for version 0.9.765 Profile Wealth Breakdown.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.764`.
+- Current artifact version: `0.9.765`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2894,4 +2894,18 @@ Decoding is lazy per selected SkyBlock profile and happens off the render thread
 
 Version `0.9.764` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures, and the nested legacy item data fixer loaded without an error. Main-jar SHA-256: `aa119625c4a0543b50bf271ff68c68b93be29af9bf4a5971d564696215dc2601`.
 
-The previous `0.9.763` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-154121-0.9.764/`; only `constellation-0.9.764.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.763` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-154121-0.9.764/`; only `constellation-0.9.764.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `1c6b183dba`, authored only as Froggy-Lord. The first enqueue attempt correctly failed before committing because the helper did not yet include `build.gradle`; `build.gradle` is now permanently part of the helper allowlist and the successful retry independently rebuilt all 11 tests.
+
+## July 30 version 0.9.765 Profile Wealth Breakdown
+
+`ProfileWealthCalculator.java`, `ProfileViewerScreen.java`, `ProfileItemDecoder.java`, `ItemValueCalculator.java` and `LyraConfig.java` add a conservative category-level wealth page. Currency/storage source boundaries and aggregation port SkyBlockPv modified-MIT `feature/networth/NetworthCalculator.kt` and `NetworthCategory.kt`; modifier-aware item estimates continue the existing SkyHanni LGPL `features/misc/items/EstimatedItemValueCalculator.kt` port.
+
+Exact purse and profile bank values combine with Inventory, Armor, Equipment, Ender Chest, Backpacks, Accessory Bag, Potion Bag, Fishing Bag, Quiver, Personal Vault, Wardrobe, Equipment Sets and Sacks. Every category reports its valued/observed stack count and modifier-complete count. Clicking a category expands its highest-value items with aggregate quantities. The total never pretends unknown items are worth zero: missing base prices and unsupported modifiers remain visible through coverage and amber incomplete states.
+
+The shared item calculator now exposes `estimateCached`, which performs the exact same conservative breakdown without launching network requests. The wealth worker deduplicates missing base IDs, warms at most one per configurable 250–5,000 ms interval, respects a zero-to-200 per-view cap and publishes progressive recalculations on the render thread. Profile changes cancel the old generation logically, and no render method initiates pricing. Default expansion is eight items, thirty maximum price requests and one second between requests.
+
+`ProfileItemDecoder` was corrected to retain the original `ExtraAttributes` wrapper. Skyblocker's own pipeline flattens that wrapper because its `ItemUtils` expects flattened custom data; Constellation's established `LyraTooltips` and `ItemValueCalculator` expect the original wrapper. Preserving it is the correct 26.2 glue and restores all existing tooltip IDs, modifiers, gems, enchants and valuation components for decoded profile items.
+
+Version `0.9.765` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `4b74520a77757ca179753df62064d54bdd5ea7867814a225f9b95c96770bb10b`.
+
+The previous `0.9.764` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-155045-0.9.765/`; only `constellation-0.9.765.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

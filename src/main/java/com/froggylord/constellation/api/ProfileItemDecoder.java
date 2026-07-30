@@ -187,8 +187,8 @@ public final class ProfileItemDecoder {
                 .map(Component::getString).map(ProfileItemDecoder::fromLegacy).map(Component.class::cast).toList()));
         if (stack.has(DataComponents.CUSTOM_DATA)) {
             CompoundTag tag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
-            CompoundTag extra = tag.getCompoundOrEmpty("ExtraAttributes");
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(extra.isEmpty() ? tag : extra));
+            // Constellation's tooltip/value pipeline reads the original ExtraAttributes wrapper.
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
         }
         TooltipDisplay display = stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, TooltipDisplay.DEFAULT)
             .withHidden(DataComponents.ATTRIBUTE_MODIFIERS, true).withHidden(DataComponents.ENCHANTMENTS, true);

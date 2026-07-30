@@ -2134,3 +2134,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Switch profiles while Items is decoding. Expected: old-profile contents never appear under the new profile and the new profile starts its own lazy decode.
 - [ ] Set `profileViewerInventoryRows` from 1 to 6, toggle tooltips/decorations and change both inventory colors. Expected: each option changes only the item browser and remains saved after restart.
 - [ ] Test a player with inventory APIs disabled. Expected: Items states that data is unavailable while Overview and other public pages continue working.
+
+### Profile wealth
+
+- [ ] Open Wealth for a profile with inventory APIs enabled. Expected: liquid currency appears immediately, item categories populate after lazy decoding and the total clearly reports priced/observed stack coverage.
+- [ ] Compare purse and profile bank with the selected profile. Expected: both contribute once; another profile's currency and co-op members' personal purses never leak into the total.
+- [ ] Expand Inventory, Armor, Equipment, Ender Chest, Backpacks, Accessory Bag, bags, Vault, Wardrobe, Equipment Sets and Sacks. Expected: each category appears only when it has data and its highest-value items aggregate identical names with quantities.
+- [ ] Check the currently equipped armor/equipment and its selected loadout slots. Expected: current gear is not counted twice; inactive wardrobe/equipment sets remain included once.
+- [ ] Check a plain Bazaar item, Auction item, recombobulated item, master-starred item, gemmed item, skinned/dyed item, enchanted item and drill. Expected: supported components increase value, incomplete modifiers are amber and no unknown component is guessed.
+- [ ] Watch a profile with uncached Auction items. Expected: the pending count falls progressively, never more than one new ID is warmed per configured interval and the screen remains responsive.
+- [ ] Set `profileWealthMaxPriceRequests` to 0 and 200 and `profileWealthRequestIntervalMs` from 250 to 5000. Expected: zero performs a cache-only estimate; other values bound enrichment without changing unrelated tooltip pricing.
+- [ ] Change `profileWealthItemsPerCategory` from 0 to 30. Expected: category totals remain while expanded item detail respects the configured limit.
+- [ ] Switch profiles or close/reopen during enrichment. Expected: results from the old generation never overwrite the newly selected profile.
+- [ ] Disable inventory APIs for the tested Hypixel profile. Expected: exact currency can remain visible, missing item wealth remains explicitly incomplete and no fabricated net worth is shown.

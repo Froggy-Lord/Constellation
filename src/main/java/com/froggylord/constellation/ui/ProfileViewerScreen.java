@@ -2,6 +2,7 @@ package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.api.ProfileViewerApi;
 import com.froggylord.constellation.api.ProfileItemDecoder;
+import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
 import com.google.gson.JsonArray;
@@ -29,7 +30,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -45,6 +46,11 @@ public final class ProfileViewerScreen extends Screen {
     private int itemContainer;
     private int itemContainerScroll;
     private int itemPage;
+    private ProfileWealthCalculator.Result wealth;
+    private boolean wealthLoading;
+    private int wealthProfile = -1;
+    private int wealthCategory = -1;
+    private int wealthGeneration;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -100,6 +106,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 5) {
             drawItems(g, mx, my);
+            return;
+        }
+        if (tab == 6) {
+            drawWealth(g, mx, my);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -191,6 +201,60 @@ public final class ProfileViewerScreen extends Screen {
             g.setComponentTooltipForNextFrame(font, Screen.getTooltipFromItem(Minecraft.getInstance(), hovered), mx, my);
     }
 
+    private void drawWealth(GuiGraphicsExtractor g, int mx, int my) {
+        if (wealthProfile != profileIndex && !wealthLoading) startWealth();
+        if (wealthLoading && wealth == null) {
+            g.text(font, itemLoading ? "Decoding profile items..." : "Calculating profile wealth...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (wealth == null) {
+            g.text(font, "Wealth data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        String total = "Estimated net worth  " + money(wealth.total());
+        g.text(font, total, 14, 109, ConstellationTheme.ACCENT_BRIGHT, false);
+        String coverage = wealth.pricedStacks() + "/" + wealth.totalStacks() + " stacks priced"
+            + (wealth.pendingIds().isEmpty() ? "" : "  " + wealth.pendingIds().size() + " prices pending");
+        g.text(font, coverage, width - 14 - font.width(coverage), 110,
+            wealth.pendingIds().isEmpty() ? ConstellationTheme.TEXT_MUTED : 0xFFFFAA55, false);
+        List<WealthLine> lines = wealthLines();
+        int y = 130 - scroll;
+        for (WealthLine line : lines) {
+            if (y > 120 && y < height - 20) {
+                int color = line.category >= 0 && line.category == wealthCategory ? 0xFF34506A : 0xA0181825;
+                g.fill(12, y, width - 12, y + 18, color);
+                g.text(font, line.label, 19 + line.indent, y + 6,
+                    line.category >= 0 ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED, false);
+                g.text(font, line.value, width - 19 - font.width(line.value), y + 6,
+                    line.complete ? ConstellationTheme.TEXT : 0xFFFFAA55, false);
+            }
+            y += 21;
+        }
+        if (wealthLoading)
+            g.text(font, "Loading market prices at a bounded rate...", 14, height - 13, ConstellationTheme.TEXT_FAINT, false);
+    }
+
+    private List<WealthLine> wealthLines() {
+        if (wealth == null) return List.of();
+        List<WealthLine> lines = new ArrayList<>();
+        lines.add(new WealthLine("Liquid currency", money(wealth.currency()), -1, 0, true));
+        lines.add(new WealthLine("Priced items", money(wealth.itemValue()), -1, 0,
+            wealth.pricedStacks() == wealth.totalStacks() && wealth.completeStacks() == wealth.totalStacks()));
+        int maxItems = Math.clamp(ConstellationClient.cfg().lyra.profileWealthItemsPerCategory, 0, 30);
+        for (int i = 0; i < wealth.categories().size(); i++) {
+            ProfileWealthCalculator.Category category = wealth.categories().get(i);
+            boolean complete = category.pricedStacks() == category.totalStacks() && category.completeStacks() == category.totalStacks();
+            lines.add(new WealthLine(category.name(), money(category.value()) + "  " + category.pricedStacks() + "/" + category.totalStacks(), i, 0, complete));
+            if (i == wealthCategory) {
+                category.items().stream().limit(maxItems).forEach(item -> {
+                    String count = item.count() > 1 ? " x" + item.count() : "";
+                    lines.add(new WealthLine(item.name() + count, money(item.value()), -1, 10, item.complete()));
+                });
+            }
+        }
+        return lines;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -266,13 +330,18 @@ public final class ProfileViewerScreen extends Screen {
             int x = 12;
             for (int i = 0; i < result.profiles().size(); i++) {
                 int bw = Math.max(52, font.width(string(result.profiles().get(i).getAsJsonObject(), "cute_name", Integer.toString(i + 1))) + 14);
-                if (inside(mx, my, x, 58, bw, 16)) { profileIndex = i; scroll = 0; resetItems(); if (tab == 5) startItemDecode(); return true; }
+                if (inside(mx, my, x, 58, bw, 16)) { profileIndex = i; scroll = 0; resetItems(); if (tab == 5) startItemDecode(); if (tab == 6) startWealth(); return true; }
                 x += bw + 4;
             }
             x = 12;
             for (int i = 0; i < TABS.length; i++) {
                 int bw = font.width(TABS[i]) + 16;
-                if (inside(mx, my, x, 80, bw, 16)) { tab = i; scroll = 0; if (tab == 5 && itemProfile != profileIndex) startItemDecode(); return true; }
+                if (inside(mx, my, x, 80, bw, 16)) {
+                    tab = i; scroll = 0;
+                    if (tab == 5 && itemProfile != profileIndex) startItemDecode();
+                    if (tab == 6 && wealthProfile != profileIndex) startWealth();
+                    return true;
+                }
                 x += bw + 4;
             }
             if (tab == 5 && itemResult != null && !itemResult.containers().isEmpty()) {
@@ -289,6 +358,17 @@ public final class ProfileViewerScreen extends Screen {
                 if (inside(mx, my, gridX, gridY + rows * 18 + 8, 56, 18)) { itemPage = Math.max(0, itemPage - 1); return true; }
                 if (inside(mx, my, gridX + 106, gridY + rows * 18 + 8, 56, 18)) { itemPage++; return true; }
             }
+            if (tab == 6 && wealth != null) {
+                int y = 130 - scroll;
+                for (WealthLine line : wealthLines()) {
+                    if (line.category >= 0 && inside(mx, my, 12, y, width - 24, 18)) {
+                        wealthCategory = wealthCategory == line.category ? -1 : line.category;
+                        scroll = 0;
+                        return true;
+                    }
+                    y += 21;
+                }
+            }
         }
         return super.mouseClicked(event, dbl);
     }
@@ -300,6 +380,11 @@ public final class ProfileViewerScreen extends Screen {
                 itemContainerScroll = Math.clamp(itemContainerScroll - (int) sy, 0,
                     Math.max(0, itemResult.containers().size() - Math.max(2, (height - 136) / 18)));
             else itemPage = Math.max(0, itemPage - (int) sy);
+            return true;
+        }
+        if (tab == 6) {
+            int max = Math.max(0, wealthLines().size() * 21 - (height - 154));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
         int max = Math.max(0, rows(profile(), member(profile())).size() * 21 - (height - 132));
@@ -333,7 +418,8 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private void startItemDecode() {
-        if (result == null || itemLoading || !ConstellationClient.cfg().lyra.profileViewerInventory) return;
+        if (result == null || itemLoading
+            || !ConstellationClient.cfg().lyra.profileViewerInventory && tab != 6) return;
         int requestedProfile = profileIndex;
         itemLoading = true;
         itemResult = null;
@@ -342,6 +428,36 @@ public final class ProfileViewerScreen extends Screen {
             itemLoading = false;
             itemProfile = requestedProfile;
             itemResult = failure == null ? decoded : null;
+            if (tab == 6 && failure == null) startWealthCalculation();
+            else if (tab == 6) wealthLoading = false;
+        }));
+    }
+
+    private void startWealth() {
+        if (result == null || wealthLoading || !ConstellationClient.cfg().lyra.profileWealth) return;
+        if (itemProfile != profileIndex || itemResult == null) {
+            wealthLoading = true;
+            startItemDecode();
+            return;
+        }
+        startWealthCalculation();
+    }
+
+    private void startWealthCalculation() {
+        if (itemResult == null) { wealthLoading = false; return; }
+        int generation = ++wealthGeneration;
+        int requestedProfile = profileIndex;
+        wealthLoading = true;
+        wealthProfile = requestedProfile;
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileWealthCalculator.calculate(profile(), member(profile()), itemResult,
+            cfg.profileWealthMaxPriceRequests, cfg.profileWealthRequestIntervalMs,
+            calculated -> Minecraft.getInstance().execute(() -> {
+                if (generation == wealthGeneration && requestedProfile == profileIndex) wealth = calculated;
+            }),
+            () -> generation != wealthGeneration || requestedProfile != profileIndex
+        ).whenComplete((unused, failure) -> Minecraft.getInstance().execute(() -> {
+            if (generation == wealthGeneration && requestedProfile == profileIndex) wealthLoading = false;
         }));
     }
 
@@ -350,6 +466,11 @@ public final class ProfileViewerScreen extends Screen {
         itemLoading = false;
         itemProfile = -1;
         itemContainer = itemContainerScroll = itemPage = 0;
+        wealthGeneration++;
+        wealth = null;
+        wealthLoading = false;
+        wealthProfile = -1;
+        wealthCategory = -1;
     }
 
     private JsonObject profile() { return result.profiles().get(Math.clamp(profileIndex, 0, result.profiles().size() - 1)).getAsJsonObject(); }
@@ -373,6 +494,8 @@ public final class ProfileViewerScreen extends Screen {
     private static String whole(double value){return String.format(Locale.ROOT,"%,.0f",value);}
     private static String coins(double value){return value<=0?"API disabled or empty":compact(value)+" coins";}
     private static String date(long value){return value<=0?"Unknown":TIME.format(Instant.ofEpochMilli(value));}
+    private static String money(double value){return "$"+compact(value);}
     private record Row(String label,String value,int color){}
+    private record WealthLine(String label,String value,int category,int indent,boolean complete){}
     @Override public void onClose(){Minecraft.getInstance().setScreenAndShow(parent);}
 }

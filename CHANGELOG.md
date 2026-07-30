@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.765 (2026-07-30) — Profile Wealth Breakdown
+
+- ported SkyBlockPv's currency and per-storage net-worth category model onto Constellation's conservative item-value engine
+- added liquid currency, total item value, category coverage and expandable highest-value item breakdowns
+- added Sack valuation, modifier completeness, missing-price counts and progressive one-at-a-time auction enrichment
+- fixed decoded profile items to retain Constellation-compatible ExtraAttributes for tooltips and modifier valuation
+
 ## 0.9.764 (2026-07-30) — Profile Inventory Browser
 
 - ported Skyblocker's 26.2 legacy item decoding, hotbar correction, wardrobe ordering and native item-grid rendering

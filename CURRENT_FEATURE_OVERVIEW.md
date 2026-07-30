@@ -22,6 +22,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Every backpack, wardrobe page and equipment-set page is independently selectable with native stack counts and item tooltips
 - Legacy 1.8 item NBT is upgraded through the maintained 26.2 data fixer; a malformed or disabled container is isolated without hiding valid containers
 - The item menu and item pages scroll independently, grid height is configurable from one to six rows, and tooltips, decorations and slot colors can be changed separately
+- Wealth combines exact purse/profile-bank currency with conservative item values across every decoded storage category and Sacks
+- Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
+- Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
+- Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests
 - Requests run off-thread, use bounded timeouts, share in-flight authentication state and cache profiles for a configurable one to 60 minutes
 - Refresh bypasses both local and service caches; lookup and service failures remain on the screen without closing it
 
