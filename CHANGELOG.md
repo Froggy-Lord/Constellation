@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.779 (2026-07-30) — Complete Profile Chocolate Factory
+
+- added Chocolate totals, Prestige progress, Barn capacity and last-viewed time
+- added all seven rabbit employees with levels, base production and unknown future employees
+- added Factory upgrades, Time Tower state/charges and cumulative Rabbit Hitman progress
+- added a validated, cached seven-rarity catalogue covering all 512 current rabbits
+- added employee hiding/sorting/limits, independent sections and paged profile tabs at normal GUI widths
+
 ## 0.9.778 (2026-07-30) — Complete Profile Fishing Progression
 
 - added all 18 Trophy Fish species with Bronze, Silver, Gold, Diamond and total catches

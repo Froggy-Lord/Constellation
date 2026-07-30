@@ -37,6 +37,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Garden includes every crop total/upgrade, visitor history, Jacob contests/medals/perks, composter state/upgrades and greenhouse progression
 - Rift profile progression includes Motes, visits, Souls, eyes, Montezuma cats, Grubber stacks and complete Timecharm discovery records
 - Fishing profile progression includes every Trophy Fish/tier, rank, Dolphin milestones, sharks, sea creatures and lifetime catch counters
+- Chocolate Factory profile progression includes Prestige, employees/production, upgrades, Time Tower, Hitman and all 512 categorized rabbits
+- Profile tabs page cleanly at narrow/normal GUI widths so every current and future page remains reachable
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

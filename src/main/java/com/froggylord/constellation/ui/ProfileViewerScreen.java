@@ -15,6 +15,7 @@ import com.froggylord.constellation.api.ProfileCrimsonCalculator;
 import com.froggylord.constellation.api.ProfileGardenCalculator;
 import com.froggylord.constellation.api.ProfileRiftCalculator;
 import com.froggylord.constellation.api.ProfileFishingCalculator;
+import com.froggylord.constellation.api.ProfileChocolateData;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -42,7 +43,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -51,6 +52,7 @@ public final class ProfileViewerScreen extends Screen {
     private boolean loading;
     private int profileIndex;
     private int tab;
+    private int tabPageStart;
     private int scroll;
     private ProfileItemDecoder.Result itemResult;
     private boolean itemLoading;
@@ -78,6 +80,9 @@ public final class ProfileViewerScreen extends Screen {
     private String gardenError = "";
     private boolean gardenLoading;
     private int gardenProfile = -1;
+    private ProfileChocolateData.Catalogue chocolateData;
+    private String chocolateError = "";
+    private boolean chocolateLoading;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -126,11 +131,14 @@ public final class ProfileViewerScreen extends Screen {
             px += bw + 4;
         }
         int tx = 12;
-        for (int i = 0; i < TABS.length; i++) {
-            int bw = font.width(TABS[i]) + 2;
+        int lastTab = lastVisibleTab();
+        for (int i = tabPageStart; i <= lastTab; i++) {
+            int bw = font.width(TABS[i]) + 10;
             chip(g, tx, 80, bw, TABS[i], i == tab, mx, my);
             tx += bw + 4;
         }
+        chip(g, width - 48, 80, 20, "<", false, mx, my);
+        chip(g, width - 24, 80, 20, ">", false, mx, my);
         if (tab == 5) {
             drawItems(g, mx, my);
             return;
@@ -173,6 +181,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 15) {
             drawFishing(g);
+            return;
+        }
+        if (tab == 16) {
+            drawChocolate(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -961,6 +973,93 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/ChocolateFactoryScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawChocolate(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileChocolate) {
+            g.text(font, "Chocolate Factory viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if (chocolateData == null && !chocolateLoading && chocolateError.isEmpty()) startChocolate(false);
+        ProfileChocolateData.Result data = chocolateRows();
+        if (!data.available()) {
+            g.text(font, "Chocolate Factory API data is unavailable for this profile.",
+                14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, chocolateDisplayRows(true));
+    }
+
+    private ProfileChocolateData.Result chocolateRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileChocolateData.calculate(member(profile()), chocolateData,
+            cfg.profileChocolateEmployeeSort, cfg.profileChocolateHideZeroEmployees);
+    }
+
+    private List<Row> chocolateDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileChocolateData.Result data = chocolateRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileChocolateShowSummary) {
+            rows.add(row("Chocolate", values ? whole(data.chocolate()) : ""));
+            rows.add(row("Total Chocolate", values ? whole(data.totalChocolate()) : ""));
+            rows.add(row("Chocolate since Prestige", values ? whole(data.chocolateSincePrestige()) : ""));
+            String prestige = "Level " + data.prestige();
+            if (data.prestigeRemaining() > 0) prestige += "  " + whole(data.prestigeRemaining()) + " to next";
+            else prestige += "  Maximum or ready";
+            rows.add(row("Chocolate Prestige", values ? prestige : ""));
+            rows.add(row("Rabbit Barn capacity", values ? whole(data.barnCapacity()) : ""));
+            rows.add(row("Last Factory view", values ? date(data.lastViewed()) : ""));
+        }
+        if (cfg.profileChocolateShowEmployees) {
+            rows.add(row("Employee production", values ? whole(data.employeeProduction()) + " base/s" : ""));
+            int limit = Math.clamp(cfg.profileChocolateEmployeeLimit, 0, 100);
+            int shown = 0;
+            for (ProfileChocolateData.Employee employee : data.employees()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = "Level " + employee.level();
+                if (cfg.profileChocolateShowEmployeeProduction)
+                    value += "  " + (employee.level() * employee.multiplier()) + " base/s";
+                rows.add(new Row((employee.unknown() ? "Unknown  " : "") + employee.name(), values ? value : "",
+                    employee.unknown() ? 0xFFFFAA55 : employee.level() > 0 ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+            }
+        }
+        if (cfg.profileChocolateShowUpgrades) {
+            rows.add(row("Click Upgrade", values ? "Level " + (data.clickUpgrades() + 1) : ""));
+            rows.add(row("Coach Jackrabbit", values ? "Level " + data.multiplierUpgrades() : ""));
+            rows.add(row("Rabbit Shrine", values ? "Level " + data.rarityUpgrades() : ""));
+        }
+        if (cfg.profileChocolateShowTimeTower) {
+            rows.add(row("Time Tower", values ? "Level " + data.timeTowerLevel() + "  "
+                + data.timeTowerCharges() + "/3 charges" : ""));
+            if (data.timeTowerActivation() > 0)
+                rows.add(row("Time Tower activated", values ? date(data.timeTowerActivation()) : ""));
+        }
+        if (cfg.profileChocolateShowHitman) {
+            rows.add(row("Rabbit Hitman", values ? data.hitmanSlots() + " slots  "
+                + data.uncollectedEggs() + " eggs ready" : ""));
+            rows.add(row("Hitman Chocolate paid", values ? whole(data.hitmanPaid()) + "/"
+                + whole(data.hitmanTotal()) : ""));
+        }
+        if (cfg.profileChocolateShowRarities) {
+            if (chocolateLoading && chocolateData == null)
+                rows.add(row("Rabbit catalogue", values ? "Loading..." : ""));
+            else if (chocolateData == null)
+                rows.add(new Row("Rabbit catalogue", values ? "Unavailable" : "", 0xFFFFAA55));
+            else {
+                rows.add(row("Rabbit collection", values ? data.knownRabbits() + "/" + data.catalogueTotal()
+                    + (data.catalogueCached() ? "  cached" : "") : ""));
+                for (var rarity : data.rarityCounts().entrySet())
+                    rows.add(row("  " + rarity.getKey(), values ? whole(rarity.getValue()) : ""));
+                if (data.unknownRabbits() > 0)
+                    rows.add(new Row("Uncatalogued rabbit fields", values ? whole(data.unknownRabbits()) : "", 0xFFFFAA55));
+            }
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1184,6 +1283,15 @@ public final class ProfileViewerScreen extends Screen {
         if (inside(mx, my, 150, 12, 48, 18)) { load(false); return true; }
         if (inside(mx, my, 202, 12, 56, 18)) { load(true); return true; }
         if (result != null) {
+            if (inside(mx, my, width - 48, 80, 20, 16)) {
+                tabPageStart = Math.max(0, tabPageStart - 1);
+                return true;
+            }
+            if (inside(mx, my, width - 24, 80, 20, 16)) {
+                int last = lastVisibleTab();
+                if (last < TABS.length - 1) tabPageStart = last + 1;
+                return true;
+            }
             int x = 12;
             for (int i = 0; i < result.profiles().size(); i++) {
                 int bw = Math.max(52, font.width(string(result.profiles().get(i).getAsJsonObject(), "cute_name", Integer.toString(i + 1))) + 14);
@@ -1191,8 +1299,9 @@ public final class ProfileViewerScreen extends Screen {
                 x += bw + 4;
             }
             x = 12;
-            for (int i = 0; i < TABS.length; i++) {
-                int bw = font.width(TABS[i]) + 2;
+            int lastTab = lastVisibleTab();
+            for (int i = tabPageStart; i <= lastTab; i++) {
+                int bw = font.width(TABS[i]) + 10;
                 if (inside(mx, my, x, 80, bw, 16)) {
                     tab = i; scroll = 0;
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
@@ -1201,6 +1310,7 @@ public final class ProfileViewerScreen extends Screen {
                     if (tab == 8 && collectionData == null) startCollections(false);
                     if (tab == 11 && (museumResult == null || museumProfile != profileIndex)) startMuseum(false);
                     if (tab == 13 && (gardenResult == null || gardenProfile != profileIndex)) startGarden(false);
+                    if (tab == 16 && chocolateData == null) startChocolate(false);
                     return true;
                 }
                 x += bw + 4;
@@ -1270,6 +1380,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 15) {
             int max = Math.max(0, fishingDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 16) {
+            int max = Math.max(0, chocolateDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
@@ -1345,6 +1460,7 @@ public final class ProfileViewerScreen extends Screen {
                 if (tab == 8) startCollections(refresh);
                 if (tab == 11) startMuseum(refresh);
                 if (tab == 13) startGarden(refresh);
+                if (tab == 16) startChocolate(refresh);
             }
         }));
     }
@@ -1538,6 +1654,20 @@ public final class ProfileViewerScreen extends Screen {
             }));
     }
 
+    private void startChocolate(boolean refresh) {
+        if (chocolateLoading || !ConstellationClient.cfg().lyra.profileChocolate) return;
+        chocolateLoading = true;
+        chocolateError = "";
+        ProfileChocolateData.load(refresh).whenComplete((loaded, failure) -> Minecraft.getInstance().execute(() -> {
+            chocolateLoading = false;
+            if (failure == null) chocolateData = loaded;
+            else {
+                chocolateData = null;
+                chocolateError = "Rabbit catalogue is unavailable.";
+            }
+        }));
+    }
+
     private void resetItems() {
         itemResult = null;
         itemLoading = false;
@@ -1563,6 +1693,7 @@ public final class ProfileViewerScreen extends Screen {
     private static int selectedIndex(JsonArray profiles) { for (int i = 0; i < profiles.size(); i++) if (bool(profiles.get(i).getAsJsonObject(), "selected")) return i; return 0; }
     private static Row row(String label, String value) { return new Row(label, value, ConstellationTheme.TEXT); }
     private void chip(GuiGraphicsExtractor g, int x, int y, int w, String text, boolean selected, int mx, int my) { g.fill(x,y,x+w,y+16,selected?0xFF34506A:inside(mx,my,x,y,w,16)?0xFF303044:0xFF20202C);g.text(font,text,x+(w-font.width(text))/2,y+5,selected?0xFFFFFFFF:ConstellationTheme.TEXT_MUTED,false); }
+    private int lastVisibleTab(){int x=12;int last=tabPageStart-1;for(int i=tabPageStart;i<TABS.length;i++){int width=font.width(TABS[i])+10;if(x+width>this.width-56)break;last=i;x+=width+4;}return Math.max(tabPageStart,last);}
     private void button(GuiGraphicsExtractor g,int x,int y,int w,String text,int mx,int my){g.fill(x,y,x+w,y+18,inside(mx,my,x,y,w,18)?0xFF3C3C55:0xFF252538);g.text(font,text,x+(w-font.width(text))/2,y+6,ConstellationTheme.TEXT,false);}
     private static boolean inside(int mx,int my,int x,int y,int w,int h){return mx>=x&&mx<x+w&&my>=y&&my<y+h;}
     private static JsonElement path(JsonObject root, String path) { JsonElement e=root; for(String part:path.split("\\.")){if(e==null||!e.isJsonObject()||!e.getAsJsonObject().has(part))return null;e=e.getAsJsonObject().get(part);}return e; }

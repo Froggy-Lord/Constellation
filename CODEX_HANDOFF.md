@@ -3066,7 +3066,21 @@ Trophy rows support uncaught hiding, Diamond-completed hiding, minimum obtained 
 
 Version `0.9.778` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `f4c82aebfe09cbd10b8b6d6a284da138762a773f5551a58e11109b478a23813c`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-173518-0.9.778/`; only `constellation-0.9.778.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-173518-0.9.778/`; only `constellation-0.9.778.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `d8347bdd64`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.779 Complete Profile Chocolate Factory
+
+`ProfileChocolateData.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add complete persistent Chocolate Factory progression. The `events.easter` model, Chocolate totals, seven employees and reward formulas, Barn capacity, Prestige, Click/Multiplier/Rarity upgrades, Time Tower, Rabbit Hitman and view timestamp port SkyBlockPv modified-MIT `data/api/CfData.kt`, `data/repo/CfCodecs.kt` and `screens/windowed/tabs/ChocolateFactoryScreen.kt`. Required notices are beside every derived block.
+
+Prestige progress uses the licensed zero-through-30-billion thresholds. All seven canonical employees show level and exact level-times-one-through-seven base production; future employee IDs remain visible. Rabbit Hitman progress accumulates all 28 licensed incremental costs and reports paid versus the full cumulative maximum. Time Tower level, charges and activation, all three other upgrades and Barn capacity are separate rows.
+
+The live licensed rabbit catalogue is loaded from `meowdding-repo`, validated as exactly seven rarities and at least 500 unique IDs, cached under the Fabric config directory, and retained as last-good data for one to 168 configurable hours. The July 30 probe validated exactly 512 unique rabbits and was archived under `~/Desktop/To-Delete/constellation-probes/20260730-173913-chocolate-rabbits/`. Core Factory data remains available while the catalogue loads or fails; uncatalogued primitive fields remain honestly visible.
+
+Summary, employees, employee production, upgrades, Time Tower, Hitman and rarity sections are independent. Employees support zero hiding, canonical/level/production/name sorts and a limit. Profile tabs now use deterministic `<`/`>` pages with a reserved navigation area, so adding this seventeenth tab does not clip existing pages at normal or narrow widths.
+
+Version `0.9.779` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `11d75ab56e73f0c156cd5ba9fad4efc628a25216c23858185f82a0eb13492d27`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-174320-0.9.779/`; only `constellation-0.9.779.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

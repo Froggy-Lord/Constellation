@@ -2321,3 +2321,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Test ALL/SILVER/GOLD/DIAMOND minimum tiers, DEFAULT/TOTAL/TIER/DIAMOND/NAME sorting and the limit. Expected: highest obtained tier controls filtering and scrolling remains bounded.
 - [ ] Open a profile containing a new tier-suffixed Trophy Fish API key. Expected: it appears once with an Unknown marker and is not confused with metadata such as rewards or total caught.
 - [ ] Switch profiles and disable `profileFishing`. Expected: records change immediately with the member and disabled/unavailable states remain readable.
+
+### Profile Chocolate Factory
+
+- [ ] Open `/pv` at standard and narrow GUI widths. Expected: profile tabs stop before the navigation controls; `<` and `>` page through every tab without clipping or changing the selected page.
+- [ ] Enable `profileChocolate`, page to Chocolate and compare current/total/since-Prestige Chocolate, Prestige level/progress, Barn capacity and last view. Expected: each matches the Factory.
+- [ ] Compare Rabbit Bro, Cousin, Sis, Daddy, Granny, Uncle and Dog. Expected: levels and level-times-one-through-seven base production match; the summary is their total.
+- [ ] Toggle employee production, zero-level hiding, DEFAULT/LEVEL/PRODUCTION/NAME sorting and the employee limit. Expected: rows change independently without changing Factory totals.
+- [ ] Compare Click Upgrade, Coach Jackrabbit, Rabbit Shrine, Time Tower level/charges/activation and Rabbit Hitman slots/ready eggs. Expected: each matches the profile.
+- [ ] Compare Rabbit Hitman paid/maximum progress. Expected: the 28 licensed costs are accumulated exactly and the current slots select the proper cumulative point.
+- [ ] Enable rarity display online. Expected: the validated catalogue reports 512 rabbits across Common, Uncommon, Rare, Epic, Legendary, Mythic and Divine, with owned counts matching the Factory.
+- [ ] Refresh online, restart offline and reopen Chocolate. Expected: a validated one-to-168-hour catalogue cache remains usable; an incomplete response never replaces it.
+- [ ] Force the catalogue unavailable with no cache. Expected: core Factory data still renders and the rarity section says unavailable rather than failing the page.
+- [ ] Disable `profileChocolate` or switch to a profile without Easter data. Expected: readable disabled/unavailable states appear without request loops.
