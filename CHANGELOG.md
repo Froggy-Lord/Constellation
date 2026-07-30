@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.768 (2026-07-30) — Complete Profile Slayer Progression
+
+- replaced raw Slayer XP with exact Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire levels
+- added next-level progress, remaining XP, overflow, total XP and total boss summaries
+- added per-type and per-tier kills, raw attempts, claimed rewards and unclaimed reward warnings
+- added independent visibility and precision controls plus honest missing-field handling
+
 ## 0.9.767 (2026-07-30) — Complete Profile Dungeon Progression
 
 - replaced raw dungeon XP with exact Catacombs and class levels, progress, selected class and optional overflow

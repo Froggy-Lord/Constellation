@@ -2928,7 +2928,17 @@ The page calculates Catacombs and all five class levels from the exact 50-level 
 
 Version `0.9.767` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `271067a3b09d0269a97bbc9e2d2d9718c9f388a06f0fa4dccc1ab8570e584aff`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-160531-0.9.767/`; only `constellation-0.9.767.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-160531-0.9.767/`; only `constellation-0.9.767.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `6aa1fc1db7`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.768 Complete Profile Slayer Progression
+
+`ProfileSlayerCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` replace raw-XP Slayer rows. Cumulative milestones, type/tier boundaries, boss totals and claimed-level parsing port Skyblocker LGPL `skyblock/slayers/SlayerType.java`, `profileviewer/slayers/SlayerWidget.java`, `profileviewer2/model/SlayerData.java` and `SlayerBoss.java`. Dynamic data structure, attempts parsing and next-level presentation port SkyBlockPv modified-MIT `data/api/skills/combat/SlayerData.kt`, `data/repo/SlayerCodecs.kt` and `screens/windowed/tabs/MainScreen.kt`; its required notice sits beside the derived calculator.
+
+The page covers Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire with their exact separate cumulative curves and boss-tier counts. It reports fractional level progress, remaining XP, max state, overflow, total XP, total bosses, individual bosses and per-tier kills. Raw attempt counters are optional and are deliberately not turned into a guessed success rate because the licensed sources do not establish that meaning. Claimed rewards fail independently when hidden by API settings, while achieved-but-unclaimed rewards receive an amber warning. Every summary/detail group, unplayed types and zero-count tiers are configurable.
+
+Version `0.9.768` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `81d4f0dd75a245815a9f256cf35e3583ef82f54ce54580c9b62dc187b97fde86`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-161251-0.9.768/`; only `constellation-0.9.768.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
 
 ## Required dedicated visual-design pass
 

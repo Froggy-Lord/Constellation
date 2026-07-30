@@ -4,6 +4,7 @@ import com.froggylord.constellation.api.ProfileViewerApi;
 import com.froggylord.constellation.api.ProfileItemDecoder;
 import com.froggylord.constellation.api.ProfileDungeonCalculator;
 import com.froggylord.constellation.api.ProfileSkillCalculator;
+import com.froggylord.constellation.api.ProfileSlayerCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -363,15 +364,49 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private List<Row> slayers(JsonObject m) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileSlayerCalculator.Result data = ProfileSlayerCalculator.calculate(m);
         List<Row> out = new ArrayList<>();
-        JsonObject bosses = object(path(m, "slayer"), "slayer_bosses");
-        if (bosses.isEmpty()) bosses = object(m, "slayer_bosses");
-        for (String id : List.of("zombie", "spider", "wolf", "enderman", "blaze", "vampire")) {
-            JsonObject boss = object(bosses, id);
-            out.add(row(title(id), compact(number(path(boss, "xp"))) + " XP"));
-            for (int tier = 0; tier <= 4; tier++) {
-                double kills = number(path(boss, "boss_kills_tier_" + tier));
-                if (kills > 0) out.add(row("  Tier " + (tier + 1), whole(kills) + " kills"));
+        if (!data.available()) {
+            out.add(row("Slayers", "API disabled or no Slayer data"));
+            return out;
+        }
+        int decimals = Math.clamp(cfg.profileSlayersDecimals, 0, 2);
+        if (cfg.profileSlayersShowSummary) {
+            out.add(row("Total Slayer XP", compact(data.totalXp())));
+            out.add(row("Total bosses", whole(data.totalKills())));
+            if (cfg.profileSlayersShowAttempts) out.add(row("Total attempts", whole(data.totalAttempts())));
+        }
+        for (ProfileSlayerCalculator.Slayer slayer : data.slayers()) {
+            if (!cfg.profileSlayersShowUnplayed && !slayer.played()) continue;
+            ProfileSlayerCalculator.Level level = slayer.level();
+            StringBuilder value = new StringBuilder("Level ").append(fixed(level.level(), decimals));
+            if (cfg.profileSlayersShowProgress && level.needed() > 0)
+                value.append("  ").append(Math.round(level.progress() * 100)).append("%");
+            if (cfg.profileSlayersShowXp) value.append("  ").append(compact(slayer.xp())).append(" XP");
+            if (cfg.profileSlayersShowRemaining && level.needed() > 0)
+                value.append("  ").append(compact(level.remaining())).append(" left");
+            if (cfg.profileSlayersShowOverflow && level.overflow() > 0)
+                value.append("  +").append(compact(level.overflow()));
+            out.add(new Row(slayer.name(), value.toString(),
+                level.needed() == 0 ? 0xFF55FF55 : ConstellationTheme.TEXT));
+            if (cfg.profileSlayersShowKills) out.add(row("  Bosses", whole(slayer.kills())));
+            if (cfg.profileSlayersShowAttempts) out.add(row("  Attempts", whole(slayer.attempts())));
+            if (cfg.profileSlayersShowClaimedRewards) {
+                String rewards = slayer.rewardsAvailable()
+                    ? slayer.claimedRewards() + "/" + slayer.level().max() : "API disabled";
+                if (slayer.unclaimedRewards() > 0) rewards += "  " + slayer.unclaimedRewards() + " unclaimed";
+                out.add(new Row("  Rewards claimed", rewards,
+                    slayer.unclaimedRewards() > 0 ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+            }
+            if (cfg.profileSlayersShowTierKills) {
+                for (ProfileSlayerCalculator.Tier tier : slayer.tiers()) {
+                    if (!cfg.profileSlayersShowUnplayed && tier.kills() == 0 && tier.attempts() == 0) continue;
+                    String tierValue = whole(tier.kills()) + " kills";
+                    if (cfg.profileSlayersShowAttempts && tier.attempts() > 0)
+                        tierValue += " / " + whole(tier.attempts()) + " attempts";
+                    out.add(row("    Tier " + tier.tier(), tierValue));
+                }
             }
         }
         return out;

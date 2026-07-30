@@ -665,3 +665,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Independent fastest completion, S, S+ and best-score personal records for every played floor
 - Configurable precision, XP, progress, overflow, summary, empty-floor and record visibility
 - Explicit unavailable state when the selected profile has no dungeon API data
+
+## Profile Slayer progression
+
+- Exact cumulative level curves for Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire
+- Fractional next-level progress, remaining XP, max state and overflow XP
+- Total Slayer XP and total boss summaries plus individual Slayer boss totals
+- Tier-correct kill and optional raw attempt counts without inventing a success-rate meaning
+- Claimed reward totals and amber unclaimed-reward warnings when the API field is available
+- Independent summary, XP, progress, remaining, overflow, kills, tiers, attempts, rewards and unplayed visibility

@@ -61,6 +61,8 @@ the profile viewer calculates exact skill levels and progress from hypixel's pub
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
+the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.

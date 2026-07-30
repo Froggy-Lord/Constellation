@@ -2168,3 +2168,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Enable Entrance and empty floors. Expected: Entrance appears only as a normal Catacombs floor, all empty F/M floors can be shown, and M0 never appears.
 - [ ] Toggle every `profileDungeonsShow*` option, XP and decimal precision. Expected: each controls only its documented dungeon row group and persists after restart.
 - [ ] Open a profile with no dungeon data. Expected: one clear unavailable row appears and no fabricated zero-level floor table is shown.
+
+### Profile Slayer progression
+
+- [ ] Open Slayers for a profile with Slayer data. Expected: Revenant, Tarantula, Sven, Voidgloom, Inferno and Vampire use their exact cumulative milestone curves.
+- [ ] Compare XP just below and above several milestones. Expected: level, percentage and remaining XP change from the previous cumulative milestone to the next one.
+- [ ] Check a maxed normal Slayer and maxed Vampire. Expected: their caps are 9 and 5, the row turns green and excess XP appears only as overflow.
+- [ ] Add every displayed per-tier kill count for a Slayer. Expected: it equals that Slayer's boss total; all Slayer totals equal the page total.
+- [ ] Enable attempts on a profile that exposes them. Expected: exact raw per-tier and total counters appear without a fabricated success percentage.
+- [ ] Compare claimed levels with the Hypixel API. Expected: claimed/max matches, achieved-but-unclaimed rewards are amber, and a missing claimed-level field says API disabled.
+- [ ] Hide unplayed Slayers and zero-count tiers. Expected: untouched types and empty tier rows disappear without changing totals.
+- [ ] Toggle every `profileSlayersShow*` option and decimal precision. Expected: each controls only its documented rows and persists after restart.
+- [ ] Open a profile with no Slayer data. Expected: one unavailable row appears and no zero-filled progression table is fabricated.

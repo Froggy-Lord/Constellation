@@ -191,6 +191,17 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileDungeonsShowEmptyFloors = false;
     public boolean profileDungeonsShowEntrance = false;
     public int profileDungeonsDecimals = 2;
+    public boolean profileSlayersShowSummary = true;
+    public boolean profileSlayersShowProgress = true;
+    public boolean profileSlayersShowXp = true;
+    public boolean profileSlayersShowRemaining = true;
+    public boolean profileSlayersShowOverflow = true;
+    public boolean profileSlayersShowKills = true;
+    public boolean profileSlayersShowTierKills = true;
+    public boolean profileSlayersShowAttempts = false;
+    public boolean profileSlayersShowClaimedRewards = true;
+    public boolean profileSlayersShowUnplayed = true;
+    public int profileSlayersDecimals = 2;
     public boolean profileWealth = true;
     public int profileWealthItemsPerCategory = 8;
     public int profileWealthMaxPriceRequests = 30;
