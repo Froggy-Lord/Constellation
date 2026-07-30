@@ -2310,3 +2310,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Test missing-Timecharm hiding, DEFAULT/STATUS/VISITS/DATE/NAME sorting, the trophy limit and visit/date detail toggles. Expected: only intended rows change and scrolling remains bounded.
 - [ ] Open a profile containing an API ID newer than the bundled eyes, cats or Timecharms. Expected: it remains visible with an Unknown marker rather than disappearing.
 - [ ] Switch profiles and disable `profileRift`. Expected: Rift state changes immediately with the selected member and the disabled message appears without requests or crashes.
+
+### Profile Fishing
+
+- [ ] Enable `profileFishing`, open `/pv` and select Fishing. Expected: Trophy Fish total, last catch and Novice/Adept/Expert/Master reward rank match the selected profile.
+- [ ] Compare sea-creature kills and Dolphin milestone at 250, 1,000, 2,500, 5,000 and 10,000 kills. Expected: rarity and remaining kills advance exactly at each threshold.
+- [ ] Compare Festival Sharks, total/normal items fished, treasure/large-treasure catches, Trophy catches and fishing-treasure count. Expected: each comes from its distinct API field and matches the profile.
+- [ ] Compare all 18 Trophy Fish from Sulphur Skitter through Golden Fish. Expected: total and Bronze/Silver/Gold/Diamond counts match the Trophy Fish menu.
+- [ ] Toggle tier counts, uncaught hiding and diamond-completed hiding. Expected: details and rows change independently without altering summary totals.
+- [ ] Test ALL/SILVER/GOLD/DIAMOND minimum tiers, DEFAULT/TOTAL/TIER/DIAMOND/NAME sorting and the limit. Expected: highest obtained tier controls filtering and scrolling remains bounded.
+- [ ] Open a profile containing a new tier-suffixed Trophy Fish API key. Expected: it appears once with an Unknown marker and is not confused with metadata such as rewards or total caught.
+- [ ] Switch profiles and disable `profileFishing`. Expected: records change immediately with the member and disabled/unavailable states remain readable.

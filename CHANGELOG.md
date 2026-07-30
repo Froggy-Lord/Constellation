@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.778 (2026-07-30) — Complete Profile Fishing Progression
+
+- added all 18 Trophy Fish species with Bronze, Silver, Gold, Diamond and total catches
+- added last Trophy Fish, Trophy rank/reward progression and exact Dolphin kill milestones
+- added sea-creature kills, Festival Sharks and all lifetime item/treasure fishing counters
+- added uncaught/diamond hiding, minimum-tier filtering, five sorts, limits and tier-detail controls
+- kept unknown future Trophy Fish API keys visible and marked
+
 ## 0.9.777 (2026-07-30) — Complete Profile Rift Progression
 
 - added current/lifetime Motes, visits, sitting time, Enigma Souls and Grubber stacks

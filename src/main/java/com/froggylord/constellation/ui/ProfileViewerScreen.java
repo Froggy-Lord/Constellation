@@ -14,6 +14,7 @@ import com.froggylord.constellation.api.ProfileMuseumData;
 import com.froggylord.constellation.api.ProfileCrimsonCalculator;
 import com.froggylord.constellation.api.ProfileGardenCalculator;
 import com.froggylord.constellation.api.ProfileRiftCalculator;
+import com.froggylord.constellation.api.ProfileFishingCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -41,7 +42,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -126,7 +127,7 @@ public final class ProfileViewerScreen extends Screen {
         }
         int tx = 12;
         for (int i = 0; i < TABS.length; i++) {
-            int bw = font.width(TABS[i]) + 6;
+            int bw = font.width(TABS[i]) + 2;
             chip(g, tx, 80, bw, TABS[i], i == tab, mx, my);
             tx += bw + 4;
         }
@@ -168,6 +169,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 14) {
             drawRift(g);
+            return;
+        }
+        if (tab == 15) {
+            drawFishing(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -892,6 +897,70 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/FishingScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawFishing(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileFishing) {
+            g.text(font, "Fishing viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileFishingCalculator.Result data = fishingRows();
+        if (!data.available()) {
+            g.text(font, "Fishing API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, fishingDisplayRows(true));
+    }
+
+    private ProfileFishingCalculator.Result fishingRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileFishingCalculator.calculate(member(profile()), cfg.profileFishingSort,
+            cfg.profileFishingMinimumTier, cfg.profileFishingHideUncaught, cfg.profileFishingHideDiamond);
+    }
+
+    private List<Row> fishingDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileFishingCalculator.Result data = fishingRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileFishingShowSummary) {
+            rows.add(row("Trophy Fish caught", values ? whole(data.trophyCatches()) : ""));
+            rows.add(row("Last Trophy Fish", values ? data.lastCatch() : ""));
+            rows.add(row("Trophy Fish rank", values ? data.trophyRank() + "  reward " + data.trophyReward() + "/4" : ""));
+        }
+        if (cfg.profileFishingShowDolphin) {
+            String dolphin = data.dolphinRarity();
+            if (data.dolphinRemaining() > 0) dolphin += "  " + data.dolphinRemaining() + " kills to next";
+            rows.add(row("Dolphin milestone", values ? dolphin : ""));
+            rows.add(row("Sea creatures killed", values ? whole(data.seaCreatureKills()) : ""));
+        }
+        if (cfg.profileFishingShowSharks)
+            rows.add(row("Festival Sharks killed", values ? data.festivalSharks() + "/5,000" : ""));
+        if (cfg.profileFishingShowCatchStats) {
+            rows.add(row("Items fished", values ? whole(data.totalItemsFished()) : ""));
+            rows.add(row("Normal catches", values ? whole(data.normalItemsFished()) : ""));
+            rows.add(row("Treasure catches", values ? whole(data.treasureItemsFished()) : ""));
+            rows.add(row("Large treasures", values ? whole(data.largeTreasures()) : ""));
+            rows.add(row("Trophy catches in stats", values ? whole(data.trophyItemsFished()) : ""));
+            rows.add(row("Fishing treasures", values ? whole(data.treasuresCaught()) : ""));
+        }
+        if (cfg.profileFishingShowTrophyFish) {
+            int limit = Math.clamp(cfg.profileFishingLimit, 0, 100);
+            int shown = 0;
+            for (ProfileFishingCalculator.TrophyFish fish : data.fish()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = fish.total() + " total";
+                if (cfg.profileFishingShowTierCounts)
+                    value += "  " + fish.bronze() + "/" + fish.silver() + "/" + fish.gold() + "/" + fish.diamond();
+                rows.add(new Row((fish.unknown() ? "Unknown  " : "") + fish.name(), values ? value : "",
+                    fish.unknown() ? 0xFFFFAA55 : fish.diamond() > 0 ? 0xFF55FFFF
+                        : fish.total() > 0 ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+            }
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1123,7 +1192,7 @@ public final class ProfileViewerScreen extends Screen {
             }
             x = 12;
             for (int i = 0; i < TABS.length; i++) {
-                int bw = font.width(TABS[i]) + 6;
+                int bw = font.width(TABS[i]) + 2;
                 if (inside(mx, my, x, 80, bw, 16)) {
                     tab = i; scroll = 0;
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
@@ -1196,6 +1265,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 14) {
             int max = Math.max(0, riftDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 15) {
+            int max = Math.max(0, fishingDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }

@@ -3054,7 +3054,19 @@ Summaries, found Soul IDs, eyes, cats, Timecharms, discovery visits and dates ar
 
 Version `0.9.777` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `e81d6deeb86a8a9f0a3e93e3d06ef81aecec8f620df482b8a917be0c87c10353`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172904-0.9.777/`; only `constellation-0.9.777.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172904-0.9.777/`; only `constellation-0.9.777.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `0f2fc35a11`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.778 Complete Profile Fishing Progression
+
+`ProfileFishingCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add complete persistent Fishing progression. The Trophy Fish parser, 18 canonical species, four catch tiers, last catch, rewards/rank, Dolphin kill brackets, Festival Sharks and lifetime catch-stat model port SkyBlockPv modified-MIT `data/api/skills/FishData.kt` and `screens/windowed/tabs/FishingScreen.kt`. Required notices are beside every derived block.
+
+Each Trophy Fish row shows total, Bronze, Silver, Gold and Diamond catches. Trophy summary includes total catches, last species/tier and Novice through Master reward progression. Dolphin rarity and remaining kills use the exact 250, 1,000, 2,500, 5,000 and 10,000 sea-creature thresholds. Separate rows retain total/normal items, treasure/large-treasure catches, Trophy catches, the legacy fishing-treasure count and Festival Sharks.
+
+Trophy rows support uncaught hiding, Diamond-completed hiding, minimum obtained tier, canonical/total/tier/Diamond/name sorting, limits and optional tier details. Unknown future tier-suffixed Trophy Fish keys are grouped once and marked; metadata keys are excluded. All calculations use the selected profile member and are read-only.
+
+Version `0.9.778` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `f4c82aebfe09cbd10b8b6d6a284da138762a773f5551a58e11109b478a23813c`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-173518-0.9.778/`; only `constellation-0.9.778.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 
