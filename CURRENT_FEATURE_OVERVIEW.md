@@ -37,6 +37,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Persistent Fly, Spider and Silverfish vacuum counts with a movable HUD, exact entity recognition and Turbomax-held highlighting
 - Complete ordered 52-point Gunther race route with automatic checkpoint progress, configurable detection, look-ahead, colors and presentation
 - Full `/westvillage` status, reset, range and feature controls; all hacking and race behavior remains advisory
+- Wand-gated Agaricus maturity countdown/elapsed timer with exact brown-to-red ready-state observation
+- Exact Volt friendly, hostile and lightning skull recognition with optional mood boxes, strike-range ring and charge countdown
+- Particle-tracked Wilted Berberis movement/stationary boxes, optional exact particle hiding and context-aware donkey-sound muting
+- Six-field Berberis respawn-sequence learning with authoritative expected counts and ordered previous/current/next/third rendering
+- Complete 14-spot/56-button quest data, persistent powered/chat-confirmed hits, nearest incomplete spot route and nearby button markers
+- Full `/dreadfarm` status, reset, timing, range and feature controls
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
 - Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
 - Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes

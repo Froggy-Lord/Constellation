@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.736 Rift West Village Suite.
+Last updated: 2026-07-30 for version 0.9.737 Complete Rift Dreadfarm Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.736`.
+- Current artifact version: `0.9.737`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2530,4 +2530,22 @@ The user separately requested a proper icon pack and a complete UI/UX redesign b
 
 Version `0.9.736` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded 73 Motes prices, all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `fbecb2e3547eeb904f203bf44a0bc6b88a6d07d1e0b6be051fb74211158591c8`.
 
-The previous `0.9.735` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-114511-0.9.736/`; only `constellation-0.9.736.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
+The previous `0.9.735` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-114511-0.9.736/`; only `constellation-0.9.736.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `6695967f22`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.737 Complete Rift Dreadfarm Suite
+
+`AndromedaDreadfarm.java`, `AndromedaConfig.java`, `AndromedaRift.java`, `ClientPacketListenerMixin.java` and `rift_wooden_buttons.json` port SkyHanni LGPL-3.0-or-later `features/rift/area/dreadfarm/RiftAgaricusCap.kt`, `VoltHighlighter.kt`, `RiftWiltedBerberisHelper.kt`, `WoodenButtonsHelper.kt` and all three Dreadfarm configuration classes. Mushroom timing was cross-checked against Doc GPL-3.0 `features/rift/MushroomTimer.js`; particle-to-block positioning was cross-checked against Doc GPL-3.0 `features/rift/BoxBerberis.js`. The exact SkyHanni Repo MIT `constants/rift/RiftWoodenButtons.json` asset has checksum `cbfeb08c460dc485891328d7a6ead0bf89d4509bbf174c836f3f84145a184880` and validates as 14 spots containing exactly 56 button coordinates.
+
+Agaricus requires the authoritative `FARMING_WAND`, Dreadfarm or West Village and the actual crosshair block. A new brown target starts a configurable default four-second countdown; a red transition on that same block shows `Click!`. Looking away, changing item, leaving the area or world replacement clears it. Countdown versus elapsed display, label, wall state, growth/ready colors and one-to-ten-second maturity are independently saved.
+
+Volt identity uses SkyHanni Repo's exact friendly, hostile and doing-lightning skull hashes. A two-tick scan detects exact head-state transitions; entering lightning within seven blocks starts the source's 12-second warning. The strike boundary is a configurable 12-to-96-segment ring at the source's seven-block default, not a misleading axis-aligned box. Mood highlighting, range, warning label, distance, scan/strike range, charge time, wall mode and all four colors are independent.
+
+Wilted Berberis follows the source's 500-millisecond particle-group lifetime, squared-eight association, three-block discontinuity rule, stationary-Y discovery and `x/z - 0.5` block correction. It recognizes only Firework and Happy Villager particle types while the Wand is held in Dreadfarm. Hiding is cancellable only for correlated particles. The live-enabled sound filter cancels only donkey hurt/death in Dreadfarm or West Village when the player is not both holding the Wand and standing on farmland.
+
+All six authoritative Berberis field centers and counts (12, 15, 19, 21, 36 and 8) drive session sequence learning. A three-second gap clears a partial observation. Learned sequences render previous/current/next/third state and advance only on an authoritative dead-bush-to-air server transition at the current position. Returning to a field validates expected present/absent bushes and discards inconsistent state. Ordinary particle mode remains the fail-safe until a valid complete cycle is learned.
+
+The button helper loads the exact 14-spot/56-button asset and chooses only the nearest spot with an unhit button. Long-range line/beam/label and short-range boxes/numbers have separate controls. Button completion requires either an authoritative powered ButtonBlock transition at a dataset coordinate plus matching progress chat, or the exact all-56 completion line; hit coordinates persist and can be deliberately reset. It never fires the Blowgun, clicks a button or claims progress from proximity alone. `/dreadfarm` exposes status, both resets, every primary toggle and bounded timing/range controls. No Dreadfarm helper moves, aims, attacks, clicks, chats to the server, issues a command or creates a gameplay packet.
+
+Version `0.9.737` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the new 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `b990294aeae468349fd9e0115738d933301743a15e4bd7a1cbb513e85ae6b0ea`.
+
+The previous `0.9.736` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-115457-0.9.737/`; only `constellation-0.9.737.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.

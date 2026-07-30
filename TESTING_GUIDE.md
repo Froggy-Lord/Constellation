@@ -1775,3 +1775,28 @@ Enable Andromeda, enter the Rift and travel to West Village. Run `/westvillage` 
 - [ ] Cross checkpoints normally and skip close enough across two adjacent points. Expected: progress advances in order within the configured detection radius and never rewinds from ordinary movement.
 - [ ] Finish, cancel, leave the Rift or reconnect. Expected: race rendering and transient progress clear immediately.
 - [ ] Test `/westvillage number terminalrange|beamheight|verminrange|lookahead|detection` and `/westvillage option`. Expected: bounded values and every exposed choice persist after restart.
+
+## Rift Dreadfarm suite
+
+Enable Andromeda and travel to Dreadfarm. Run `/dreadfarm`; it should report Agaricus, Volt, Berberis and saved button state locally.
+
+- [ ] Hold the Wand of Farming and look directly at a brown Agaricus mushroom. Expected: a configurable four-second countdown appears over that exact block.
+- [ ] Keep looking until the mushroom becomes red. Expected: the label switches to `Click!`; looking away, changing item or leaving Dreadfarm/West Village clears it.
+- [ ] Toggle Countdown off. Expected: the same exact observation displays elapsed growth time instead, without guessing another mushroom.
+- [ ] Find friendly, hostile and charging Volts. Expected: each exact skull texture is classified correctly and unrelated armor stands are ignored.
+- [ ] Enable Volt Mood. Expected: friendly is green, hostile red and charging blue using independently saved colors.
+- [ ] Trigger a nearby Volt charge. Expected: a seven-block circular strike boundary and roughly 12-second lightning countdown appear; neither moves nor attacks.
+- [ ] Change Strike Range, ring segments, charge duration, scan range, labels, distance and through-wall behavior independently. Expected: each applies without changing recognition.
+- [ ] Hold the Wand near active Wilted Berberis. Expected: moving particles produce a white path/box, then the settled bush becomes yellow and labelled.
+- [ ] Enable Hide Particles. Expected: only tracked nearby Berberis firework/villager particles hide; unrelated particles remain.
+- [ ] Stand off farmland without the Wand while another Berberis produces donkey hurt/death sounds. Expected: those two exact sounds mute by live-profile default; holding the Wand on farmland restores them.
+- [ ] Enable Only Farmland. Expected: Berberis rendering hides when the player is grounded away from farmland and returns on farmland.
+- [ ] Observe a complete respawn cycle in each field. Expected: the helper learns only after the authoritative expected count for that field, announces locally once, and shows current green, next yellow and third red.
+- [ ] Break the current dead bush. Expected: its authoritative server block transition advances the sequence. Breaking an unrelated bush does not advance it.
+- [ ] Leave a learned field and return after another player changes it. Expected: stale/inconsistent sequences fail closed instead of directing to a missing bush.
+- [ ] Run `/dreadfarm resetsequences`. Expected: session sequence learning clears without altering the world.
+- [ ] Follow the nearest wooden-button spot route. Expected: one nearest incomplete spot receives a line, beam and label, then its unhit buttons appear only inside the configured local range.
+- [ ] Activate buttons by hand and Blowgun. Expected: powered-block/chat evidence marks only authoritative dataset positions and persists them across restart.
+- [ ] Run `/dreadfarm resetbuttons`. Expected: all 56 local button markers return without claiming the server quest changed.
+- [ ] Complete all 56. Expected: the exact completion chat marks the full local set and removes button routing.
+- [ ] Run every `/dreadfarm number` and `/dreadfarm option` control, then restart. Expected: all saved settings persist and remain bounded.

@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.737 (2026-07-30) — Complete Rift Dreadfarm Suite
+
+- added Wand-gated Agaricus maturity guidance with configurable countdown, timing and ready state
+- added exact Volt mood recognition, 12-second lightning warning and configurable seven-block strike-range ring
+- added particle-tracked Wilted Berberis boxes plus per-field respawn-sequence learning and ordered current/next/third guidance
+- added all 14 authoritative wooden-button spots and 56 buttons with persistent hit tracking, nearest-spot routing and reset controls
+- added precise Berberis particle/sound controls, complete rendering options and `/dreadfarm` configuration
+
 ## 0.9.736 (2026-07-30) — Rift West Village Suite
 
 - added the five-row Kloon hacking solver, terminal color guide and all eight visor-gated terminal waypoints

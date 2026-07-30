@@ -39,10 +39,12 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaRiftNavigation.init(cfg);
         AndromedaMotes.init(cfg);
         AndromedaWestVillage.init(cfg);
+        AndromedaDreadfarm.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
         registerRenderer(AndromedaWestVillage::draw);
+        registerRenderer(AndromedaDreadfarm::draw);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class AndromedaRift extends BaseConstellation {
             HudPosition.of(126,132),()->cfg.enabled&&cfg.westVerminTracker));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

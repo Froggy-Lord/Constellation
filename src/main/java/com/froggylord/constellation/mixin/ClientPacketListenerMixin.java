@@ -98,7 +98,8 @@ public class ClientPacketListenerMixin {
             || com.froggylord.constellation.constellation.SlayerSounds.shouldCancel(packet)
             || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)
             || com.froggylord.constellation.constellation.AquilaMiningAwareness.shouldCancel(packet)
-            || com.froggylord.constellation.constellation.AquilaMiningHighlights.shouldCancel(packet)) ci.cancel();
+            || com.froggylord.constellation.constellation.AquilaMiningHighlights.shouldCancel(packet)
+            || com.froggylord.constellation.constellation.AndromedaDreadfarm.shouldCancelSound(packet)) ci.cancel();
     }
 
     // ported from SkyHanni (LGPL-2.1): features/dungeon/DungeonSecretTrackerLocator.kt (particle event input)
@@ -112,7 +113,8 @@ public class ClientPacketListenerMixin {
         boolean hidePest = com.froggylord.constellation.constellation.HerculesPestWaypoint.onParticle(packet);
         // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/motes/RiftMotesOrb.kt
         boolean hideMotes = com.froggylord.constellation.constellation.AndromedaMotes.onParticle(packet);
-        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes) ci.cancel();
+        boolean hideBerberis = com.froggylord.constellation.constellation.AndromedaDreadfarm.onParticle(packet);
+        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis) ci.cancel();
     }
 
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))
