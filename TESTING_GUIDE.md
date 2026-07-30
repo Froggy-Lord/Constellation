@@ -1691,6 +1691,19 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Toggle `hud`, `icon`, `level`, `cosmetic`, `skin`, `rarity`, `item`, `xp`, `rate`, `eta`, `source`, `persist`, `highlight`, `tooltip`, `autopettitle`, and `dungeononly` through `/petdisplay option`, then test `color name|info|progress|highlight <ARGB>`. Expected: each surface changes independently and malformed colors are rejected.
 - [ ] Run `/petdisplay clear confirm`. Expected: only the current profile's active-pet state clears, with no pet click, despawn command or packet generated.
 - [ ] Move and resize `Active Pet` in `/cn hud`. Expected: only the icon and text are shown with no decorative panel or editor chrome.
+
+### Collection tracker
+
+- [ ] Enable Phoenix and `Collection Tracker`, then open `/collections`. Expected: every visible item with an exact `Total Collected` or tier-progress lore line is cached under only the current SkyBlock profile.
+- [ ] Open a collection category such as Mining Collection. Expected: collection names, exact totals and next-tier goals update; roman-numeral tier suffixes do not become part of the saved collection name.
+- [ ] Run `/collectiontracker track <name>` using a full or unique partial name. Expected: the synced collection becomes the HUD title; an unknown name asks you to visit Collections and does not invent a value.
+- [ ] Increase that collection legitimately, then reopen its collection category. Expected: Total, Session, Last sync and Rate change only after the authoritative menu total changes.
+- [ ] Leave the menu closed. Expected: the total remains cached and `Updated` ages visibly; no inventory pickup, Bazaar purchase, trade or NPC purchase changes collection.
+- [ ] Run `/collectiontracker goal <amount>`. Expected: the HUD shows remaining amount and ETA only when a positive observed rate exists. Goal `0` returns to a parsed next-tier goal when available.
+- [ ] Test `/collectiontracker pause`, `resume` and `reset`. Expected: paused time is excluded from rate time, resume continues the same session, and reset starts a new session from the last synchronized total.
+- [ ] Switch SkyBlock profiles. Expected: totals and selections cannot leak between profiles; each profile resumes only its own saved observations.
+- [ ] Toggle `hud`, `autoselect`, `persist`, `total`, `session`, `rate`, `goal`, `eta`, `lastgain` and `freshness` through `/collectiontracker option`. Expected: each row or behavior changes independently.
+- [ ] Move and resize `Collection Tracker` in `/cn hud`. Expected: it follows normal HUD persistence and never sends an API request, click, command or gameplay packet.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

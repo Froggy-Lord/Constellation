@@ -162,6 +162,26 @@ public class PhoenixConfig extends BaseConfigGroup {
     public int petDisplayInfoColor = 0xFF55FFFF;
     public java.util.Map<String, PetDisplayData> activePetsByProfile = new java.util.LinkedHashMap<>();
 
+    // ported from SkyHanni (LGPL-2.1): api/CollectionApi.kt
+    // ported from SkyblockCollectionTracker (LGPL-2.1): tracker/collection/TrackingRates.java, config/categories/overlay/CollectionConfig.java
+    public boolean collectionTracker = true;
+    public boolean collectionTrackerHud = true;
+    public boolean collectionTrackerAutoSelect = true;
+    public boolean collectionTrackerPersistProfiles = true;
+    public boolean collectionTrackerShowTotal = true;
+    public boolean collectionTrackerShowSession = true;
+    public boolean collectionTrackerShowRate = true;
+    public boolean collectionTrackerShowGoal = true;
+    public boolean collectionTrackerShowEta = true;
+    public boolean collectionTrackerShowLastGain = false;
+    public boolean collectionTrackerShowFreshness = true;
+    public int collectionTrackerNameColor = 0xFFFFAA00;
+    public int collectionTrackerValueColor = 0xFF55FFFF;
+    public int collectionTrackerProgressColor = 0xFF55FF55;
+    public String collectionTrackerSelected = "";
+    public long collectionTrackerGoal;
+    public java.util.Map<String, java.util.Map<String, CollectionTrackerData>> collectionsByProfile = new java.util.LinkedHashMap<>();
+
     // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
     public static class SlotBindingProfile {
         public String area = "";
@@ -181,5 +201,12 @@ public class PhoenixConfig extends BaseConfigGroup {
         public double levelProgress = -1;
         public String source = "";
         public long updatedAt;
+    }
+
+    public static class CollectionTrackerData {
+        public String name = "";
+        public long amount;
+        public long updatedAt;
+        public long goal;
     }
 }

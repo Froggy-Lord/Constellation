@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.761 (2026-07-30) — Profile-Safe Collection Tracker
+
+- ported SkyHanni's exact collection-menu and co-op-total parsing model and SkyblockCollectionTracker's session-rate state
+- added profile-safe cached totals for every visible collection without relying on incorrect inventory pickup estimates
+- added tracked collection selection, pause/resume/reset, optional explicit goals, remaining amount, rate and ETA
+- added configurable movable HUD rows with authoritative-sync freshness and full `/collectiontracker` controls
+
 ## 0.9.760 (2026-07-30) — Profile-Safe Active Pet Display
 
 - ported Devonian's active-pet menu, widget, summon, Autopet and selected-slot synchronization

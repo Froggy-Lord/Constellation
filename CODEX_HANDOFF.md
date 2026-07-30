@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.760 Profile-Safe Active Pet Display.
+Last updated: 2026-07-30 for version 0.9.761 Profile-Safe Collection Tracker.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.760`.
+- Current artifact version: `0.9.761`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2842,4 +2842,18 @@ The chrome-free movable HUD independently exposes icon, level, Golden Dragon cos
 
 Version `0.9.760` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded exactly 212 Hoppity egg locations across 14 islands and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `241a83e69bb9240ba0fa4f352321732dca977d499f68e7339c5ff02ab3255774`.
 
-The previous `0.9.759` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-145855-0.9.760/`; only `constellation-0.9.760.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release is enqueued through the drip script, authored only as Froggy-Lord.
+The previous `0.9.759` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-145855-0.9.760/`; only `constellation-0.9.760.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `7962ed82d7`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.761 Profile-Safe Collection Tracker
+
+`PhoenixCollectionTracker.java`, `CollectionTrackerHudWidget.java`, `PhoenixConfig.java` and `PhoenixQol.java` add the missing general SkyBlock collection tracker. The authoritative menu title, total and tier-progress parsing model ports SkyHanni LGPL `api/CollectionApi.kt`; session timing, gain, rate, pause/resume and overlay row behavior port the maintained LGPL Fabric SkyblockCollectionTracker `tracker/collection/TrackingRates.java`, `tracker/collection/TrackingHandler.java`, `gui/overlays/CollectionOverlay.java` and `config/categories/overlay/CollectionConfig.java`.
+
+The tracker deliberately does not count inventory additions as collection. Purchases, trades and many other item gains do not increment Hypixel Collection, and the maintained standalone tracker gets its live values through its own authenticated proxy. Constellation therefore learns exact totals and next-tier goals only from visible Collections inventories, saves every observed collection by SkyBlock profile, and visibly reports the age of its last authoritative synchronization. No external service, API token or background request was added.
+
+The first synchronized collection can auto-select, while `/collectiontracker track <name>` accepts an exact or unique partial cached name. The selected session exposes total, gain, elapsed active time, observed rate, last synchronized gain, explicit or parsed goal, remaining amount and ETA. Pause excludes paused time, resume preserves the session and reset begins from the last authoritative total. Every row, automatic selection and persistence is independently configurable; the movable HUD hides until a real collection has been observed.
+
+Version `0.9.761` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `77ba0a7b33cf38df89c323edcbebf93fbc6b54cd2cb348970cdfec62c9a058cb`.
+
+The previous `0.9.760` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-150917-0.9.761/`; only `constellation-0.9.761.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Fill in the drip commit hash after enqueueing.
+
+The next agent should test real Collection menu lore against `TESTING_GUIDE.md` before broadening transport; if live API refresh is later desired, use an explicitly configured trustworthy provider rather than silently adopting the standalone tracker's third-party bearer-token service.

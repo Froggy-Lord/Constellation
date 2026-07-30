@@ -29,6 +29,7 @@ public class PhoenixQol extends BaseConstellation {
         PhoenixScreenshotClipboard.init((PhoenixConfig) config);
         PhoenixSpeedPresets.init((PhoenixConfig) config);
         PhoenixPetDisplay.init((PhoenixConfig) config);
+        PhoenixCollectionTracker.init((PhoenixConfig) config);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class PhoenixQol extends BaseConstellation {
         PhoenixScreenshotClipboard.registerCommands(dispatcher);
         PhoenixSpeedPresets.registerCommands(dispatcher);
         PhoenixPetDisplay.registerCommands(dispatcher);
+        PhoenixCollectionTracker.registerCommands(dispatcher);
     }
 
     @Override
@@ -53,6 +55,8 @@ public class PhoenixQol extends BaseConstellation {
             HudPosition.of(76, 32), () -> cfg.enabled && cfg.speedPresets && cfg.speedPresetsHud));
         hud.register(new com.froggylord.constellation.hud.PetDisplayHudWidget(
             HudPosition.of(76, 38), () -> cfg.enabled && cfg.petDisplay && cfg.petDisplayHud));
+        hud.register(new com.froggylord.constellation.hud.CollectionTrackerHudWidget(
+            HudPosition.of(76, 44), () -> cfg.enabled && cfg.collectionTracker && cfg.collectionTrackerHud));
     }
 
     private static long lastSaveAt = 0;
