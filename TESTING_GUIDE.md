@@ -1612,6 +1612,16 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Hover found and missing rabbits. Expected: the tooltip shows collection state, rarity and found count; incomplete scans warn to visit every page.
 - [ ] Run `/hoppitycollection`, representative `/hoppitycollection option <name> on|off`, then `/hoppitycollection clear`. Expected: status is readable, options persist, and clear removes only the current profile's collection cache.
 - [ ] Move and resize the Hoppity Collection HUD in `/cn hud`. Expected: it appears only while the exact collection inventory is open or during editor grace.
+
+### Rabbit Hitman slot costs
+
+- [ ] Enable Auriga, `Chocolate Factory Hitman Costs` and its HUD, then open the exact `Rabbit Hitman` inventory. Expected: purchased and remaining slot counts match the menu.
+- [ ] Compare `Total paid`, `Cost left` and the next five prices with the purchasable slot lore. Expected: every number uses the authoritative 28-slot schedule and the next slot matches Hypixel.
+- [ ] Open the menu during loading. Expected: an incomplete chest does not overwrite the last good profile value; the display syncs only after all 54 chest slots exist and observed prices fit the schedule.
+- [ ] Switch profiles and reopen Rabbit Hitman. Expected: each profile restores only its own purchased count.
+- [ ] Run `/hitmancosts`, `/hitmancosts next 3`, and toggle `purchased`, `paid`, `remaining`, `remainingcost`, `next`, `outside` and `persist` through `/hitmancosts option <name> <on|off>`. Expected: each row and cache behavior changes independently and persists.
+- [ ] Run `/hitmancosts clear`. Expected: only the current profile cache clears; reopening Rabbit Hitman safely restores it.
+- [ ] Move and resize `Hitman Slot Costs` in `/cn hud`. Expected: it is visible in the exact menu by default, remains chrome-free in the editor, and appears outside the menu only when `outside` is enabled and a valid profile snapshot exists.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

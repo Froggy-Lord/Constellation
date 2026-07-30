@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.754 (2026-07-30) — Rabbit Hitman Slot Costs
+
+- ported SkyHanni's exact Rabbit Hitman inventory detection and non-border cost-lore parsing
+- added the authoritative 28-slot price schedule with purchased, paid, remaining and next-slot totals
+- added guarded profile-safe persistence that rejects partial or unexpected menu price layouts
+- added a movable HUD with independent rows, optional cached visibility and `/hitmancosts` controls
+
 ## 0.9.753 (2026-07-30) — Profile-Safe Hoppity Collection
 
 - ported Hoppity Collection page, found, duplicate, requirement and total-progress parsing from SkyHanni

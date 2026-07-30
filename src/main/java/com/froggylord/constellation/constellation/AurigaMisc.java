@@ -21,6 +21,7 @@ public class AurigaMisc extends BaseConstellation {
         AurigaReforgeHelper.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaSkyblockGuide.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaHoppityCollection.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaHitmanCosts.init((com.froggylord.constellation.config.AurigaConfig) config);
     }
 
     @Override
@@ -35,6 +36,9 @@ public class AurigaMisc extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.HoppityCollectionHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(65, 32),
             () -> cfg.enabled && cfg.hoppityCollectionStats && cfg.hoppityCollectionHud));
+        hud.register(new com.froggylord.constellation.hud.HitmanCostsHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(65, 44),
+            () -> cfg.enabled && cfg.chocolateFactoryHitmanCosts && cfg.chocolateFactoryHitmanCostsHud));
         hud.register(new com.froggylord.constellation.hud.AnvilHelperHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 44),
             () -> cfg.enabled && cfg.anvilHelper && cfg.anvilHud));
@@ -55,5 +59,6 @@ public class AurigaMisc extends BaseConstellation {
         AurigaReforgeHelper.registerCommands(dispatcher);
         AurigaSkyblockGuide.registerCommands(dispatcher);
         AurigaHoppityCollection.registerCommands(dispatcher);
+        AurigaHitmanCosts.registerCommands(dispatcher);
     }
 }

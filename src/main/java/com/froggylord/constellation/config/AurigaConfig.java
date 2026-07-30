@@ -73,6 +73,18 @@ public class AurigaConfig extends BaseConfigGroup {
     public boolean chocolateFactoryTimeTowerTitle = false;
     public boolean chocolateFactoryTimeTowerSound = true;
     public boolean chocolateFactoryShowHitman = true;
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/chocolatefactory/hitman/HitmanSlots.kt
+    public boolean chocolateFactoryHitmanCosts = true;
+    public boolean chocolateFactoryHitmanCostsHud = true;
+    public boolean chocolateFactoryHitmanShowPurchased = true;
+    public boolean chocolateFactoryHitmanShowPaid = true;
+    public boolean chocolateFactoryHitmanShowRemaining = true;
+    public boolean chocolateFactoryHitmanShowRemainingCost = true;
+    public boolean chocolateFactoryHitmanShowNext = true;
+    public boolean chocolateFactoryHitmanShowOutsideMenu = false;
+    public boolean chocolateFactoryHitmanPersistProfiles = true;
+    public int chocolateFactoryHitmanNextRows = 5;
+    public java.util.Map<String, Integer> chocolateFactoryHitmanOwnedSlots = new java.util.LinkedHashMap<>();
     public boolean chocolateFactoryShowLevels = true;
     public boolean chocolateFactoryShowAllAffordable = true;
     public boolean chocolateFactoryBarnWarning = true;

@@ -214,6 +214,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Unique, duplicate and total counts per rarity with authoritative Hypixel progress and explicit scanned-page completeness
 - Configurable found/missing, rarity, Factory, Shop, requirement and Golden Stray highlights plus contextual rabbit tooltips
 - Movable Hoppity Collection HUD and `/hoppitycollection` status, clear and granular option controls
+- Exact Rabbit Hitman menu synchronization with all 28 slot prices, purchased/remaining totals, guarded profile cache, movable cost HUD and `/hitmancosts` controls
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips
