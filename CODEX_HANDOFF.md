@@ -2427,3 +2427,19 @@ Calendar groups support all active rows or only the first, one-to-eight rows and
 Version `0.9.731` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `df16b86ba9bfdb255703e1b466cc2705b5617942325f8dade29c7943b9871012`.
 
 The previous `0.9.730` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-103921-0.9.731/`; only `constellation-0.9.731.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so existing Apollo preferences were not rewritten.
+
+## July 30 version 0.9.732 General Speed Presets
+
+The live Froggy__Lord Skyblocker profile enables general speed presets and contains the exact seven defaults: crops 93, cocoa 155, cactus 464, default 100, mushroom 233, cane 327 and squash 327. Constellation previously had no general speed-preset system.
+
+`PhoenixSpeedPresets.java`, `SpeedPresetScreen.java`, `SpeedPresetHudWidget.java`, `SignEditScreenMixin.java`, `PhoenixConfig.java` and `PhoenixQol.java` port Skyblocker LGPL-3.0-or-later `skyblock/speedpreset/SpeedPresets.java`, `SpeedPresetsScreen.java`, `SpeedPresetListWidget.java` and `mixins/AbstractSignEditScreenMixin.java`. The exact defaults, outgoing `/setmaxspeed <alias>` replacement and Rancher's Boots `speed cap!` sign marker come from that implementation.
+
+The port adds a searchable graphical editor with selection, validated names, speeds from zero to 500, immediate save, rename, deletion and default restoration. Presets are stored in named maps; optional automatic profile selection uses Constellation's existing SkyBlock profile key and initializes unseen profiles from defaults. Menu, next, previous and all seven default direct controls are registered as unbound key mappings. Cycling follows the saved map order.
+
+`/speedpreset` exposes the editor, list, use, next, previous, set, remove, reset, profile selection, 100-to-5000-millisecond cooldown, one-to-30-second HUD duration and every Boolean option. User-issued `/setmaxspeed <alias>`, explicit use commands, sign submission and keybinds are the only server-facing paths. Unknown aliases, disabled state, non-Hypixel state and unrelated commands fail open. No action is automatic.
+
+Local feedback has independent chat, action-bar and sound controls. The movable HUD has independent preset, speed and profile rows plus recent-only or persistent modes. Sign previews and the editor contain plain user-facing copy. Source audits over every touched Java file found zero forbidden-source references and zero prohibited emoji characters.
+
+Version `0.9.732` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `f957a1b7d11f5f92ea22b1abd55ef668383ee4d931feffaaa5ffd6430c5dfcaa`.
+
+Gather's Phoenix constellation remained disabled and the new field was absent, so speed presets remain inactive until Phoenix is deliberately enabled. The previous `0.9.731` jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-105129-0.9.732/`; only `constellation-0.9.732.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so existing preferences were not rewritten. The next continuation should re-scan the live 26.1.2 feature selection before choosing one coherent high-impact release.

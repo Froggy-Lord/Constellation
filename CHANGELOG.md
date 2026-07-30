@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.732 (2026-07-30) — General Speed Presets
+
+- added the seven live farming speed presets with searchable editing, validation, deletion and default restoration
+- added named profiles, optional automatic SkyBlock-profile selection and direct, next, previous and menu keybinds
+- added `/setmaxspeed <preset>` rewriting, Rancher's Boots sign aliases and deliberate `/speedpreset use` controls
+- added configurable cooldown, local action-bar/chat/sound feedback and a movable recent-preset HUD with independent rows
+
 ## 0.9.731 (2026-07-30) — Scoreboard Information Suite
 
 - added exact SkyBlock date and configurable 12/24-hour time elements plus dated lobby IDs and learned current/maximum player counts

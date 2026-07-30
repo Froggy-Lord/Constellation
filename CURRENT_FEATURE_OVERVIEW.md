@@ -381,6 +381,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Optional next-transition countdown, real elapsed age, raw ticks, 12-hour clock and independent colors
 - Automatic screenshot-to-image-clipboard copying while preserving Minecraft's normal saved file
 - Optional last-screenshot retention, manual clipboard retry, bounded busy-clipboard retries and feedback controls
+- Seven default farming speed presets matching the active Skyblocker profile
+- Searchable preset editor with validated custom names and values, deletion, reset and immediate persistence
+- Named preset profiles with optional automatic SkyBlock-profile selection
+- Preset aliases in `/setmaxspeed` and Rancher's Boots speed-cap signs
+- Menu, next, previous and seven direct preset keybinds
+- Configurable command cooldown, action-bar/chat/sound feedback and recent-use HUD rows
 - Slot locking and item protection integration
 - Auto-save reminder
 - Sign calculator and input helpers

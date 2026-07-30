@@ -122,6 +122,22 @@ public class PhoenixConfig extends BaseConfigGroup {
     public int screenshotClipboardRetries = 3;
     public int screenshotClipboardRetryDelayMillis = 75;
 
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/speedpreset/SpeedPresets.java
+    public boolean speedPresets = true;
+    public boolean speedPresetsAutoProfile = false;
+    public boolean speedPresetsFeedbackChat = false;
+    public boolean speedPresetsFeedbackActionbar = true;
+    public boolean speedPresetsFeedbackSound = true;
+    public boolean speedPresetsHud = true;
+    public boolean speedPresetsHudRecentOnly = true;
+    public boolean speedPresetsHudName = true;
+    public boolean speedPresetsHudSpeed = true;
+    public boolean speedPresetsHudProfile = false;
+    public int speedPresetsCooldownMillis = 500;
+    public int speedPresetsHudSeconds = 4;
+    public String speedPresetsSelectedProfile = "default";
+    public java.util.Map<String, java.util.Map<String,Integer>> speedPresetProfiles = new java.util.LinkedHashMap<>();
+
     // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
     public static class SlotBindingProfile {
         public String area = "";

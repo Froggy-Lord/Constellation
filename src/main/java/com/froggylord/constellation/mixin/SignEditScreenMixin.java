@@ -1,6 +1,8 @@
 package com.froggylord.constellation.mixin;
 
 import com.froggylord.constellation.constellation.LyraBazaarHelper;
+import com.froggylord.constellation.constellation.PhoenixSpeedPresets;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.network.chat.Component;
@@ -22,4 +24,18 @@ public abstract class SignEditScreenMixin extends Screen {
     private void constellation$bazaarQuantityButtons(CallbackInfo ci) {
         for (var button : LyraBazaarHelper.quantityButtons((AbstractSignEditScreen) (Object) this, messages)) addRenderableWidget(button);
     }
+
+    // ported from Skyblocker (LGPL-3.0-or-later): mixins/AbstractSignEditScreenMixin.java
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void constellation$speedPresetPreview(GuiGraphicsExtractor graphics,int mouseX,int mouseY,float delta,CallbackInfo ci) {
+        if(isSpeedInput()&&PhoenixSpeedPresets.signAlias(messages[0]))graphics.centeredText(font,PhoenixSpeedPresets.signPreview(messages[0]),graphics.guiWidth()/2,55,0xFF55FF55);
+    }
+
+    // ported from Skyblocker (LGPL-3.0-or-later): mixins/AbstractSignEditScreenMixin.java
+    @Inject(method = "onDone", at = @At("HEAD"))
+    private void constellation$resolveSpeedPreset(CallbackInfo ci) {
+        if(isSpeedInput()&&PhoenixSpeedPresets.signAlias(messages[0]))messages[0]=PhoenixSpeedPresets.signValue(messages[0]);
+    }
+
+    private boolean isSpeedInput(){return messages.length>3&&messages[3].equals("speed cap!");}
 }

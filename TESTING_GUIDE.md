@@ -1482,6 +1482,17 @@ Enable Lyra and Phoenix protection/inventory features. Use inexpensive test item
 - [ ] Disable retention and take another screenshot. Expected: automatic copying still works, but `copylast` has no image; re-enabling retention affects subsequent screenshots.
 - [ ] Toggle action-bar, chat, failure-chat and sound options independently. Expected: only the selected local feedback channels change; no server message is sent.
 - [ ] Disable automatic copying. Expected: Minecraft continues saving screenshots normally and existing screenshot chat links still work.
+- [ ] Enable Phoenix and `speedPresets`, then run `/speedpreset`. Expected: a searchable editor opens with default, crops, cocoa, mushroom, cane, squash and cactus values.
+- [ ] Select, edit and save a preset; create another preset; delete it; then restart. Expected: valid values from 0 to 500 persist, invalid names or values show a local validation message and deletion persists.
+- [ ] Run `/speedpreset reset`. Expected: only the active preset profile returns to the seven defaults.
+- [ ] Run `/setmaxspeed crops` on Hypixel SkyBlock. Expected: the outgoing command becomes `/setmaxspeed 93`; unknown aliases and commands outside Hypixel are left unchanged.
+- [ ] Open a Rancher's Boots speed-cap sign and type `cactus`. Expected: a local `cactus -> 464` preview appears and submitting writes `464`.
+- [ ] Bind the Speed Preset Menu, Next and Previous controls plus several direct preset controls. Expected: each deliberate keypress selects exactly one saved preset and observes the configured cooldown.
+- [ ] Run `/speedpreset profile test`, save a different value, then return to the default profile. Expected: the profiles retain independent maps.
+- [ ] Enable automatic profiles and switch SkyBlock profiles. Expected: the active preset map follows the detected profile key and a previously unseen profile begins with defaults.
+- [ ] Toggle chat, action-bar and sound feedback independently. Expected: feedback remains local and only the selected channels fire after a user-triggered speed command.
+- [ ] Configure recent-HUD mode and `/speedpreset hudseconds 2`, then use a preset. Expected: selected HUD rows appear for about two seconds; permanent mode keeps them visible.
+- [ ] Toggle `hudname`, `hudspeed` and `hudprofile` independently, then move and scroll-resize the Speed Preset HUD in `/cn hud`. Expected: only selected rows render and placement/scale persist.
 - [ ] Hover Bazaar, auction and ordinary items. Expected: relevant prices appear without duplicated or impossible values.
 - [ ] Open storage/backpacks. Expected: previews and total value correspond to contained items.
 - [ ] Search inventory. Expected: matching items remain clear and unrelated items are dimmed as configured.
