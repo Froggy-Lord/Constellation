@@ -114,7 +114,8 @@ public class ClientPacketListenerMixin {
         // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/motes/RiftMotesOrb.kt
         boolean hideMotes = com.froggylord.constellation.constellation.AndromedaMotes.onParticle(packet);
         boolean hideBerberis = com.froggylord.constellation.constellation.AndromedaDreadfarm.onParticle(packet);
-        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis) ci.cancel();
+        boolean hideLiving = com.froggylord.constellation.constellation.AndromedaLivingCave.onParticle(packet);
+        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis || hideLiving) ci.cancel();
     }
 
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))
@@ -127,6 +128,7 @@ public class ClientPacketListenerMixin {
         target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/network/PacketProcessor;)V",
         shift = At.Shift.AFTER), cancellable = true)
     private void constellation$filterGoldorTitle(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
+        com.froggylord.constellation.constellation.AndromedaLivingCave.onTitle(packet.text());
         // ported from Athen (BSD-3-Clause): modules/impl/kuudra/KuudraTitles.kt Supply.Progress cancellation
         if (com.froggylord.constellation.constellation.KuudraTitles.onTitle(packet.text())) {
             ci.cancel();

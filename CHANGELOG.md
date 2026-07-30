@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.738 (2026-07-30) — Complete Rift Living Cave Suite
+
+- added Living Metal lapis-transition animation with exact click/block pairing, expiry and particle controls
+- added moving and placed Defense Block tracking tied to the correct Autonull family mob
+- added complete Living Metal Snake reconstruction, state recognition and held-tool-specific head/tail guidance
+- added an optional movable four-piece Living Metal Suit progression HUD using exact `lm_evo` item data
+- added independent colors, ranges, boxes, lines, labels, bars and `/livingcave` controls
+
 ## 0.9.737 (2026-07-30) — Complete Rift Dreadfarm Suite
 
 - added Wand-gated Agaricus maturity guidance with configurable countdown, timing and ready state

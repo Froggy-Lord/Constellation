@@ -1800,3 +1800,26 @@ Enable Andromeda and travel to Dreadfarm. Run `/dreadfarm`; it should report Aga
 - [ ] Run `/dreadfarm resetbuttons`. Expected: all 56 local button markers return without claiming the server quest changed.
 - [ ] Complete all 56. Expected: the exact completion chat marks the full local set and removes button routing.
 - [ ] Run every `/dreadfarm number` and `/dreadfarm option` control, then restart. Expected: all saved settings persist and remain bounded.
+
+## Rift Living Cave suite
+
+Enable Andromeda and enter Living Cave or Living Stillness. Run `/livingcave`; it should report Metal, Defense Blocks, reconstructed Snake count and suit-HUD state locally.
+
+- [ ] Left-click a lapis-ore Living Metal block, then observe the nearby server-created lapis ore. Expected: an aqua box animates from the clicked block to only that adjacent replacement, with an optional line.
+- [ ] Trigger an unrelated or distant lapis update. Expected: it is ignored because it is not within two blocks of the deliberate clicked origin and seven blocks of the player.
+- [ ] Wait beyond the default four-second expiry or receive a Living Metal title. Expected: the animation clears.
+- [ ] Enable Living Metal particle hiding. Expected: only particles within three blocks of the paired destination hide; unrelated Living Cave particles remain.
+- [ ] Damage an Autonull, Autocap, Autochest, Autopants or Autoboots and watch a Defense Block move. Expected: the Enchanted Hit trail is associated with that exact damaged nearby mob.
+- [ ] Observe the moving Defense Block become stained glass or diamond. Expected: it becomes a persistent `Break!` target with a line back to its owning mob.
+- [ ] Break the placed Defense Block or kill/despawn its mob. Expected: the marker and association clear.
+- [ ] Test Defense particle hiding around moving and placed blocks. Expected: only correlated particles are cancelled.
+- [ ] Observe a Living Metal Snake spawn. Expected: authoritative lapis-block additions reconstruct one connected ordered Snake rather than independent random blocks.
+- [ ] Force two Snake heads close together. Expected: collision correction prefers the non-calm Snake as the source does.
+- [ ] Hold Frozen Water Pungi. Expected: the Snake head is highlighted for calming. Hold Self-Recursive, Anti-Sentient, Eon or Chrono Pickaxe. Expected: a calm multi-block Snake highlights its tail for breaking.
+- [ ] Inspect Spawning, Active, not-touching-air and Calm states. Expected: aqua, yellow, red and green presentation follows actual blocks and motion.
+- [ ] Look at or click a Snake. Expected: only the selected Snake gains its state/block-count label; no action is generated.
+- [ ] Remove a middle block, create a gap over three blocks or leave a head invalid for more than one second. Expected: invalid reconstruction fails closed and clears.
+- [ ] Enable Living Metal Suit HUD while wearing suit pieces. Expected: exact `lm_evo` values produce a movable total and optional piece bars/percent; unrelated armor is excluded.
+- [ ] Test one to four pieces, missing `lm_evo`, 100% pieces and all four maxed. Expected: values clamp from 0-100 and Compact Maxed reduces the full maxed set to one row.
+- [ ] Use `/livingcave number metalrange|animation|expiry|defenserange|snakerange|barlength` and every option, then restart. Expected: values remain bounded and every choice persists.
+- [ ] Leave Living Cave, change world or disconnect mid-animation. Expected: Metal, Defense and Snake transient state clears without affecting the suit item data.

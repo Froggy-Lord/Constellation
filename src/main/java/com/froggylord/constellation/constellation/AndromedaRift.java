@@ -40,11 +40,13 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaMotes.init(cfg);
         AndromedaWestVillage.init(cfg);
         AndromedaDreadfarm.init(cfg);
+        AndromedaLivingCave.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
         registerRenderer(AndromedaWestVillage::draw);
         registerRenderer(AndromedaDreadfarm::draw);
+        registerRenderer(AndromedaLivingCave::draw);
     }
 
     @Override
@@ -55,9 +57,11 @@ public class AndromedaRift extends BaseConstellation {
             HudPosition.of(126,156),()->cfg.enabled&&cfg.motesStorageValue));
         hud.register(new com.froggylord.constellation.hud.WestVerminHudWidget(
             HudPosition.of(126,132),()->cfg.enabled&&cfg.westVerminTracker));
+        hud.register(new com.froggylord.constellation.hud.LivingMetalSuitHudWidget(
+            HudPosition.of(126,108),()->cfg.enabled&&cfg.livingMetalSuitHud));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

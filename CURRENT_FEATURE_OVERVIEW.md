@@ -43,6 +43,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Six-field Berberis respawn-sequence learning with authoritative expected counts and ordered previous/current/next/third rendering
 - Complete 14-spot/56-button quest data, persistent powered/chat-confirmed hits, nearest incomplete spot route and nearby button markers
 - Full `/dreadfarm` status, reset, timing, range and feature controls
+- Living Metal lapis-ore click/transition pairing with bounded movement animation, line, box, expiry and correlated particle hiding
+- Moving Defense Block particle tracking, exact damaged Autonull-family ownership, placed-block recognition, break labels and mob/block lines
+- Reconstructed Living Metal Snakes from authoritative lapis-block transitions with collision correction, invalid-shape cleanup and four states
+- Held Frozen Water Pungi versus four exact Pickaxes selects the useful Snake head or calm tail target
+- Optional movable Living Metal Suit HUD using exact `lm_evo` progression, total, per-piece bars/percent and compact maxed mode
+- Full `/livingcave` status, reset, range, animation and presentation controls
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
 - Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
 - Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes

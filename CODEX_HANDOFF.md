@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.737 Complete Rift Dreadfarm Suite.
+Last updated: 2026-07-30 for version 0.9.738 Complete Rift Living Cave Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.737`.
+- Current artifact version: `0.9.738`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2548,4 +2548,20 @@ The button helper loads the exact 14-spot/56-button asset and chooses only the n
 
 Version `0.9.737` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the new 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `b990294aeae468349fd9e0115738d933301743a15e4bd7a1cbb513e85ae6b0ea`.
 
-The previous `0.9.736` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-115457-0.9.737/`; only `constellation-0.9.737.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
+The previous `0.9.736` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-115457-0.9.737/`; only `constellation-0.9.737.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `07546e291a`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.738 Complete Rift Living Cave Suite
+
+`AndromedaLivingCave.java`, `LivingMetalSuitHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java` and `ClientPacketListenerMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/livingcave/LivingCaveLivingMetalHelper.kt`, `LivingCaveDefenseBlocks.kt`, `LivingCaveSnakeFeatures.kt`, `snake/LivingCaveSnake.kt`, `LivingMetalSuitProgress.kt` and all four Living Cave configuration classes. Defaults match the live 26.1.2 profile: Living Metal, Defense Blocks and Snake highlighting enabled; both particle filters disabled; suit HUD disabled.
+
+Living Metal requires a deliberate local left-click against normal or deepslate lapis ore. Only an authoritative nearby lapis-ore creation within two blocks of that origin and seven blocks of the player forms a pair. The source's default 500-millisecond interpolation and four-second expiry drive the moving box; the old destination becoming non-lapis or an exact Living Metal title clears it. Range, animation, expiry, box, line, correlated particle hiding, wall state and color are independent.
+
+Defense Blocks accept only Enchanted Hit particles associated within two blocks of a damaged `Autonull`, `Autocap`, `Autochest`, `Autopants` or `Autoboots` RemotePlayer. A moving observation lives through the source's 250-millisecond visible window and two-second cleanup. An authoritative air-to-diamond/stained-glass transition near it promotes it to a placed block; that block becoming air or its owning mob dying removes it. Moving box, crosshair line, placed box, owner line, `Break!` label, particle hiding, range, color and wall behavior are saved separately.
+
+Snake reconstruction follows authoritative lapis-block creation/restoration. New heads join only within the source's square-root-three distance; close collisions prefer a non-calm snake. Duplicate server additions are ignored. Restore transitions remove exact blocks, head clicks are protected from duplicate-packet removal, gaps over three blocks fail closed, and a missing head receives the source's one-second grace. Spawning becomes Active after the first real removal; motion settles after 200 milliseconds; a block with no air-touching neighbor produces Not touching air; otherwise it becomes Calm. Frozen Water Pungi selects the head, while the exact Self-Recursive, Anti-Sentient, Eon and Chrono Pickaxes select a calm multi-block tail. All-block outlines, target fill, selected label/count, range, wall behavior and four state colors are independent. No tool is used automatically.
+
+The optional movable suit HUD reads exact integer `lm_evo` from item ExtraAttributes. A piece is accepted only with that key or a Living Metal display name, excluding unrelated armor. Values clamp to 0-100. The total averages observed suit pieces; four 100-percent pieces become `MAXED`. Per-piece rows, bar, percent, five-to-thirty bar length and compact-when-maxed are independent. `/livingcave` exposes local status, transient reset, bounded numerical tuning and primary options. World replacement, area exit and disconnect clear only transient Metal, Defense and Snake state.
+
+Version `0.9.738` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `eb479fae8a0443148491c5030b88f2f42b5997c389b69d8356fa3932e8de0c65`.
+
+The previous `0.9.737` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-120334-0.9.738/`; only `constellation-0.9.738.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
