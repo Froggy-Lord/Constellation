@@ -46,7 +46,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging", "Mobs"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging", "Mobs", "Loadouts"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -63,6 +63,8 @@ public final class ProfileViewerScreen extends Screen {
     private int itemContainer;
     private int itemContainerScroll;
     private int itemPage;
+    private int loadoutSelected = -1;
+    private int loadoutMenuScroll;
     private ProfileWealthCalculator.Result wealth;
     private boolean wealthLoading;
     private int wealthProfile = -1;
@@ -199,6 +201,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 18) {
             drawMobs(g);
+            return;
+        }
+        if (tab == 19) {
+            drawLoadouts(g, mx, my);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -1375,6 +1381,163 @@ public final class ProfileViewerScreen extends Screen {
         return fixed(kills / (double) deaths, decimals);
     }
 
+    private void drawLoadouts(GuiGraphicsExtractor g, int mx, int my) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileLoadouts) {
+            g.text(font, "Loadout viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if (itemProfile != profileIndex && !itemLoading) startItemDecode();
+        if (itemLoading) {
+            g.text(font, "Decoding loadout items...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (itemResult == null || !itemResult.loadouts().available()) {
+            g.text(font, "Loadout API is disabled or no templates were returned.",
+                14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        List<ProfileItemDecoder.SavedLoadout> loadouts = visibleLoadouts();
+        if (loadouts.isEmpty()) {
+            g.text(font, "No loadouts match the current options.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if (loadouts.stream().noneMatch(value -> value.id() == loadoutSelected))
+            loadoutSelected = loadouts.getFirst().id();
+        ProfileItemDecoder.SavedLoadout selected = loadouts.stream()
+            .filter(value -> value.id() == loadoutSelected).findFirst().orElse(loadouts.getFirst());
+
+        int visibleMenus = Math.max(2, (height - 136) / 18);
+        loadoutMenuScroll = Math.clamp(loadoutMenuScroll, 0, Math.max(0, loadouts.size() - visibleMenus));
+        int menuY = 108;
+        for (int i = loadoutMenuScroll; i < Math.min(loadouts.size(), loadoutMenuScroll + visibleMenus); i++) {
+            ProfileItemDecoder.SavedLoadout loadout = loadouts.get(i);
+            boolean active = loadout.id() == selected.id();
+            g.fill(12, menuY, 122, menuY + 16,
+                active ? 0xFF34506A : inside(mx, my, 12, menuY, 110, 16) ? 0xFF303044 : 0xFF20202C);
+            String name = loadout.name() + (!loadout.saved() ? "  Locked" : loadout.empty() ? "  Empty" : "");
+            String shown = font.width(name) > 98 ? font.plainSubstrByWidth(name, 92) + "..." : name;
+            g.text(font, shown, 18, menuY + 5, active ? 0xFFFFFFFF : ConstellationTheme.TEXT_MUTED, false);
+            menuY += 18;
+        }
+
+        int x = 138;
+        int y = 108;
+        g.text(font, selected.name() + "  Template " + selected.id(), x, y,
+            ConstellationTheme.ACCENT_BRIGHT, false);
+        y += 20;
+        ItemStack hovered = null;
+        ProfileItemDecoder.Loadouts data = itemResult.loadouts();
+        if (cfg.profileLoadoutsShowArmor) {
+            g.text(font, "Armor", x, y + 5, ConstellationTheme.TEXT_MUTED, false);
+            hovered = drawLoadoutSlots(g, data.armor(selected), x + 74, y, mx, my, hovered);
+            y += 24;
+        }
+        if (cfg.profileLoadoutsShowEquipment) {
+            g.text(font, "Equipment", x, y + 5, ConstellationTheme.TEXT_MUTED, false);
+            hovered = drawLoadoutSlots(g, data.equipment(selected), x + 74, y, mx, my, hovered);
+            y += 24;
+        }
+        ProfilePetCalculator.Pet pet = loadoutPet(selected);
+        if (cfg.profileLoadoutsShowPet) {
+            g.text(font, "Pet", x, y + 5, ConstellationTheme.TEXT_MUTED, false);
+            g.fill(x + 74, y, x + 92, y + 18,
+                inside(mx, my, x + 74, y, 18, 18) ? cfg.profileViewerInventoryHoverColor
+                    : cfg.profileViewerInventorySlotColor);
+            String petValue = pet == null ? selected.petUuid() == null ? "None" : "Unknown UUID"
+                : title(pet.type()) + "  " + pet.effectiveTier() + "  Level " + fixed(pet.level().level(), 1);
+            g.text(font, petValue, x + 100, y + 5,
+                pet == null ? ConstellationTheme.TEXT_MUTED : ConstellationTheme.TEXT, false);
+            y += 24;
+        }
+        if (cfg.profileLoadoutsShowSetIds) {
+            drawLoadoutRow(g, x, y, "Armor set", selected.armorSetId() == null ? "None"
+                : selected.armorSetId() + (selected.armorSetId() == data.equippedArmorSet() ? "  equipped" : ""));
+            y += 21;
+            drawLoadoutRow(g, x, y, "Equipment set", selected.equipmentSetId() == null ? "None"
+                : selected.equipmentSetId() + (selected.equipmentSetId() == data.equippedEquipmentSet()
+                    ? "  equipped" : ""));
+            y += 21;
+        }
+        if (cfg.profileLoadoutsShowPresets) {
+            drawLoadoutRow(g, x, y, "HOTM preset",
+                selected.miningPreset() == null ? "Default selected tree" : selected.miningPreset().toString());
+            y += 21;
+            drawLoadoutRow(g, x, y, "HOTF preset",
+                selected.foragingPreset() == null ? "Default selected tree" : selected.foragingPreset().toString());
+            y += 21;
+        }
+        if (cfg.profileLoadoutsShowPowerStone) {
+            drawLoadoutRow(g, x, y, "Power stone", selected.powerStone() == null
+                ? "None" : title(selected.powerStone()));
+            y += 21;
+        }
+        if (cfg.profileLoadoutsShowTuning)
+            drawLoadoutRow(g, x, y, "Tuning slot",
+                selected.tuningSlot() == null ? "None" : selected.tuningSlot().toString());
+        if (hovered != null && cfg.profileLoadoutsTooltips)
+            g.setComponentTooltipForNextFrame(font,
+                Screen.getTooltipFromItem(Minecraft.getInstance(), hovered), mx, my);
+        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
+    }
+
+    private List<ProfileItemDecoder.SavedLoadout> visibleLoadouts() {
+        if (itemResult == null) return List.of();
+        var cfg = ConstellationClient.cfg().lyra;
+        int limit = Math.clamp(cfg.profileLoadoutsLimit, 0, 100);
+        java.util.Map<Integer, ProfileItemDecoder.SavedLoadout> saved = itemResult.loadouts().saved().stream()
+            .collect(java.util.stream.Collectors.toMap(ProfileItemDecoder.SavedLoadout::id,
+                value -> value, (first, ignored) -> first));
+        List<ProfileItemDecoder.SavedLoadout> templates = new ArrayList<>();
+        for (int id = 1; id <= 27; id++) {
+            ProfileItemDecoder.SavedLoadout value = saved.get(id);
+            if (value == null && cfg.profileLoadoutsShowLockedTemplates)
+                value = ProfileItemDecoder.SavedLoadout.locked(id);
+            if (value != null) templates.add(value);
+        }
+        saved.entrySet().stream().filter(entry -> entry.getKey() < 1 || entry.getKey() > 27)
+            .sorted(java.util.Map.Entry.comparingByKey()).map(java.util.Map.Entry::getValue)
+            .forEach(templates::add);
+        return templates.stream()
+            .filter(value -> !cfg.profileLoadoutsHideEmptyTemplates || !value.saved() || !value.empty())
+            .limit(limit == 0 ? Long.MAX_VALUE : limit).toList();
+    }
+
+    private ItemStack drawLoadoutSlots(GuiGraphicsExtractor g, List<ItemStack> items, int x, int y,
+                                       int mx, int my, ItemStack hovered) {
+        var cfg = ConstellationClient.cfg().lyra;
+        int shown = 0;
+        for (int i = 0; i < 4; i++) {
+            ItemStack stack = i < items.size() ? items.get(i) : ItemStack.EMPTY;
+            if (stack.isEmpty() && !cfg.profileLoadoutsShowEmptySlots) continue;
+            int slotX = x + shown++ * 18;
+            boolean over = inside(mx, my, slotX, y, 18, 18);
+            g.fill(slotX, y, slotX + 18, y + 18,
+                over ? cfg.profileViewerInventoryHoverColor : cfg.profileViewerInventorySlotColor);
+            if (!stack.isEmpty()) {
+                g.fakeItem(stack, slotX + 1, y + 1);
+                if (cfg.profileLoadoutsDecorations) g.itemDecorations(font, stack, slotX + 1, y + 1);
+                if (over) hovered = stack;
+            }
+        }
+        return hovered;
+    }
+
+    private ProfilePetCalculator.Pet loadoutPet(ProfileItemDecoder.SavedLoadout loadout) {
+        if (loadout.petUuid() == null) return null;
+        return ProfilePetCalculator.calculate(member(profile()), "DEFAULT", true).pets().stream()
+            .filter(pet -> loadout.petUuid().equalsIgnoreCase(pet.uniqueId())
+                || loadout.petUuid().equalsIgnoreCase(pet.uuid())).findFirst().orElse(null);
+    }
+
+    private void drawLoadoutRow(GuiGraphicsExtractor g, int x, int y, String label, String value) {
+        g.fill(x, y, width - 12, y + 18, 0xA0181825);
+        g.text(font, label, x + 7, y + 6, ConstellationTheme.TEXT_MUTED, false);
+        String shown = font.width(value) > Math.max(40, width - x - 130)
+            ? font.plainSubstrByWidth(value, Math.max(32, width - x - 140)) + "..." : value;
+        g.text(font, shown, width - 19 - font.width(shown), y + 6, ConstellationTheme.TEXT, false);
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1610,7 +1773,14 @@ public final class ProfileViewerScreen extends Screen {
             int x = 12;
             for (int i = 0; i < result.profiles().size(); i++) {
                 int bw = Math.max(52, font.width(string(result.profiles().get(i).getAsJsonObject(), "cute_name", Integer.toString(i + 1))) + 14);
-                if (inside(mx, my, x, 58, bw, 16)) { profileIndex = i; scroll = 0; resetItems(); if (tab == 5) startItemDecode(); if (tab == 6) startWealth(); return true; }
+                if (inside(mx, my, x, 58, bw, 16)) {
+                    profileIndex = i;
+                    scroll = 0;
+                    resetItems();
+                    if (tab == 5 || tab == 19) startItemDecode();
+                    if (tab == 6) startWealth();
+                    return true;
+                }
                 x += bw + 4;
             }
             x = 12;
@@ -1626,6 +1796,7 @@ public final class ProfileViewerScreen extends Screen {
                     if (tab == 11 && (museumResult == null || museumProfile != profileIndex)) startMuseum(false);
                     if (tab == 13 && (gardenResult == null || gardenProfile != profileIndex)) startGarden(false);
                     if (tab == 16 && chocolateData == null) startChocolate(false);
+                    if (tab == 19 && itemProfile != profileIndex) startItemDecode();
                     return true;
                 }
                 x += bw + 4;
@@ -1655,6 +1826,19 @@ public final class ProfileViewerScreen extends Screen {
                     y += 21;
                 }
             }
+            if (tab == 19 && itemResult != null) {
+                List<ProfileItemDecoder.SavedLoadout> loadouts = visibleLoadouts();
+                int visibleMenus = Math.max(2, (height - 136) / 18);
+                int y = 108;
+                for (int i = loadoutMenuScroll; i < Math.min(loadouts.size(),
+                    loadoutMenuScroll + visibleMenus); i++) {
+                    if (inside(mx, my, 12, y, 110, 16)) {
+                        loadoutSelected = loadouts.get(i).id();
+                        return true;
+                    }
+                    y += 18;
+                }
+            }
         }
         return super.mouseClicked(event, dbl);
     }
@@ -1666,6 +1850,14 @@ public final class ProfileViewerScreen extends Screen {
                 itemContainerScroll = Math.clamp(itemContainerScroll - (int) sy, 0,
                     Math.max(0, itemResult.containers().size() - Math.max(2, (height - 136) / 18)));
             else itemPage = Math.max(0, itemPage - (int) sy);
+            return true;
+        }
+        if (tab == 19) {
+            if (mx < 130 && itemResult != null) {
+                int visibleMenus = Math.max(2, (height - 136) / 18);
+                int maximum = Math.max(0, visibleLoadouts().size() - visibleMenus);
+                loadoutMenuScroll = Math.clamp(loadoutMenuScroll - (int) sy, 0, maximum);
+            }
             return true;
         }
         if (tab == 10) {
@@ -1786,13 +1978,17 @@ public final class ProfileViewerScreen extends Screen {
                 if (tab == 11) startMuseum(refresh);
                 if (tab == 13) startGarden(refresh);
                 if (tab == 16) startChocolate(refresh);
+                if (tab == 19) startItemDecode();
             }
         }));
     }
 
     private void startItemDecode() {
-        if (result == null || itemLoading
-            || !ConstellationClient.cfg().lyra.profileViewerInventory && tab != 6) return;
+        if (result == null || itemLoading) return;
+        var cfg = ConstellationClient.cfg().lyra;
+        if (tab == 5 && !cfg.profileViewerInventory
+            || tab == 6 && !cfg.profileWealth
+            || tab == 19 && !cfg.profileLoadouts) return;
         int requestedProfile = profileIndex;
         itemLoading = true;
         itemResult = null;
@@ -2013,6 +2209,8 @@ public final class ProfileViewerScreen extends Screen {
         itemLoading = false;
         itemProfile = -1;
         itemContainer = itemContainerScroll = itemPage = 0;
+        loadoutSelected = -1;
+        loadoutMenuScroll = 0;
         wealthGeneration++;
         wealth = null;
         wealthLoading = false;

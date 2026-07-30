@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.786 Complete Profile Mob Records.
+Last updated: 2026-07-30 for version 0.9.787 Complete Profile Saved Loadouts.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.786`.
+- Current artifact version: `0.9.787`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3180,7 +3180,21 @@ The nineteenth profile tab uses the existing deterministic tab paging and scroll
 
 Version `0.9.786` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `126e02052ec613d899ec916ba4f830a591eb319f06bc27fa5da714c4e3105b29`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-183330-0.9.786/`; only `constellation-0.9.786.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-183330-0.9.786/`; only `constellation-0.9.786.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `81f312f3d7`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.787 Complete Profile Saved Loadouts
+
+`ProfileItemDecoder.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Saved Loadouts page. The `loadout.armor`, `loadout.equipment` and `loadout.loadouts` codecs, equipped-set substitution, 27-position selector, icon precedence and template detail model port SkyBlockPv modified-MIT `api/data/InventoryData.kt` and `screens/windowed/tabs/loadout/LoadoutTab.kt`. Required notices are beside the derived blocks.
+
+All 27 canonical template positions distinguish locked, saved-empty and configured state, and profile-only future IDs beyond 27 remain reachable without manufacturing missing intermediate positions. The selector scrolls independently and has a zero-to-100 configured limit. Locked positions and saved-empty templates have separate policies.
+
+Each configured template preserves armor/equipment set IDs, pet UUID, HOTM/HOTF preset, power stone and tuning slot. A set ID matching `equipped_set` resolves the live `inv_armor` or `equipment_contents` items exactly like the licensed view; other IDs resolve the saved set. Armor and equipment keep canonical four-slot order. Pet UUIDs resolve against the profile's exact pet record and show type, effective rarity and level; missing/private pet data stays Unknown.
+
+All eight items reuse the existing Skyblocker-derived legacy item fixer, so native 26.2 icons, decorations and tooltips match the Items page while malformed slots fail independently. Armor, equipment, pet, set IDs, presets, power stone, tuning, empty slots, tooltips and decorations are independent. The twentieth profile tab uses deterministic paging and starts decoding only when enabled/selected; profile switches and Refresh invalidate all decoded state.
+
+Version `0.9.787` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2dd71c54a00ba4f864e81be54fd81a9b16481850ca99c4cee042c8ddc1fe1900`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-184222-0.9.787/`; only `constellation-0.9.787.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

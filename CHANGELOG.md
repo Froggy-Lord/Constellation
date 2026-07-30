@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.787 (2026-07-30) — Complete Profile Saved Loadouts
+
+- added all 27 Loadout template positions with locked, saved-empty and configured states
+- added exact armor/equipment set links with current-equipped-set substitution
+- added saved pet UUID, HOTM/HOTF presets, power stone and tuning-slot details
+- reused the safe legacy item decoder for native icons, decorations and tooltips
+- added independent sections, empty/locked policies, scrolling and bounded limits
+
 ## 0.9.786 (2026-07-30) — Complete Profile Mob Records
 
 - added lifetime Mob Records from every profile kill and death counter

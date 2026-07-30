@@ -2384,3 +2384,17 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle kills, deaths, K/D, percentage shares and raw IDs independently. Expected: each changes only row presentation; zero-death positive-kill records show Infinite rather than dividing by zero.
 - [ ] Switch profiles, refresh and open a profile with empty or disabled statistics. Expected: rows update immediately with the selected member and a readable unavailable message replaces stale data.
 - [ ] Disable `profileMobs`. Expected: the tab reports disabled and performs no extra network request.
+
+### Profile Saved Loadouts
+
+- [ ] Enable `profileLoadouts`, open `/pv`, page to Loadouts and compare the selector with the in-game Loadouts menu. Expected: all 27 positions distinguish Locked, Empty and named configured templates.
+- [ ] Select a configured template. Expected: armor set, equipment set, pet UUID, HOTM preset, HOTF preset, power stone and tuning slot match its raw `loadout.loadouts` entry.
+- [ ] Select a template that references the currently equipped armor or equipment set. Expected: its four live equipped items appear instead of a stale saved copy.
+- [ ] Select a non-equipped set. Expected: Helmet, Chestplate, Leggings and Boots plus all four Equipment slots decode from that exact set ID in canonical order.
+- [ ] Hover every non-empty gear slot. Expected: native 26.2 icons, stack decorations and full fixed legacy tooltips appear; malformed slots fail independently.
+- [ ] Select a loadout with a pet. Expected: UUID resolution shows the exact pet type, effective rarity and level; missing/private pet data reports Unknown UUID without borrowing another pet.
+- [ ] Toggle armor, equipment, pet, set IDs, skill-tree presets, power stone and tuning sections independently. Expected: each affects only its own presentation.
+- [ ] Toggle empty slots, locked templates, saved-empty hiding, item tooltips and decorations. Expected: each behavior changes independently and configured templates remain selectable.
+- [ ] Test the zero-to-100 limit and scroll over the selector. Expected: zero is unlimited, the limit is deterministic and the selector reaches every included template.
+- [ ] Switch profiles and press Refresh. Expected: decoded sets/templates reset and reload for only the selected profile with no state leakage.
+- [ ] Disable `profileLoadouts` or open a profile with Loadout API disabled. Expected: a readable state appears and no unnecessary decode starts.

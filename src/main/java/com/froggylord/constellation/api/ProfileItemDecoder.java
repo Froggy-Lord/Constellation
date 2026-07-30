@@ -27,8 +27,10 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -91,13 +93,89 @@ public final class ProfileItemDecoder {
             .forEach(entry -> add(containers, failures, "Backpack " + entry.getKey(), entry.getValue(), 5, false, false));
 
         JsonObject loadout = object(member, "loadout");
+        Loadouts loadouts = decodeLoadouts(member, loadout, inventory, failures);
         addLoadouts(containers, failures, "Wardrobe", object(loadout, "armor"),
             List.of("HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"));
         addLoadouts(containers, failures, "Equipment Sets", object(loadout, "equipment"),
             List.of("EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"));
 
         containers.removeIf(container -> container.items.isEmpty());
-        return new Result(List.copyOf(containers), List.copyOf(failures));
+        return new Result(List.copyOf(containers), List.copyOf(failures), loadouts);
+    }
+
+    // ported from SkyBlockPv (modified MIT): api/data/InventoryData.kt, screens/windowed/tabs/loadout/LoadoutTab.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private static Loadouts decodeLoadouts(JsonObject member, JsonObject loadout, JsonObject inventory,
+                                           List<String> failures) {
+        if (loadout.isEmpty()) return Loadouts.EMPTY;
+        JsonObject rawArmor = object(loadout, "armor");
+        JsonObject rawEquipment = object(loadout, "equipment");
+        int equippedArmorSet = integer(rawArmor.get("equipped_set"));
+        int equippedEquipmentSet = integer(rawEquipment.get("equipped_set"));
+        Map<Integer, List<ItemStack>> armorSets = decodeSets(rawArmor,
+            List.of("HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"), "Loadout armor", failures);
+        Map<Integer, List<ItemStack>> equipmentSets = decodeSets(rawEquipment,
+            List.of("EQUIPMENT_SLOT_1", "EQUIPMENT_SLOT_2", "EQUIPMENT_SLOT_3", "EQUIPMENT_SLOT_4"),
+            "Loadout equipment", failures);
+        List<ItemStack> equippedArmor = decodeContainer(object(inventory, "inv_armor"), true,
+            "Equipped armor", failures);
+        List<ItemStack> equippedEquipment = decodeContainer(object(inventory, "equipment_contents"), false,
+            "Equipped equipment", failures);
+
+        List<SavedLoadout> saved = new ArrayList<>();
+        JsonObject rawSaved = object(loadout, "loadouts");
+        rawSaved.entrySet().stream().filter(entry -> entry.getValue().isJsonObject())
+            .sorted(Comparator.comparingInt(entry -> integer(entry.getKey()))).forEach(entry -> {
+                JsonObject value = entry.getValue().getAsJsonObject();
+                int id = value.has("id") ? integer(value.get("id")) : integer(entry.getKey());
+                saved.add(new SavedLoadout(id, string(value.get("name"), "Template " + id),
+                    optionalInt(value.get("armor_set_id")), optionalInt(value.get("equipment_set_id")),
+                    optionalInt(value.get("mining_core_selected_slot")),
+                    optionalInt(value.get("foraging_core_selected_slot")),
+                    string(value.get("power_stone"), null), optionalInt(value.get("tuning_points_slot")),
+                    string(value.get("pet"), null), true));
+            });
+        return new Loadouts(true, equippedArmorSet, equippedEquipmentSet, Map.copyOf(armorSets),
+            Map.copyOf(equipmentSets), List.copyOf(equippedArmor), List.copyOf(equippedEquipment),
+            List.copyOf(saved));
+    }
+
+    private static Map<Integer, List<ItemStack>> decodeSets(JsonObject sets, List<String> slots, String name,
+                                                            List<String> failures) {
+        Map<Integer, List<ItemStack>> decoded = new LinkedHashMap<>();
+        sets.entrySet().stream().filter(entry -> !entry.getKey().equals("equipped_set")
+            && entry.getValue().isJsonObject()).sorted(Comparator.comparingInt(entry -> integer(entry.getKey())))
+            .forEach(entry -> {
+                JsonObject set = entry.getValue().getAsJsonObject();
+                int id = set.has("id") ? integer(set.get("id")) : integer(entry.getKey());
+                List<ItemStack> items = new ArrayList<>();
+                for (String slot : slots) items.add(decodeSlot(set.get(slot), name, failures));
+                decoded.put(id, List.copyOf(items));
+            });
+        return decoded;
+    }
+
+    private static ItemStack decodeSlot(JsonElement encoded, String name, List<String> failures) {
+        if (encoded == null || !encoded.isJsonObject()) return ItemStack.EMPTY;
+        try {
+            List<ItemStack> items = decodeData(encoded.getAsJsonObject());
+            return items.isEmpty() ? ItemStack.EMPTY : items.getFirst();
+        } catch (Exception ignored) {
+            if (!failures.contains(name)) failures.add(name);
+            return ItemStack.EMPTY;
+        }
+    }
+
+    private static List<ItemStack> decodeContainer(JsonObject encoded, boolean reverse, String name,
+                                                   List<String> failures) {
+        if (encoded.isEmpty()) return List.of();
+        try {
+            List<ItemStack> items = decodeData(encoded);
+            return reverse ? items.reversed() : items;
+        } catch (Exception ignored) {
+            if (!failures.contains(name)) failures.add(name);
+            return List.of();
+        }
     }
 
     private static void add(List<Container> out, List<String> failures, String name, JsonObject parent, String key,
@@ -257,8 +335,47 @@ public final class ProfileItemDecoder {
         return parent != null && parent.has(key) && parent.get(key).isJsonObject() ? parent.getAsJsonObject(key) : new JsonObject();
     }
     private static int integer(String value) { try { return Integer.parseInt(value); } catch (Exception ignored) { return Integer.MAX_VALUE; } }
+    private static int integer(JsonElement value) { try { return value == null ? 0 : value.getAsInt(); } catch (Exception ignored) { return 0; } }
+    private static Integer optionalInt(JsonElement value) {
+        try { return value == null || value.isJsonNull() ? null : value.getAsInt(); }
+        catch (Exception ignored) { return null; }
+    }
+    private static String string(JsonElement value, String fallback) {
+        try { return value == null || value.isJsonNull() ? fallback : value.getAsString(); }
+        catch (Exception ignored) { return fallback; }
+    }
 
     public record Container(String name, int rows, List<ItemStack> items, boolean hotbar) {}
-    public record Result(List<Container> containers, List<String> failures) {}
+    public record SavedLoadout(int id, String name, Integer armorSetId, Integer equipmentSetId,
+                               Integer miningPreset, Integer foragingPreset, String powerStone,
+                               Integer tuningSlot, String petUuid, boolean saved) {
+        public boolean empty() {
+            return armorSetId == null && equipmentSetId == null && miningPreset == null
+                && foragingPreset == null && powerStone == null && tuningSlot == null && petUuid == null;
+        }
+        public static SavedLoadout locked(int id) {
+            return new SavedLoadout(id, "Template " + id, null, null, null, null,
+                null, null, null, false);
+        }
+    }
+    public record Loadouts(boolean available, int equippedArmorSet, int equippedEquipmentSet,
+                           Map<Integer, List<ItemStack>> armorSets,
+                           Map<Integer, List<ItemStack>> equipmentSets,
+                           List<ItemStack> equippedArmor, List<ItemStack> equippedEquipment,
+                           List<SavedLoadout> saved) {
+        public static final Loadouts EMPTY = new Loadouts(false, 0, 0, Map.of(), Map.of(),
+            List.of(), List.of(), List.of());
+        public List<ItemStack> armor(SavedLoadout loadout) {
+            if (loadout == null || loadout.armorSetId() == null) return List.of();
+            return loadout.armorSetId() == equippedArmorSet ? equippedArmor
+                : armorSets.getOrDefault(loadout.armorSetId(), List.of());
+        }
+        public List<ItemStack> equipment(SavedLoadout loadout) {
+            if (loadout == null || loadout.equipmentSetId() == null) return List.of();
+            return loadout.equipmentSetId() == equippedEquipmentSet ? equippedEquipment
+                : equipmentSets.getOrDefault(loadout.equipmentSetId(), List.of());
+        }
+    }
+    public record Result(List<Container> containers, List<String> failures, Loadouts loadouts) {}
     public record SpecialIds(Set<String> ids, int failures) {}
 }
