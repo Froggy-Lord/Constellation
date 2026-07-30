@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.748 (2026-07-30) — Andromeda Configuration Truthfulness
+
+- removed 22 legacy Andromeda toggles that were visible in generated settings but had no runtime consumer
+- retained the live Rift low-time master and every working granular HUD, waypoint, solver, area, progression and rendering control
+- removed speculative Bluetooth Ring, Deadgehog and generic helper labels that had no licensed implementation
+- verified every remaining Andromeda Boolean is consumed outside its declaration
+
 ## 0.9.747 (2026-07-30) — Complete McGrubber Detection
 
 - ported Skyblocker's automatic McGrubber detection from Motes Grubber sale prices, SkyBlock Levels consumable progress and exact orb payouts

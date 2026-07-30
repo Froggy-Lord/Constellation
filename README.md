@@ -50,7 +50,7 @@ also has a bunch of quality of life shortcuts like `/f7` for f7, `/h` for hub, `
 
 ## config
 
-everything's toggleable. hit right shift for the hub screen, or `/cn config` for the full settings. each constellation has its own section with toggles for every individual feature.
+everything's toggleable. hit right shift for the hub screen, or `/cn config` for the full settings. each constellation has its own section with toggles for every individual feature. generated settings are audited against runtime consumers so dead placeholder toggles are removed instead of pretending to enable something.
 
 hud elements are draggable — open `/cn hud` and move stuff where you want it. positions are saved per-element.
 

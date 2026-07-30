@@ -486,6 +486,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Optional danger-volume box, beam, label and distance overlays with independent color, beam height and through-wall controls
 - `/riftnav` reports detected pillars and blocked node count and exposes all pillar settings
 
+## Rift Configuration Integrity
+
+- Every visible Andromeda Boolean setting has a real runtime consumer
+- Removed legacy aliases no longer suggest nonexistent duplicate helpers
+- Area suites use their complete granular controls rather than inert generic master switches
+- Unknown historical JSON keys are safely ignored by the configuration loader
+
 ## Scatha Mining
 
 - Exact Crystal Hollows spawn-message recognition followed by a bounded nearby level-5 Worm or level-10 Scatha pairing window

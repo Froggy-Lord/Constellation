@@ -1972,3 +1972,13 @@ Enable Andromeda and Motes tooltips. Run `/riftmotes`; status should show the cu
 - [ ] Toggle `grubbermenu`, `consumables`, `orblearn`, and `consumption` independently. Expected: only the disabled source stops learning.
 - [ ] Run `/riftmotes burgers 0` through `5`. Expected: this deliberately sets a manual value and status reports `manual`.
 - [ ] Leave menus and reconnect. Expected: learned configuration persists, while transient menu signatures do not create duplicate saves or notices.
+
+## Andromeda Configuration Integrity
+
+Open `/cn config`, select Andromeda, and compare visible settings with the Andromeda sections in this guide.
+
+- [ ] Confirm `timeHud`, `enigmaSoulTracker`, `effigyTracker`, and the old generic area-helper toggles are absent. Expected: their real `riftHud`, Enigma Soul, Effigy and per-area controls remain.
+- [ ] Confirm speculative `deadgehogCounter`, `bluetoothRingHelper`, and the obsolete duplicate Vampire toggle are absent.
+- [ ] Confirm `riftLowTimeAlert` remains visible and `/riftguide option alert on|off` still controls it.
+- [ ] Toggle representative remaining settings from each Andromeda area. Expected: every visible Boolean corresponds to behavior documented in the relevant test section.
+- [ ] Launch with an older configuration containing removed JSON keys. Expected: the client loads normally, ignores unknown historical keys and preserves all recognized preferences.

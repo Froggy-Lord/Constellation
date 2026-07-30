@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.747 Complete McGrubber Detection.
+Last updated: 2026-07-30 for version 0.9.748 Andromeda Configuration Truthfulness.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.747`.
+- Current artifact version: `0.9.748`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2680,4 +2680,14 @@ Exact orb pickup text must include the `+2ф Rift Time` recovery and a payout ma
 
 Version `0.9.747` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 73 Rift Motes prices and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `79321b3a0f4e81bf4da7059bafd6a5a0b7bd3b2d0f9609491d49504cf4ff7183`.
 
-The previous `0.9.746` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-131756-0.9.747/`; only `constellation-0.9.747.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.746` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-131756-0.9.747/`; only `constellation-0.9.747.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `f86cc95eba`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.748 Andromeda Configuration Truthfulness
+
+An explicit declaration-to-consumer audit found 22 legacy public Booleans at the top of `AndromedaConfig.java` that were visible in the generated settings UI but never read outside their declarations. They included obsolete aliases for time HUD, Enigma Souls, Effigies and every area suite, plus speculative `deadgehogCounter`, `bluetoothRingHelper`, duplicate Vampire/Crux/Motes labels and generic soul/score/timer placeholders. Reference searches found no licensed feature implementation behind the speculative names.
+
+All 22 dead fields were removed. The working `riftLowTimeAlert` master remains because `AndromedaRiftCore` consumes it. Every legitimate duplicated label already has deeper, independently consumed settings: Rift HUD/time, named/profile-safe souls, Effigy lifecycle, complete Motes tracking, Crux, Punchcard, Vampire combat and all seven area suites. Older Gson JSON can retain the removed keys; unknown keys are ignored and do not rewrite or corrupt recognized preferences.
+
+The release adds a structural verification command to the build procedure: enumerate every public Andromeda Boolean and fail if `rg` finds it only in `AndromedaConfig.java`. It returned no names. Version `0.9.748` then built with exactly 11 successful tests and zero failures. Its full headless client loaded the existing older configuration, exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d9d3a7796af829955ca92a32163c0c35f656d8e4abe553f4142ebfa078aad241`.
+
+The previous `0.9.747` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-132342-0.9.748/`; only `constellation-0.9.748.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
