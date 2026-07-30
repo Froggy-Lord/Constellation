@@ -45,6 +45,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Chocolate Factory profile progression includes Prestige, employees/production, upgrades, Time Tower, Hitman and all 512 categorized rabbits
 - Profile tabs page cleanly at narrow/normal GUI widths so every current and future page remains reachable
 - Foraging profile progression includes gifts, personal bests, Whispers, Heart of the Forest loadouts, attributes, shards, fusions and traps
+- Mob Records includes every lifetime kill/death counter, optional numeric-variant grouping, K/D, percentages, filters, search, sorting and limits
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

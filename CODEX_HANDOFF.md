@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.785 Exact Profile Garden Summary Progression.
+Last updated: 2026-07-30 for version 0.9.786 Complete Profile Mob Records.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.785`.
+- Current artifact version: `0.9.786`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3166,7 +3166,21 @@ The live July 30 probe validated all threshold counts/maxima, ten crop requireme
 
 Version `0.9.785` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `0c58de95c298d9c3e6878425db47c2424b4613f47fec298f30ff0cfcc1fc331b`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-182616-0.9.785/`; only `constellation-0.9.785.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-182616-0.9.785/`; only `constellation-0.9.785.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `617949c873`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.786 Complete Profile Mob Records
+
+`ProfileMobCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing lifetime Mob Records page. Parsing the `player_stats.kills`/`deaths` maps, unioning raw IDs and optionally combining a trailing numeric variant port SkyBlockPv modified-MIT `api/data/profile/SkyBlockProfile.kt`, `data/api/skills/combat/MobData.kt` and `screens/windowed/tabs/combat/MobScreen.kt`. Required notices are beside the derived blocks.
+
+This page is intentionally separate from Bestiary: every counter survives even when there is no static family definition, including future API IDs. Grouping is enabled by default to match the licensed view (`mob_1`, `mob_2` become `mob`) but can be disabled to inspect raw variants. Grouping never changes lifetime totals.
+
+Summary totals include lifetime kills, deaths, overall K/D, distinct positive-kill mobs and positive-death causes. Rows independently show kills, deaths, K/D, shares of total and raw IDs. ALL, KILLS, DEATHS, BOTH, KILLED_NOT_DIED and DIED_NOT_KILLED filters compose with partial name/ID search, separate minimum kills/deaths, KILLS/DEATHS/KD/TOTAL/NAME sorts and a zero-to-5,000 limit. Positive kills with zero deaths report Infinite.
+
+The nineteenth profile tab uses the existing deterministic tab paging and scroll bounds. It reads the already cached selected member and makes no new network request. Empty/disabled `player_stats` is a readable unavailable state. The drip helper allowlist now includes `ProfileMobCalculator.java`.
+
+Version `0.9.786` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `126e02052ec613d899ec916ba4f830a591eb319f06bc27fa5da714c4e3105b29`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-183330-0.9.786/`; only `constellation-0.9.786.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

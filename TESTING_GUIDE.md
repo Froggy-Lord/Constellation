@@ -2373,3 +2373,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Compare owned shards and fusions. Expected: owned amount, optional last-captured date, empty hiding and shard limit match the profile.
 - [ ] Compare active traps. Expected: item, mode, shard, location, captured/waiting state and optional placed date match; the trap limit is bounded.
 - [ ] Toggle every `profileForagingShow...` section and disable the page. Expected: gifts, Personal Bests, daily, tree/nodes, attributes, shards and traps hide independently with readable disabled/unavailable states.
+
+### Profile Mob Records
+
+- [ ] Enable `profileMobs`, open `/pv`, page to Mobs and compare several entries with `player_stats.kills` and `player_stats.deaths`. Expected: every raw API key appears even when it has no Bestiary family.
+- [ ] Compare the summary. Expected: lifetime kills/deaths are sums, recorded mobs count positive kill rows, death causes count positive death rows and overall K/D is exact.
+- [ ] Enable numeric-variant grouping with IDs such as `zombie_1` and `zombie_2`. Expected: one Zombie row sums both; disabling it restores each raw variant without changing summary totals.
+- [ ] Test ALL, KILLS, DEATHS, BOTH, KILLED_NOT_DIED and DIED_NOT_KILLED filters. Expected: each applies to the combined or raw rows currently selected.
+- [ ] Test partial display-name and raw-ID search, independent minimum kills/deaths, KILLS/DEATHS/KD/TOTAL/NAME sorts and the zero-to-5,000 limit. Expected: controls compose, zero is unlimited and summaries remain unfiltered.
+- [ ] Toggle kills, deaths, K/D, percentage shares and raw IDs independently. Expected: each changes only row presentation; zero-death positive-kill records show Infinite rather than dividing by zero.
+- [ ] Switch profiles, refresh and open a profile with empty or disabled statistics. Expected: rows update immediately with the selected member and a readable unavailable message replaces stale data.
+- [ ] Disable `profileMobs`. Expected: the tab reports disabled and performs no extra network request.

@@ -18,6 +18,7 @@ import com.froggylord.constellation.api.ProfileRiftCalculator;
 import com.froggylord.constellation.api.ProfileFishingCalculator;
 import com.froggylord.constellation.api.ProfileChocolateData;
 import com.froggylord.constellation.api.ProfileForagingCalculator;
+import com.froggylord.constellation.api.ProfileMobCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -45,7 +46,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging", "Mobs"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -194,6 +195,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 17) {
             drawForaging(g);
+            return;
+        }
+        if (tab == 18) {
+            drawMobs(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -1311,6 +1316,65 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    private void drawMobs(GuiGraphicsExtractor g) {
+        if (!ConstellationClient.cfg().lyra.profileMobs) {
+            g.text(font, "Mob records are disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, mobDisplayRows(true));
+    }
+
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/combat/MobScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private List<Row> mobDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileMobCalculator.Result data = ProfileMobCalculator.calculate(member(profile()),
+            cfg.profileMobsCombineVariants, cfg.profileMobsFilter, cfg.profileMobsSort,
+            cfg.profileMobsSearch, cfg.profileMobsMinimumKills, cfg.profileMobsMinimumDeaths);
+        List<Row> rows = new ArrayList<>();
+        if (!data.available()) {
+            rows.add(row("Mob records", values ? "API disabled or no lifetime counters" : ""));
+            return rows;
+        }
+        int decimals = Math.clamp(cfg.profileMobsDecimals, 0, 4);
+        if (cfg.profileMobsShowSummary) {
+            rows.add(row("Lifetime mob kills", values ? whole(data.totalKills()) : ""));
+            rows.add(row("Lifetime mob deaths", values ? whole(data.totalDeaths()) : ""));
+            rows.add(row("Overall K/D", values ? mobRatio(data.totalKills(), data.totalDeaths(), decimals) : ""));
+            rows.add(row("Recorded mobs", values ? data.mobsKilled() + " killed  "
+                + data.causesOfDeath() + " death causes" : ""));
+        }
+        int limit = Math.clamp(cfg.profileMobsLimit, 0, 5_000);
+        int shown = 0;
+        for (ProfileMobCalculator.Mob mob : data.mobs()) {
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            List<String> parts = new ArrayList<>();
+            if (cfg.profileMobsShowKills) {
+                String kills = whole(mob.kills()) + " kills";
+                if (cfg.profileMobsShowShare && data.totalKills() > 0)
+                    kills += " " + fixed(mob.kills() * 100.0 / data.totalKills(), decimals) + "%";
+                parts.add(kills);
+            }
+            if (cfg.profileMobsShowDeaths) {
+                String deaths = whole(mob.deaths()) + " deaths";
+                if (cfg.profileMobsShowShare && data.totalDeaths() > 0)
+                    deaths += " " + fixed(mob.deaths() * 100.0 / data.totalDeaths(), decimals) + "%";
+                parts.add(deaths);
+            }
+            if (cfg.profileMobsShowRatio) parts.add("K/D " + mobRatio(mob.kills(), mob.deaths(), decimals));
+            String label = mob.name() + (cfg.profileMobsShowRawIds ? "  [" + mob.id() + "]" : "");
+            rows.add(row(label, values ? String.join("  ", parts) : ""));
+        }
+        if (data.mobs().isEmpty()) rows.add(row("Mob records", values ? "No rows match the filters" : ""));
+        return rows;
+    }
+
+    private static String mobRatio(long kills, long deaths, int decimals) {
+        if (deaths == 0) return kills > 0 ? "Infinite" : "0";
+        return fixed(kills / (double) deaths, decimals);
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1641,6 +1705,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 17) {
             int max = Math.max(0, foragingDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 18) {
+            int max = Math.max(0, mobDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }

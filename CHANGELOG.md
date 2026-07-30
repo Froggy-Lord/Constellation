@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.786 (2026-07-30) — Complete Profile Mob Records
+
+- added lifetime Mob Records from every profile kill and death counter
+- added optional numeric-variant grouping matching the licensed reference behavior
+- added six record filters, partial name/ID search, five sorts and independent minimums
+- added configurable kills, deaths, K/D, total-share percentages, raw IDs and row limits
+- preserved non-Bestiary and future mob IDs without requiring a static catalogue
+
 ## 0.9.785 (2026-07-30) — Exact Profile Garden Summary Progression
 
 - replaced hard-coded Garden summary progress with the maintained 15-level 60,120-XP curve
