@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.735 (2026-07-30) — Complete Rift Motes Suite
+
+- added authoritative lifetime Motes, session gain, hourly rate, visit duration and leave-summary tracking
+- added all 73 current Hypixel Motes NPC prices with McGrubber bonuses, stack tooltips and transferred-item protection
+- added movable Rift Storage valuation, item/stack totals and configurable high-value slot markers
+- added particle-validated Motes Orb guidance with pickup state, optional particle hiding and complete render/tuning controls
+
 ## 0.9.734 (2026-07-30) — Rift Guide Soul Synchronization
 
 - replaced numbered Enigma Soul labels with the authoritative 52-name, nine-area Rift Guide dataset

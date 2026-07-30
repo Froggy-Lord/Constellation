@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.734 Rift Guide Soul Synchronization.
+Last updated: 2026-07-30 for version 0.9.735 Complete Rift Motes Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.734`.
+- Current artifact version: `0.9.735`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -21,6 +21,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 2. Every ported block needs a nearby credit in this exact style:
    `// ported from <Mod> (<license>): <path>`
 3. Copy-permitted references include Skyblocker (LGPL), Odin (BSD-3-Clause), Devonian, NoFrills, SecretRoutes and DungeonRoomsMod (GPL-3.0), Athen (BSD-3-Clause), SkyblockAddons (LGPL), and SkyHanni (LGPL-2.1).
+   Additional copy-permitted suggestions now include Doc and BadAddons (GPL-3.0), Stella and CaribouStonks (LGPL-3.0), and Enhanced Storage (GPL-3.0). Bazaar Utils' modern branch is CC-BY-NC-4.0 and is suggestion/reimplementation-only; do not copy its code or assets into this GPL project.
    For duplicate dungeon features, the user's preferred implementation order is Devonian first, Athena/Athen second, then Odin. Use that order unless the preferred source is incomplete, incompatible, or less safe, and document any exception.
 4. The two AGPL dungeon references named in the original user brief are reimplementation-only. Never copy a line from them. In this document they are called `S-tils` and `D-guide` so touched-file forbidden-string audits remain clean.
 5. Run `rg -i 'dungeons''guide|sky''tils'` on every touched code or documentation file. The adjacent shell strings form the required forbidden-name pattern without placing either forbidden name in a touched file. It must return no matches.
@@ -50,8 +51,16 @@ Official repositories already present include:
 - `NoammAddons` 26.1.2 branch at commit `4ccd3eb`, CC0-1.0
 - `Athen` at exact version 0.1.9 commit `ef0269f`
 - `SkyblockAddons` at exact version 2.3.10 commit `a5c6053f`
+- `Doc` at commit `0421df57c459`, GPL-3.0; useful for dungeon/Croesus displays, inventory logs, mining/fishing/Garden trackers, Kuudra and RNG-meter comparisons
+- `stella` at commit `87f9fc340b08`, LGPL-3.0; useful for modern Fabric dungeon routes, route recording, secret waypoints, terminal numbers/tracking, inventory buttons and pet displays
+- `BadAddons` at commit `19c4d47eb650`, GPL-3.0; useful for deep Kuudra supply/build/HP/DPS/fresh/ballista features, routes, terminal waypoints, grace items and trade-webhook comparisons
+- `CaribouStonks` at commit `e5576b69527f`, LGPL-3.0; current 26.2 source for item value/history, reminders, deployables, mob tracking, extracted tab widgets, sack overlays, vanilla UI controls and configurable waypoints
+- `Bazaar-Utils` modern branch at commit `8054db905969`, CC-BY-NC-4.0 and therefore reimplementation-only; useful for custom buy amounts, bookmarks, sell-confirmation rules, order status/limits, outbid alerts, tax-aware profit and Bazaar compatibility ideas
+- `Enhanced-Storage` at commit `b68b4b8674bc`, GPL-3.0; current 26.1+ source for unified Ender Chest/Backpack/Rift Storage views, cross-page search, profile-aware names/order, layout/theme/scroll controls and toolkit shortcuts
 
 No relevant installed dungeon mod currently needs decompilation because official source is available. SkyOcean code is MIT, but its non-code assets/data are all-rights-reserved and must not be copied.
+
+The six additional repositories above are cloned read-only under `/home/zadenz/projects/minecraft/cryptkit-refs/`. Before choosing a future release, include them in feature-gap searches. Prefer an existing user-selected source when duplicate behavior is already mature, but use these newer 26.2 implementations where they provide more current APIs or a genuinely deeper missing vertical. Never infer copy permission from popularity: preserve the Bazaar Utils reimplementation-only boundary.
 
 Room-data source split is locked:
 
@@ -2477,3 +2486,17 @@ Right-clicking a named menu entry is deliberately intercepted and starts the exi
 Version `0.9.734` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `1584294ad5c623cd83c8d3b1118f7a9f0f73d1fda23e7e8dfbbb886e61f68660`.
 
 The previous `0.9.733` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-112144-0.9.734/`; only `constellation-0.9.734.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Continue Andromeda with the live-enabled Motes session/value/orb vertical or the highest-use missing area helper after another licensed-source check.
+
+## July 30 version 0.9.735 Complete Rift Motes Suite
+
+`AndromedaMotes.java`, `MotesStorageHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java`, `RiftHudWidget.java`, `ClientPacketListenerMixin.java`, `ItemProtectionScreenMixin.java` and `motes_prices.json` port SkyHanni LGPL-3.0-or-later `features/rift/everywhere/motes/MotesSession.kt`, `ShowMotesNpcSellPrice.kt`, `RiftMotesOrb.kt`, `features/rift/RiftApi.kt` and their configuration classes. Defaults match the live 26.1.2 profile: prices, session summary, storage value and orbs enabled; orb size three; original particles retained; zero configured McGrubber stacks.
+
+Lifetime Motes come from the exact `Lifetime Motes` Rift Info row rather than inferred purse deltas. The first authoritative value establishes a visit baseline; the HUD can independently show lifetime, gained, hourly rate and duration. Leaving the Rift produces one configurable local summary above a saved minimum. `/riftmotes reset` deliberately resets only the local baseline. Disconnect, world replacement and area exit clear transient state.
+
+The bundled deterministic price table is filtered from Hypixel's public `v2/resources/skyblock/items` response updated at epoch `1784730494765`. It contains all 73 entries with `motes_sell_price`; exact checksum `ef5a47d30d844625e5a0d08b48a45eeda77d6f7bea229d97a31c36099c4807af`. Tooltips apply stack quantity and five percent per McGrubber stack exactly once. Exact Grubber confirmation learns zero-to-five stacks. Items marked `rift_transferred` fail closed without a Motes value. Rift Storage receives an independent movable HUD for total and optional item/stack counts plus thresholded slot markers.
+
+Orb detection follows SkyHanni's proven grouping and timing: raw entity-effect particle events within the configurable three-block default cluster are observed for at least 500 ms, only 60-90 events per second validate, pickup chat or a 300 ms particle stop marks the closest orb gray, and two seconds of inactivity expires it. Only validated future particles can be hidden. Box, beam, line, label, distance, wall mode, size, range, timing, grouping, particle-rate bounds, beam height and active/picked colors are saved independently. No Motes helper clicks, moves, aims, chats to the server, issues a command or constructs a gameplay packet.
+
+Version `0.9.735` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded 73 Motes prices, all 52 named souls, all three Mirrorverse sections and the 2,201-node/5,293-edge graph, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `2b10958dc8f7d39cbc7ecd8b533e1a5b5dd95bedfce5970d6fb828815a966801`.
+
+The previous `0.9.734` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-113343-0.9.735/`; only `constellation-0.9.735.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The next feature selection must search the six newly added reference repositories as well as the established corpus.

@@ -37,17 +37,21 @@ public class AndromedaRift extends BaseConstellation {
         cfg = (AndromedaConfig) config;
         AndromedaRiftCore.init(cfg);
         AndromedaRiftNavigation.init(cfg);
+        AndromedaMotes.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
+        registerRenderer(AndromedaMotes::draw);
     }
 
     @Override
     public void registerHud(HudManager hud) {
         hud.register(new com.froggylord.constellation.hud.RiftHudWidget(
             HudPosition.of(2,54),()->cfg.enabled&&cfg.riftHud));
+        hud.register(new com.froggylord.constellation.hud.MotesStorageHudWidget(
+            HudPosition.of(126,156),()->cfg.enabled&&cfg.motesStorageValue));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

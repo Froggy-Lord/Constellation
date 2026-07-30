@@ -160,7 +160,7 @@ public final class AndromedaRiftCore {
     public static boolean hudVisible(){return active()&&cfg.riftHud;}
     public static String hudTime(){return cfg.riftHudTime&&timeSeconds>=0?duration(timeSeconds):null;}
     public static int hudTimeColor(){return timeSeconds<0?cfg.riftTimeNormalColor:timeSeconds<=Math.clamp(cfg.riftLowTimeSeconds,10,600)?cfg.riftTimeDangerColor:timeSeconds<=300?cfg.riftTimeWarningColor:cfg.riftTimeNormalColor;}
-    public static String hudMotes(){return cfg.riftHudMotes&&motes>=0?number(motes)+(cfg.riftHudMotesSession&&motesSession>0?" (+"+number(motesSession)+")":""):null;}
+    public static String hudMotes(){return cfg.riftHudMotes&&motes>=0?number(motes):null;}
     public static String hudSouls(){return cfg.riftHudSouls?found().size()+"/"+SOULS.size():null;}
     public static String hudEffigies(){return cfg.riftHudEffigies&&!unbrokenEffigies.isEmpty()?unbrokenEffigies.size()+" unbroken":null;}
     public static String hudArea(){return cfg.riftHudArea&&!lastArea.isBlank()?lastArea:null;}

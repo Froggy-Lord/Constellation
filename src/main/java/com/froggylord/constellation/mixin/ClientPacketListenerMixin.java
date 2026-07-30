@@ -110,7 +110,9 @@ public class ClientPacketListenerMixin {
         // ported from SkyOcean (MIT): api/HotspotAPI.kt
         boolean hideHotspot = com.froggylord.constellation.constellation.HydraHotspots.onParticle(packet);
         boolean hidePest = com.froggylord.constellation.constellation.HerculesPestWaypoint.onParticle(packet);
-        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest) ci.cancel();
+        // ported from SkyHanni (LGPL-3.0-or-later): features/rift/everywhere/motes/RiftMotesOrb.kt
+        boolean hideMotes = com.froggylord.constellation.constellation.AndromedaMotes.onParticle(packet);
+        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes) ci.cancel();
     }
 
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))

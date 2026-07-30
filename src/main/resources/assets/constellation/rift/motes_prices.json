@@ -1,0 +1,298 @@
+{
+  "source": "https://api.hypixel.net/v2/resources/skyblock/items",
+  "lastUpdated": 1784730494765,
+  "items": {
+    "FISHING_ROD": {
+      "name": "Fishing Rod",
+      "price": 105
+    },
+    "BOW": {
+      "name": "Bow",
+      "price": 105
+    },
+    "STICK": {
+      "name": "Stick",
+      "price": 15
+    },
+    "STRING": {
+      "name": "String",
+      "price": 30
+    },
+    "SAPLING": {
+      "name": "Oak Sapling",
+      "price": 2
+    },
+    "SLIME_BALL": {
+      "name": "Slimeball",
+      "price": 30
+    },
+    "WOOD": {
+      "name": "Oak Planks",
+      "price": 30
+    },
+    "IQ_POINT": {
+      "name": "IQ Point",
+      "price": 100
+    },
+    "TWO_IQ_POINT": {
+      "name": "2 IQ Points",
+      "price": 450
+    },
+    "LIVING_METAL": {
+      "name": "Living Metal",
+      "price": 5
+    },
+    "SELF_RECURSIVE_PICKAXE": {
+      "name": "Self-Recursive Pickaxe",
+      "price": 25
+    },
+    "FROZEN_WATER": {
+      "name": "Frozen Water",
+      "price": 10
+    },
+    "FROZEN_WATER_PUNGI": {
+      "name": "Frozen Water Pungi",
+      "price": 10
+    },
+    "METAL_HEART": {
+      "name": "Living Metal Heart",
+      "price": 250
+    },
+    "LIVING_METAL_ANVIL": {
+      "name": "Living Metal Anchor",
+      "price": 100
+    },
+    "FROSTY_CRUX": {
+      "name": "Frosty Crux",
+      "price": 100
+    },
+    "NULLIFIED_METAL": {
+      "name": "Nullified Metal",
+      "price": 100
+    },
+    "LM_EGG_LEGS": {
+      "name": "Living Metal Pantspawn",
+      "price": 100
+    },
+    "LM_EGG_CHEST": {
+      "name": "Living Metal Chestspawn",
+      "price": 100
+    },
+    "LM_EGG_BOOTS": {
+      "name": "Living Metal Bootspawn",
+      "price": 100
+    },
+    "LM_EGG_CAP": {
+      "name": "Living Metal Capspawn",
+      "price": 100
+    },
+    "SHADOW_CRUX": {
+      "name": "Shadow Crux",
+      "price": 100
+    },
+    "BEDWARS_WOOL": {
+      "name": "Tree-like Wool",
+      "price": 10
+    },
+    "SCRIBE_CRUX": {
+      "name": "Scribe Crux",
+      "price": 120
+    },
+    "VOLT_CRUX": {
+      "name": "Volt Crux",
+      "price": 100
+    },
+    "DEADGEHOG_SPINE": {
+      "name": "Deadgehog Spine",
+      "price": 111
+    },
+    "LIL_PAD": {
+      "name": "Lil' Pad",
+      "price": 5
+    },
+    "ANTI_SENTIENT_PICKAXE": {
+      "name": "Anti-Sentient Pickaxe",
+      "price": 25
+    },
+    "DISCRITE": {
+      "name": "Discrite",
+      "price": 150
+    },
+    "HIGHLITE": {
+      "name": "Highlite",
+      "price": 25000
+    },
+    "SPOTLITE": {
+      "name": "Spotlite",
+      "price": 2000
+    },
+    "EON_PICKAXE": {
+      "name": "Eon Pickaxe",
+      "price": 25
+    },
+    "SATELITE": {
+      "name": "Satelite",
+      "price": 37800
+    },
+    "TIME_GUN": {
+      "name": "Time Gun",
+      "price": 25
+    },
+    "CHRONO_PICKAXE": {
+      "name": "Chrono Pickaxe",
+      "price": 25
+    },
+    "YOUNGITE": {
+      "name": "Youngite",
+      "price": 50
+    },
+    "OBSOLITE": {
+      "name": "Obsolite",
+      "price": 200
+    },
+    "TIMITE": {
+      "name": "Timite",
+      "price": 100
+    },
+    "PUFF_CRUX": {
+      "name": "Puff Crux",
+      "price": 100
+    },
+    "UGLY_BOOTS_FRAGMENT": {
+      "name": "Ugly Boots Fragment",
+      "price": 1750
+    },
+    "TIGHT_PANTS_FRAGMENT": {
+      "name": "Tight Pants Fragment",
+      "price": 1750
+    },
+    "S_LOGO_FRAGMENT": {
+      "name": "W Logo Fragment",
+      "price": 1750
+    },
+    "MIRRORED_SLIME_BALL": {
+      "name": "llabemilS",
+      "price": 30
+    },
+    "MIRRORED_STRING": {
+      "name": "gnirtS",
+      "price": 30
+    },
+    "MIRRORED_WOOD": {
+      "name": "knalP dooW kaO",
+      "price": 30
+    },
+    "MIRRORED_STICK": {
+      "name": "kcitS",
+      "price": 15
+    },
+    "MIRRORED_FISHING_ROD": {
+      "name": "doR gnihsiF",
+      "price": 30
+    },
+    "MIRRORED_LEASH": {
+      "name": "daeL",
+      "price": 75
+    },
+    "TINY_HAMMER": {
+      "name": "remmaH yniT",
+      "price": 495
+    },
+    "SHAME_CRUX": {
+      "name": "Shy Crux",
+      "price": 100
+    },
+    "MUTED_BARK": {
+      "name": "Muted Bark",
+      "price": 50
+    },
+    "BUBBA_BLISTER": {
+      "name": "Bubba Blister",
+      "price": 10000
+    },
+    "CHOCOLATE_CHIP": {
+      "name": "Fang-tastic Chocolate Chip",
+      "price": 10000
+    },
+    "GARLIC_FLAVORED_GUMMY_BEAR": {
+      "name": "Perma-Jelled Garlic-Flavored Re-Heated Gummy Polar Bear",
+      "price": 4000
+    },
+    "MCGRUBBER_BURGER": {
+      "name": "McGrubber's Burger",
+      "price": 30000
+    },
+    "HEMOBOMB": {
+      "name": "Hemobomb",
+      "price": 400
+    },
+    "HEMOGLASS": {
+      "name": "Hemoglass",
+      "price": 25
+    },
+    "HOLY_ICE": {
+      "name": "Holy Ice",
+      "price": 5
+    },
+    "UNFANGED_VAMPIRE_PART": {
+      "name": "Unfanged Vampire Part",
+      "price": 50000
+    },
+    "BLOODBADGE": {
+      "name": "Bloodbadge",
+      "price": 2000
+    },
+    "COVEN_SEAL": {
+      "name": "Coven Seal",
+      "price": 10
+    },
+    "ENCHANTED_BOOK_BUNDLE_QUANTUM": {
+      "name": "Enchanted Book Bundle",
+      "price": 8000
+    },
+    "ENCHANTED_BOOK_BUNDLE_THE_ONE": {
+      "name": "Enchanted Book Bundle",
+      "price": 25000
+    },
+    "LUSCIOUS_HEALING_MELON": {
+      "name": "Luscious Healing Melon",
+      "price": 5
+    },
+    "JUICY_HEALING_MELON": {
+      "name": "Juicy Healing Melon",
+      "price": 5
+    },
+    "HEALING_MELON": {
+      "name": "Healing Melon",
+      "price": 5
+    },
+    "GUARDIAN_LUCKY_BLOCK": {
+      "name": "Guardian Lucky Block",
+      "price": 5000
+    },
+    "TEST_VAMPIRE_CHESTPLATE": {
+      "name": "Test Vampire Chestplate",
+      "price": 15
+    },
+    "SPLATTER_CRUX": {
+      "name": "Splatter Crux",
+      "price": 90
+    },
+    "STEAK_STAKE": {
+      "name": "Steak Stake",
+      "price": 15
+    },
+    "ENCHANTED_VAMPIRIC_MELON": {
+      "name": "Enchanted Vampiric Melon",
+      "price": 21000
+    },
+    "VAMPIRIC_MELON": {
+      "name": "Vampiric Melon",
+      "price": 120
+    },
+    "KEY_TO_KAT_SOUL": {
+      "name": "Key to Infested House Soul",
+      "price": 5
+    }
+  }
+}

@@ -1632,6 +1632,18 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Move and resize each Apollo panel independently in `/cn hud`. Expected: only visible or recently visible panels are editable and placement/scale persists.
 - [ ] Enable Andromeda, enter the Rift and run `/riftguide`. Expected: status reports real time, Motes, current-profile soul count and currently parsed unbroken effigies; nothing appears outside the Rift.
 - [ ] Compare the movable Rift HUD with sidebar/tab values. Expected: time counts down accurately, Motes match, positive Mote gains accumulate only in the session row and leaving the Rift clears visit state.
+- [ ] Expand Rift Info in the player list and gain Motes. Expected: Lifetime matches the server widget exactly; Gained is current lifetime minus the entry baseline and Rate uses actual visit duration rather than purse balance changes.
+- [ ] Leave the Rift after gaining at least the configured summary minimum. Expected: one local summary reports gained Motes, time and Motes per hour; spending Motes during the visit does not erase lifetime gains.
+- [ ] Run `/riftmotes reset`, then gain more Motes. Expected: only the local visit baseline and timer reset; lifetime server data and items remain unchanged.
+- [ ] Hover every available Rift item, including stacks and a Rift-exported transferred item. Expected: known items show the current NPC Motes total, optional per-item breakdown and McGrubber stacks; transferred exportables do not claim a Rift sell value.
+- [ ] Trigger the McGrubber stack confirmation. Expected: the exact stack count from zero to five is learned once, saved, optionally reported locally and applies a five-percent bonus per stack.
+- [ ] Open Rift Storage. Expected: the independent movable value HUD reports total Motes plus optional item/stack counts, and eligible slots above the configured threshold receive only an `M` edge marker.
+- [ ] Compare the storage total manually using several stacks. Expected: each current Hypixel base price is multiplied by stack count and McGrubber bonus exactly once.
+- [ ] Approach a real flying Motes Orb. Expected: no marker appears during the first validation window; a 60-90 entity-effect-particle-per-second cluster becomes a magenta orb box/label and unrelated effect particles remain untouched.
+- [ ] Pick up or let an orb finish. Expected: its marker turns gray from the exact pickup chat or particle stop, then expires; changing worlds or leaving the Rift clears every candidate.
+- [ ] Toggle original-particle hiding. Expected: only a validated Motes Orb's future particles are hidden, while validation particles and unrelated entity-effect particles remain visible.
+- [ ] Test `/riftmotes burgers`, every `option`, every `number` and active/picked/storage colors. Expected: tracking, HUD rows, summary, tooltip, storage, orb rendering, bounds and presentation remain independent and persist.
+- [ ] Move and resize Rift Storage Value in `/cn hud`. Expected: it has an independent position from the main Rift HUD and appears at runtime only while real Rift Storage values are available.
 - [ ] Set `/riftguide lowtime 60` and test near one minute. Expected: enabled local chat/title/sound channels fire once when crossing the threshold and re-arm only after time rises above it.
 - [ ] Run `/riftguide souls allmissing`. Expected: all 52 green missing waypoints become eligible inside the configured range; nearest-only and found visibility obey their independent options.
 - [ ] Stand within four blocks of a soul and collect it normally. Expected: the closest waypoint becomes found for the active SkyBlock profile and hides immediately unless found visibility is enabled.
