@@ -1861,3 +1861,24 @@ Enable Andromeda and enter Stillgore Chateau or Oubliette. Run `/stillgore`; it 
 - [ ] Change heart lifetime between 100 and 2,000 milliseconds and toggle box, beam, label and wall visibility. Expected: each option changes independently and unrelated heart particles remain untouched.
 - [ ] Run `/stillgore reset`. Expected: transient Effigy deadlines and heart locations clear without changing settings.
 - [ ] Leave Stillgore for another Rift area. Expected: no Effigy or Splatter Heart overlay renders there.
+
+## Rift Mountaintop suite
+
+Enable Andromeda and enter any Mountaintop subarea. Run `/mountaintop`; it should report Sun Gecko, Timite, discovered ore, tracker and Ubik state locally.
+
+- [ ] Enter the Time Chamber and begin a Sun Gecko fight. Expected: the movable Sun Gecko HUD shows health, combo progress/multiplier and a millisecond combo-expiry timer only in this subarea.
+- [ ] Open the Modifiers menu or start a modifier fight. Expected: lime slots and the server's active-modifier announcement identify Revival, Combo Manic, Time Sliced, Buffantics, Collective, Brand New Dance and Culmination.
+- [ ] Enable modifier rows. Expected: every observed active modifier appears; Collective extends the combo deadline and Culmination/long Time Sliced reduce the hit target.
+- [ ] Fight with clones enabled and real highlighting disabled. Expected: question-mark clones receive the configured red box/label while the real Gecko is not highlighted; the independent real toggle uses green.
+- [ ] Right-click blue or light-blue Timite glass with the Time Gun. Expected: a movable evolution countdown starts at two seconds; a same-position state transition uses 1.8 seconds.
+- [ ] Stop holding the Time Gun or leave Mountaintop. Expected: the evolution HUD hides immediately without cancelling or changing the click.
+- [ ] Stand near blue/cyan Timite or Obsolite panes. Expected: they are discovered within the configured scan range and show boxes/countdowns only inside the configured final warning window before the 31-second expiry.
+- [ ] Enable the Timite Tracker and collect Timite, Youngite and Obsolite. Expected: only positive inventory deltas after the initial baseline count; totals persist and show independent item, two-seconds-per-Timite time, NPC Motes profit and Highlite craftability rows.
+- [ ] Compare Highlite craftability manually. Expected: one requires 32 Youngite, 32 Timite and 16 Obsolite and is valued at 25,000 Motes.
+- [ ] Enable tracker holding-only mode. Expected: it appears only with Anti-Sentient, Eon or Chrono Pickaxe or the Time Gun held.
+- [ ] Enter Rose's End's bounded parkour area near x25-52, y165-185, z90-120. Expected: the drop at 40,161,116 receives the configured box, beam and `Drop` label only while inside.
+- [ ] Play Split or Steal with Ubik Quick Close enabled. Expected: clicks work normally while slot 4 is a clock; after it changes, any click closes locally without sending that final container click.
+- [ ] Enable Ubik Reminder, then open Split or Steal or trigger its cooldown message. Expected: the exact observed cooldown replaces the two-hour fallback, persists, and the optional HUD counts down.
+- [ ] Let Ubik become ready. Expected: one local chat/sound reminder fires according to settings, the HUD shows Ready, and ready-only mode hides all earlier countdown state.
+- [ ] Run `/mountaintop reset` and `/mountaintop resettracker`. Expected: transient combat/ore state and persistent collection totals reset independently.
+- [ ] Move to a non-Mountaintop Rift area. Expected: all Mountaintop world and HUD overlays hide.

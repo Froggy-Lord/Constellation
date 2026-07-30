@@ -62,6 +62,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Exact Blood Effigy break/respawn lifecycle with nearby armor-stand time correction, configurable respawning-soon threshold and optional unknown-state guidance
 - Exact Splatter Crux heart-particle recognition with short-lived configurable boxes, beams, labels and wall visibility
 - Full `/stillgore` status, reset, threshold, lifetime and feature controls
+- Sun Gecko health, two-phase Revival health, combo progress, expiry and all seven modifier states
+- Separately configurable real Sun Gecko and clone boxes/labels plus an optional movable Gecko HUD
+- Time Gun evolution countdown with normal and double-shot timing, and nearby Timite/Obsolite final-expiry guidance
+- Optional persistent Timite/Youngite/Obsolite tracker with elapsed ore time, NPC Motes value and exact Highlite craftability
+- Rose's End flowerpot drop box/beam/label shown only inside its parkour bounds
+- Profile-persistent Ubik cooldown correction, ready notification, movable HUD, ready-only mode and post-game click-to-close
+- Full `/mountaintop` status, transient/tracker reset, range/timing and primary feature controls
 - Crux Talisman progress and bonuses
 - Motes and area information
 - West Village and Rift activity helpers

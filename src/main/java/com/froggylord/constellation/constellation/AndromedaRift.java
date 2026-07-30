@@ -43,6 +43,7 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaLivingCave.init(cfg);
         AndromedaColosseum.init(cfg);
         AndromedaStillgore.init(cfg);
+        AndromedaMountaintop.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
@@ -51,6 +52,7 @@ public class AndromedaRift extends BaseConstellation {
         registerRenderer(AndromedaLivingCave::draw);
         registerRenderer(AndromedaColosseum::draw);
         registerRenderer(AndromedaStillgore::draw);
+        registerRenderer(AndromedaMountaintop::draw);
     }
 
     @Override
@@ -65,9 +67,14 @@ public class AndromedaRift extends BaseConstellation {
             HudPosition.of(126,108),()->cfg.enabled&&cfg.livingMetalSuitHud));
         hud.register(new HudWidget("andromeda-bacte-phase","Bacte Phase",
             AndromedaColosseum::phaseHud,HudPosition.of(126,96),()->cfg.enabled&&cfg.colosseumPhaseHud));
+        hud.register(new com.froggylord.constellation.hud.MountaintopHudWidget("sun",HudPosition.of(126,84),()->cfg.enabled&&cfg.mountainSunGecko));
+        hud.register(new com.froggylord.constellation.hud.MountaintopHudWidget("timite",HudPosition.of(126,72),()->cfg.enabled&&cfg.mountainTimiteTracker));
+        hud.register(new com.froggylord.constellation.hud.MountaintopHudWidget("ubik",HudPosition.of(126,60),()->cfg.enabled&&cfg.mountainUbikHud));
+        hud.register(new HudWidget("andromeda-mountaintop-evolution","Timite Evolution",
+            AndromedaMountaintop::evolutionHud,HudPosition.of(126,48),()->cfg.enabled&&cfg.mountainTimiteEvolution));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);AndromedaStillgore.registerCommands(dispatcher);AndromedaMountaintop.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;

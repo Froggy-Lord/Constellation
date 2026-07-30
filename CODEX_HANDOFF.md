@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.740 Complete Rift Stillgore Suite.
+Last updated: 2026-07-30 for version 0.9.741 Complete Rift Mountaintop Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.740`.
+- Current artifact version: `0.9.741`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2592,4 +2592,18 @@ Splatter Hearts accept only `ParticleTypes.HEART` packets with count three and z
 
 Version `0.9.740` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `60c7ded94851b98403dece3daeaf2034da333ae95dc02bd8940146afe252c25b`.
 
-The previous `0.9.739` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-122002-0.9.740/`; only `constellation-0.9.740.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.
+The previous `0.9.739` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-122002-0.9.740/`; only `constellation-0.9.740.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `39e56c772e`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.741 Complete Rift Mountaintop Suite
+
+`AndromedaMountaintop.java`, `MountaintopHudWidget.java`, `AndromedaConfig.java`, `AndromedaRift.java` and `ItemProtectionScreenMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/mountaintop/SunGeckoHelper.kt`, `TimiteHelper.kt`, `TimiteTracker.kt`, `EnigmaRoseFlowerpot.kt`, `UbikReminder.kt`, `UbikQuickClose.kt` and every Mountaintop configuration class. Defaults exactly follow the live Froggy__Lord 26.1.2 profile: Sun Gecko and clone highlight enabled, modifiers and real highlight disabled; Timite evolution/expiry enabled and tracker disabled; flowerpot enabled; Ubik reminder disabled, GUI enabled and quick-close enabled.
+
+Mountaintop scope uses SkyHanni's exact eight scoreboard areas: Continuum, The Mountaintop, Trial Grounds, Time-Torn Isles, Wizardman Bureau, Wizard Brawl, Walk of Fame and Time Chamber. Sun Gecko HUD scope narrows to Time Chamber. It reads combo multiplier and filled-hit blocks from the action bar, observes all seven modifiers from the Modifiers menu or announcement, applies Culmination/long Time Sliced hit reduction, Collective expiry extension and Revival two-phase health. Health labels take precedence over vanilla entity health. Real and question-mark clone highlighting have independent toggles, colors, range, box, label and wall behavior.
+
+Time Gun right-click observation accepts only blue/light-blue stained glass panes. Normal evolution is two seconds and a same-position state change is 1.8 seconds. The action remains untouched. Nearby blue/cyan Timite-family panes are discovered within a bounded five-to-25-block scan, expire at a configurable ten-to-60 seconds and render only during the final one-to-15 seconds. The optional persistent tracker ignores the initial inventory, accepts only positive Timite/Youngite/Obsolite deltas, derives two seconds per Timite, uses the authoritative 100/50/200 NPC Motes prices, and calculates Highlite with the exact NEU recipe of 32 Youngite, 32 Timite and 16 Obsolite at 25,000 Motes. Item, time, profit, craftability and holding-only rows are independent.
+
+Rose's End guidance uses the exact source AABB `(25,165,90)` to `(52,185,120)` and drop coordinate `(40,161,116)`. Ubik stores a profile configuration deadline, starts with the source's two-hour fallback only when reminders are enabled, replaces it from the exact cooldown chat duration, exposes unknown/countdown/ready HUD states and fires configured local chat/sound once. Quick-close requires the exact `Split or Steal` title and only activates after slot four stops being a clock; it closes the screen and cancels that final container click. `/mountaintop` exposes local status, transient/tracker resets and primary timing/options. No Mountaintop helper attacks, moves, aims, automatically clicks, sends chat, issues a command or constructs a gameplay packet.
+
+Version `0.9.741` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `308aa6f358490aa63e71f484300b44d86c054a5d0cb9abd5426c76b8e20c6d78`.
+
+The previous `0.9.740` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-123056-0.9.741/`; only `constellation-0.9.741.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. Record the drip commit hash below after enqueueing.

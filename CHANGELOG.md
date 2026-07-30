@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.741 (2026-07-30) — Complete Rift Mountaintop Suite
+
+- added Sun Gecko health, combo, combo-expiry and all seven modifier states plus separately configurable real/clone highlights
+- added Time Gun evolution timing, nearby Timite/Obsolite discovery and exact final-expiry countdown guidance
+- added optional persistent Timite, Youngite and Obsolite collection, time, Motes profit and Highlite-craft tracking
+- added Rose's End flowerpot drop guidance and profile-persistent Ubik cooldown, reminder, HUD and post-game quick-close
+- added four movable HUD surfaces and complete `/mountaintop` status, reset, tuning and feature controls
+
 ## 0.9.740 (2026-07-30) — Complete Rift Stillgore Suite
 
 - upgraded all six Blood Effigies with scoreboard state, exact nearby armor-stand timers and transition-derived 20-minute respawns

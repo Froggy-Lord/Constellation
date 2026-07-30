@@ -25,6 +25,7 @@ public abstract class ItemProtectionScreenMixin {
         cancellable = true)
     private void constellation$protectItemClick(Slot slot, int slotId, int button, ContainerInput input, CallbackInfo ci) {
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
+        if (com.froggylord.constellation.constellation.AndromedaMountaintop.shouldQuickClose(screen)) { screen.onClose(); ci.cancel(); return; }
         // ported from Devonian (GPL-3.0-only): features/misc/inventory/SlotBinding.kt
         if (com.froggylord.constellation.constellation.PhoenixSlotBinding.shouldHandleClick(screen, slot, button, input)) { ci.cancel(); return; }
         if (com.froggylord.constellation.constellation.AurigaExperiments.shouldBlockClick(screen, slot, slotId)) { ci.cancel(); return; }
