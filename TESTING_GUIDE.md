@@ -1659,6 +1659,19 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Enable close protection during an active timer. Expected: Escape and normal destructive slots 47-51/53 are blocked with clear local feedback; holding either Shift key bypasses both when enabled.
 - [ ] Disable `blockslots` while leaving `blockclose` enabled. Expected: destructive clicks are sent normally, while other close attempts remain protected.
 - [ ] Move and resize `Stray Timer` in `/cn hud`. Expected: it appears only for an active timer in the exact Factory and remains chrome-free in the editor.
+
+### Hoppity egg locations and Egglocator
+
+- [ ] Enable Auriga, `Hoppity Egg Waypoints`, all-waypoint display and hide-collected during Spring with a ready meal egg. Visit each supported island. Expected: its authoritative candidate locations appear; unsupported areas and periods with no ready egg show nothing.
+- [ ] Verify Hub has 17 candidates and every other supported island has 15. Expected: `/hoppitywaypoints` reports the same island total and no coordinates leak between islands.
+- [ ] Collect an egg within the configured claim radius. Expected: the nearest authoritative location is saved for only the current profile and is hidden or recolored according to `hidecollected` and `collected`.
+- [ ] Collect an egg farther than the claim radius from every known coordinate. Expected: no location is guessed silently and a local diagnostic explains the rejected synchronization.
+- [ ] Right-click the real Egglocator and observe its happy-villager trail. Expected: after at least four contiguous particles, the cubic fit snaps to one authoritative island location and `guessonly` replaces the broad candidate set with that single guess.
+- [ ] Feed an interrupted trail, particles farther apart than `particlegap`, or wait beyond `timeout`. Expected: invalid particles are ignored and stale trails do not create a guess.
+- [ ] Toggle `all`, `hidecollected`, `collected`, `nearest`, `box`, `beam`, `label`, `names`, `distance`, `line`, `walls`, `locator`, `guessonly` and `persist`. Expected: every presentation and state option changes independently.
+- [ ] Test `/hoppitywaypoints range`, `beamheight`, `particlegap`, `timeout`, `claimradius`, `color egg`, `color collected`, `resetlocator`, and `clear confirm`. Expected: values persist, only the current profile cache clears, and malformed colors are rejected.
+- [ ] Confirm boxes occupy the exact known block, beams and labels use the selected wall behavior, and lines are drawn only for a locator guess or nearest-only mode.
+- [ ] Confirm the system never rotates, walks, warps, clicks, or sends a gameplay command.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

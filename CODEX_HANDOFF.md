@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.757 Chocolate Factory Stray Timer.
+Last updated: 2026-07-30 for version 0.9.758 Hoppity Egg Waypoints and Locator.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.757`.
+- Current artifact version: `0.9.758`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2798,4 +2798,20 @@ The timer observes messages and the inventory. It does not synthesize a click; o
 
 Version `0.9.757` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `9e94c103e92b236cad00fdd3167a1b5365f287af304b82592c69f4c1ad02d3b4`.
 
-The previous `0.9.756` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142926-0.9.757/`; only `constellation-0.9.757.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.
+The previous `0.9.756` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-142926-0.9.757/`; only `constellation-0.9.757.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `5dcc7c5cf0`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.758 Hoppity Egg Waypoints and Locator
+
+`AurigaHoppityWaypoints.java`, `AurigaConfig.java`, `AurigaMisc.java` and `assets/constellation/hoppity/egg_locations.json` port SkyHanni LGPL `features/event/hoppity/HoppityEggLocations.kt`, `HoppityEggLocator.kt`, `utils/PolynomialFitter.kt` and the MIT SkyHanni repository `constants/HoppityEggLocations.json`.
+
+The bundled asset contains all 212 authoritative coordinates across 14 islands: 17 Hub entries and 15 for every other supported island. SkyHanni island identifiers map explicitly to Constellation's existing location enum, including Park, Gold Mine and Farming Islands naming differences. Startup logs the loaded location/island counts and fails visibly if the asset is absent or malformed.
+
+All-candidate rendering is gated on Spring, a supported island and an actually ready meal egg from the 0.9.756 schedule. Profile-safe collected locations are learned only from an exact Hoppity find message and the nearest authoritative location inside a configurable three-to-30-block radius; a farther result is rejected with local diagnostics. Collected locations can be hidden, shown in a separate color or cleared for only the current profile.
+
+Right-clicking an actual `EGGLOCATOR` starts a bounded particle capture. Exact happy-villager count/speed, configurable consecutive-point gap and timeout validate the trail. The degree-three least-squares fit, start derivative, pitch weighting and extrapolation port SkyHanni's ParticlePathBezierFitter; the result snaps to the nearest authoritative location. Guess-only rendering can replace the broad set.
+
+World presentation independently controls all/nearest mode, block box, beam/height, label, internal name, distance, direct player line, through-walls, range, normal/collected colors and locator/guess behavior. `/hoppitywaypoints` exposes every Boolean and numeric/color control, transient guess reset and explicit-confirm current-profile clearing. The direct line is advisory; island-graph walking paths remain a separate future deepening rather than being misrepresented here. The feature never rotates, moves, warps or clicks.
+
+Version `0.9.758` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded exactly 212 Hoppity egg locations across 14 islands and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load, transformer-error or Hoppity-resource-load failure signatures. Main-jar SHA-256: `aca4403c331f6c4518aa708644374115525eeb2841438d5161b644ad8ee124e0`.
+
+The previous `0.9.757` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-143838-0.9.758/`; only `constellation-0.9.758.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release still needs its drip commit hash recorded after enqueue.

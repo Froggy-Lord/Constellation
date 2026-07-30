@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.758 (2026-07-30) — Hoppity Egg Waypoints and Locator
+
+- ported all 212 MIT SkyHanni repository egg locations across 14 supported islands
+- added profile-safe nearest-location collection learning with configurable radius and collected-location filtering
+- ported the Egglocator happy-villager particle curve fit and snap-to-authoritative-location solver
+- added ready-state-gated boxes, beams, labels, distances and direct lines with complete `/hoppitywaypoints` controls
+
 ## 0.9.757 (2026-07-30) — Chocolate Factory Stray Timer
 
 - ported SkyHanni's exact meal/Hitman/visitor trigger set and Factory-only 30-second countdown state machine

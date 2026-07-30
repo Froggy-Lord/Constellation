@@ -25,6 +25,8 @@ public class AurigaMisc extends BaseConstellation {
         AurigaHoppityEventSummary.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaUnclaimedEggs.init((com.froggylord.constellation.config.AurigaConfig) config);
         AurigaStrayTimer.init((com.froggylord.constellation.config.AurigaConfig) config);
+        AurigaHoppityWaypoints.init((com.froggylord.constellation.config.AurigaConfig) config);
+        registerRenderer(AurigaHoppityWaypoints::draw);
     }
 
     @Override
@@ -75,5 +77,6 @@ public class AurigaMisc extends BaseConstellation {
         AurigaHoppityEventSummary.registerCommands(dispatcher);
         AurigaUnclaimedEggs.registerCommands(dispatcher);
         AurigaStrayTimer.registerCommands(dispatcher);
+        AurigaHoppityWaypoints.registerCommands(dispatcher);
     }
 }

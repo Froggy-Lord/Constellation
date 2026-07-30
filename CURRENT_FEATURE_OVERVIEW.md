@@ -221,6 +221,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Movable ready/claimed/next-spawn/event-end HUD, configurable ordering and optional chat/title/sound reminders through `/hoppityeggs`
 - Exact Chocolate Factory Stray window: meal/Hitman/visitor triggers, paused-until-Factory countdown, premature-close reset and new-caught-slot completion
 - Movable fractional timer, configurable final-second dings and optional Shift-bypass close/destructive-slot protection through `/straytimer`
+- Authoritative 212-location Hoppity dataset for Hub, Park, Gold/Deep/Dwarven Mines, Crystal Hollows, Farming Islands, End, Spider's Den, Crimson Isle, Dungeon Hub, Bayou, Galatea and Lotus Atoll
+- Profile-safe collected-location learning plus ready-state-gated all/nearest world boxes, beams, labels, distances and lines
+- Egglocator happy-villager particle polynomial fit snapped to a known island location, with configurable particle validation and single-guess rendering
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips
