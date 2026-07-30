@@ -7,6 +7,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Open the main menu with Right Shift or `/cn config`.
 - Enable or disable an entire area with `/cn toggle <constellation>`.
 - Open the transparent HUD editor with `/cn hud`.
+- The Hub and config header use a distinct hand-authored star-map icon for every constellation.
 - HUD elements only appear in the editor when they are currently useful or were visible during the last five seconds. Hover an element and scroll to resize it; drag it to move it.
 - Most individual features have their own toggle and detailed settings inside their constellation.
 - Puzzle, combat, movement, and aiming helpers are advisory overlays. They do not click or aim for you.

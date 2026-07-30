@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.788 Complete Profile Overview.
+Last updated: 2026-07-30 for version 0.9.789 Constellation Icon Foundation.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.788`.
+- Current artifact version: `0.9.789`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3212,6 +3212,22 @@ Release verification passed on July 30: `./gradlew build -q` completed with 11 t
 
 The tested `constellation-0.9.788.jar` is deployed to the Gather instance. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-185133-0.9.788/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
 
+The release is queued in the drip repository as Froggy-Lord commit `8099cd7f6f`.
+
+## July 30 version 0.9.789 Constellation Icon Foundation
+
+`tools/ui-assets/constellation-icons.svg`, `constellation_icons.png`, `ConstellationIcons.java`, `HubScreen.java` and `ConfigScreen.java` begin the requested non-generated-looking visual redesign with an original icon family. This is original vector/UI work governed by `.forge/visual-direction.md`; no reference code or artwork was copied.
+
+All fifteen registered modules have a unique star-map silhouette on the same 32-pixel grid. Fine muted-violet route strokes, star-white nodes and one warm-gold anchor star use the existing Constellation identity without generic gradients or unrelated pictograms. The vector master is retained and deterministically rendered to one transparent 480-by-32 atlas.
+
+The reusable renderer maps the exact FeatureManager order from Apollo through Artemis and fails closed for unknown IDs. Hub cards use a 28-pixel icon with text reflowed to preserve the toggle area. Configuration headers use the matching 24-pixel icon and the module's real display name instead of a raw lowercase ID. Card hitboxes, scrolling, module state and all gameplay behavior are unchanged.
+
+The sprite atlas was visually inspected at native resolution before integration. The drip helper allowlist includes the vector master, generated atlas, renderer and both integration screens.
+
+Release verification passed on July 30: the transparent atlas is exactly 480 by 32 RGBA, `./gradlew build -q` completed with 11 tests successful and zero failed, and the 160-second headless client ended at the expected timeout code 124. It loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no texture-load, renderer, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `52260981a7b650029ff7fbd8485a86abb57108b72b2f6393111b817395eeb652`.
+
+The tested `constellation-0.9.789.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-190012-0.9.789/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
 ## Required dedicated visual-design pass
 
-Zaden explicitly rejected the current generated-looking UI/UX and requested proper icon packs. Treat this as a real design-system release, not a palette swap: inventory every screen and interaction, create a coherent original constellation/space icon family with consistent grid, stroke, optical weight and active/disabled states, and replace placeholder-feeling controls and spacing. Follow `.forge/visual-direction.md`, use `ConstellationTheme`, and visually inspect at native Minecraft GUI scales. Preserve the HUD editor's separate binding requirements: game view remains visible beneath a mostly transparent overlay, show only currently visible or last-five-seconds HUD elements, scroll over any element resizes it, and add no editor cards, borders or decorative chrome. Do not mix this large visual pass into gameplay releases.
+Zaden explicitly rejected the current generated-looking UI/UX and requested proper icon packs. Version 0.9.789 completed the first icon foundation, but the broader screen and interaction inventory remains. Continue it as deliberate visual-system releases: refine active/disabled icon treatment where it materially helps, replace placeholder-feeling controls and spacing, and carry the established icon language into suitable navigation without decorating dense gameplay surfaces. Follow `.forge/visual-direction.md`, use `ConstellationTheme`, and visually inspect at native Minecraft GUI scales. Preserve the HUD editor's separate binding requirements: game view remains visible beneath a mostly transparent overlay, show only currently visible or last-five-seconds HUD elements, scroll over any element resizes it, and add no editor cards, borders or decorative chrome. Do not mix a large visual pass into gameplay releases.

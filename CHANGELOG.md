@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.789 (2026-07-30) — Constellation Icon Foundation
+
+- added a hand-authored fifteen-icon star-map family for every constellation
+- gave each module a distinct silhouette on one consistent 32-pixel optical grid
+- integrated module icons into Hub cards and the active configuration header
+- retained a vector design master alongside the optimized transparent texture atlas
+- established reusable icon rendering for the wider UI/UX redesign
+
 ## 0.9.788 (2026-07-30) — Complete Profile Overview
 
 - replaced the seven-row legacy Overview with exact cross-profile summary models

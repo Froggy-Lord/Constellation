@@ -1,6 +1,7 @@
 package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.ConstellationClient;
+import com.froggylord.constellation.render.ConstellationIcons;
 import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -89,14 +90,15 @@ public class HubScreen extends Screen {
                 cardHover.put(id, hGlow);
                 if (hGlow > 0.01f) ConstellationTheme.glow(g, cx, cy, cardW, cardH, hGlow);
 
+                ConstellationIcons.draw(g, id, cx + 7, cy + 9, 28);
                 String name = c.displayName();
-                g.text(font, name, cx + 6, cy + 6,
+                g.text(font, name, cx + 42, cy + 7,
                     enabled ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
                 String desc = c.description();
-                int maxW = cardW - 14;
+                int maxW = cardW - 50;
                 if (font.width(desc) > maxW) desc = font.plainSubstrByWidth(desc, maxW - 6) + "…";
-                g.text(font, desc, cx + 6, cy + 22, ConstellationTheme.TEXT_MUTED, false);
+                g.text(font, desc, cx + 42, cy + 23, ConstellationTheme.TEXT_MUTED, false);
 
                 // toggle indicator with smooth animation
                 int tx = cx + cardW - 32, ty = cy + 6;

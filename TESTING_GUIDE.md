@@ -2413,3 +2413,13 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle every `profileOverviewShow...` section independently and change decimal precision from zero through four. Expected: only the selected rows or precision change.
 - [ ] Switch profiles and Refresh. Expected: every cross-profile value updates immediately with no previous-member state.
 - [ ] Disable `profileOverview`. Expected: one readable disabled row replaces the page.
+
+## Constellation icon foundation
+
+- [ ] Open the Hub at small, normal and large GUI scales. Expected: every one of the 15 module cards has a distinct sharp star-map icon with no opaque square or texture bleeding.
+- [ ] Compare Apollo through Artemis in registration order. Expected: each icon remains fixed to its module and no two modules share a silhouette.
+- [ ] Hover disabled and enabled module cards. Expected: icon placement stays stable while the existing card and toggle states animate normally.
+- [ ] Open every module's configuration page. Expected: the matching module icon and full display name appear in the header instead of the raw lowercase ID.
+- [ ] Scroll the Hub and reopen it. Expected: icons follow their cards exactly with no flicker, clipping or stale texture.
+- [ ] Resize the window while the Hub or config is open. Expected: icons remain 28 pixels on cards and 24 pixels in config headers without stretching neighboring text.
+- [ ] Verify the HUD editor separately. Expected: it remains a mostly transparent, chrome-free overlay and receives no module-card decoration from this icon release.

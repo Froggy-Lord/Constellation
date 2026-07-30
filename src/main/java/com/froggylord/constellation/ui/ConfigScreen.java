@@ -2,6 +2,7 @@ package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.*;
+import com.froggylord.constellation.render.ConstellationIcons;
 import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -623,7 +624,11 @@ public class ConfigScreen extends Screen {
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
         g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT);
-        g.text(mc.font, constellationId, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
+        ConstellationIcons.draw(g, constellationId, 8, 5, 24);
+        String constellationName = ConstellationClient.featureManager().get(constellationId)
+            .map(com.froggylord.constellation.core.BaseConstellation::displayName)
+            .orElse(constellationId);
+        g.text(mc.font, constellationName, 36, 10, ConstellationTheme.ACCENT_BRIGHT, false);
         String esc = "esc to close  ·  right-click for settings";
         g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
 
