@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.753 (2026-07-30) — Profile-Safe Hoppity Collection
+
+- ported Hoppity Collection page, found, duplicate, requirement and total-progress parsing from SkyHanni
+- added profile-safe rabbit counts, rarity totals, duplicate totals and explicit page-completeness tracking
+- added configurable found/missing, rarity, Factory, Shop, requirement and Golden Stray highlights
+- added a movable rarity/total/progress/page HUD, contextual tooltips and `/hoppitycollection` controls
+
 ## 0.9.752 (2026-07-30) — Chocolate Factory Inventory Depth
 
 - ported SkyHanni's all-affordable, barn-full, unclaimed-milestone and active/full Time Tower menu highlights

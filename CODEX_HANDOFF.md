@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.752 Chocolate Factory Inventory Depth.
+Last updated: 2026-07-30 for version 0.9.753 Profile-Safe Hoppity Collection.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.752`.
+- Current artifact version: `0.9.753`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2734,4 +2734,16 @@ Top-left text covers parsed non-maxed rabbit, Coach, Prestige, Rabbit Barn, Hand
 
 Version `0.9.752` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `4d69f32bcbfaffa3d24b6b45683f9adc09a330c591ffd37d14f7e62ba5848510`.
 
-The previous `0.9.751` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-135134-0.9.752/`; only `constellation-0.9.752.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.751` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-135134-0.9.752/`; only `constellation-0.9.752.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `c829ca5364`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.753 Profile-Safe Hoppity Collection
+
+`AurigaHoppityCollection.java`, `HoppityCollectionHudWidget.java`, `AurigaConfig.java`, `AurigaMisc.java` and `ItemProtectionScreenMixin.java` port SkyHanni LGPL-3.0-or-later `features/event/hoppity/HoppityCollectionStats.kt` and `config/features/inventory/chocolatefactory/HoppityCollectionStatsConfig.kt`.
+
+Exact optional `(page/max) Hoppity's Collection` titles identify the inventory. Rabbit entries require either authoritative not-found lore or a `Duplicates Found` row; navigation/decorative/player slots cannot enter the cache. Found count is one plus duplicates. Rabbit-name component color supplies Common through Divine rarity, while unknown colors remain explicitly Unknown. The menu's own `current/total` progress is kept separate from locally scanned entries.
+
+Counts, rarity and progress persist under profile-prefixed keys. Scanned page numbers and advertised maximum persist independently, and the movable HUD cannot show a complete state until every page has actually been visited. It offers independently configurable rarity rows, duplicate counts, local total, Hypixel progress and page completeness. Found/missing overlays, rarity-colored missing entries, Factory milestone, Shop milestone, requirement and Golden Stray priority colors are independent. Contextual tooltips show collection state, rarity/count and warn when page coverage is partial. `/hoppitycollection` exposes status, current-profile clear and all primary toggles.
+
+Version `0.9.753` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `37ac43b0a239b7ed43fb65a6f7f6223ba8f5803ad012add521b18fa971aefa82`.
+
+The previous `0.9.752` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-135919-0.9.753/`; only `constellation-0.9.753.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

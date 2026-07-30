@@ -1604,6 +1604,14 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Run `/chocolatefactory`, `toggle`, `cleartower` and representative `option <name> <on|off>` commands. Expected: readable status and persistent independent settings.
 - [ ] Run `/chocolatefactory barnthreshold 0`, then `1` and a larger safe value. Expected: Barn warning sensitivity changes without altering the actual parsed rabbit/capacity totals.
 - [ ] Move and resize the Chocolate Factory HUD in `/cn hud`. Expected: it appears only while the menu or a saved active Time Tower is relevant, plus editor grace.
+- [ ] Enable `hoppityCollectionStats`, open Hoppity's Collection and scroll through every page. Expected: each page is counted once, the HUD reaches `pages seen / maximum`, and completion becomes green only after all pages have actually been scanned.
+- [ ] Compare several found, duplicate and missing rabbits. Expected: found count is one plus `Duplicates Found`; missing entries store zero; the Hypixel progress row comes from the menu progress bar rather than inferred local totals.
+- [ ] Switch profiles and reopen the collection. Expected: rabbit, rarity, duplicate, page and progress caches remain isolated per profile and restore only that profile's state.
+- [ ] Toggle rarity rows, duplicates, total, Hypixel progress and pages independently. Expected: only the selected HUD rows change, and partial page scans remain visibly partial.
+- [ ] Test missing/found highlights and missing rabbits sourced from Factory milestones, Shop milestones, requirements and Golden Strays. Expected: each uses its independent toggle/color; rarity mode uses the rabbit name's authoritative menu rarity.
+- [ ] Hover found and missing rabbits. Expected: the tooltip shows collection state, rarity and found count; incomplete scans warn to visit every page.
+- [ ] Run `/hoppitycollection`, representative `/hoppitycollection option <name> on|off`, then `/hoppitycollection clear`. Expected: status is readable, options persist, and clear removes only the current profile's collection cache.
+- [ ] Move and resize the Hoppity Collection HUD in `/cn hud`. Expected: it appears only while the exact collection inventory is open or during editor grace.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.
 - [ ] Put two identical single-enchantment books of the same level into slots 29 and 33. Expected: state reads Matching books and the input/result colors use the configured safe colors.

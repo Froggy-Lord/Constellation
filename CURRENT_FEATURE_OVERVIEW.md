@@ -210,6 +210,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Cost-per-CPS, prestige ETA/remaining and Time Tower production/charge tooltip details
 - Stray and Golden Rabbit alerts, Hitman status and a movable factory HUD
 - Profile-aware Time Tower persistence with configurable warning and expiry channels
+- Profile-safe Hoppity Collection synchronization from all paged menu entries
+- Unique, duplicate and total counts per rarity with authoritative Hypixel progress and explicit scanned-page completeness
+- Configurable found/missing, rarity, Factory, Shop, requirement and Golden Stray highlights plus contextual rabbit tooltips
+- Movable Hoppity Collection HUD and `/hoppitycollection` status, clear and granular option controls
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
 - Optional mismatch warning, sound and output blocking with deliberate Control bypass
 - Matching-book discovery in player inventory, configurable slot overlays and tooltips
