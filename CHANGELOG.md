@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.785 (2026-07-30) — Exact Profile Garden Summary Progression
+
+- replaced hard-coded Garden summary progress with the maintained 15-level 60,120-XP curve
+- added exact accepted-offer and unique-visitor milestone progress through 10,000 and 300
+- added crop unlock levels, all 13 Personal Best targets and the maintained Larva cap
+- added cumulative Farming Level Cap and Extra Farming Fortune medal/ticket costs
+- added four maintained default Barn skins with selected/unlocked and unknown-future handling
+
 ## 0.9.784 (2026-07-30) — Exact Profile Garden Mutations and Chips
 
 - added all 41 maintained mutations with discovered, analyzed and non-analyzable states

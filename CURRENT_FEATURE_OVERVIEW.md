@@ -39,6 +39,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Garden visitors use all 139 maintained names/rarities; composter upgrades show exact level and 35,650-Copper completion
 - Garden plots use all 24 maintained numbers/coordinates and tier-aware Compost costs; greenhouse upgrades show exact rewards and cumulative materials
 - Garden mutations include all 41 maintained names/rarities and discovery/analysis state; ten Garden Chips include exact 25-million-Sowdust progress
+- Garden summary progression includes exact 15-level XP, visitor milestones, crop unlocks/Personal Bests, Jacob perk costs and Barn skins
 - Rift profile progression includes Motes, visits, Souls, eyes, Montezuma cats, Grubber stacks and complete Timecharm discovery records
 - Fishing profile progression includes every Trophy Fish/tier, rank, Dolphin milestones, sharks, sea creatures and lifetime catch counters
 - Chocolate Factory profile progression includes Prestige, employees/production, upgrades, Time Tower, Hitman and all 512 categorized rabbits

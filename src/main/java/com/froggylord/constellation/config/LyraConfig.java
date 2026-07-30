@@ -314,13 +314,18 @@ public class LyraConfig extends BaseConfigGroup {
     public String profileCrimsonDojoSort = "DEFAULT";
     public boolean profileGarden = true;
     public boolean profileGardenShowSummary = true;
+    public boolean profileGardenShowBarnSkins = true;
     public boolean profileGardenShowCrops = true;
     public boolean profileGardenShowCropUpgrades = true;
     public boolean profileGardenShowCropMilestones = true;
     public boolean profileGardenShowCropCopper = true;
+    public boolean profileGardenShowCropRequirements = true;
+    public boolean profileGardenShowPersonalBests = true;
     public boolean profileGardenShowVisitors = true;
     public boolean profileGardenShowVisitorBreakdown = true;
+    public boolean profileGardenShowVisitorMilestones = true;
     public boolean profileGardenShowContests = true;
+    public boolean profileGardenShowContestPerkCosts = true;
     public boolean profileGardenShowComposter = true;
     public boolean profileGardenShowComposterUpgrades = true;
     public boolean profileGardenShowPlots = true;
@@ -337,6 +342,7 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileGardenHideZeroCrops = false;
     public boolean profileGardenHideZeroVisitors = true;
     public int profileGardenCropLimit = 0;
+    public int profileGardenBarnSkinLimit = 0;
     public int profileGardenVisitorLimit = 10;
     public int profileGardenPlotLimit = 0;
     public int profileGardenMutationLimit = 0;

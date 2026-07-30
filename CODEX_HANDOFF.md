@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.784 Exact Profile Garden Mutations and Chips.
+Last updated: 2026-07-30 for version 0.9.785 Exact Profile Garden Summary Progression.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.784`.
+- Current artifact version: `0.9.785`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3150,7 +3150,23 @@ The live July 30 probe validated 41 unique mutations: nine Common, seven Uncommo
 
 Version `0.9.784` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `10b6ca41f97673a48cbcc4b6b9e44057e7b16a14962ecd6b8d777bb8a20349b1`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181848-0.9.784/`; only `constellation-0.9.784.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181848-0.9.784/`; only `constellation-0.9.784.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `e354a13b1c`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.785 Exact Profile Garden Summary Progression
+
+`ProfileGardenData.java`, `ProfileGardenCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` complete the remaining Garden summary catalogue. Maintained cumulative Garden levels, visitor milestones, crop requirements, Personal Best targets, Larva cap, Jacob perk cost maps and Barn-skin resolution port SkyBlockPv modified-MIT `data/repo/StaticGardenData.kt`, `data/api/skills/farming/FarmingData.kt`, `GardenProfile.kt` and `FarmingScreen.kt`. Required notices are beside the derived blocks.
+
+Garden level now uses the licensed 15-level cumulative curve ending at 60,120 XP rather than a private duplicate. Accepted offers show 30 milestone levels through 10,000; unique visitors show 32 through 300. Both preserve current level, progress, remaining and maximum. The ten standard crop unlock requirements and 13 Personal Best targets attach to their crop rows independently.
+
+Farming Level Cap shows exact cumulative cost paid out of 16 Gold Medals and 1,550 Jacob's Tickets over ten levels. Extra Farming Fortune uses its separate 15-level curve ending at 66 Gold Medals and 3,750 Tickets. Cost rows are independent of the contest/perk summaries.
+
+Default, Red, Medieval and Sunny resolve from the maintained Barn-skin catalogue. Selected, unlocked and locked remain distinct; profile-only future IDs remain visible as Unknown. Barn-skin rows and their zero-to-100 limit are independent. Larva uses the licensed five cap.
+
+The live July 30 probe validated all threshold counts/maxima, ten crop requirements, 13 Personal Bests, both perk curves and four default skins. It was archived under `~/Desktop/To-Delete/constellation-probes/20260730-182208-garden-summary/`. These resources join the existing all-or-nothing Garden cache and invalidate older partial cache bodies.
+
+Version `0.9.785` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `0c58de95c298d9c3e6878425db47c2424b4613f47fec298f30ff0cfcc1fc331b`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-182616-0.9.785/`; only `constellation-0.9.785.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

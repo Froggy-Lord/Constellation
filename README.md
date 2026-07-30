@@ -62,6 +62,7 @@ garden crop records use the maintained licensed 46-level milestone tables and ex
 garden visitor and composter records use all 139 maintained visitor identities and exact 25-level cumulative upgrade costs.
 garden plots use the maintained 24-plot layout and tier-aware unlock costs; greenhouse records include exact reward and cumulative material progress.
 garden mutation records cover all 41 maintained crops with discovery/analysis state, while all ten chips show exact 25-million-Sowdust progression.
+garden summary records include exact level and visitor milestones, crop unlocks/Personal Bests, Jacob perk costs, Larva cap and maintained Barn skins.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

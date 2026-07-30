@@ -773,7 +773,8 @@ public final class ProfileViewerScreen extends Screen {
         ProfileGardenCalculator.Result data = gardenRows();
         List<Row> rows = new ArrayList<>();
         if (cfg.profileGardenShowSummary) {
-            String level = "Level " + data.gardenLevel() + "  " + whole(data.gardenXp()) + " XP";
+            String level = "Level " + data.gardenLevel() + "/" + data.gardenLevelMaximum()
+                + "  " + whole(data.gardenXp()) + "/" + whole(data.gardenXpMaximum()) + " XP";
             if (data.levelRequired() > 0)
                 level += "  " + whole(data.levelRequired() - data.levelProgress()) + " left";
             rows.add(row("Garden", values ? level : ""));
@@ -781,8 +782,21 @@ public final class ProfileViewerScreen extends Screen {
             rows.add(row("Plots unlocked", values ? Integer.toString(data.unlockedPlots()) : ""));
             rows.add(row("Barn skin", values ? title(data.selectedBarnSkin()) + "  "
                 + data.unlockedBarnSkins() + " unlocked" : ""));
-            rows.add(row("Larva consumed", values ? data.larvaConsumed() + "/5" : ""));
+            rows.add(row("Larva consumed", values ? data.larvaConsumed()
+                + (data.maxLarva() > 0 ? "/" + data.maxLarva() : "") : ""));
             rows.add(row("Crops collected", values ? whole(data.cropsCollected()) : ""));
+        }
+        if (cfg.profileGardenShowBarnSkins) {
+            int limit = Math.clamp(cfg.profileGardenBarnSkinLimit, 0, 100);
+            int shown = 0;
+            for (ProfileGardenCalculator.BarnSkin skin : data.barnSkins()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String state = skin.selected() ? "Selected" : skin.unlocked() ? "Unlocked" : "Locked";
+                rows.add(new Row("  " + (skin.unknown() ? "Unknown  " : "") + skin.name(),
+                    values ? state : "", skin.unknown() ? 0xFFFFAA55
+                        : skin.unlocked() || skin.selected() ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED));
+            }
         }
         if (cfg.profileGardenShowCrops) {
             if (gardenDataLoading && gardenData == null)
@@ -806,6 +820,11 @@ public final class ProfileViewerScreen extends Screen {
                 if (cfg.profileGardenShowCropUpgrades) value += "  upgrade " + crop.upgrade() + "/9";
                 if (cfg.profileGardenShowCropCopper && crop.copperTotal() > 0)
                     value += "  " + crop.copperPaid() + "/" + crop.copperTotal() + " Copper";
+                if (cfg.profileGardenShowCropRequirements && crop.unlockLevel() > 0)
+                    value += "  unlock Garden " + crop.unlockLevel();
+                if (cfg.profileGardenShowPersonalBests && crop.personalBestTarget() > 0)
+                    value += "  best " + whole(crop.personalBest()) + "/"
+                        + whole(crop.personalBestTarget());
                 rows.add(new Row((crop.unknown() ? "Unknown  " : "") + crop.name(), values ? value : "",
                     crop.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
             }
@@ -813,6 +832,12 @@ public final class ProfileViewerScreen extends Screen {
         if (cfg.profileGardenShowVisitors) {
             rows.add(row("Visitor offers completed", values ? whole(data.visitorsCompleted()) : ""));
             rows.add(row("Unique visitors served", values ? whole(data.uniqueVisitors()) : ""));
+            if (cfg.profileGardenShowVisitorMilestones) {
+                rows.add(row("Accepted-offer milestone", values
+                    ? gardenProgress(data.offerProgress(), data.visitorsCompleted()) : ""));
+                rows.add(row("Unique-visitor milestone", values
+                    ? gardenProgress(data.uniqueVisitorProgress(), data.uniqueVisitors()) : ""));
+            }
             if (cfg.profileGardenShowVisitorBreakdown) {
                 int limit = Math.clamp(cfg.profileGardenVisitorLimit, 0, 200);
                 int shown = 0;
@@ -835,6 +860,12 @@ public final class ProfileViewerScreen extends Screen {
             rows.add(row("Farming cap upgrades", values ? whole(data.farmingCapUpgrades()) : ""));
             rows.add(row("Double Drops upgrades", values ? whole(data.doubleDropUpgrades()) : ""));
             rows.add(row("Personal Bests perk", values ? (data.personalBests() ? "Unlocked" : "Locked") : ""));
+            if (cfg.profileGardenShowContestPerkCosts) {
+                rows.add(row("  " + data.farmingCap().name(), values
+                    ? gardenUpgradeCost(data.farmingCap()) : ""));
+                rows.add(row("  " + data.farmingFortune().name(), values
+                    ? gardenUpgradeCost(data.farmingFortune()) : ""));
+            }
         }
         if (cfg.profileGardenShowComposter) {
             rows.add(row("Composter storage", values ? compact(data.organicMatter()) + " organic  "
@@ -920,6 +951,21 @@ public final class ProfileViewerScreen extends Screen {
             .sorted(java.util.Map.Entry.comparingByKey())
             .map(entry -> whole(entry.getValue()) + " " + title(entry.getKey()))
             .collect(java.util.stream.Collectors.joining(", "));
+    }
+
+    private static String gardenProgress(ProfileGardenCalculator.Progress progress, long amount) {
+        String value = "Level " + progress.level() + "/" + progress.maximum() + "  "
+            + whole(amount) + "/" + whole(progress.totalRequired());
+        if (progress.required() > 0)
+            value += "  " + whole(progress.required() - progress.progress()) + " to next";
+        return value;
+    }
+
+    private static String gardenUpgradeCost(ProfileGardenCalculator.CostUpgrade upgrade) {
+        String value = "Level " + upgrade.level() + "/" + upgrade.maximum();
+        if (!upgrade.total().isEmpty())
+            value += "  paid " + gardenCost(upgrade.paid()) + " / " + gardenCost(upgrade.total());
+        return value;
     }
 
     // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/rift/MainRiftScreen.kt

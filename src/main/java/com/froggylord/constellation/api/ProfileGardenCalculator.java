@@ -36,21 +36,23 @@ public final class ProfileGardenCalculator {
         JsonObject player = object(member, "garden_player_data");
         JsonObject contests = object(member, "jacobs_contest");
         long experience = whole(garden.get("garden_experience"));
-        long[] thresholds = cumulative(GARDEN_XP_STEPS);
+        List<Long> thresholds = catalogue != null && !catalogue.gardenLevels().isEmpty()
+            ? catalogue.gardenLevels() : cumulativeList(GARDEN_XP_STEPS);
         int level = 0;
-        for (int i = 0; i < thresholds.length; i++) if (experience >= thresholds[i]) level = i + 1;
-        level = Math.min(level, thresholds.length);
-        long start = thresholds[Math.max(0, level - 1)];
-        long next = level >= thresholds.length ? 0 : thresholds[level];
+        for (int i = 0; i < thresholds.size(); i++) if (experience >= thresholds.get(i)) level = i + 1;
+        level = Math.min(level, thresholds.size());
+        long start = thresholds.get(Math.max(0, level - 1));
+        long next = level >= thresholds.size() ? 0 : thresholds.get(level);
 
         JsonObject resources = object(garden, "resources_collected");
         JsonObject upgrades = object(garden, "crop_upgrade_levels");
+        JsonObject personalBestValues = object(contests, "personal_bests");
         List<Crop> crops = new ArrayList<>();
         Set<String> known = new HashSet<>(CROPS);
-        for (String id : CROPS) crops.add(crop(id, resources, upgrades, catalogue, false));
+        for (String id : CROPS) crops.add(crop(id, resources, upgrades, personalBestValues, catalogue, false));
         for (var entry : resources.entrySet())
             if (!known.contains(entry.getKey()))
-                crops.add(crop(entry.getKey(), resources, upgrades, catalogue, true));
+                crops.add(crop(entry.getKey(), resources, upgrades, personalBestValues, catalogue, true));
         crops.removeIf(value -> hideZeroCrops && value.collected() == 0 && value.upgrade() == 0);
         crops.sort(cropComparator(cropSort));
 
@@ -174,15 +176,40 @@ public final class ProfileGardenCalculator {
         for (JsonElement value : contestRows.asMap().values())
             if (value.isJsonObject() && bool(value.getAsJsonObject().get("claimed_rewards"))) claimed++;
 
-        return new Result(true, experience, level, level >= thresholds.length ? 0 : experience - start,
-            level >= thresholds.length ? 0 : next - start, integer(player.get("copper")),
+        Progress offerProgress = progression(integer(commission.get("total_completed")),
+            catalogue == null ? List.of() : catalogue.offerMilestones());
+        Progress uniqueVisitorProgress = progression(integer(commission.get("unique_npcs_served")),
+            catalogue == null ? List.of() : catalogue.uniqueVisitorMilestones());
+        int farmingCapLevel = integer(perks.get("farming_level_cap"));
+        int fortuneLevel = integer(perks.get("double_drops"));
+        CostUpgrade farmingCap = costUpgrade("Farming Level Cap", farmingCapLevel,
+            catalogue == null ? List.of() : catalogue.farmingCapCosts());
+        CostUpgrade farmingFortune = costUpgrade("Extra Farming Fortune", fortuneLevel,
+            catalogue == null ? List.of() : catalogue.farmingFortuneCosts());
+        String selectedBarnSkin = string(garden.get("selected_barn_skin"), "");
+        Set<String> unlockedSkinIds = rawStringSet(garden.get("unlocked_barn_skins"));
+        Set<String> skinIds = new java.util.LinkedHashSet<>();
+        if (catalogue != null) skinIds.addAll(catalogue.barnSkins().keySet());
+        skinIds.addAll(unlockedSkinIds);
+        if (!selectedBarnSkin.isBlank()) skinIds.add(selectedBarnSkin);
+        List<BarnSkin> barnSkins = skinIds.stream().map(id -> {
+            ProfileGardenData.BarnSkin definition = catalogue == null ? null : catalogue.barnSkins().get(id);
+            return new BarnSkin(id, definition == null ? title(id) : definition.name(),
+                id.equals(selectedBarnSkin), unlockedSkinIds.contains(id), definition == null);
+        }).toList();
+
+        return new Result(true, experience, level, level >= thresholds.size() ? 0 : experience - start,
+            level >= thresholds.size() ? 0 : next - start, thresholds.size(), thresholds.getLast(),
+            integer(player.get("copper")),
             integer(player.get("larva_consumed")), arraySize(garden, "unlocked_plots_ids"),
             string(garden.get("selected_barn_skin"), "Unknown"), arraySize(garden, "unlocked_barn_skins"),
+            catalogue == null ? 0 : catalogue.maxLarva(), barnSkins,
             List.copyOf(crops), resources.asMap().values().stream().mapToLong(ProfileGardenCalculator::whole).sum(),
             integer(commission.get("total_completed")), integer(commission.get("unique_npcs_served")),
-            List.copyOf(visitors), contestRows.size(), claimed, integer(medals.get("bronze")),
+            offerProgress, uniqueVisitorProgress, List.copyOf(visitors), contestRows.size(), claimed,
+            integer(medals.get("bronze")),
             integer(medals.get("silver")), integer(medals.get("gold")),
-            integer(perks.get("farming_level_cap")), integer(perks.get("double_drops")),
+            farmingCapLevel, fortuneLevel, farmingCap, farmingFortune,
             bool(perks.get("personal_bests")), decimal(composter.get("organic_matter")),
             decimal(composter.get("fuel_units")), decimal(composter.get("compost_units")),
             integer(composter.get("compost_items")), integer(composter.get("conversion_ticks")),
@@ -192,7 +219,7 @@ public final class ProfileGardenCalculator {
             mutationsDiscovered, mutationsAnalyzed, allMutations.size(), mutations, chips, response.cached());
     }
 
-    private static Crop crop(String id, JsonObject resources, JsonObject upgrades,
+    private static Crop crop(String id, JsonObject resources, JsonObject upgrades, JsonObject personalBests,
                              ProfileGardenData.Catalogue catalogue, boolean unknown) {
         long collected = whole(resources.get(id));
         int upgrade = integer(upgrades.get(id));
@@ -204,10 +231,30 @@ public final class ProfileGardenCalculator {
         int copperPaid = catalogue == null ? 0 : catalogue.cropUpgradeCosts().stream()
             .limit(Math.clamp(upgrade, 0, catalogue.cropUpgradeCosts().size())).mapToInt(Integer::intValue).sum();
         int copperTotal = catalogue == null ? 0 : catalogue.cropUpgradeCosts().stream().mapToInt(Integer::intValue).sum();
+        int unlockLevel = catalogue == null ? 0 : catalogue.cropRequirements().getOrDefault(id, 0);
+        int personalBest = integer(personalBests.get(id));
+        int personalBestTarget = catalogue == null ? 0 : catalogue.personalBests().getOrDefault(id, 0);
         return new Crop(id, cropName(id), collected, upgrade, milestone, milestones.size(),
             milestone >= milestones.size() ? 0 : collected - start,
             milestone >= milestones.size() ? 0 : next - start,
-            milestones.isEmpty() ? 0 : milestones.getLast(), copperPaid, copperTotal, unknown);
+            milestones.isEmpty() ? 0 : milestones.getLast(), copperPaid, copperTotal,
+            unlockLevel, personalBest, personalBestTarget, unknown);
+    }
+
+    private static Progress progression(long amount, List<Long> thresholds) {
+        int level = 0;
+        while (level < thresholds.size() && amount >= thresholds.get(level)) level++;
+        long start = level == 0 ? 0 : thresholds.get(level - 1);
+        long next = level >= thresholds.size() ? 0 : thresholds.get(level);
+        return new Progress(level, thresholds.size(), level >= thresholds.size() ? 0 : amount - start,
+            level >= thresholds.size() ? 0 : next - start, thresholds.isEmpty() ? 0 : thresholds.getLast());
+    }
+
+    private static CostUpgrade costUpgrade(String name, int level, List<Map<String, Integer>> costs) {
+        Map<String, Integer> paid = level <= 0 || costs.isEmpty() ? Map.of()
+            : costs.get(Math.min(level, costs.size()) - 1);
+        return new CostUpgrade(name, level, costs.size(), Map.copyOf(paid),
+            costs.isEmpty() ? Map.of() : costs.getLast());
     }
 
     private static Comparator<Crop> cropComparator(String sort) {
@@ -273,14 +320,14 @@ public final class ProfileGardenCalculator {
         };
     }
 
-    private static long[] cumulative(int[] steps) {
-        long[] values = new long[steps.length];
+    private static List<Long> cumulativeList(int[] steps) {
+        List<Long> values = new ArrayList<>();
         long total = 0;
-        for (int i = 0; i < steps.length; i++) {
-            total += steps[i];
-            values[i] = total;
+        for (int step : steps) {
+            total += step;
+            values.add(total);
         }
-        return values;
+        return List.copyOf(values);
     }
 
     private static String cropName(String id) {
@@ -300,6 +347,15 @@ public final class ProfileGardenCalculator {
         if (value == null || !value.isJsonArray()) return values;
         for (JsonElement element : value.getAsJsonArray()) {
             try { values.add(element.getAsString().toUpperCase(Locale.ROOT)); }
+            catch (RuntimeException ignored) {}
+        }
+        return values;
+    }
+    private static Set<String> rawStringSet(JsonElement value) {
+        Set<String> values = new java.util.LinkedHashSet<>();
+        if (value == null || !value.isJsonArray()) return values;
+        for (JsonElement element : value.getAsJsonArray()) {
+            try { values.add(element.getAsString()); }
             catch (RuntimeException ignored) {}
         }
         return values;
@@ -339,7 +395,8 @@ public final class ProfileGardenCalculator {
 
     public record Crop(String id, String name, long collected, int upgrade, int milestone, int maxMilestone,
                        long milestoneProgress, long milestoneRequired, long maximumRequired,
-                       int copperPaid, int copperTotal, boolean unknown) {}
+                       int copperPaid, int copperTotal, int unlockLevel, int personalBest,
+                       int personalBestTarget, boolean unknown) {}
     public record Visitor(String id, String name, String rarity, int visits, int completed, boolean unknown) {}
     public record Upgrade(String id, String name, int level, int maximum, int copperPaid, int copperTotal) {}
     public record Plot(String id, String type, int number, int x, int z, boolean unlocked,
@@ -350,12 +407,19 @@ public final class ProfileGardenCalculator {
                            boolean analyzable, boolean unknown) {}
     public record Chip(String id, String name, int level, int maximum, long sowdustPaid,
                        long sowdustMaximum, boolean unknown) {}
+    public record BarnSkin(String id, String name, boolean selected, boolean unlocked, boolean unknown) {}
+    public record Progress(int level, int maximum, long progress, long required, long totalRequired) {}
+    public record CostUpgrade(String name, int level, int maximum, Map<String, Integer> paid,
+                              Map<String, Integer> total) {}
     public record Result(boolean available, long gardenXp, int gardenLevel, long levelProgress, long levelRequired,
-                         int copper, int larvaConsumed, int unlockedPlots, String selectedBarnSkin,
-                         int unlockedBarnSkins, List<Crop> crops, long cropsCollected, int visitorsCompleted,
-                         int uniqueVisitors, List<Visitor> visitors, int contests, int claimedContests,
+                         int gardenLevelMaximum, long gardenXpMaximum, int copper, int larvaConsumed,
+                         int unlockedPlots, String selectedBarnSkin, int unlockedBarnSkins, int maxLarva,
+                         List<BarnSkin> barnSkins, List<Crop> crops, long cropsCollected, int visitorsCompleted,
+                         int uniqueVisitors, Progress offerProgress, Progress uniqueVisitorProgress,
+                         List<Visitor> visitors, int contests, int claimedContests,
                          int bronzeMedals, int silverMedals, int goldMedals, int farmingCapUpgrades,
-                         int doubleDropUpgrades, boolean personalBests, double organicMatter, double fuel,
+                         int doubleDropUpgrades, CostUpgrade farmingCap, CostUpgrade farmingFortune,
+                         boolean personalBests, double organicMatter, double fuel,
                          double compostUnits, int compostItems, int conversionTicks, long composterLastSave,
                          List<Upgrade> composterUpgrades, List<Plot> plots,
                          int greenhouseSlots, List<GreenhouseUpgrade> greenhouseUpgrades,

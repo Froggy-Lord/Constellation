@@ -42,6 +42,8 @@ public final class ProfileGardenData {
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/mutations.json");
     private static final URI CHIPS = URI.create(
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/chips.json");
+    private static final URI BARN_SKINS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/barn_skins.json");
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static volatile Catalogue catalogue;
     private static volatile CompletableFuture<Catalogue> loading;
@@ -70,6 +72,7 @@ public final class ProfileGardenData {
                 root.add("greenhouse", fetch(GREENHOUSE));
                 root.add("mutations", fetch(MUTATIONS));
                 root.add("chips", fetch(CHIPS));
+                root.add("barn_skins", fetch(BARN_SKINS));
                 String body = root.toString();
                 Catalogue loaded = parse(body, System.currentTimeMillis(), false);
                 Files.writeString(cachePath(), body, StandardCharsets.UTF_8);
@@ -116,6 +119,7 @@ public final class ProfileGardenData {
         JsonObject rawGreenhouse = object(root, "greenhouse");
         JsonArray rawMutations = array(root.get("mutations"));
         JsonArray rawChips = array(root.get("chips"));
+        JsonObject rawBarnSkins = object(root, "barn_skins");
         Map<String, List<Long>> milestones = new LinkedHashMap<>();
         for (var entry : rawMilestones.entrySet()) {
             if (!entry.getValue().isJsonArray()) continue;
@@ -129,6 +133,30 @@ public final class ProfileGardenData {
             for (JsonElement value : rawCosts.getAsJsonArray()) upgradeCosts.add(value.getAsInt());
         if (milestones.size() != 13 || upgradeCosts.size() != 9)
             throw new IllegalArgumentException("Garden progression catalogue is incomplete.");
+
+        // ported from SkyBlockPv (modified MIT): data/repo/StaticGardenData.kt, data/api/skills/farming/FarmingData.kt, FarmingScreen.kt
+        // Portions of this code are from the SkyBlockPv mod.
+        List<Long> gardenLevels = cumulative(array(misc.get("garden_level")));
+        List<Long> offerMilestones = cumulative(array(misc.get("offers_accepted_milestone")));
+        List<Long> uniqueVisitorMilestones = cumulative(array(misc.get("unique_visitors_served_milestone")));
+        Map<String, Integer> cropRequirements = integerMap(object(misc, "crop_requirements"));
+        Map<String, Integer> personalBests = integerMap(object(misc, "personal_bests"));
+        List<Map<String, Integer>> farmingCapCosts = cumulativeMaps(array(misc.get("farming_level_cap")));
+        List<Map<String, Integer>> fortuneCosts = cumulativeMaps(array(misc.get("extra_farming_fortune")));
+        int maxLarva = misc.has("max_larva_consumed") ? misc.get("max_larva_consumed").getAsInt() : 0;
+        Map<String, BarnSkin> barnSkins = new LinkedHashMap<>();
+        for (var entry : rawBarnSkins.entrySet()) {
+            if (!entry.getValue().isJsonObject()) continue;
+            JsonObject skin = entry.getValue().getAsJsonObject();
+            barnSkins.put(entry.getKey(), new BarnSkin(entry.getKey(),
+                plain(string(skin.get("displayname"), entry.getKey())), string(skin.get("item"), "")));
+        }
+        if (gardenLevels.size() != 15 || gardenLevels.getLast() != 60_120L
+            || offerMilestones.size() != 30 || offerMilestones.getLast() != 10_000L
+            || uniqueVisitorMilestones.size() != 32 || uniqueVisitorMilestones.getLast() != 300L
+            || cropRequirements.size() != 10 || personalBests.size() != 13 || maxLarva != 5
+            || farmingCapCosts.size() != 10 || fortuneCosts.size() != 15 || barnSkins.size() != 4)
+            throw new IllegalArgumentException("Garden summary catalogue is incomplete.");
         Map<String, Visitor> visitors = new LinkedHashMap<>();
         for (JsonElement value : rawVisitors) {
             if (!value.isJsonObject()) continue;
@@ -210,7 +238,11 @@ public final class ProfileGardenData {
             throw new IllegalArgumentException("Garden mutation or chip catalogue is incomplete.");
         return new Catalogue(Map.copyOf(milestones), List.copyOf(upgradeCosts), Map.copyOf(visitors),
             Map.copyOf(composter), Map.copyOf(plots), Map.copyOf(plotCosts), Map.copyOf(greenhouse),
-            Map.copyOf(mutations), List.copyOf(chips), loadedAt, cached);
+            Map.copyOf(mutations), List.copyOf(chips), List.copyOf(gardenLevels),
+            List.copyOf(offerMilestones), List.copyOf(uniqueVisitorMilestones),
+            Map.copyOf(cropRequirements), Map.copyOf(personalBests), maxLarva,
+            List.copyOf(farmingCapCosts), List.copyOf(fortuneCosts), Map.copyOf(barnSkins),
+            loadedAt, cached);
     }
 
     private static List<Long> cumulative(JsonArray steps) {
@@ -230,6 +262,14 @@ public final class ProfileGardenData {
             for (var entry : step.getAsJsonObject().entrySet())
                 total.merge(entry.getKey(), entry.getValue().getAsInt(), Integer::sum);
             values.add(Map.copyOf(total));
+        }
+        return values;
+    }
+    private static Map<String, Integer> integerMap(JsonObject object) {
+        Map<String, Integer> values = new LinkedHashMap<>();
+        for (var entry : object.entrySet()) {
+            try { values.put(entry.getKey(), entry.getValue().getAsInt()); }
+            catch (RuntimeException ignored) {}
         }
         return values;
     }
@@ -260,10 +300,17 @@ public final class ProfileGardenData {
     public record Greenhouse(String id, String name, String rewardFormula, int maximum,
                              List<Map<String, Integer>> costs) {}
     public record Mutation(String id, String name, String rarity, boolean analyzable) {}
+    public record BarnSkin(String id, String name, String item) {}
     public record Catalogue(Map<String, List<Long>> milestones, List<Integer> cropUpgradeCosts,
                             Map<String, Visitor> visitors, Map<String, Composter> composter,
                             Map<String, Plot> plots, Map<String, List<PlotCost>> plotCosts,
                             Map<String, Greenhouse> greenhouse,
                             Map<String, Mutation> mutations, List<Long> chipCosts,
+                            List<Long> gardenLevels, List<Long> offerMilestones,
+                            List<Long> uniqueVisitorMilestones, Map<String, Integer> cropRequirements,
+                            Map<String, Integer> personalBests, int maxLarva,
+                            List<Map<String, Integer>> farmingCapCosts,
+                            List<Map<String, Integer>> farmingFortuneCosts,
+                            Map<String, BarnSkin> barnSkins,
                             long loadedAt, boolean cached) {}
 }

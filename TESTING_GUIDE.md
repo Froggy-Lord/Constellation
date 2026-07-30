@@ -2290,15 +2290,22 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 ### Profile Garden
 
 - [ ] Enable `profileGarden`, open `/pv` and select Garden. Expected: the separate Garden request loads asynchronously for the selected profile while the screen remains responsive.
-- [ ] Compare Garden level and XP, Copper, unlocked plots, selected/unlocked barn skins and Larva with the in-game Garden. Expected: every value matches and level progress targets the next exact cumulative threshold.
+- [ ] Compare Garden level and XP, Copper, unlocked plots, selected/unlocked barn skins and Larva with the in-game Garden. Expected: every value matches, level progress targets the next exact cumulative threshold and max is level 15 at 60,120 XP.
+- [ ] Compare Default, Red, Medieval and Sunny Barn skins. Expected: selected/unlocked/locked state matches; API-only future skin IDs remain visible as Unknown.
+- [ ] Toggle Barn-skin rows and their zero-to-100 limit. Expected: the summary count remains stable, zero is unlimited and only rows change.
 - [ ] Compare all standard crops. Expected: Wheat through Wild Rose show exact lifetime collection totals and crop-upgrade levels; future unknown crop IDs remain visible and marked.
 - [ ] Compare several crops immediately below and on milestone thresholds. Expected: current level out of 46 and remaining crops advance exactly; the repository increments are accumulated rather than treated as absolute values.
 - [ ] Compare crop upgrades from zero through nine. Expected: Copper paid sums the first N costs and reaches 7,685/7,685 at upgrade nine.
 - [ ] Toggle milestone, crop-upgrade and Copper details, zero-crop hiding, DEFAULT/COLLECTED/UPGRADE/MILESTONE/NAME sorting and the crop limit. Expected: rows change independently without changing totals.
+- [ ] Toggle crop unlock requirements and Personal Bests. Expected: the ten standard unlock levels and all 13 maintained Personal Best targets match the in-game progression; each detail hides independently.
 - [ ] Compare visitor totals and several visitors. Expected: total offers, unique visitors, per-NPC visits/completions, zero hiding and the visitor limit match the Garden API.
 - [ ] Compare visitor names and rarities. Expected: all 139 maintained visitors resolve into 62 Uncommon, 47 Rare, 25 Legendary, four Mythic and one Special entry; future IDs remain marked Unknown.
 - [ ] Test ALL/UNCOMMON/RARE/LEGENDARY/MYTHIC/SPECIAL/UNKNOWN filters and COMPLETED/VISITS/RARITY/NAME sorts. Expected: accepted, visits and rejected counts remain exact while only ordering/filtering changes.
+- [ ] Compare accepted-offer and unique-visitor milestones. Expected: progress uses 30 cumulative tiers through 10,000 offers and 32 tiers through 300 unique visitors, including exact amount to next.
+- [ ] Toggle visitor milestones independently. Expected: visitor totals and NPC rows remain unchanged.
 - [ ] Compare Jacob contests, claimed contests, Bronze/Silver/Gold medals, Farming cap, Double Drops and Personal Bests perk. Expected: each matches the profile.
+- [ ] Compare Jacob perk costs. Expected: Farming Level Cap reaches 16 Gold Medals and 1,550 Jacob's Tickets over ten levels; Extra Farming Fortune reaches 66 Gold Medals and 3,750 Tickets over 15 levels.
+- [ ] Toggle contest perk costs independently. Expected: contest/medal/perk levels remain while only paid/maximum cost rows hide.
 - [ ] Compare organic matter, fuel, compost units/items, conversion ticks, last save and all five composter upgrades. Expected: exact stored values and levels appear.
 - [ ] Compare each composter upgrade from level zero through 25. Expected: level is shown out of 25 and cumulative Copper paid reaches 35,650/35,650 at max.
 - [ ] Compare all 24 plots with Configure Plots. Expected: plot numbers, unlocked state and 5×5 grid coordinates match; future unknown IDs do not inflate known unlocked-tier costs.
@@ -2317,7 +2324,7 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle chip rows and Sowdust details independently. Expected: installed totals and levels remain stable while only the selected presentation changes.
 - [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
 - [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.
-- [ ] Refresh online, restart offline and reopen Garden. Expected: the validated crop, visitor, composter, plot, greenhouse, 41-mutation and 19-step chip catalogue survives for the configured one-to-168-hour cache period.
+- [ ] Refresh online, restart offline and reopen Garden. Expected: the complete validated Garden catalogue, including summary milestones and Barn skins, survives for the configured one-to-168-hour cache period.
 - [ ] Force the progression catalogue unavailable with no cache. Expected: core Garden totals, visitors, contests, composter and greenhouse still render; crop progression says unavailable.
 
 ### Profile Rift
