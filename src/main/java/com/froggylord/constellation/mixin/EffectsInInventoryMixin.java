@@ -14,6 +14,6 @@ public class EffectsInInventoryMixin {
     @Inject(method = "extractRenderState", at = @At("HEAD"), cancellable = true)
     private void constellation$hide(GuiGraphicsExtractor g, int mx, int my, CallbackInfo ci) {
         PhoenixConfig cfg = ConstellationClient.cfg().phoenix;
-        if (cfg != null && cfg.hideStatusEffects) ci.cancel();
+        if (cfg != null && cfg.enabled && cfg.hideStatusEffects) ci.cancel();
     }
 }

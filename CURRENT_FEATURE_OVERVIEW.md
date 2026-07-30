@@ -495,7 +495,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 ## Phoenix: general quality of life
 
 - Fullbright and fog/overlay controls
-- Auto sprint and instant/legacy sneak options
+- Auto sprint with an independent water policy and exact synthesized-key cleanup
+- Instant camera-height sneak without changing player movement or server state
+- Non-wrapping hotbar wheel selection that still allows every adjacent slot change
 - Etherwarp target overlay
 - Armor and equipment wardrobe keys with hotbar, number-row or custom slot mapping
 - Wardrobe page, open, unequip and two-slot swap keys
@@ -525,6 +527,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Auto-save reminder
 - Sign calculator and input helpers
 - Hotbar and inventory safety
+- Render-state-only attached-arrow hiding and correctly master-gated inventory-effect hiding
 - Optional hiding of lightning, fire, falling blocks and selected visual clutter
 
 ## Shared systems

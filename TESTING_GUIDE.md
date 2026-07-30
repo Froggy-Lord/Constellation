@@ -2438,3 +2438,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open a number/text editor and press Escape. Expected: the edit cancels without closing the browser; a second Escape returns to the normal module config.
 - [ ] Check structured profile maps, history lists and editor-backed collections. Expected: raw complex state is absent and its existing purpose-built screen or command remains authoritative.
 - [ ] Restart the client after several edits. Expected: saved values reload from the normal Constellation config with no parallel settings file.
+
+## Phoenix input and visual integrity
+
+- [ ] Enable Phoenix and Auto Sprint, then walk forward on land without holding Sprint. Expected: sprint engages through the normal sprint key state.
+- [ ] Stop moving, disable Auto Sprint, disable Phoenix and disconnect in separate trials. Expected: Constellation releases only its synthesized sprint-key state and never leaves sprint held.
+- [ ] Enter water with `autoSprintInWater` disabled and enabled. Expected: the sprint key is released in the first case and retained in the second.
+- [ ] Test Auto Sprint with vanilla Hold and Toggle Sprint modes. Expected: the NoFrills-derived behavior works in both and disabling it returns control to the physical key.
+- [ ] Enable Instant Sneak and repeatedly crouch/stand in first and third person. Expected: camera eye height changes immediately with no smooth interpolation; movement, collision and sent sneak state remain vanilla.
+- [ ] Disable Instant Sneak or Phoenix. Expected: vanilla camera interpolation returns immediately.
+- [ ] Enable Hotbar Scroll Lock at slots 1 and 9 and scroll outward. Expected: selection stays at the edge instead of wrapping; scrolling inward and between all neighboring slots remains normal.
+- [ ] Disable Hotbar Scroll Lock or Phoenix. Expected: vanilla 1-to-9 and 9-to-1 wrapping returns.
+- [ ] Enable Hide Attached Arrows and view a player with arrows stuck in them. Expected: attached-arrow render count becomes zero without deleting any entity, passenger or world arrow.
+- [ ] Disable Hide Attached Arrows while Phoenix remains enabled. Expected: attached arrows render normally.
+- [ ] Toggle Hide Status Effects with Phoenix enabled and disabled. Expected: inventory status effects hide only when both the feature and Phoenix master are enabled.
+- [ ] Run `/phoenixinput` and change every named option. Expected: status matches the typed browser and changes persist through the single normal config file.

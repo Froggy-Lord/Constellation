@@ -9,6 +9,8 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean noHurtCam = true;
     public boolean noViewBob = true;
     public boolean autoSprint = false;
+    // ported from NoFrills (GPL-3.0-only): features/general/AutoSprint.java
+    public boolean autoSprintInWater = false;
     public boolean hideLightning = true;
     public boolean hideFallingBlocks = true;
     public boolean hideFireOverlay = true;

@@ -22,6 +22,7 @@ public class PhoenixQol extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
+        PhoenixInputControls.init((PhoenixConfig) config);
         PhoenixWardrobeKeybinds.init((PhoenixConfig) config);
         PhoenixSlotBinding.init((PhoenixConfig) config);
         PhoenixCenturyCake.init((PhoenixConfig) config);
@@ -34,6 +35,7 @@ public class PhoenixQol extends BaseConstellation {
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        PhoenixInputControls.registerCommands(dispatcher);
         PhoenixWardrobeKeybinds.registerCommands(dispatcher);
         PhoenixSlotBinding.registerCommands(dispatcher);
         PhoenixCenturyCake.registerCommands(dispatcher);

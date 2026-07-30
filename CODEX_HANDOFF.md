@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.790 Complete Typed Configuration Browser.
+Last updated: 2026-07-30 for version 0.9.791 Phoenix Input and Visual Integrity.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.790`.
+- Current artifact version: `0.9.791`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3245,6 +3245,24 @@ The drip helper allowlist now includes `AdvancedConfigScreen.java`.
 Release verification passed on July 30: `./gradlew build -q` completed with 11 tests successful and zero failed. The 160-second headless client ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no advanced-screen, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load, transformer or texture-load error signature. The exact tested jar SHA-256 is `d7c669383ac8bbbc46e7a3a6594f657795ddac150ec278e1d700616a78efd8c2`.
 
 The tested `constellation-0.9.790.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-191315-0.9.790/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The release is queued in the drip repository as Froggy-Lord commit `93fd8974ea`.
+
+## July 30 version 0.9.791 Phoenix Input and Visual Integrity
+
+The scalar dead-setting audit found 147 fields referenced only by their declaration. This is a candidate list, not proof that every field is a feature gap: aliases, nested saved-state fields and reflective consumers require manual classification. The audit nevertheless proved several advertised Phoenix core toggles had no consumer.
+
+`PhoenixInputControls.java`, `CameraInstantSneakMixin.java`, `HotbarScrollLockMixin.java`, `PhoenixConfig.java` and `PhoenixQol.java` port NoFrills GPL-3.0-only `features/general/AutoSprint.java`, `features/tweaks/InstantSneak.java`, `features/misc/HotbarScrollLock.java`, `mixin/CameraMixin.java` and `mixin/MouseHandlerMixin.java`. Auto Sprint synthesizes only the vanilla sprint key, supports an independent water policy and releases the state it created when the feature/master/world becomes inactive. Instant Sneak bypasses only the camera eye-height lerp. Scroll Lock redirects only the wheel-selected slot call and rejects exact 0-to-8 or 8-to-0 wraps.
+
+`HideStuckArrowsMixin.java` was materially wrong: it scanned and discarded passenger arrow entities on every Player tick, ignored `hideAttachedArrows`, and did not target the avatar attached-arrow render count. It now ports Devonian GPL-3.0-only `mixin/PlayerRendererMixin.java`, sets `AvatarRenderState.arrowCount` to zero only when Phoenix and the feature are enabled, and never mutates an entity or packet. `EffectsInInventoryMixin.java` now also requires both Phoenix master and `hideStatusEffects`.
+
+`/phoenixinput` reports the six repaired states and allows explicit changes to Auto Sprint, water behavior, Instant Sneak, Scroll Lock, attached arrows and inventory effects. Every value is also available in the typed browser. No movement, interaction or gameplay packet is sent directly.
+
+The drip helper allowlist includes all three new runtime/mixin files and both corrected legacy mixins.
+
+Release verification passed on July 30: `./gradlew build -q` completed with 11 tests successful and zero failed. The 160-second headless client ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no target, redirect, injection, mixin-apply, transformer, initializer, fatal or crash signature. The exact tested jar SHA-256 is `d2780499153c6a677702380d5a9c146f462a5823067bd705b91c41a1f725c623`.
+
+The tested `constellation-0.9.791.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-192403-0.9.791/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; Phoenix therefore remains in the user's existing disabled state until deliberately enabled.
 
 ## Required dedicated visual-design pass
 

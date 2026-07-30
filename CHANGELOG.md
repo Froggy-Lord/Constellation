@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.791 (2026-07-30) — Phoenix Input and Visual Integrity
+
+- implemented the previously inert Auto Sprint with an independent water policy
+- implemented instant camera-height sneak and non-wrapping hotbar wheel selection
+- replaced destructive passenger-arrow removal with render-state-only attached-arrow hiding
+- made attached-arrow and inventory-effect behavior respect both their own toggle and Phoenix master
+- added one status/option command while retaining complete typed-browser access
+
 ## 0.9.790 (2026-07-30) — Complete Typed Configuration Browser
 
 - added one searchable browser for every primitive and text option in each module
