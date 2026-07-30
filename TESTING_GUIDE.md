@@ -2224,3 +2224,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Inject or encounter a collection ID newer than the catalogue. Expected: it remains visible in amber with its API amount and no guessed tier.
 - [ ] Refresh online and restart offline. Expected: current validated data becomes the last-good cache, offline keeps it and incomplete responses never replace it.
 - [ ] Disable `profileCollections`. Expected: the tab reports disabled and starts no collection request.
+
+### Profile minions
+
+- [ ] Enable `profileMinions`, open `/pv`, then select Minions. Expected: the page lists 60 known Farming, Mining, Combat, Foraging and Misc minion families.
+- [ ] Compare a co-op profile with Hypixel's Crafted Minions menu. Expected: co-op unique crafts are the union of every member's `crafted_generators`, so the same tier is counted once.
+- [ ] Enable personal-only mode. Expected: summaries, rows, filters and slot progress use only the viewed member's crafts; disabling it restores co-op progress.
+- [ ] Check known XI and XII families. Expected: wood, Gravel, Sand, End Stone and the configured combat families cap at XI while current upgradeable families cap at XII.
+- [ ] Check an uncrafted, partly crafted and fully crafted family. Expected: highest tier, distinct crafted tiers, missing count and completion match the API without assuming intermediate tiers were crafted.
+- [ ] Compare “Slots from crafted minions” and the next threshold with Hypixel. Expected: it starts from five base slots and applies only unique-craft bonuses; Community Shop bonus slots are deliberately excluded.
+- [ ] Test ALL and every named category, partial name/ID search, personal-only, hide-uncrafted and hide-maxed together. Expected: every filter composes without changing summary totals.
+- [ ] Test CATEGORY, NAME, TIER, MISSING and COMPLETION sorts. Expected: ties remain alphabetical and the chosen source controls the entire visible list.
+- [ ] Set `profileMinionsLimit` to zero and positive values and precision from zero to two. Expected: zero is unlimited, positive values bound detail rows, and summaries remain unchanged.
+- [ ] Toggle summary, category, personal comparison, completion, missing and slot-progress fields independently. Expected: each changes only its own presentation.
+- [ ] Inject or encounter a generator family newer than the catalogue. Expected: it remains visible in amber under Unknown with its observed highest tier and no guessed maximum.
+- [ ] Disable `profileMinions`. Expected: the tab reports disabled and performs no extra work.

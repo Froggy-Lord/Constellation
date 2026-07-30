@@ -2972,7 +2972,19 @@ Every co-op member's `collection` contribution is summed exactly as SkyBlockPv d
 
 Version `0.9.771` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `81b1c0848c98d053ee5089523f6f400cb6e1663032c20b5e8f5f6984e465fc12`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163850-0.9.771/`; only `constellation-0.9.771.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163850-0.9.771/`; only `constellation-0.9.771.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `d397a828f8`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.772 Complete Profile Minions
+
+`ProfileMinionCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Minions page. Co-op `player_data.crafted_generators` aggregation and highest-tier presentation port SkyBlockPv modified-MIT `api/data/profile/SkyBlockProfile.kt`, `data/repo/MinionCodecs.kt` and `screens/windowed/tabs/collection/MinionScreen.kt`; the required notice sits beside the implementation. Its current repository category data supplies 60 Farming, Mining, Combat, Foraging and Misc families plus exact XI/XII caps. Crafted-minion slot thresholds are cross-checked against the official Hypixel SkyBlock Wiki Minions table.
+
+The calculator unions every co-op member's distinct generator-tier IDs while retaining the viewed member separately. It does not assume that lower tiers were crafted merely because a higher tier exists: highest tier, distinct crafts, missing tiers and completion are calculated independently. The summary reports the five base slots plus only unique-craft bonuses and labels them as slots from crafted minions; public generator data cannot safely reconstruct Community Shop purchases. The next unique-craft threshold and remaining crafts are exact.
+
+Personal/co-op scope, category/search, uncrafted/maxed hiding, category/name/tier/missing/completion sorts, limits, precision and each presentation group are independently configurable. Unknown future IDs remain visible in amber with their observed highest tier and no guessed cap. The implementation is local and deterministic and adds no render-time network work.
+
+Version `0.9.772` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `be4f06eb2eaebd922f0abe9ce66b1d77b696af1d6fdedb2f4372f71a85fc35d0`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-164736-0.9.772/`; only `constellation-0.9.772.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
 
 ## Required dedicated visual-design pass
 

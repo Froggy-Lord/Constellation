@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.772 (2026-07-30) — Complete Profile Minions
+
+- added all 60 current minion families with exact XI/XII caps and per-tier crafted progress
+- added personal and co-op unique crafts, crafted-minion slot progress and missing tier counts
+- added category/search filtering, personal-only mode, uncrafted/maxed hiding, five sorts and limits
+- kept unknown future generator families visible without guessing their caps
+
 ## 0.9.771 (2026-07-30) — Complete Profile Collections
 
 - added all 87 current Farming, Mining, Combat, Foraging, Fishing and Rift collections

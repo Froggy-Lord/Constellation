@@ -23,6 +23,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Legacy 1.8 item NBT is upgraded through the maintained 26.2 data fixer; a malformed or disabled container is isolated without hiding valid containers
 - The item menu and item pages scroll independently, grid height is configurable from one to six rows, and tooltips, decorations and slot colors can be changed separately
 - Wealth combines exact purse/profile-bank currency with conservative item values across every decoded storage category and Sacks
+- Collections shows official tiers, co-op totals, personal contribution, next thresholds and unlocks across every current category
+- Minions shows all 60 current families, exact XI/XII caps, personal or co-op crafted tiers, missing crafts and crafted-minion slot progress
+- Collection and Minion pages support independent search, category, sorting, hiding, limit, precision and presentation controls; unknown future IDs stay visible
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

@@ -8,6 +8,7 @@ import com.froggylord.constellation.api.ProfileSlayerCalculator;
 import com.froggylord.constellation.api.ProfilePetCalculator;
 import com.froggylord.constellation.api.ProfileBestiaryData;
 import com.froggylord.constellation.api.ProfileCollectionData;
+import com.froggylord.constellation.api.ProfileMinionCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -35,7 +36,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -129,6 +130,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 8) {
             drawCollections(g);
+            return;
+        }
+        if (tab == 9) {
+            drawMinions(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -393,6 +398,59 @@ public final class ProfileViewerScreen extends Screen {
                 String value = font.width(row.value) > width / 2
                     ? font.plainSubstrByWidth(row.value, width / 2 - 24) + "..." : row.value;
                 g.text(font, value, width - 19 - font.width(value), y + 6, row.color, false);
+            }
+            y += 21;
+        }
+        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
+    }
+
+    private void drawMinions(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileMinions) {
+            g.text(font, "Minions viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileMinionCalculator.Result data = minionRows();
+        if (!data.available()) {
+            g.text(font, "Minion API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileMinionsShowSummary) {
+            rows.add(row(cfg.profileMinionsPersonalOnly ? "Personal unique crafts" : "Co-op unique crafts",
+                data.unique() + "/" + data.knownMaximum()));
+            if (cfg.profileMinionsShowPersonal && !cfg.profileMinionsPersonalOnly)
+                rows.add(row("Personal unique crafts", data.personalUnique() + "  co-op " + data.coopUnique()));
+            rows.add(row("Slots from crafted minions", Integer.toString(data.slotsFromCrafts())));
+            if (cfg.profileMinionsShowSlotProgress)
+                rows.add(row("Next crafted-minion slot", data.nextSlotAt() == 0 ? "Maximum reached"
+                    : data.nextSlotRemaining() + " crafts  (" + data.unique() + "/" + data.nextSlotAt() + ")"));
+            if (data.unknownFamilies() > 0)
+                rows.add(new Row("Uncatalogued families", Integer.toString(data.unknownFamilies()), 0xFFFFAA55));
+        }
+        int limit = Math.clamp(cfg.profileMinionsLimit, 0, 1000);
+        int decimals = Math.clamp(cfg.profileMinionsDecimals, 0, 2);
+        int shown = 0;
+        for (ProfileMinionCalculator.Minion minion : data.minions()) {
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            String label = cfg.profileMinionsShowCategory
+                ? minion.category() + "  " + minion.name() : minion.name();
+            StringBuilder value = new StringBuilder(minion.unknown() ? "Unknown cap"
+                : "Tier " + minion.highestTier() + "/" + minion.maxTier());
+            if (cfg.profileMinionsShowMissing && !minion.unknown())
+                value.append("  ").append(minion.missing()).append(" missing");
+            if (cfg.profileMinionsShowCompletion && !minion.unknown())
+                value.append("  ").append(fixed(minion.completion() * 100, decimals)).append("%");
+            rows.add(new Row(label, value.toString(), minion.unknown() ? 0xFFFFAA55
+                : minion.crafted() >= minion.maxTier() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+        }
+        int y = 108 - scroll;
+        for (Row row : rows) {
+            if (y > 98 && y < height - 22) {
+                g.fill(12, y, width - 12, y + 18, 0xA0181825);
+                g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
+                g.text(font, row.value, width - 19 - font.width(row.value), y + 6, row.color, false);
             }
             y += 21;
         }
@@ -708,6 +766,19 @@ public final class ProfileViewerScreen extends Screen {
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
+        if (tab == 9) {
+            var cfg = ConstellationClient.cfg().lyra;
+            ProfileMinionCalculator.Result data = minionRows();
+            int summary = cfg.profileMinionsShowSummary
+                ? 2 + (cfg.profileMinionsShowPersonal && !cfg.profileMinionsPersonalOnly ? 1 : 0)
+                    + (cfg.profileMinionsShowSlotProgress ? 1 : 0) + (data.unknownFamilies() > 0 ? 1 : 0)
+                : 0;
+            int shown = cfg.profileMinionsLimit <= 0 ? data.minions().size()
+                : Math.min(data.minions().size(), cfg.profileMinionsLimit);
+            int max = Math.max(0, (summary + shown) * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
         int max = Math.max(0, rows(profile(), member(profile())).size() * 21 - (height - 132));
         scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
         return true;
@@ -805,6 +876,13 @@ public final class ProfileViewerScreen extends Screen {
             result.uuid().toString().replace("-", ""), cfg.profileCollectionsCategory,
             cfg.profileCollectionsSearch, cfg.profileCollectionsSort,
             cfg.profileCollectionsHideZero, cfg.profileCollectionsHideMaxed);
+    }
+
+    private ProfileMinionCalculator.Result minionRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileMinionCalculator.calculate(profile(), result.uuid().toString().replace("-", ""),
+            cfg.profileMinionsCategory, cfg.profileMinionsSearch, cfg.profileMinionsSort,
+            cfg.profileMinionsPersonalOnly, cfg.profileMinionsHideUncrafted, cfg.profileMinionsHideMaxed);
     }
 
     private void startCollections(boolean refresh) {
