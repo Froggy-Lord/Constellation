@@ -390,6 +390,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Storage, backpack and container previews
 - Container total-value calculation
 - Inventory search and configurable inventory buttons
+- Exact multi-page Accessory Bag collection saved independently per SkyBlock profile
+- Accessory-family missing, upgrade, downgrade and highest-owned classification in item tooltips
+- Searchable and filterable missing/upgrade panel with price-per-Magical-Power ordering
+- Gradual bounded item/price loading, last-good catalogue cache, recombobulation state and hovered-family bag highlights
 - Slot/item protection with explicit multi-click overrides where configured
 - Museum, salvage, NPC trade, auction and drop protections
 

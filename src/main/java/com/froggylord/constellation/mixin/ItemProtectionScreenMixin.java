@@ -66,6 +66,7 @@ public abstract class ItemProtectionScreenMixin {
         com.froggylord.constellation.constellation.SpiritMaskState.drawSlot(graphics, slot);
         com.froggylord.constellation.constellation.LyraBazaarHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.LyraAuctionHelper.drawSlot(graphics, screen, slot);
+        com.froggylord.constellation.constellation.LyraAccessoryHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.HerculesVisitorHelper.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.HerculesStereoHarmony.drawSlot(graphics, screen, slot);
         com.froggylord.constellation.constellation.HerculesGreenhouse.drawSlot(graphics, screen, slot);

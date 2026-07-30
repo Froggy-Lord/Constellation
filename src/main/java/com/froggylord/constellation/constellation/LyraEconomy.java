@@ -46,6 +46,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraStorageValue.init(cfg);
         LyraBazaarHelper.init(cfg);
         LyraAuctionHelper.init(cfg);
+        LyraAccessoryHelper.init(cfg);
     }
 
     // accessed by LyraTracker via package-private
@@ -90,6 +91,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraStorageValue.registerCommands(dispatcher);
         LyraBazaarHelper.registerCommands(dispatcher);
         LyraAuctionHelper.registerCommands(dispatcher);
+        LyraAccessoryHelper.registerCommands(dispatcher);
     }
 
     private static long parse(String s) {

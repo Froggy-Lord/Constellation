@@ -1435,6 +1435,16 @@ Enable Lyra and Phoenix protection/inventory features. Use inexpensive test item
 
 ### Test
 
+- [ ] Enable Lyra, `accessoryDisplay`, `missingAccessoryHelper`, `accessoryTooltip` and `accessoryBagPanel`, then open every page of the exact Accessory Bag. Expected: `/accessoryhelper` reports each scanned page and remembers only real accessory IDs from container slots.
+- [ ] Switch SkyBlock profiles and scan a different set of pages. Expected: owned accessories and recombobulation state remain isolated; `/accessoryhelper clear confirm` removes only the current profile.
+- [ ] Hover an unowned accessory, a higher family tier, a lower family tier and the highest owned tier in inventory, Auction House or a recipe view. Expected: the tooltip distinguishes Missing, Upgrade, Better tier owned and Highest tier owned using the configured colors and exact family tiers.
+- [ ] Keep the Accessory Bag open while the catalogue and item metadata load. Expected: the panel fills gradually without freezing, request bursts or replacing a valid cached catalogue when the endpoint is unavailable.
+- [ ] Compare panel Magical Power gains with the item's rarity, including Hegemony Artifact's doubled power. Expected: only positive incremental power is shown; unresolved metadata stays absent instead of being guessed.
+- [ ] Compare known-price rows against Auction/Bazaar replacement prices. Expected: price-per-Magical-Power sorting uses incremental power and unknown prices remain unpriced rather than zero-cost.
+- [ ] Test `/accessoryhelper filter all|missing|upgrades`, `/accessoryhelper search <text|clear>`, `next`, `previous`, `rows <3-18>` and `refresh`. Expected: panel state changes immediately, persists where configured and manual refresh remains asynchronous.
+- [ ] Toggle `helper`, `tooltip`, `panel`, `highest`, `missing`, `upgrades`, `downgrades`, `owned`, `pricepermp`, `price`, `mp`, `highlight`, `recomb` and `persist` through `/accessoryhelper option`, then set `missing`, `upgrade`, `owned` and `highlight` through `/accessoryhelper color`. Expected: each surface and valid six/eight-digit ARGB color changes independently.
+- [ ] Hover a panel row while its owned family tier is visible in the bag. Expected: only matching family slots receive the configured highlight; leaving the row clears it.
+- [ ] Disconnect networking after one successful catalogue fetch and reopen the bag. Expected: the last-good `config/constellation-accessories.json` catalogue remains usable and no server click, purchase, Wiki opening or gameplay packet occurs.
 - [ ] Enable Lyra, `auctionHelper` and `auctionOutbidAlert`, then have another player outbid one of your auctions. Expected: the original Hypixel chat remains, the configured local title appears and the configured sound plays once.
 - [ ] Toggle `auctionOutbidTitle` and `auctionOutbidSound` independently, then change `auctionOutbidTitleText` and `auctionOutbidColor`. Expected: only the selected presentation channels change; unrelated `[Auction]` messages never trigger it.
 - [ ] Run `/auctionhelper option outbid off|on`, `/auctionhelper option outbidtitle off|on` and `/auctionhelper option outbidsound off|on`. Expected: each setting persists and reconnecting clears only transient duplicate-message state.

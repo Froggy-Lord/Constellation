@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.761 Profile-Safe Collection Tracker.
+Last updated: 2026-07-30 for version 0.9.762 Complete Accessory Helper.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.761`.
+- Current artifact version: `0.9.762`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2854,6 +2854,20 @@ The first synchronized collection can auto-select, while `/collectiontracker tra
 
 Version `0.9.761` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `77ba0a7b33cf38df89c323edcbebf93fbc6b54cd2cb348970cdfec62c9a058cb`.
 
-The previous `0.9.760` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-150917-0.9.761/`; only `constellation-0.9.761.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Fill in the drip commit hash after enqueueing.
+The previous `0.9.760` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-150917-0.9.761/`; only `constellation-0.9.761.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `190e4991ce`, authored only as Froggy-Lord.
 
 The next agent should test real Collection menu lore against `TESTING_GUIDE.md` before broadening transport; if live API refresh is later desired, use an explicitly configured trustworthy provider rather than silently adopting the standalone tracker's third-party bearer-token service.
+
+## July 30 version 0.9.762 Complete Accessory Helper
+
+`LyraAccessoryHelper.java`, `LyraConfig.java`, `LyraEconomy.java` and `ItemProtectionScreenMixin.java` replace Lyra's declaration-only `accessoryDisplay` and `missingAccessoryHelper` settings with a complete runtime feature. Profile/page collection, recombobulation tracking, accessory-family reports, missing/upgrade/downgrade/highest-owned semantics, highest-family filtering, price-per-Magical-Power ordering and hovered-family bag highlights port Skyblocker LGPL `skyblock/accessories/AccessoriesHelper.java`, `AccessoriesHelperWidget.java` and `AccessoriesContainerSolver.java`.
+
+Skyblocker does not bundle its accessory-family catalogue. Its maintained source downloads the licensed feature's data from `https://hysky.de/api/accessories`; Constellation ports that exact endpoint and the asynchronous cache behavior from `skyblock/item/tooltip/info/DataTooltipInfo.java` and `TooltipInfoType.java`. A current Meowdding family cache was inspected but not copied because its separate repository contains no usable license. The Constellation transport requires at least fifty valid entries before replacing state, saves only a last-good response under `config/constellation-accessories.json`, retains that cache across network failures, uses strict five/12-second connect/request timeouts and never performs network work on the render thread.
+
+The exact optional-page Accessory Bag title activates collection. Player-inventory slots are excluded. Every observed real SkyBlock item ID is stored under the current profile and page, so rescanning a changed page replaces only that page. Recombobulation state is removed and rebuilt for the rescanned page rather than becoming permanently sticky. Tooltips classify a catalogued accessory against the highest owned member of its family and optionally expose positive incremental Magical Power. The bag panel supports All/Missing/Upgrades filters, text search, highest-tier-only mode, three-to-18 rows, pagination, prices, Magical Power and price-per-power sorting.
+
+Item names, rarity-derived Magical Power and prices enrich at one catalogue item per second. The renderer reads only in-memory maps, so opening the panel cannot launch hundreds of item/Auction requests. Hegemony Artifact receives the source-correct doubled Magical Power. Unknown metadata and prices remain absent rather than guessed. `/accessoryhelper` exposes status, refresh, page controls, filters, search, row count, current-profile clearing and every primary Boolean. The helper never clicks an accessory, opens a Wiki, buys an item or sends a gameplay packet.
+
+Version `0.9.762` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `73c4bacb24ba552c8cb4faf66c8dce2510c4c5f709197411f796ff6c4823e3d7`.
+
+The previous `0.9.761` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-152206-0.9.762/`; only `constellation-0.9.762.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Fill in the drip commit hash after enqueueing.

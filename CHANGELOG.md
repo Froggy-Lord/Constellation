@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.762 (2026-07-30) — Complete Accessory Helper
+
+- replaced Lyra's two advertised but inactive accessory settings with a complete Skyblocker accessory-helper port
+- added profile-safe, page-safe Accessory Bag collection plus recombobulation state and family-tier classification
+- added missing, upgrade, downgrade and highest-owned tooltips with Magical Power gains and configurable bag highlights
+- added a filterable, searchable, paged missing/upgrade panel sorted by price per Magical Power with bounded metadata and price loading
+- added a last-good disk catalogue cache, fail-open refresh behavior and full `/accessoryhelper` controls without copying unlicensed family data
+
 ## 0.9.761 (2026-07-30) — Profile-Safe Collection Tracker
 
 - ported SkyHanni's exact collection-menu and co-op-total parsing model and SkyblockCollectionTracker's session-rate state
