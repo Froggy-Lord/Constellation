@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.751 Complete SkyBlock Guide Highlights.
+Last updated: 2026-07-30 for version 0.9.752 Chocolate Factory Inventory Depth.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.751`.
+- Current artifact version: `0.9.752`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2722,4 +2722,16 @@ The exact `Power Stones Guide` requires `Learned: Not Yet` plus a following `Pow
 
 Version `0.9.751` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `0629fada9e6ffa9e455aa4942785a1e009e87351dd2911148d998654d8a9fee8`.
 
-The previous `0.9.750` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-134446-0.9.751/`; only `constellation-0.9.751.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.750` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-134446-0.9.751/`; only `constellation-0.9.751.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `bfec03f7c8`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.752 Chocolate Factory Inventory Depth
+
+`AurigaChocolateFactory.java` and `AurigaConfig.java` deepen the live-enabled Factory inventory surfaces by porting SkyHanni LGPL-3.0-or-later `features/inventory/chocolatefactory/CFInventory.kt`, `CFTooltip.kt`, `CFBarnManager.kt`, `CFTimeTowerManager.kt` and its data-loader patterns, plus Skyblocker LGPL-3.0-or-later `skyblock/chocolatefactory/ChocolateFactorySolver.java` tooltip and slot-text behavior.
+
+Every parsed affordable rabbit and Coach can receive a base highlight before best/best-affordable priority. Exact Rabbit Barn `current/max`, milestone unclaimed-reward and Time Tower `current/max` charge lore drive independent Barn, milestone, Tower-active and Tower-full colors. Barn sensitivity is zero-to-100 remaining spaces through config or `/chocolatefactory barnthreshold`; full Tower takes priority over active Tower.
+
+Top-left text covers parsed non-maxed rabbit, Coach, Prestige, Rabbit Barn, Hand-Baked Chocolate, Time Tower and Rabbit Shrine levels plus Hitman available/purchased state. Upgrade tooltips now optionally include cost per effective CPS. Prestige adds chocolate remaining and ETA; Time Tower adds current production increase, active production and charges. Unknown/malformed values remain absent or explicitly Unknown rather than manufacturing state. Every new surface and color is independently configurable.
+
+Version `0.9.752` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `4d69f32bcbfaffa3d24b6b45683f9adc09a330c591ffd37d14f7e62ba5848510`.
+
+The previous `0.9.751` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-135134-0.9.752/`; only `constellation-0.9.752.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.

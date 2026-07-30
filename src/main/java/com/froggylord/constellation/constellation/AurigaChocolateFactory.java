@@ -51,6 +51,9 @@ public final class AurigaChocolateFactory {
     private static final Pattern TOWER_CHAT = Pattern.compile("^TIME TOWER! Your Chocolate Factory production has increased by \\+([\\d.]+)x for (\\d+)h!$");
     private static final Pattern EGGS = Pattern.compile("Available eggs: (\\d+)");
     private static final Pattern HITMAN = Pattern.compile("Purchased slots: (\\d+)/(\\d+)");
+    private static final Pattern BARN = Pattern.compile("Your Barn: (\\d+)/(\\d+) Rabbits");
+    private static final Pattern CHARGES = Pattern.compile("Charges: (\\d+)/(\\d+)");
+    private static final Pattern UNCLAIMED = Pattern.compile("You have \\d+ unclaimed rewards?!");
 
     private static AurigaConfig cfg;
     private static AbstractContainerScreen<?> screen;
@@ -59,6 +62,9 @@ public final class AurigaChocolateFactory {
     private static boolean warned;
     private static long previousTowerRemaining = Long.MIN_VALUE;
     private static int lastStray = -1;
+    private static int prestigeLevel = -1, handBakedLevel = -1, towerLevel = -1, shrineLevel = -1, barnLevel = -1;
+    private static int barnRabbits = -1, barnCapacity = -1, towerCharges = -1, towerMaxCharges = -1;
+    private static boolean milestoneUnclaimed;
 
     private AurigaChocolateFactory() {}
 
@@ -75,6 +81,7 @@ public final class AurigaChocolateFactory {
                     screen = null;
                     state = empty();
                     lastStray = -1;
+                    resetInventoryState();
                 }
             });
         });
@@ -99,6 +106,9 @@ public final class AurigaChocolateFactory {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("warning")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("minutes", IntegerArgumentType.integer(0, 60))
                     .executes(c -> { cfg.chocolateFactoryWarningMinutes = IntegerArgumentType.getInteger(c, "minutes"); save(); return status(); })))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("barnthreshold")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("spaces", IntegerArgumentType.integer(0, 100))
+                    .executes(c -> { cfg.chocolateFactoryBarnThreshold = IntegerArgumentType.getInteger(c, "spaces"); save(); return status(); })))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("option")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("name", StringArgumentType.word())
                     .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("state", StringArgumentType.word())
@@ -136,6 +146,16 @@ public final class AurigaChocolateFactory {
         Matcher hm = HITMAN.matcher(hitman);
         int purchased = -1, maximum = -1;
         if (hm.find()) { purchased = Integer.parseInt(hm.group(1)); maximum = Integer.parseInt(hm.group(2)); }
+        prestigeLevel = level(container.getMenu().getSlot(27).getItem());
+        handBakedLevel = level(container.getMenu().getSlot(38).getItem());
+        towerLevel = level(container.getMenu().getSlot(39).getItem());
+        shrineLevel = level(container.getMenu().getSlot(41).getItem());
+        barnLevel = level(container.getMenu().getSlot(35).getItem());
+        Matcher barn = BARN.matcher(joinedLore(container.getMenu().getSlot(35).getItem()));
+        if (barn.find()) { barnRabbits = Integer.parseInt(barn.group(1)); barnCapacity = Integer.parseInt(barn.group(2)); }
+        Matcher charges = CHARGES.matcher(tower);
+        if (charges.find()) { towerCharges = Integer.parseInt(charges.group(1)); towerMaxCharges = Integer.parseInt(charges.group(2)); }
+        milestoneUnclaimed = container.getMenu().slots.size() > 53 && UNCLAIMED.matcher(joinedLore(container.getMenu().getSlot(53).getItem())).find();
         state = new State(chocolate, cps, multiplier, List.copyOf(upgrades), best, affordable,
             prestigeRemaining, canPrestige, maxPrestige, towerActive, towerMultiplier, eggs, purchased, maximum);
         stray(container);
@@ -226,6 +246,8 @@ public final class AurigaChocolateFactory {
     }
 
     public static void drawSlot(GuiGraphicsExtractor graphics, AbstractContainerScreen<?> container, Slot slot) {
+        // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/chocolatefactory/CFInventory.kt
+        // ported from Skyblocker (LGPL-3.0-or-later): skyblock/chocolatefactory/ChocolateFactorySolver.java getText
         if (!active() || container != screen || slot == null) return;
         int color = 0;
         if (cfg.chocolateFactoryStrayRabbits && slot.index >= 0 && slot.index <= 26) {
@@ -234,10 +256,22 @@ public final class AurigaChocolateFactory {
         }
         if (cfg.chocolateFactoryPrestige && slot.index == 27 && state.canPrestige()) color = cfg.chocolateFactoryPrestigeColor;
         Upgrade ranked = upgrade(slot.index);
+        if (cfg.chocolateFactoryShowAllAffordable && ranked != null && ranked.affordable()) color = cfg.chocolateFactoryAffordableColor;
         if (cfg.chocolateFactoryBestUpgrade && slot.index == state.bestSlot() && ranked != null)
             color = ranked.affordable() ? cfg.chocolateFactoryBestColor : cfg.chocolateFactoryUnaffordableColor;
         if (cfg.chocolateFactoryBestAffordable && slot.index == state.affordableSlot()) color = cfg.chocolateFactoryAffordableColor;
+        if (cfg.chocolateFactoryBarnWarning && slot.index == 35 && barnRabbits >= 0 && barnCapacity >= 0
+            && barnCapacity - barnRabbits <= Math.max(0, cfg.chocolateFactoryBarnThreshold)) color = cfg.chocolateFactoryBarnFullColor;
+        if (cfg.chocolateFactoryMilestoneWarning && slot.index == 53 && milestoneUnclaimed) color = cfg.chocolateFactoryMilestoneColor;
+        if (cfg.chocolateFactoryTowerStateHighlight && slot.index == 39) {
+            if (towerMaxCharges > 0 && towerCharges >= towerMaxCharges) color = cfg.chocolateFactoryTowerFullColor;
+            else if (state.towerActive()) color = cfg.chocolateFactoryTowerActiveColor;
+        }
         if (color != 0) graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, color);
+        if (cfg.chocolateFactoryShowLevels) {
+            String text = slotText(slot.index, ranked);
+            if (!text.isBlank()) graphics.text(Minecraft.getInstance().font, text, slot.x + 1, slot.y + 1, cfg.chocolateFactoryLevelColor, true);
+        }
     }
 
     public static List<Component> appendTooltip(AbstractContainerScreen<?> container, ItemStack stack, List<Component> original) {
@@ -245,12 +279,31 @@ public final class AurigaChocolateFactory {
         Slot hovered = ((com.froggylord.constellation.mixin.ContainerScreenAccessor) container).constellation$hoveredSlot();
         if (hovered == null) return original;
         Upgrade upgrade = upgrade(hovered.index);
-        if (upgrade == null) return original;
         ArrayList<Component> out = new ArrayList<>(original);
+        if (upgrade == null) {
+            if (hovered.index == 27 && cfg.chocolateFactoryPrestigeTooltip && !state.maxPrestige()
+                && (state.canPrestige() || state.prestigeRemaining() >= 0)) {
+                out.add(Component.literal("\u00a78----------------"));
+                out.add(Component.literal("\u00a77Chocolate remaining: \u00a76" + compact(Math.max(0, state.prestigeRemaining()))));
+                out.add(Component.literal("\u00a77Time until prestige: \u00a7e" + (state.canPrestige() ? "Now"
+                    : state.cps() > 0 ? formatTime(state.prestigeRemaining() / state.cps()) : "Unknown")));
+                return out;
+            }
+            if (hovered.index == 39 && cfg.chocolateFactoryTimeTowerTooltip && state.cps() > 0 && state.multiplier() > 0 && state.towerMultiplier() > 0) {
+                double raw = state.cps() / state.multiplier();
+                out.add(Component.literal("\u00a78----------------"));
+                out.add(Component.literal("\u00a77Tower CPS increase: \u00a76" + compact(raw * state.towerMultiplier())));
+                out.add(Component.literal("\u00a77CPS while active: \u00a76" + compact(state.towerActive() ? state.cps() : raw * (state.multiplier() + state.towerMultiplier()))));
+                if (towerMaxCharges > 0) out.add(Component.literal("\u00a77Charges: \u00a7e" + towerCharges + "/" + towerMaxCharges));
+                return out;
+            }
+            return original;
+        }
         out.add(Component.literal("\u00a78----------------"));
         out.add(Component.literal("\u00a77CPS increase: \u00a76" + compact(upgrade.increase())));
         out.add(Component.literal("\u00a77Time until affordable: \u00a7e" + (upgrade.affordable() ? "Now" : formatTime((upgrade.cost() - state.chocolate()) / state.cps()))));
         if (cfg.chocolateFactoryPayback) out.add(Component.literal("\u00a77Payback time: \u00a7b" + formatTime(upgrade.payback())));
+        if (cfg.chocolateFactoryExtraTooltipStats) out.add(Component.literal("\u00a77Cost per CPS: \u00a76" + compact(upgrade.cost() / upgrade.increase())));
         int rank = state.upgrades().indexOf(upgrade) + 1;
         out.add(Component.literal("\u00a77Efficiency rank: \u00a7f" + rank + " / " + state.upgrades().size()));
         return out;
@@ -339,6 +392,12 @@ public final class AurigaChocolateFactory {
             case "tower" -> cfg.chocolateFactoryTimeTower = value; case "towerchat" -> cfg.chocolateFactoryTimeTowerChat = value;
             case "towertitle" -> cfg.chocolateFactoryTimeTowerTitle = value; case "towersound" -> cfg.chocolateFactoryTimeTowerSound = value;
             case "hitman" -> cfg.chocolateFactoryShowHitman = value; case "levels" -> cfg.chocolateFactoryShowLevels = value;
+            case "allaffordable" -> cfg.chocolateFactoryShowAllAffordable = value;
+            case "barn" -> cfg.chocolateFactoryBarnWarning = value; case "milestone" -> cfg.chocolateFactoryMilestoneWarning = value;
+            case "towerhighlight" -> cfg.chocolateFactoryTowerStateHighlight = value;
+            case "extrastats" -> cfg.chocolateFactoryExtraTooltipStats = value;
+            case "prestigetooltip" -> cfg.chocolateFactoryPrestigeTooltip = value;
+            case "towertooltip" -> cfg.chocolateFactoryTimeTowerTooltip = value;
             default -> { local("Unknown Chocolate Factory option."); return 0; }
         } save(); return status();
     }
@@ -346,4 +405,15 @@ public final class AurigaChocolateFactory {
     private static String on(boolean value) { return value ? "on" : "off"; }
     private static void local(String text) { Minecraft mc = Minecraft.getInstance(); if (mc.player != null) mc.player.sendSystemMessage(Component.literal("\u00a76[Chocolate Factory] \u00a7f" + text)); }
     private static void save() { ConstellationClient.saveConfig(); }
+    private static String slotText(int slot, Upgrade upgrade) {
+        if (upgrade != null && upgrade.level() > 0) return Integer.toString(upgrade.level());
+        return switch (slot) {
+            case 27 -> text(prestigeLevel, -1); case 35 -> text(barnLevel, 245); case 38 -> text(handBakedLevel, 10);
+            case 39 -> text(towerLevel, 15); case 41 -> text(shrineLevel, 20);
+            case 51 -> state.availableEggs() < 0 || state.hitmanSlots() < 0 ? "" : state.availableEggs() + (state.hitmanSlots() < state.hitmanMax() ? "/" + state.hitmanSlots() : "");
+            default -> "";
+        };
+    }
+    private static String text(int level, int maximum) { return level < 0 || level == maximum ? "" : Integer.toString(level); }
+    private static void resetInventoryState() { prestigeLevel=handBakedLevel=towerLevel=shrineLevel=barnLevel=-1; barnRabbits=barnCapacity=towerCharges=towerMaxCharges=-1; milestoneUnclaimed=false; }
 }

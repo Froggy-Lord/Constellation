@@ -1593,11 +1593,16 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Move and resize the Experiment HUD in `/cn hud`. Expected: it appears only during a live experiment or its five-second grace and persists.
 - [ ] Enable Auriga and `chocolateFactoryHelper`, then open the exact Chocolate Factory menu. Expected: no similarly named or unrelated inventory receives an overlay.
 - [ ] Compare all seven rabbit upgrades and the Coach. Expected: the best-efficiency highlight follows lowest chocolate-cost per added production, while green marks the best currently affordable option.
+- [ ] Enable `chocolateFactoryShowAllAffordable`. Expected: every affordable parsed rabbit/Coach upgrade receives the base affordable color, while best and best-affordable priority colors still win.
+- [ ] Inspect rabbit, Coach, Prestige, Rabbit Barn, Hand-Baked Chocolate, Time Tower, Rabbit Shrine and Hitman slots with `chocolateFactoryShowLevels` enabled. Expected: parsed non-maxed levels or Hitman egg/slot state appear in the top-left; unknown and configured max levels remain clean.
+- [ ] Fill the Rabbit Barn to the configured remaining-space threshold, leave a Factory milestone reward unclaimed, activate Time Tower and fill its charges. Expected: only slots 35, 53 and 39 use their independent warning colors, with full Tower taking priority over active Tower.
 - [ ] Hover every ranked upgrade. Expected: added production, affordability time, optional payback and efficiency rank match the menu; zero or missing production reports Unknown.
+- [ ] Enable extra stats and hover an upgrade, Prestige and Time Tower. Expected: cost per added CPS, chocolate/ETA until Prestige, Tower CPS increase, active CPS and current/max charges derive from the same menu snapshot.
 - [ ] Reach a prestige requirement and inspect Hitman. Expected: prestige changes to Ready and configured egg/slot rows reflect the menu.
 - [ ] Wait for normal and Golden stray Rabbits. Expected: the correct slot highlights and enabled sound fires once per appearance, then may fire again after reopening.
 - [ ] Activate Time Tower normally, then use `/chocolatefactory warning 1` for a boundary test. Expected: the profile timer persists, warning fires once at one minute and expiry fires once at zero without stale-login spam.
 - [ ] Run `/chocolatefactory`, `toggle`, `cleartower` and representative `option <name> <on|off>` commands. Expected: readable status and persistent independent settings.
+- [ ] Run `/chocolatefactory barnthreshold 0`, then `1` and a larger safe value. Expected: Barn warning sensitivity changes without altering the actual parsed rabbit/capacity totals.
 - [ ] Move and resize the Chocolate Factory HUD in `/cn hud`. Expected: it appears only while the menu or a saved active Time Tower is relevant, plus editor grace.
 - [ ] In the Garden, run `/cropstart set <crop>` for a crop different from the held tool. Expected: only that named crop receives the manual start and `clearstart <crop>` removes only it.
 - [ ] Enable Auriga and `anvilHelper`, then open the exact SkyBlock Anvil. Expected: the helper and movable HUD remain absent from unrelated containers.

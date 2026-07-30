@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.752 (2026-07-30) — Chocolate Factory Inventory Depth
+
+- ported SkyHanni's all-affordable, barn-full, unclaimed-milestone and active/full Time Tower menu highlights
+- ported Skyblocker's rabbit, Coach, Prestige, Barn, Shrine, Hand-Baked Chocolate, Time Tower and Hitman slot text
+- added deeper cost-per-CPS, prestige timing, Time Tower production and charge tooltips
+- added independent warnings, tooltips, level text, colors and configurable barn-capacity threshold
+
 ## 0.9.751 (2026-07-30) — Complete SkyBlock Guide Highlights
 
 - ported SkyHanni's missing-progress rules for task, menu, Abiphone, minion, consumable, Jacob, story, collection, essence and one-time Guide views

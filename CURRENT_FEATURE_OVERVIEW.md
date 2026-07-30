@@ -205,6 +205,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Independent Guide category, overlay, marker, tooltip, click, price, text and color controls with `/skyblockguide` commands
 - Exact Chocolate Factory screen helper with live rabbit and coach efficiency ranking
 - Best and best-affordable highlights, affordability/payback tooltips and prestige guidance
+- Optional all-affordable highlights plus barn-capacity, unclaimed-milestone and active/full Time Tower state warnings
+- Rabbit, Coach, Prestige, Barn, Shrine, Hand-Baked Chocolate, Time Tower and Hitman slot-level/status text
+- Cost-per-CPS, prestige ETA/remaining and Time Tower production/charge tooltip details
 - Stray and Golden Rabbit alerts, Hitman status and a movable factory HUD
 - Profile-aware Time Tower persistence with configurable warning and expiry channels
 - Exact Anvil screen state with complete enchanted-book enchant and level comparison
