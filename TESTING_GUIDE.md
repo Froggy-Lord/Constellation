@@ -1823,3 +1823,26 @@ Enable Andromeda and enter Living Cave or Living Stillness. Run `/livingcave`; i
 - [ ] Test one to four pieces, missing `lm_evo`, 100% pieces and all four maxed. Expected: values clamp from 0-100 and Compact Maxed reduces the full maxed set to one row.
 - [ ] Use `/livingcave number metalrange|animation|expiry|defenserange|snakerange|barlength` and every option, then restart. Expected: values remain bounded and every choice persists.
 - [ ] Leave Living Cave, change world or disconnect mid-animation. Expected: Metal, Defense and Snake transient state clears without affecting the suit item data.
+
+## Rift Colosseum suite
+
+Enable Andromeda and enter the Rift Colosseum. Run `/colosseum`; it should report Bacte phase, Blobbercyst, warning and tracked-Tentacle state locally.
+
+- [ ] Spawn a Blobbercyst. Expected: only the exact RemotePlayer name receives the configured red box and label; normal players and similarly named entities remain unchanged.
+- [ ] Toggle Blobber box, label, distance, range and through-wall behavior independently. Expected: recognition stays exact and dead/despawned Blobbercysts disappear immediately.
+- [ ] Start Bacte and observe each growth line from B through Bacte. Expected: phase advances from 1 through 5 based on the authoritative new-name length.
+- [ ] Hide chat or miss a growth line while the boss label is loaded. Expected: the cleaned `[Lv] name current/max` label corrects phase within a tick.
+- [ ] Despawn/end Bacte. Expected: after the two-second missing-label grace, phase and Tentacles clear.
+- [ ] Enable the default-off Bacte Phase HUD. Expected: it appears only in Colosseum during an active phase by default and optionally includes the current partial boss name.
+- [ ] Enable Show Inactive. Expected: `Not Active` remains visible in Colosseum but still hides outside the area.
+- [ ] Step outside the arena and observe warning lines with increasing exclamation marks. Expected: each exact line recalculates `250ms x (12 - warning level)`, plays the configured sound and refreshes a hundredth-second title countdown.
+- [ ] Return safely or stop receiving warning lines. Expected: the forced short-lived title expires within roughly 250ms and never remains stale.
+- [ ] Toggle title, subtitle, sound and local chat independently. Expected: each channel changes without suppressing Hypixel’s original warning.
+- [ ] Observe Bacte Tentacles at the arena floor. Expected: only Slimes sized 4-8 whose ceiling Y is exactly 68 and which pair with a `Bacte Tentacle` label receive waypoints.
+- [ ] Damage a Tentacle normally. Expected: its display loses one HP from a generic damage packet.
+- [ ] Let the wall or another non-generic source damage it. Expected: hit/HP display does not decrement.
+- [ ] Compare phases 1-3, phase 4 and phase 5. Expected: Tentacles show remaining out of 4, remaining out of 3, then accumulated Hits respectively.
+- [ ] Kill/despawn a Tentacle. Expected: its marker clears on zero health, death or missing observation.
+- [ ] Test Tentacle box, beam, label, distance, range, height, color and through-wall options independently.
+- [ ] Run `/colosseum reset`, every number control and every option, then restart. Expected: transient fight state clears and saved preferences remain bounded and persistent.
+- [ ] Leave Colosseum or reconnect mid-fight. Expected: phase, warnings and Tentacles clear immediately.

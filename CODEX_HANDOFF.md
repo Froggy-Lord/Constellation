@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.738 Complete Rift Living Cave Suite.
+Last updated: 2026-07-30 for version 0.9.739 Complete Rift Colosseum Suite.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.738`.
+- Current artifact version: `0.9.739`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2564,4 +2564,20 @@ The optional movable suit HUD reads exact integer `lm_evo` from item ExtraAttrib
 
 Version `0.9.738` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `eb479fae8a0443148491c5030b88f2f42b5997c389b69d8356fa3932e8de0c65`.
 
-The previous `0.9.737` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-120334-0.9.738/`; only `constellation-0.9.738.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
+The previous `0.9.737` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-120334-0.9.738/`; only `constellation-0.9.738.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `32c7d0f86c`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.739 Complete Rift Colosseum Suite
+
+`AndromedaColosseum.java`, `AndromedaConfig.java`, `AndromedaRift.java` and the passive damage-packet hook in `ClientPacketListenerMixin.java` port SkyHanni LGPL-3.0-or-later `features/rift/area/colosseum/BacteApi.kt`, `BlobbercystsHighlight.kt`, `KillZoneWarning.kt`, `TentacleWaypoint.kt` and `config/features/rift/area/colosseum/ColosseumConfig.kt`. Defaults match the live 26.1.2 profile: Blobbercysts, kill-zone warning and Tentacle waypoints enabled; separate Bacte phase HUD disabled.
+
+Blobbercysts require an exact cleaned `Blobbercyst` RemotePlayer name, a live entity and exact Colosseum area. Box, label, distance, 10-to-150-block range, color and wall mode are independent. It does not mutate entity glow or invisibility state.
+
+Bacte phase uses both authoritative evidence paths. The exact `<old> is growing into <new>!` chat line maps the new one-to-five-character name to phases 1-5. A cleaned live `[LvN] <partial-name> current/max` armor-stand label corrects missed chat every tick. Two seconds without a valid label returns to Not Active and clears Tentacles. The optional movable HUD supports active-only or inactive visibility plus partial boss name.
+
+The kill-zone warning matches only `Get back in the arena or you will DIE` followed by one-to-twelve exclamation marks. Each server line sets the source deadline `now + 250ms * (12 - count)`. While the most recent line is younger than 250 milliseconds, a zero-fade, configurable one-to-ten-tick title is refreshed with hundredth-second time remaining. Title, subtitle, zero-pitch experience-orb sound and local chat are independent; the original server message is never blocked.
+
+Tentacles require a live `Bacte Tentacle` armor-stand label paired within five blocks to a Slime of size 4-8 whose ceiling Y is exactly 68. This preserves the source's floor-only check. A new passive `handleDamageEvent` return hook forwards the real `ClientboundDamageEventPacket`; only a packet whose resolved DamageSource message ID is `generic` increments hits, explicitly excluding wall damage. Tentacles expire after two seconds without label observation, zero health, death or entity removal. Phases 1-3 show remaining out of four, phase 4 remaining out of three, and phase 5 accumulated hits. Box, beam, label, distance, range, height, color and wall mode are independent. `/colosseum` exposes local status, transient reset and primary tuning/options. No Colosseum helper attacks, moves, aims, clicks, chats to the server, issues a command or creates a gameplay packet.
+
+Version `0.9.739` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, all 52 named souls, all three Mirrorverse sections, the 2,201-node/5,293-edge graph, 73 Motes prices and the 14-spot/56-button dataset, printed `Constellation ready. 14 constellations loaded.`, and contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `626820e7e505471b7dc818beb79b9d690bfaa9f4fc1751b5c900762ddd553202`.
+
+The previous `0.9.738` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-121205-0.9.739/`; only `constellation-0.9.739.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.

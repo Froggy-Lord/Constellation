@@ -49,6 +49,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Held Frozen Water Pungi versus four exact Pickaxes selects the useful Snake head or calm tail target
 - Optional movable Living Metal Suit HUD using exact `lm_evo` progression, total, per-piece bars/percent and compact maxed mode
 - Full `/livingcave` status, reset, range, animation and presentation controls
+- Exact `Blobbercyst` RemotePlayer recognition with configurable boxes, labels, distance, range, colors and wall state
+- Bacte phase 1-5 tracking from authoritative growth chat and live boss labels with optional movable phase/name HUD
+- Exact progressive out-of-arena deadline derived from the server’s one-to-twelve exclamation sequence
+- Independent kill-zone title, subtitle, sound and local-chat channels with continuously refreshed hundredth-second countdown
+- Floor-only size 4-8 Bacte Tentacle recognition, configurable box/beam/label/distance and generic-damage-only hit tracking
+- Phase-aware Tentacle display: four HP normally, three in phase 4 and hit count in phase 5
+- Full `/colosseum` status, transient reset, range, height, title and feature controls
 - Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
 - Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
 - Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes

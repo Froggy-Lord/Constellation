@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.739 (2026-07-30) — Complete Rift Colosseum Suite
+
+- added exact Blobbercyst recognition with configurable boxes, labels, range and wall behavior
+- added Bacte phase tracking from both growth chat and live boss labels with an optional movable HUD
+- added the server’s progressive arena kill-zone deadline, continuously refreshed title/subtitle and independent alert channels
+- added floor-only Bacte Tentacle waypoints and packet-accurate generic-damage hit/HP tracking that excludes wall damage
+- added complete presentation controls and `/colosseum` status, tuning and reset commands
+
 ## 0.9.738 (2026-07-30) — Complete Rift Living Cave Suite
 
 - added Living Metal lapis-transition animation with exact click/block pairing, expiry and particle controls

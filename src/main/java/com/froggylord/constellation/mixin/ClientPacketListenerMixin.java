@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerPositionPacket;
 import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
+import net.minecraft.network.protocol.game.ClientboundDamageEventPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.world.phys.Vec3;
@@ -121,6 +122,12 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))
     private void constellation$onParticle(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
         ConstellationClient.instance().packets().fire(packet);
+    }
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/rift/area/colosseum/TentacleWaypoint.kt
+    @Inject(method = "handleDamageEvent", at = @At("RETURN"))
+    private void constellation$onDamage(ClientboundDamageEventPacket packet, CallbackInfo ci) {
+        com.froggylord.constellation.constellation.AndromedaColosseum.onDamage(packet);
     }
 
     // ported from Devonian (GPL-3.0): features/dungeons/f7/TerminalHideCompletion.kt

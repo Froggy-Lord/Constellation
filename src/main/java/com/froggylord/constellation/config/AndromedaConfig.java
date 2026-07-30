@@ -262,5 +262,33 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean livingMetalSuitBars = true;
     public boolean livingMetalSuitPercent = true;
     public int livingMetalSuitBarLength = 20;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/area/colosseum/ColosseumConfig.kt
+    public boolean colosseumBlobbercysts = true;
+    public boolean colosseumBlobberBox = true;
+    public boolean colosseumBlobberLabel = true;
+    public boolean colosseumBlobberDistance = false;
+    public boolean colosseumBlobberThroughWalls = true;
+    public int colosseumBlobberRange = 80;
+    public int colosseumBlobberColor = 0x80FF0000;
+    public boolean colosseumKillZoneWarning = true;
+    public boolean colosseumKillZoneTitle = true;
+    public boolean colosseumKillZoneSubtitle = true;
+    public boolean colosseumKillZoneSound = true;
+    public boolean colosseumKillZoneChat = false;
+    public int colosseumKillZoneTitleTicks = 2;
+    public int colosseumKillZoneColor = 0xFFFF5555;
+    public boolean colosseumTentacles = true;
+    public boolean colosseumTentacleBox = true;
+    public boolean colosseumTentacleBeam = true;
+    public boolean colosseumTentacleLabel = true;
+    public boolean colosseumTentacleDistance = false;
+    public boolean colosseumTentacleThroughWalls = true;
+    public int colosseumTentacleRange = 120;
+    public int colosseumTentacleBeamHeight = 10;
+    public int colosseumTentacleColor = 0xFFFF5555;
+    public boolean colosseumPhaseHud = false;
+    public boolean colosseumPhaseShowInactive = false;
+    public boolean colosseumPhaseShowBossName = true;
+    public int colosseumPhaseColor = 0xFF55FF55;
     public java.util.Map<String, java.util.Set<String>> riftFoundSouls = new java.util.LinkedHashMap<>();
 }

@@ -41,12 +41,14 @@ public class AndromedaRift extends BaseConstellation {
         AndromedaWestVillage.init(cfg);
         AndromedaDreadfarm.init(cfg);
         AndromedaLivingCave.init(cfg);
+        AndromedaColosseum.init(cfg);
         registerRenderer(AndromedaRiftCore::draw);
         registerRenderer(AndromedaRiftNavigation::draw);
         registerRenderer(AndromedaMotes::draw);
         registerRenderer(AndromedaWestVillage::draw);
         registerRenderer(AndromedaDreadfarm::draw);
         registerRenderer(AndromedaLivingCave::draw);
+        registerRenderer(AndromedaColosseum::draw);
     }
 
     @Override
@@ -59,9 +61,11 @@ public class AndromedaRift extends BaseConstellation {
             HudPosition.of(126,132),()->cfg.enabled&&cfg.westVerminTracker));
         hud.register(new com.froggylord.constellation.hud.LivingMetalSuitHudWidget(
             HudPosition.of(126,108),()->cfg.enabled&&cfg.livingMetalSuitHud));
+        hud.register(new HudWidget("andromeda-bacte-phase","Bacte Phase",
+            AndromedaColosseum::phaseHud,HudPosition.of(126,96),()->cfg.enabled&&cfg.colosseumPhaseHud));
     }
 
-    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);}
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);AndromedaMotes.registerCommands(dispatcher);AndromedaWestVillage.registerCommands(dispatcher);AndromedaDreadfarm.registerCommands(dispatcher);AndromedaLivingCave.registerCommands(dispatcher);AndromedaColosseum.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;
