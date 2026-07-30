@@ -15,7 +15,9 @@ public class ApolloHud extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
-        ApolloTelemetry.init((com.froggylord.constellation.config.ApolloConfig) config);
+        var cfg = (com.froggylord.constellation.config.ApolloConfig) config;
+        ApolloTelemetry.init(cfg);
+        ApolloCustomScoreboard.init(cfg);
     }
 
     @Override
@@ -31,10 +33,13 @@ public class ApolloHud extends BaseConstellation {
             HudPosition.of(76, 2), () -> cfg.enabled && cfg.vitalsHud));
         hud.register(new com.froggylord.constellation.hud.EffectsHudWidget(
             HudPosition.of(76, 14), () -> cfg.enabled && cfg.effectsHud));
+        hud.register(new com.froggylord.constellation.hud.CustomScoreboardHudWidget(
+            HudPosition.of(82, 24), () -> cfg.enabled && cfg.customScoreboard));
     }
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         ApolloTelemetry.registerCommands(dispatcher);
+        ApolloCustomScoreboard.registerCommands(dispatcher);
     }
 }

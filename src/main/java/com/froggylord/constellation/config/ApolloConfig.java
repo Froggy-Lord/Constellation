@@ -1,5 +1,12 @@
 package com.froggylord.constellation.config;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 public class ApolloConfig extends BaseConfigGroup {
 
     { enabled = false; }
@@ -70,4 +77,34 @@ public class ApolloConfig extends BaseConfigGroup {
     public int effectsActiveColor = 0xFF55FF55;
     public int effectsWarningColor = 0xFFFFFF55;
     public int effectsExpiredColor = 0xFFFF5555;
+
+    // ported from CryptKit (GPL-3.0-only): config/CryptkitConfig.java Sidebar
+    // cross-checked with SkyHanni (LGPL-3.0-or-later): config/features/gui/customscoreboard
+    public boolean customScoreboard = true;
+    public boolean customScoreboardHideVanilla = true;
+    public boolean customScoreboardShowServerLines = true;
+    public boolean customScoreboardUseCustomLines = true;
+    public boolean customScoreboardBackground = true;
+    public boolean customScoreboardOutline = false;
+    public boolean customScoreboardTextShadow = false;
+    public boolean customScoreboardHideEmptyLines = true;
+    public boolean customScoreboardHideConsecutiveEmptyLines = true;
+    public boolean customScoreboardHideEdgeEmptyLines = true;
+    public boolean customScoreboardHideIrrelevantLines = true;
+    public boolean customScoreboardUseCustomTitle = true;
+    public boolean customScoreboardPersistValues = true;
+    public String customScoreboardTitle = "SKYBLOCK";
+    public String customScoreboardTextAlignment = "LEFT";
+    public String customScoreboardTitleAlignment = "CENTER";
+    public int customScoreboardLineSpacing = 1;
+    public int customScoreboardMaxRows = 40;
+    public int customScoreboardBackgroundColor = 0xCC080810;
+    public int customScoreboardOutlineColor = 0xFF555577;
+    public int customScoreboardTitleColor = 0xFF55FFFF;
+    public int customScoreboardServerColor = 0xFFDDDDDD;
+    public int customScoreboardLabelColor = 0xFFAAAAAA;
+    public int customScoreboardValueColor = 0xFFFFFFFF;
+    public List<String> customScoreboardOrder = new ArrayList<>(List.of("server","bank","sbLevel","magicPower","tuning","powerStone","gems","quiver","godPot","mayor","party","election","area","purse","bits"));
+    public Set<String> customScoreboardHidden = new LinkedHashSet<>();
+    public Map<String,String> customScoreboardCachedValues = new LinkedHashMap<>();
 }

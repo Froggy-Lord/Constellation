@@ -2,6 +2,21 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Custom SkyBlock Scoreboard
+
+Enable Apollo and Custom Scoreboard, then join Hypixel SkyBlock. Open `/customscoreboard`.
+
+- [ ] Confirm the custom scoreboard appears and the vanilla sidebar disappears. Expected: only one scoreboard is visible; disabling the feature or leaving SkyBlock restores vanilla immediately.
+- [ ] Compare its server rows against the vanilla sidebar before enabling replacement. Expected: all non-hidden lines remain in score order, including unfamiliar lines.
+- [ ] Open the tab list and menus containing Bank, Bits, Gems, Magical Power, tuning, power, Quiver, God Pot, mayor, party, election or area information. Expected: recognized values update and can persist between sightings.
+- [ ] Search the line editor, click a name, and use Up or Down. Expected: filtering does not change saved order; visibility and order survive restarting.
+- [ ] Use Reset. Expected: the documented default server/stat ordering returns and hidden lines clear.
+- [ ] Toggle empty, consecutive, edge and irrelevant filtering. Expected: missing custom values and duplicate source rows change independently without discarding unknown server information.
+- [ ] Change title/text alignment, line spacing, row cap, title, background, outline, shadow and each color. Expected: changes apply immediately and persist.
+- [ ] Move and resize Custom Scoreboard in `/cn hud`. Expected: placement and scale persist.
+- [ ] Disable Hide Vanilla while leaving the custom scoreboard on. Expected: both sidebars render for comparison; reenabling it hides only vanilla.
+- [ ] Join a non-Hypixel server or leave SkyBlock. Expected: Constellation does not hide that server's scoreboard.
+
 ## Deep Caverns Guide
 
 Enable Aquila and Deep Caverns Guide. Defaults match the live profile: 30 points ahead, rainbow rendering, boxes and lines.

@@ -29,6 +29,7 @@
         "SpiritLeapScreenMixin",
         "SlayerDeathMixin",
         "ScreenshotMixin",
+        "ScoreboardSidebarMixin",
         "SignEditScreenMixin",
         "TerminalClickBlockMixin",
         "WarpShortenerMixin"

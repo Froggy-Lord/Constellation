@@ -11,6 +11,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Most individual features have their own toggle and detailed settings inside their constellation.
 - Puzzle, combat, movement, and aiming helpers are advisory overlays. They do not click or aim for you.
 
+## Apollo: HUD and interface
+
+- Movable and scalable custom SkyBlock scoreboard with safe vanilla-sidebar replacement
+- Live ordered server lines plus cached Purse, Bank, Bits, level, Magical Power, tuning, power, Gems, Quiver, God Pot, mayor, party, election and area values
+- Searchable per-line ordering and visibility editor with fail-open unknown-line preservation
+- Configurable filtering, title, alignment, spacing, row cap, background, outline, shadow, colors and persistence
+
 ## Andromeda: Rift
 
 - Rift time, area and progression displays

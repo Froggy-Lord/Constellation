@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.730 (2026-07-30) — Custom SkyBlock Scoreboard
+
+- added a movable and scalable custom scoreboard that safely replaces the vanilla sidebar only while active on Hypixel SkyBlock
+- added ordered server lines plus cached Purse, Bank, Bits, level, Magical Power, tuning, power, Gems, Quiver, God Pot, mayor, party, election and area values
+- added a searchable line editor with per-line show/hide and ordering, safe duplicate filtering and preserved unknown server information
+- added configurable title, alignment, spacing, row cap, background, outline, text shadow, six colors, persistence and complete `/customscoreboard` controls
+
 ## 0.9.729 (2026-07-30) — Glacite Tunnel Maps
 
 - added the complete 825-node Glacite Tunnels navigation graph with nearest-node recovery and weighted shortest paths
