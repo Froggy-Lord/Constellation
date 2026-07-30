@@ -2147,3 +2147,12 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Change `profileWealthItemsPerCategory` from 0 to 30. Expected: category totals remain while expanded item detail respects the configured limit.
 - [ ] Switch profiles or close/reopen during enrichment. Expected: results from the old generation never overwrite the newly selected profile.
 - [ ] Disable inventory APIs for the tested Hypixel profile. Expected: exact currency can remain visible, missing item wealth remains explicitly incomplete and no fabricated net worth is shown.
+
+### Profile skill progression
+
+- [ ] Open Skills for a profile with skill APIs enabled. Expected: every skill, including Hunting, shows an exact fractional level and its correct cap.
+- [ ] Compare Farming with Jacob's level-cap perks and Taming with sacrificed pet types. Expected: each cap rises from 50 toward 60 only from that profile's unlocks.
+- [ ] Check Foraging, Hunting, Runecrafting and Social. Expected: their caps are 54, 25, 25 and 25 and their distinct published XP curves are used.
+- [ ] Check a maxed skill with excess XP. Expected: it says Level cap, turns green and reports overflow separately without inventing levels beyond the cap.
+- [ ] Check a real zero-XP skill and a profile with skill APIs disabled. Expected: zero XP reports Level 0 while a missing field reports API disabled.
+- [ ] Toggle every `profileSkillsShow*` option, average inclusion option and decimal precision from zero to two. Expected: each changes only Skills presentation and persists after restart.

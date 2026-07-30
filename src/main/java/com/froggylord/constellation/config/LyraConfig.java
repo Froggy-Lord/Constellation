@@ -170,6 +170,15 @@ public class LyraConfig extends BaseConfigGroup {
     public int profileViewerInventoryRows = 5;
     public int profileViewerInventorySlotColor = 0xD020202C;
     public int profileViewerInventoryHoverColor = 0xE03C3C55;
+    public boolean profileSkillsShowAverage = true;
+    public boolean profileSkillsShowProgress = true;
+    public boolean profileSkillsShowRemaining = true;
+    public boolean profileSkillsShowTotalXp = true;
+    public boolean profileSkillsShowOverflow = true;
+    public boolean profileSkillsIncludeCarpentry = true;
+    public boolean profileSkillsIncludeHunting = true;
+    public boolean profileSkillsIncludeCosmeticInAverage = false;
+    public int profileSkillsDecimals = 2;
     public boolean profileWealth = true;
     public int profileWealthItemsPerCategory = 8;
     public int profileWealthMaxPriceRequests = 30;

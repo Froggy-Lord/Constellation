@@ -2,6 +2,7 @@ package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.api.ProfileViewerApi;
 import com.froggylord.constellation.api.ProfileItemDecoder;
+import com.froggylord.constellation.api.ProfileSkillCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -267,13 +268,37 @@ public final class ProfileViewerScreen extends Screen {
         return out;
     }
 
-    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/profileviewer2/pages/SkillsPage.java, utils/LevelCalculator.java
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/profileviewer2/pages/SkillsPage.java, widgets/SkillsInfoBoxWidget.java, utils/LevelCalculator.java
     private List<Row> skills(JsonObject m) {
+        var cfg = ConstellationClient.cfg().lyra;
+        List<ProfileSkillCalculator.Skill> skills = ProfileSkillCalculator.calculate(m);
         List<Row> out = new ArrayList<>();
-        for (String skill : List.of("farming", "mining", "combat", "foraging", "fishing", "enchanting", "alchemy", "taming", "carpentry", "runecrafting", "social")) {
-            double xp = number(number(path(m, "player_data.experience.SKILL_" + skill.toUpperCase(Locale.ROOT))),
-                number(path(m, "experience_skill_" + skill)));
-            out.add(row(title(skill), xp <= 0 ? "API disabled or no XP" : compact(xp) + " XP"));
+        int decimals = Math.clamp(cfg.profileSkillsDecimals, 0, 2);
+        if (cfg.profileSkillsShowAverage) {
+            double average = ProfileSkillCalculator.average(skills, cfg.profileSkillsIncludeCarpentry,
+                cfg.profileSkillsIncludeHunting, cfg.profileSkillsIncludeCosmeticInAverage);
+            out.add(row("Skill average", fixed(average, decimals)));
+        }
+        if (cfg.profileSkillsShowTotalXp) {
+            double total = skills.stream().filter(ProfileSkillCalculator.Skill::available)
+                .mapToDouble(ProfileSkillCalculator.Skill::xp).sum();
+            out.add(row("Total skill XP", compact(total)));
+        }
+        for (ProfileSkillCalculator.Skill skill : skills) {
+            if (!skill.available()) {
+                out.add(row(title(skill.id()), "API disabled"));
+                continue;
+            }
+            StringBuilder value = new StringBuilder(skill.maxed() ? "Level " + skill.cap()
+                : "Level " + fixed(skill.level(), decimals) + " / " + skill.cap());
+            if (cfg.profileSkillsShowProgress && !skill.maxed())
+                value.append("  ").append(Math.round(skill.progress() * 100)).append("%");
+            if (cfg.profileSkillsShowRemaining && !skill.maxed())
+                value.append("  ").append(compact(skill.remaining())).append(" left");
+            if (cfg.profileSkillsShowOverflow && skill.overflow() > 0)
+                value.append("  +").append(compact(skill.overflow())).append(" XP");
+            out.add(new Row(title(skill.id()), value.toString(),
+                skill.maxed() ? 0xFF55FF55 : ConstellationTheme.TEXT));
         }
         return out;
     }
@@ -490,6 +515,7 @@ public final class ProfileViewerScreen extends Screen {
     private static String string(JsonObject o,String key,String fallback){try{return o.has(key)?o.get(key).getAsString():fallback;}catch(Exception ignored){return fallback;}}
     private static boolean bool(JsonObject o,String key){try{return o.has(key)&&o.get(key).getAsBoolean();}catch(Exception ignored){return false;}}
     private static String title(String value){if(value.isBlank())return value;return Character.toUpperCase(value.charAt(0))+value.substring(1).toLowerCase(Locale.ROOT);}
+    private static String fixed(double value,int decimals){return String.format(Locale.ROOT,"%."+decimals+"f",value);}
     private static String compact(double value){if(value>=1_000_000_000)return String.format(Locale.ROOT,"%.2fb",value/1_000_000_000);if(value>=1_000_000)return String.format(Locale.ROOT,"%.2fm",value/1_000_000);if(value>=1_000)return String.format(Locale.ROOT,"%.1fk",value/1_000);return whole(value);}
     private static String whole(double value){return String.format(Locale.ROOT,"%,.0f",value);}
     private static String coins(double value){return value<=0?"API disabled or empty":compact(value)+" coins";}

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.766 (2026-07-30) — Exact Profile Skill Progression
+
+- replaced raw profile XP rows with exact Hypixel skill levels, caps, progress, remaining XP and overflow
+- added current Foraging and Hunting caps plus profile-dependent Farming and Taming caps
+- added configurable skill average composition, total XP, precision and progression detail
+- distinguished disabled skill APIs from real zero-XP skills
+
 ## 0.9.765 (2026-07-30) — Profile Wealth Breakdown
 
 - ported SkyBlockPv's currency and per-storage net-worth category model onto Constellation's conservative item-value engine

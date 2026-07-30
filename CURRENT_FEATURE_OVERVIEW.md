@@ -648,3 +648,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Tree-breaking audio recognizes only the exact `entity.creaking.death` sound.
 - Galatea and non-Galatea Hypixel sound scopes are independent; live-profile defaults keep Galatea audible and mute elsewhere.
 - `/treecleanup` exposes all settings plus current hidden-display and muted-sound diagnostics.
+
+## Profile skill progression
+
+- Exact published XP curves for every current normal and cosmetic skill, including Hunting
+- Current Foraging and Hunting limits plus profile-specific Farming and Taming caps
+- Fractional level, next-level percentage, remaining XP, maxed state and overflow XP
+- Configurable conventional skill average, total XP, decimal precision and included skill groups
+- Explicit API-disabled state instead of treating a legitimate zero-XP skill as unavailable

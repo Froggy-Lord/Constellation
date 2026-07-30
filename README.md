@@ -57,6 +57,8 @@ hud elements are draggable — open `/cn hud` and move stuff where you want it. 
 
 For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. For a staged in-game checklist, see `TESTING_GUIDE.md`.
 
+the profile viewer calculates exact skill levels and progress from hypixel's published curves, including hunting, the current foraging cap and profile-specific farming/taming caps.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.
