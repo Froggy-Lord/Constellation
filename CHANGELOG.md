@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.733 (2026-07-30) — Rift Core and Navigation
+
+- rebuilt the previously inactive Andromeda core with a live Rift time, Motes, session, soul and effigy HUD
+- added all 52 profile-aware Enigma Soul waypoints with collection detection, manual correction and complete render controls
+- added the complete 2,201-node Rift graph with shortest-path routing to any or the nearest missing Enigma Soul
+- added all three Mirrorverse waypoint sections and scoreboard-driven compact or full Stillgore effigy guidance
+- added low-time alerts, bounded rendering, section/row/channel controls, colors, ranges and complete `/riftguide` and `/riftnav` commands
+
 ## 0.9.732 (2026-07-30) — General Speed Presets
 
 - added the seven live farming speed presets with searchable editing, validation, deletion and default restoration

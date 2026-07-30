@@ -1630,7 +1630,21 @@ Enable Pegasus and configure message templates in the master Messages screen bef
 - [ ] Apply effects with different levels and durations. Expected: amplifier numerals, sorting, infinite filtering, row limit and warning colors follow settings.
 - [ ] Toggle panels and representative rows with `/apollohud option <name> <on|off>`. Expected: no toggle changes another panel or sends anything to the server.
 - [ ] Move and resize each Apollo panel independently in `/cn hud`. Expected: only visible or recently visible panels are editable and placement/scale persists.
-- [ ] Enable Andromeda in the Rift. Expected: timer and selected waypoints are Rift-only; collected Enigma Souls hide.
+- [ ] Enable Andromeda, enter the Rift and run `/riftguide`. Expected: status reports real time, Motes, current-profile soul count and currently parsed unbroken effigies; nothing appears outside the Rift.
+- [ ] Compare the movable Rift HUD with sidebar/tab values. Expected: time counts down accurately, Motes match, positive Mote gains accumulate only in the session row and leaving the Rift clears visit state.
+- [ ] Set `/riftguide lowtime 60` and test near one minute. Expected: enabled local chat/title/sound channels fire once when crossing the threshold and re-arm only after time rises above it.
+- [ ] Run `/riftguide souls allmissing`. Expected: all 52 green missing waypoints become eligible inside the configured range; nearest-only and found visibility obey their independent options.
+- [ ] Stand within four blocks of a soul and collect it normally. Expected: the closest waypoint becomes found for the active SkyBlock profile and hides immediately unless found visibility is enabled.
+- [ ] Run closest-found, closest-missing, all-found and all-missing corrections. Expected: only the current profile changes and state persists after restart.
+- [ ] Switch SkyBlock profiles. Expected: found-soul sets remain independent; an unknown profile starts with no fabricated collection state.
+- [ ] Run `/riftnav soul 1`, then `/riftnav nearest`. Expected: a blue path follows the actual Rift graph from the closest node to the selected or closest missing soul, followed by a bounded final segment.
+- [ ] Walk along a route and deviate by several blocks. Expected: shortest path recalculates from the new nearest graph node without teleporting, moving or aiming the player.
+- [ ] Test `/riftnav width`, `lookahead`, `arrival`, `beamheight`, `color` and every option. Expected: each affects only its saved presentation or arrival behavior.
+- [ ] Enable automatic nearest routing. Expected: the next closest missing soul is selected locally; finding it advances to another missing soul, while no server command or interaction is generated.
+- [ ] Enter each Mirrorverse section. Expected: only nearby Lava Path, Upside Down or Turbulator blocks render within the saved range; section toggles, colors, labels, line and wall mode remain independent.
+- [ ] Enter Stillgore Chateau with mixed broken/unbroken effigies. Expected: only gray scoreboard-marked unbroken effigies render, using exact compact-below or full source coordinates.
+- [ ] Toggle effigy box, beam, label, distance and wall mode; change range and beam height. Expected: every control changes only its matching primitive and no stale effigy remains after leaving.
+- [ ] Move and scroll-resize the Rift HUD in `/cn hud`. Expected: placement and scale persist and only enabled rows appear.
 - [ ] Enable Cygnus during a scheduled event. Expected: event timing/alerts match the calendar and fire once.
 - [ ] Test Diana with a Spade. Expected: burrow guidance updates from real particles/events and clears after completion.
 - [ ] Enable Apollo widgets one at a time. Expected: values update, can be moved/scaled, and do not overlap after you arrange them.

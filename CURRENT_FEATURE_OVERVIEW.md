@@ -22,10 +22,14 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 ## Andromeda: Rift
 
-- Rift time, area and progression displays
-- Enigma Soul waypoints with collected-soul hiding
-- Mirrorverse guidance and puzzle waypoints
-- Effigy status and waypoint support
+- Live Rift time, Motes, session gains, found-soul and unbroken-effigy HUD rows
+- Configurable low-time chat, title and sound warning with normal, warning and danger colors
+- All 52 Enigma Soul waypoints with SkyBlock-profile-aware collected state and automatic collection detection
+- Closest/all found or missing correction commands, found visibility, nearest-only mode and bounded box/beam/line/label rendering
+- Complete 2,201-node connected Rift navigation graph with weighted shortest paths to any or the nearest missing soul
+- Configurable path width, look-ahead, wall visibility, arrival behavior, blue default route and target guidance
+- Exact Lava Path, Upside Down Parkour and Turbulator Mirrorverse waypoint sets with independent sections and colors
+- Scoreboard-styled detection of all six unbroken Stillgore effigies with compact/full coordinate modes
 - Crux Talisman progress and bonuses
 - Motes and area information
 - West Village and Rift activity helpers

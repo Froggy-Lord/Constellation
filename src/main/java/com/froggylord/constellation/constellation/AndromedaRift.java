@@ -8,6 +8,8 @@ import com.froggylord.constellation.core.LocationManager.SkyblockArea;
 import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
+import com.mojang.brigadier.CommandDispatcher;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,11 +34,20 @@ public class AndromedaRift extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
+        cfg = (AndromedaConfig) config;
+        AndromedaRiftCore.init(cfg);
+        AndromedaRiftNavigation.init(cfg);
+        registerRenderer(AndromedaRiftCore::draw);
+        registerRenderer(AndromedaRiftNavigation::draw);
     }
 
     @Override
     public void registerHud(HudManager hud) {
+        hud.register(new com.froggylord.constellation.hud.RiftHudWidget(
+            HudPosition.of(2,54),()->cfg.enabled&&cfg.riftHud));
     }
+
+    @Override public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){AndromedaRiftCore.registerCommands(dispatcher);AndromedaRiftNavigation.registerCommands(dispatcher);}
 
     private static boolean inRift() {
         return ConstellationClient.loc().area() == SkyblockArea.THE_RIFT;
