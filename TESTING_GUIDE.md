@@ -2111,3 +2111,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Confirm `riftLowTimeAlert` remains visible and `/riftguide option alert on|off` still controls it.
 - [ ] Toggle representative remaining settings from each Andromeda area. Expected: every visible Boolean corresponds to behavior documented in the relevant test section.
 - [ ] Launch with an older configuration containing removed JSON keys. Expected: the client loads normally, ignores unknown historical keys and preserves all recognized preferences.
+
+## SkyBlock Profile Viewer
+
+- [ ] Enable Lyra and `profileViewer`, then run `/pv` while signed into a paid Minecraft account. Expected: the viewer opens your official name, authenticates without requesting an API key and defaults to your selected SkyBlock profile.
+- [ ] Run `/pv <another player>` with a valid public player. Expected: all returned profiles appear as buttons and switching them updates every page without another request.
+- [ ] Check Overview, Skills, Dungeons, Slayers and Pets. Expected: values match the selected profile; disabled Hypixel API sections say they are unavailable or remain zero rather than borrowing another profile.
+- [ ] Scroll a long Dungeons or Pets page, change tabs, then change profiles. Expected: scrolling is bounded and resets on each selection.
+- [ ] Press Refresh. Expected: the player is reloaded from the service, the updated time changes and the interface remains responsive while loading.
+- [ ] Search an invalid name, a nonexistent name and retry while offline. Expected: a readable error remains in the screen and no crash, token, stack trace or raw response appears in chat.
+- [ ] Set `profileCacheMinutes` from 1 to 60 and reopen a profile. Expected: cached requests say `cached`; Refresh always bypasses the local cache.
+- [ ] Disable `profileViewer` and run `/pv`. Expected: a local disabled message appears and no network request starts.

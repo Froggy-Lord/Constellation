@@ -11,6 +11,16 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Most individual features have their own toggle and detailed settings inside their constellation.
 - Puzzle, combat, movement, and aiming helpers are advisory overlays. They do not click or aim for you.
 
+## Lyra: Profile Viewer
+
+- `/pv [player]` and `/cn profile [player]` open any public SkyBlock profile without a user-supplied Hypixel API key
+- Minecraft-session proof is sent directly to the SkyBlockPv profile service; the access token and returned service key stay in memory and are never logged or saved
+- All returned profiles are switchable, with the selected profile used by default
+- Overview shows SkyBlock level, purse, bank, Fairy Souls, first join, profile type and co-op size
+- Skills, Dungeons, Slayers and Pets provide scrollable detailed pages and preserve unavailable API fields honestly
+- Requests run off-thread, use bounded timeouts, share in-flight authentication state and cache profiles for a configurable one to 60 minutes
+- Refresh bypasses both local and service caches; lookup and service failures remain on the screen without closing it
+
 ## Apollo: HUD and interface
 
 - Movable and scalable custom SkyBlock scoreboard with safe vanilla-sidebar replacement

@@ -10,6 +10,7 @@ import com.froggylord.constellation.hud.HudEditScreen;
 import com.froggylord.constellation.render.WorldRenderer;
 import com.froggylord.constellation.ui.ConfigScreen;
 import com.froggylord.constellation.ui.HubScreen;
+import com.froggylord.constellation.ui.ProfileViewerScreen;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -31,6 +32,10 @@ public final class CommandRegistry {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
             dispatcher.register(root("cn", features));
             dispatcher.register(root("constellation", features));
+            dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("pv")
+                .executes(ctx -> openProfile(null))
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", StringArgumentType.word())
+                    .executes(ctx -> openProfile(StringArgumentType.getString(ctx, "player")))));
             features.registerCommands(dispatcher);
             ItemProtection.registerCommands(dispatcher);
         });
@@ -58,6 +63,10 @@ public final class CommandRegistry {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("hud")
                 .executes(ctx -> { Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new HudEditScreen(null))); return 1; }))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("config").executes(ctx -> openConfig(features)))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("profile")
+                .executes(ctx -> openProfile(null))
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", StringArgumentType.word())
+                    .executes(ctx -> openProfile(StringArgumentType.getString(ctx, "player")))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("scrape")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("mode", StringArgumentType.word())
                     .executes(ctx -> { Scraper.scrape(StringArgumentType.getString(ctx, "mode")); return 1; })))
@@ -130,6 +139,17 @@ public final class CommandRegistry {
 
     private static int openHub() {
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new HubScreen(null)));
+        return 1;
+    }
+
+    private static int openProfile(String name) {
+        Minecraft mc = Minecraft.getInstance();
+        if (!ConstellationClient.cfg().lyra.profileViewer) {
+            message("§cProfile Viewer is disabled in Lyra.");
+            return 0;
+        }
+        String target = name == null ? mc.getUser().getName() : name;
+        mc.execute(() -> mc.setScreenAndShow(new ProfileViewerScreen(null, target)));
         return 1;
     }
 

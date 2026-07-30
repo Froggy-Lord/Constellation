@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.763 (2026-07-30) — SkyBlock Profile Viewer
+
+- ported SkyBlockPv's Minecraft-session-authenticated profile transport, bounded request flow and five-minute cache
+- added player lookup, all-profile switching, selected-profile defaulting and manual refresh through `/pv [player]`
+- added Overview, Skills, Dungeons, Slayers and Pets pages with defensive handling for disabled Hypixel API fields
+- kept requests asynchronous, credentials in memory only and the interface free of gameplay automation
+
 ## 0.9.762 (2026-07-30) — Complete Accessory Helper
 
 - replaced Lyra's two advertised but inactive accessory settings with a complete Skyblocker accessory-helper port

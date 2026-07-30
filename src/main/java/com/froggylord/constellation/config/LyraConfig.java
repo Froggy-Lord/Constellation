@@ -162,6 +162,8 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipAttributes = true; 
     public boolean tooltipSalvageable = true; 
     public boolean profileCommand = true; 
+    public boolean profileViewer = true;
+    public int profileCacheMinutes = 5;
     public boolean auctionHelper = true;
     public boolean auctionOutbidAlert = true;
     public boolean auctionOutbidTitle = true;

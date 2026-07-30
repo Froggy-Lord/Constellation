@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.762 Complete Accessory Helper.
+Last updated: 2026-07-30 for version 0.9.763 SkyBlock Profile Viewer.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.762`.
+- Current artifact version: `0.9.763`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2870,4 +2870,16 @@ Item names, rarity-derived Magical Power and prices enrich at one catalogue item
 
 Version `0.9.762` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `73c4bacb24ba552c8cb4faf66c8dce2510c4c5f709197411f796ff6c4823e3d7`.
 
-The previous `0.9.761` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-152206-0.9.762/`; only `constellation-0.9.762.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Fill in the drip commit hash after enqueueing.
+The previous `0.9.761` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-152206-0.9.762/`; only `constellation-0.9.762.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `2146b2989a`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.763 SkyBlock Profile Viewer
+
+`ProfileViewerApi.java`, `ProfileViewerScreen.java`, `CommandRegistry.java` and `LyraConfig.java` turn the declaration-only Lyra profile command into a complete first profile-viewer release. Player/profile loading, selected-profile behavior and screen structure port Skyblocker LGPL `skyblock/profileviewer2/ProfileViewer.java`, `ProfileViewerScreen.java`, `pages/SkillsPage.java` and `utils/LevelCalculator.java`. Authentication, `/profiles/{uuid}`, expiring cache, profile tabs and failure behavior port SkyBlockPv's modified-MIT `api/PvAPI.kt`, `CachedApi.kt`, `CachedApis.kt`, `screens/BasePvScreen.kt` and `screens/PvTab.kt`. Source was cloned at commit `13ed26f27ee8b087b7de666f8bd4a40f118bca95`; its required “Portions of this code are from the SkyBlockPv mod.” notice is present beside every SkyBlockPv-derived block.
+
+`/pv [player]` and `/cn profile [player]` resolve the official Minecraft name and UUID, prove the running paid Minecraft session to SkyBlockPv's profile proxy and fetch raw Hypixel profiles without asking the player for an API key. The Minecraft access token and proxy key remain memory-only, are never logged and use only direct HTTPS requests with bounded timeouts. Authentication is serialized, profile requests run away from the render thread, a configurable one-to-60-minute local cache is used, and Refresh deliberately bypasses it.
+
+The screen defaults to the API-selected profile and exposes every returned profile. Overview, Skills, Dungeons, Slayers and Pets pages parse both current and compatible legacy Hypixel field locations, scroll within the game window and show unavailable/disabled API data honestly. Errors remain visible without closing the screen. This release does not decode inventories, calculate net worth, click anything, send gameplay commands or automate any action. Inventory/wardrobe/storage decoding and richer progression pages are deliberately deferred to separate releases.
+
+Version `0.9.763` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `1bd8da7bb0540b89b87b04ca6165c25f12198ca7d2229d0f379e3ef278b4ba99`.
+
+The previous `0.9.762` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-153241-0.9.763/`; only `constellation-0.9.763.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
