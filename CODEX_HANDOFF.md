@@ -3108,7 +3108,21 @@ The combined catalogue is validated before writing `config/constellation-garden-
 
 Version `0.9.781` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `c596f5e81580f1201129f28070a8f8671047f963a75780e85346f41751f56158`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175618-0.9.781/`; only `constellation-0.9.781.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-175618-0.9.781/`; only `constellation-0.9.781.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `9afa4cc2f1`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.782 Exact Profile Garden Visitors and Composter
+
+`ProfileGardenData.java`, `ProfileGardenCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` complete the Visitor and Composter subpage depth. Static visitor identity/rarity, commission accepted/visit/rejected state, composter upgrade definitions and cumulative-map codec behavior port SkyBlockPv modified-MIT `data/api/skills/farming/GardenProfile.kt`, `data/repo/StaticGardenData.kt`, `utils/codecs/CodecUtils.kt`, `VisitorScreen.kt` and `ComposterScreen.kt`.
+
+The expanded live-resource probe validated 139 visitors: 62 Uncommon, 47 Rare, 25 Legendary, four Mythic and one Special. It also validated all five composter upgrades, 25 levels each and 35,650 cumulative Copper each. The probe was archived under `~/Desktop/To-Delete/constellation-probes/20260730-175910-garden-visitors-composter/`.
+
+Visitor rows now use maintained names and rarities, show visits, completed and rejected offers, preserve unknown future API IDs, filter by every rarity/unknown, and sort by completed, visits, rarity or name. Existing zero hiding and limits remain independent.
+
+Composter Speed, Multi Drop, Fuel Cap, Organic Matter Cap and Cost Reduction now show exact level out of 25 and Copper paid out of 35,650. The raw per-level cost maps are cumulatively decoded before current/max progress is read. Visitors and composter definitions share the existing validated Garden last-good cache; an old partial cache fails the expanded validation and refreshes safely, while catalogue failure leaves core Garden records available.
+
+Version `0.9.782` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `65ccc5f1568175ebd3007e2cbf8e6032faeee2c231c4f248f09dd2b4f6f261f9`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-180253-0.9.782/`; only `constellation-0.9.782.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

@@ -762,7 +762,8 @@ public final class ProfileViewerScreen extends Screen {
         var cfg = ConstellationClient.cfg().lyra;
         return ProfileGardenCalculator.calculate(member(profile()), gardenResult,
             gardenData,
-            cfg.profileGardenCropSort, cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors);
+            cfg.profileGardenCropSort, cfg.profileGardenVisitorFilter, cfg.profileGardenVisitorSort,
+            cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors);
     }
 
     private List<Row> gardenDisplayRows(boolean values) {
@@ -816,8 +817,11 @@ public final class ProfileViewerScreen extends Screen {
                 for (ProfileGardenCalculator.Visitor visitor : data.visitors()) {
                     if (limit > 0 && shown >= limit) break;
                     shown++;
-                    rows.add(row("  " + visitor.name(), values
-                        ? visitor.completed() + " completed  " + visitor.visits() + " visits" : ""));
+                    String value = visitor.completed() + " completed  " + visitor.visits() + " visits  "
+                        + Math.max(0, visitor.visits() - visitor.completed()) + " rejected";
+                    rows.add(new Row("  " + (visitor.unknown() ? "Unknown  " : "") + visitor.name(),
+                        values ? value + "  " + title(visitor.rarity()) : "",
+                        visitor.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
                 }
             }
         }
@@ -838,7 +842,10 @@ public final class ProfileViewerScreen extends Screen {
             rows.add(row("Composter last save", values ? date(data.composterLastSave()) : ""));
             if (cfg.profileGardenShowComposterUpgrades)
                 for (ProfileGardenCalculator.Upgrade upgrade : data.composterUpgrades())
-                    rows.add(row("  " + upgrade.name(), values ? "Level " + upgrade.level() : ""));
+                    rows.add(row("  " + upgrade.name(), values ? "Level " + upgrade.level()
+                        + (upgrade.maximum() > 0 ? "/" + upgrade.maximum() : "")
+                        + (upgrade.copperTotal() > 0 ? "  " + upgrade.copperPaid() + "/"
+                            + upgrade.copperTotal() + " Copper" : "") : ""));
         }
         if (cfg.profileGardenShowGreenhouse) {
             rows.add(row("Greenhouse spaces", values ? (data.greenhouseSlots() + 12) + "/100" : ""));

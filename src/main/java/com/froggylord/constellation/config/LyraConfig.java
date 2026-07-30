@@ -330,6 +330,8 @@ public class LyraConfig extends BaseConfigGroup {
     public int profileGardenVisitorLimit = 10;
     public int profileGardenCatalogueCacheHours = 24;
     public String profileGardenCropSort = "DEFAULT";
+    public String profileGardenVisitorFilter = "ALL";
+    public String profileGardenVisitorSort = "COMPLETED";
     public boolean profileRift = true;
     public boolean profileRiftShowSummary = true;
     public boolean profileRiftShowSouls = true;

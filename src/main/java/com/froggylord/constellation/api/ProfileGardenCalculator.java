@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 // ported from SkyBlockPv (modified MIT): data/api/skills/farming/GardenProfile.kt, FarmingData.kt, screens/windowed/tabs/farming/FarmingScreen.kt, CropScreen.kt, ComposterScreen.kt
@@ -25,7 +26,8 @@ public final class ProfileGardenCalculator {
 
     public static Result calculate(JsonObject member, ProfileViewerApi.GardenResult response,
                                    ProfileGardenData.Catalogue catalogue,
-                                   String cropSort, boolean hideZeroCrops, boolean hideZeroVisitors) {
+                                   String cropSort, String visitorFilter, String visitorSort,
+                                   boolean hideZeroCrops, boolean hideZeroVisitors) {
         JsonObject garden = response.garden();
         JsonObject player = object(member, "garden_player_data");
         JsonObject contests = object(member, "jacobs_contest");
@@ -56,19 +58,33 @@ public final class ProfileGardenCalculator {
         visitorIds.addAll(visits.keySet());
         visitorIds.addAll(completed.keySet());
         for (String id : visitorIds) {
-            Visitor visitor = new Visitor(id, title(id), integer(visits.get(id)), integer(completed.get(id)));
-            if (!hideZeroVisitors || visitor.visits() > 0 || visitor.completed() > 0) visitors.add(visitor);
+            ProfileGardenData.Visitor definition = catalogue == null ? null : catalogue.visitors().get(id);
+            Visitor visitor = new Visitor(id, definition == null ? title(id) : definition.name(),
+                definition == null ? "UNKNOWN" : definition.rarity(),
+                integer(visits.get(id)), integer(completed.get(id)), definition == null);
+            String filter = visitorFilter == null ? "ALL" : visitorFilter.toUpperCase(Locale.ROOT);
+            if ((!hideZeroVisitors || visitor.visits() > 0 || visitor.completed() > 0)
+                && (filter.equals("ALL") || visitor.rarity().equalsIgnoreCase(filter)
+                    || filter.equals("UNKNOWN") && visitor.unknown())) visitors.add(visitor);
         }
-        visitors.sort(Comparator.comparingInt(Visitor::completed).reversed()
-            .thenComparing(Comparator.comparingInt(Visitor::visits).reversed()).thenComparing(Visitor::name));
+        visitors.sort(visitorComparator(visitorSort));
 
         JsonObject composter = object(garden, "composter_data");
         JsonObject composterUpgrades = object(composter, "upgrades");
-        List<Upgrade> composterRows = COMPOSTER.stream()
-            .map(id -> new Upgrade(id, title(id), integer(composterUpgrades.get(id)))).toList();
+        List<Upgrade> composterRows = COMPOSTER.stream().map(id -> {
+            int upgradeLevel = integer(composterUpgrades.get(id));
+            ProfileGardenData.Composter definition = catalogue == null ? null : catalogue.composter().get(id);
+            int maximum = definition == null ? 0 : definition.maximum();
+            Map<String, Integer> paid = definition == null || upgradeLevel <= 0 ? java.util.Map.of()
+                : definition.costs().get(Math.min(upgradeLevel, maximum) - 1);
+            Map<String, Integer> total = definition == null ? java.util.Map.of()
+                : definition.costs().getLast();
+            return new Upgrade(id, definition == null ? title(id) : definition.name(), upgradeLevel, maximum,
+                paid.getOrDefault("copper", 0), total.getOrDefault("copper", 0));
+        }).toList();
         JsonObject greenhouse = object(garden, "garden_upgrades");
         List<Upgrade> greenhouseRows = List.of("GROWTH_SPEED", "YIELD", "PLOT_LIMIT").stream()
-            .map(id -> new Upgrade(id, title(id), integer(greenhouse.get(id)))).toList();
+            .map(id -> new Upgrade(id, title(id), integer(greenhouse.get(id)), 0, 0, 0)).toList();
 
         JsonObject medals = object(contests, "medals_inv");
         JsonObject perks = object(contests, "perks");
@@ -122,6 +138,28 @@ public final class ProfileGardenCalculator {
             case "MILESTONE" -> Comparator.comparingInt(Crop::milestone).reversed().thenComparing(Crop::name);
             case "NAME" -> Comparator.comparing(Crop::name);
             default -> canonical.thenComparing(Crop::name);
+        };
+    }
+
+    private static Comparator<Visitor> visitorComparator(String sort) {
+        return switch (sort == null ? "" : sort.toUpperCase(Locale.ROOT)) {
+            case "NAME" -> Comparator.comparing(Visitor::name);
+            case "RARITY" -> Comparator.<Visitor>comparingInt(value -> rarityOrder(value.rarity())).reversed()
+                .thenComparing(Visitor::name);
+            case "VISITS" -> Comparator.comparingInt(Visitor::visits).reversed().thenComparing(Visitor::name);
+            default -> Comparator.comparingInt(Visitor::completed).reversed()
+                .thenComparing(Comparator.comparingInt(Visitor::visits).reversed()).thenComparing(Visitor::name);
+        };
+    }
+
+    private static int rarityOrder(String rarity) {
+        return switch (rarity.toUpperCase(Locale.ROOT)) {
+            case "SPECIAL" -> 5;
+            case "MYTHIC" -> 4;
+            case "LEGENDARY" -> 3;
+            case "RARE" -> 2;
+            case "UNCOMMON" -> 1;
+            default -> 0;
         };
     }
 
@@ -182,8 +220,8 @@ public final class ProfileGardenCalculator {
     public record Crop(String id, String name, long collected, int upgrade, int milestone, int maxMilestone,
                        long milestoneProgress, long milestoneRequired, long maximumRequired,
                        int copperPaid, int copperTotal, boolean unknown) {}
-    public record Visitor(String id, String name, int visits, int completed) {}
-    public record Upgrade(String id, String name, int level) {}
+    public record Visitor(String id, String name, String rarity, int visits, int completed, boolean unknown) {}
+    public record Upgrade(String id, String name, int level, int maximum, int copperPaid, int copperTotal) {}
     public record Result(boolean available, long gardenXp, int gardenLevel, long levelProgress, long levelRequired,
                          int copper, int larvaConsumed, int unlockedPlots, String selectedBarnSkin,
                          int unlockedBarnSkins, List<Crop> crops, long cropsCollected, int visitorsCompleted,

@@ -2296,8 +2296,11 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Compare crop upgrades from zero through nine. Expected: Copper paid sums the first N costs and reaches 7,685/7,685 at upgrade nine.
 - [ ] Toggle milestone, crop-upgrade and Copper details, zero-crop hiding, DEFAULT/COLLECTED/UPGRADE/MILESTONE/NAME sorting and the crop limit. Expected: rows change independently without changing totals.
 - [ ] Compare visitor totals and several visitors. Expected: total offers, unique visitors, per-NPC visits/completions, zero hiding and the visitor limit match the Garden API.
+- [ ] Compare visitor names and rarities. Expected: all 139 maintained visitors resolve into 62 Uncommon, 47 Rare, 25 Legendary, four Mythic and one Special entry; future IDs remain marked Unknown.
+- [ ] Test ALL/UNCOMMON/RARE/LEGENDARY/MYTHIC/SPECIAL/UNKNOWN filters and COMPLETED/VISITS/RARITY/NAME sorts. Expected: accepted, visits and rejected counts remain exact while only ordering/filtering changes.
 - [ ] Compare Jacob contests, claimed contests, Bronze/Silver/Gold medals, Farming cap, Double Drops and Personal Bests perk. Expected: each matches the profile.
 - [ ] Compare organic matter, fuel, compost units/items, conversion ticks, last save and all five composter upgrades. Expected: exact stored values and levels appear.
+- [ ] Compare each composter upgrade from level zero through 25. Expected: level is shown out of 25 and cumulative Copper paid reaches 35,650/35,650 at max.
 - [ ] Compare greenhouse spaces and Growth Speed, Yield and Plot Limit upgrades. Expected: spaces include the twelve initial slots and cap at 100.
 - [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
 - [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.

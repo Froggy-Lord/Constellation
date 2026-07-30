@@ -28,6 +28,10 @@ public final class ProfileGardenData {
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/crop_milestones.json");
     private static final URI MISC = URI.create(
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/misc.json");
+    private static final URI VISITORS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/visitors.json");
+    private static final URI COMPOSTER = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/composter_data.json");
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static volatile Catalogue catalogue;
     private static volatile CompletableFuture<Catalogue> loading;
@@ -49,6 +53,8 @@ public final class ProfileGardenData {
                 JsonObject root = new JsonObject();
                 root.add("milestones", fetch(MILESTONES));
                 root.add("misc", fetch(MISC));
+                root.add("visitors", fetch(VISITORS));
+                root.add("composter", fetch(COMPOSTER));
                 String body = root.toString();
                 Catalogue loaded = parse(body, System.currentTimeMillis(), false);
                 Files.writeString(cachePath(), body, StandardCharsets.UTF_8);
@@ -88,6 +94,8 @@ public final class ProfileGardenData {
         JsonObject root = JsonParser.parseString(body).getAsJsonObject();
         JsonObject rawMilestones = object(root, "milestones");
         JsonObject misc = object(root, "misc");
+        JsonArray rawVisitors = array(root.get("visitors"));
+        JsonObject rawComposter = object(root, "composter");
         Map<String, List<Long>> milestones = new LinkedHashMap<>();
         for (var entry : rawMilestones.entrySet()) {
             if (!entry.getValue().isJsonArray()) continue;
@@ -101,7 +109,28 @@ public final class ProfileGardenData {
             for (JsonElement value : rawCosts.getAsJsonArray()) upgradeCosts.add(value.getAsInt());
         if (milestones.size() != 13 || upgradeCosts.size() != 9)
             throw new IllegalArgumentException("Garden progression catalogue is incomplete.");
-        return new Catalogue(Map.copyOf(milestones), List.copyOf(upgradeCosts), loadedAt, cached);
+        Map<String, Visitor> visitors = new LinkedHashMap<>();
+        for (JsonElement value : rawVisitors) {
+            if (!value.isJsonObject()) continue;
+            JsonObject visitor = value.getAsJsonObject();
+            String id = string(visitor.get("id"), "");
+            if (!id.isBlank()) visitors.put(id, new Visitor(id, string(visitor.get("name"), id),
+                string(visitor.get("rarity"), "UNKNOWN")));
+        }
+        Map<String, Composter> composter = new LinkedHashMap<>();
+        for (var entry : rawComposter.entrySet()) {
+            if (!entry.getValue().isJsonObject()) continue;
+            JsonObject definition = entry.getValue().getAsJsonObject();
+            JsonArray levels = array(definition.get("upgrades"));
+            List<Map<String, Integer>> cumulative = cumulativeMaps(levels);
+            composter.put(entry.getKey(), new Composter(entry.getKey(),
+                string(definition.get("name"), entry.getKey()), cumulative.size(), List.copyOf(cumulative)));
+        }
+        if (visitors.size() < 130 || composter.size() != 5
+            || composter.values().stream().anyMatch(value -> value.maximum() != 25))
+            throw new IllegalArgumentException("Garden visitor or composter catalogue is incomplete.");
+        return new Catalogue(Map.copyOf(milestones), List.copyOf(upgradeCosts), Map.copyOf(visitors),
+            Map.copyOf(composter), loadedAt, cached);
     }
 
     private static List<Long> cumulative(JsonArray steps) {
@@ -113,6 +142,24 @@ public final class ProfileGardenData {
         }
         return values;
     }
+    private static List<Map<String, Integer>> cumulativeMaps(JsonArray steps) {
+        List<Map<String, Integer>> values = new ArrayList<>();
+        Map<String, Integer> total = new LinkedHashMap<>();
+        for (JsonElement step : steps) {
+            if (!step.isJsonObject()) continue;
+            for (var entry : step.getAsJsonObject().entrySet())
+                total.merge(entry.getKey(), entry.getValue().getAsInt(), Integer::sum);
+            values.add(Map.copyOf(total));
+        }
+        return values;
+    }
+    private static JsonArray array(JsonElement value) {
+        return value != null && value.isJsonArray() ? value.getAsJsonArray() : new JsonArray();
+    }
+    private static String string(JsonElement value, String fallback) {
+        try { return value == null ? fallback : value.getAsString(); }
+        catch (RuntimeException ignored) { return fallback; }
+    }
     private static JsonObject object(JsonObject root, String key) {
         JsonElement value = root.get(key);
         return value != null && value.isJsonObject() ? value.getAsJsonObject() : new JsonObject();
@@ -121,6 +168,9 @@ public final class ProfileGardenData {
         return FabricLoader.getInstance().getConfigDir().resolve("constellation-garden-progression.json");
     }
 
+    public record Visitor(String id, String name, String rarity) {}
+    public record Composter(String id, String name, int maximum, List<Map<String, Integer>> costs) {}
     public record Catalogue(Map<String, List<Long>> milestones, List<Integer> cropUpgradeCosts,
+                            Map<String, Visitor> visitors, Map<String, Composter> composter,
                             long loadedAt, boolean cached) {}
 }

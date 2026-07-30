@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.782 (2026-07-30) — Exact Profile Garden Visitors and Composter
+
+- added all 139 current visitor identities and five rarity groups
+- added per-visitor visits, accepted offers and rejected offers with unknown-future handling
+- added rarity filters plus completed, visits, rarity and name sorting
+- added all five composter upgrades with exact level out of 25 and cumulative Copper progress
+- expanded validated Garden last-good caching without making core Garden data depend on it
+
 ## 0.9.781 (2026-07-30) — Exact Profile Garden Crop Progression
 
 - added all 46 exact cumulative milestones for each of the 13 current Garden crops
