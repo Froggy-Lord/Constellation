@@ -365,7 +365,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Item-price and value tooltips
 - Auction comparison and purchase safeguards
 - Exact Auction outbid recognition with configurable title, sound, text and color
-- Bazaar order information
+- Bazaar order ladder information plus filled, partial, expired, expiring, outbid and matched state markers
+- Transition-based Bazaar buy-order/sell-offer undercut alerts with configurable chat, title, sound, recovery and templates
 - Storage, backpack and container previews
 - Container total-value calculation
 - Inventory search and configurable inventory buttons

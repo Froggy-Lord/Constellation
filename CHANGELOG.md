@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.750 (2026-07-30) — Bazaar Order Competition
+
+- ported live buy-order and sell-offer competitiveness checks from SkyHanni
+- tracked transitions after a real orders-screen snapshot and alerts only when an order becomes outbid
+- added filled, partial, expired, expiring, outbid and matched order markers with configurable colors
+- added independent chat, title, sound, recovery, message-template, color and cooldown controls
+
 ## 0.9.749 (2026-07-30) — Auction Outbid Alerts
 
 - made Lyra's existing auction-outbid setting functional instead of declaration-only

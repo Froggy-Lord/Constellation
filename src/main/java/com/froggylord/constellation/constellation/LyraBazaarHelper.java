@@ -1,6 +1,7 @@
 package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
+import com.froggylord.constellation.api.BazaarApi;
 import com.froggylord.constellation.config.LyraConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -40,6 +42,7 @@ import java.util.regex.Pattern;
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/bazaar/ReorderHelper.java
 public final class LyraBazaarHelper {
     private static final Pattern ORDERS_TITLE = Pattern.compile("(?:Co-op|Your) Bazaar Orders");
+    private static final Pattern ORDER_NAME = Pattern.compile("^(BUY|SELL) (.+)$");
     private static final Pattern FILLED = Pattern.compile("Filled: .*?([\\d.]+)%.*");
     private static final Pattern UNIT_PRICE = Pattern.compile("Price per unit: ([0-9,.]+) coins");
     private static final Pattern ORDER_AMOUNT = Pattern.compile("(?:Order|Offer) amount: ([0-9,]+)x");
@@ -47,7 +50,10 @@ public final class LyraBazaarHelper {
     private static final Pattern BUY_MISSING = Pattern.compile("([0-9,]+)x missing items\\.");
     private static final Pattern SELL_ITEMS = Pattern.compile("([0-9,]+)x items\\.");
     private static final Map<Integer, Order> ORDERS = new HashMap<>();
+    private static final Map<String, Boolean> OUTBID_STATE = new HashMap<>();
+    private static final Map<String, Long> ALERTED_AT = new HashMap<>();
     private static LyraConfig cfg;
+    private static boolean initialized;
     private static long orderSnapshotAt;
     private static boolean reorderCopied;
     private static AbstractContainerScreen<?> observedOrdersScreen;
@@ -58,6 +64,9 @@ public final class LyraBazaarHelper {
     public static void init(LyraConfig config) {
         cfg = config;
         normalize();
+        if (initialized) return;
+        initialized = true;
+        ConstellationClient.tick().every(100, "lyra-bazaar-outbid", LyraBazaarHelper::checkTrackedOrders);
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> clear());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clear());
     }
@@ -122,12 +131,13 @@ public final class LyraBazaarHelper {
         if (mc.player == null || slot.container == mc.player.getInventory()) return;
         if (slot.getItem().isEmpty()) { ORDERS.remove(slot.index); return; }
         if (!validOrderSlot(slot)) return;
-        processOrder(slot);
+        Order order = processOrder(slot);
         if (!cfg.bazaarOrderStatus) return;
-        Status status = status(slot.getItem());
+        Status status = status(slot.getItem(), order);
         if (status == null) return;
-        String marker = switch (status) { case FULL -> "F"; case PARTIAL -> "%"; case EXPIRED, EXPIRING -> "!"; };
-        int color = switch (status) { case FULL -> cfg.bazaarFilledColor; case PARTIAL -> cfg.bazaarPartialColor; case EXPIRED -> cfg.bazaarExpiredColor; case EXPIRING -> cfg.bazaarExpiringColor; };
+        String marker = switch (status) { case FULL -> "F"; case PARTIAL -> "%"; case EXPIRED, EXPIRING -> "!"; case OUTBID -> "O"; case MATCHED -> "M"; };
+        int color = switch (status) { case FULL -> cfg.bazaarFilledColor; case PARTIAL -> cfg.bazaarPartialColor; case EXPIRED -> cfg.bazaarExpiredColor; case EXPIRING -> cfg.bazaarExpiringColor; case OUTBID -> cfg.bazaarOutbidColor; case MATCHED -> cfg.bazaarMatchedColor; };
+        if (status == Status.OUTBID || status == Status.FULL) graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, color);
         graphics.text(Minecraft.getInstance().font, marker, slot.x + 1, slot.y + 1, color, true);
     }
 
@@ -138,31 +148,88 @@ public final class LyraBazaarHelper {
         return column != 0 && column != 8;
     }
 
-    private static Status status(ItemStack stack) {
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/bazaar/BazaarOrderHelper.kt
+    private static Status status(ItemStack stack, Order order) {
         List<String> lore = lore(stack);
         if (cfg.bazaarOrderExpiredMarker && lore.stream().anyMatch(line -> line.equals("Expired!"))) return Status.EXPIRED;
         if (cfg.bazaarOrderExpiringMarker && lore.stream().anyMatch(line -> line.startsWith("Expires in"))) return Status.EXPIRING;
-        if (!cfg.bazaarOrderFilledMarker || lore.isEmpty() || !lore.getLast().equals("Click to claim!")) return null;
-        Matcher matcher = first(lore, FILLED);
-        if (matcher == null) return null;
-        try { return Double.parseDouble(matcher.group(1)) >= 100 ? Status.FULL : Status.PARTIAL; }
-        catch (NumberFormatException ignored) { return null; }
+        if (cfg.bazaarOrderFilledMarker && !lore.isEmpty() && lore.getLast().equals("Click to claim!")) {
+            Matcher matcher = first(lore, FILLED);
+            if (matcher != null) try { return Double.parseDouble(matcher.group(1)) >= 100 ? Status.FULL : Status.PARTIAL; }
+            catch (NumberFormatException ignored) {}
+        }
+        Boolean outbid = order == null ? null : outbid(order);
+        if (Boolean.TRUE.equals(outbid) && cfg.bazaarOutbidMarker) return Status.OUTBID;
+        if (Boolean.FALSE.equals(outbid) && cfg.bazaarMatchedMarker) return Status.MATCHED;
+        return null;
     }
 
-    private static void processOrder(Slot slot) {
+    private static Order processOrder(Slot slot) {
         // ported from Skyblocker (LGPL-3.0-or-later): skyblock/bazaar/BazaarOrderTracker.java processOrder
-        if (!cfg.bazaarOrderTracker) { ORDERS.clear(); return; }
+        if (!cfg.bazaarOrderTracker) { ORDERS.clear(); OUTBID_STATE.clear(); return null; }
         ORDERS.remove(slot.index);
         ItemStack stack = slot.getItem();
         List<String> lore = lore(stack);
         Matcher price = first(lore, UNIT_PRICE), amount = first(lore, ORDER_AMOUNT);
+        Matcher orderName = ORDER_NAME.matcher(plain(stack.getHoverName()));
         String id = LyraTooltips.marketId(stack);
-        if (price == null || amount == null || id.isBlank()) return;
+        if (price == null || amount == null || id.isBlank() || !orderName.matches()) return null;
         BigDecimal parsedPrice = decimal(price.group(1));
         Long parsedAmount = integer(amount.group(1));
-        if (parsedPrice == null || parsedAmount == null || parsedAmount <= 0) return;
-        ORDERS.put(slot.index, new Order(id, parsedPrice, parsedAmount, slot.index < 18));
+        if (parsedPrice == null || parsedAmount == null || parsedAmount <= 0) return null;
+        Order order = new Order(id, orderName.group(2), parsedPrice, parsedAmount, orderName.group(1).equals("SELL"));
+        ORDERS.put(slot.index, order);
         orderSnapshotAt = System.currentTimeMillis();
+        Boolean state = outbid(order);
+        if (state != null) OUTBID_STATE.putIfAbsent(order.key(), state);
+        return order;
+    }
+
+    // ported from CaribouStonks (LGPL-3.0): config/categories/GeneralCategory.java orders tracker
+    // comparison ported from SkyHanni (LGPL-3.0-or-later): features/inventory/bazaar/BazaarOrderHelper.kt
+    private static void checkTrackedOrders() {
+        if (!scope() || !cfg.bazaarUndercutAlert || ORDERS.isEmpty()) return;
+        BazaarApi.ensureFresh();
+        for (Order order : List.copyOf(ORDERS.values())) {
+            Boolean now = outbid(order);
+            if (now == null) continue;
+            Boolean before = OUTBID_STATE.put(order.key(), now);
+            if (before == null || before == now) continue;
+            if (now) alert(order, true);
+            else if (cfg.bazaarCompetitiveAgainAlert) alert(order, false);
+        }
+    }
+
+    private static Boolean outbid(Order order) {
+        double[] market = BazaarApi.get(order.itemId);
+        if (market == null) { BazaarApi.ensureFresh(); return null; }
+        double best = order.sell ? market[1] : market[0];
+        if (best <= 0) return null;
+        int comparison = order.unitPrice.compareTo(BigDecimal.valueOf(best));
+        return order.sell ? comparison > 0 : comparison < 0;
+    }
+
+    private static void alert(Order order, boolean outbid) {
+        long now = System.currentTimeMillis(), cooldown = Math.max(1, cfg.bazaarUndercutCooldownSeconds) * 1_000L;
+        if (now - ALERTED_AT.getOrDefault(order.key(), 0L) < cooldown) return;
+        ALERTED_AT.put(order.key(), now);
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+        String title = format(outbid ? cfg.bazaarUndercutTitleText : cfg.bazaarCompetitiveAgainText, order);
+        String chat = format(outbid ? cfg.bazaarUndercutChatText : cfg.bazaarCompetitiveAgainText, order);
+        if (cfg.bazaarUndercutTitle) {
+            mc.gui.hud.resetTitleTimes();
+            mc.gui.hud.setTitle(Component.literal(title).withColor(cfg.bazaarUndercutAlertColor & 0xFFFFFF));
+        }
+        if (cfg.bazaarUndercutChat) local((outbid ? "§6" : "§a") + chat);
+        if (cfg.bazaarUndercutSound) mc.player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 0.9f, outbid ? 0.7f : 1.2f);
+    }
+
+    private static String format(String template, Order order) {
+        double[] market = BazaarApi.get(order.itemId);
+        double best = market == null ? 0 : order.sell ? market[1] : market[0];
+        return template.replace("{item}", order.name).replace("{type}", order.sell ? "Sell offer" : "Buy order")
+            .replace("{price}", coins(order.unitPrice.doubleValue())).replace("{market}", coins(best));
     }
 
     public static List<Component> appendTooltip(AbstractContainerScreen<?> screen, ItemStack stack, List<Component> original) {
@@ -246,15 +313,22 @@ public final class LyraBazaarHelper {
             case "expired" -> cfg.bazaarOrderExpiredMarker = enabled;
             case "expiring" -> cfg.bazaarOrderExpiringMarker = enabled;
             case "tracker" -> cfg.bazaarOrderTracker = enabled;
+            case "outbid" -> cfg.bazaarUndercutAlert = enabled;
+            case "outbidmarker" -> cfg.bazaarOutbidMarker = enabled;
+            case "matchedmarker" -> cfg.bazaarMatchedMarker = enabled;
+            case "outbidchat" -> cfg.bazaarUndercutChat = enabled;
+            case "outbidtitle" -> cfg.bazaarUndercutTitle = enabled;
+            case "outbidsound" -> cfg.bazaarUndercutSound = enabled;
+            case "recovered" -> cfg.bazaarCompetitiveAgainAlert = enabled;
             case "amount" -> cfg.bazaarOrderTrackerShowAmount = enabled;
             case "count" -> cfg.bazaarOrderTrackerShowCount = enabled;
             case "reorder" -> cfg.bazaarReorderClipboard = enabled;
-            default -> { local("§cOption must be enabled, quantities, clipboard, close, status, filled, expired, expiring, tracker, amount, count, or reorder."); return 0; }
+            default -> { local("§cUnknown Bazaar-helper option."); return 0; }
         }
         save(); local("§aBazaar-helper option updated."); return 1;
     }
 
-    private static void normalize() { if (cfg == null) return; cfg.bazaarQuickQuantity1 = Math.max(1, cfg.bazaarQuickQuantity1); cfg.bazaarQuickQuantity2 = Math.max(1, cfg.bazaarQuickQuantity2); cfg.bazaarQuickQuantity3 = Math.max(1, cfg.bazaarQuickQuantity3); }
+    private static void normalize() { if (cfg == null) return; cfg.bazaarQuickQuantity1 = Math.max(1, cfg.bazaarQuickQuantity1); cfg.bazaarQuickQuantity2 = Math.max(1, cfg.bazaarQuickQuantity2); cfg.bazaarQuickQuantity3 = Math.max(1, cfg.bazaarQuickQuantity3); cfg.bazaarUndercutCooldownSeconds = Math.clamp(cfg.bazaarUndercutCooldownSeconds, 1, 3600); }
     private static void save() { normalize(); ConstellationClient.saveConfig(); }
     private static boolean scope() {
         if (!active()) { clear(); return false; }
@@ -263,7 +337,7 @@ public final class LyraBazaarHelper {
         if (!profile.equals(orderProfile)) { clear(); orderProfile = profile; }
         return true;
     }
-    private static void clear() { ORDERS.clear(); orderSnapshotAt = 0; reorderCopied = false; observedOrdersScreen = null; orderProfile = ""; }
+    private static void clear() { ORDERS.clear(); OUTBID_STATE.clear(); ALERTED_AT.clear(); orderSnapshotAt = 0; reorderCopied = false; observedOrdersScreen = null; orderProfile = ""; }
     private static List<String> lore(ItemStack stack) { ItemLore lore = stack.get(net.minecraft.core.component.DataComponents.LORE); if (lore == null) return List.of(); return lore.lines().stream().map(LyraBazaarHelper::plain).toList(); }
     private static Matcher first(List<String> lines, Pattern pattern) { for (String line : lines) { Matcher matcher = pattern.matcher(line); if (matcher.matches()) return matcher; } return null; }
     private static BigDecimal decimal(String raw) { try { return new BigDecimal(raw.replace(",", "")); } catch (NumberFormatException ignored) { return null; } }
@@ -271,8 +345,11 @@ public final class LyraBazaarHelper {
     private static String plain(Component component) { String text = ChatFormatting.stripFormatting(component.getString()); return text == null ? component.getString() : text; }
     private static Boolean parseState(String state) { return switch (state.toLowerCase(Locale.ROOT)) { case "on", "true", "yes", "1" -> true; case "off", "false", "no", "0" -> false; default -> null; }; }
     private static String on(boolean enabled) { return enabled ? "§aon" : "§coff"; }
+    private static String coins(double value) { return String.format(Locale.ROOT, "%,.1f", value); }
     private static void local(String text) { Minecraft mc = Minecraft.getInstance(); if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§5Lyra §8> §f" + text)); }
 
-    private enum Status { FULL, PARTIAL, EXPIRED, EXPIRING }
-    private record Order(String itemId, BigDecimal unitPrice, long amount, boolean sell) {}
+    private enum Status { FULL, PARTIAL, EXPIRED, EXPIRING, OUTBID, MATCHED }
+    private record Order(String itemId, String name, BigDecimal unitPrice, long amount, boolean sell) {
+        String key() { return itemId + '|' + unitPrice.toPlainString() + '|' + amount + '|' + sell; }
+    }
 }

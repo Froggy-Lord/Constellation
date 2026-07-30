@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.749 Auction Outbid Alerts.
+Last updated: 2026-07-30 for version 0.9.750 Bazaar Order Competition.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.749`.
+- Current artifact version: `0.9.750`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2700,4 +2700,14 @@ The listener requires the exact cleaned `[Auction] ... outbid you by ... for ...
 
 Version `0.9.749` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d70ca253176a1bc69002d8aeded6dfedf0cd50e0d13cba390758026e1f91aa66`.
 
-The previous `0.9.748` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133054-0.9.749/`; only `constellation-0.9.749.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. A cohesive hand-designed icon pack and visual-language pass remain a standing request; preserve the transparent, chrome-free HUD editor while replacing generic generated-looking UI assets.
+The previous `0.9.748` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133054-0.9.749/`; only `constellation-0.9.749.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `1fcc4b9a7b`, authored only as Froggy-Lord. A cohesive hand-designed icon pack and visual-language pass remain a standing request; preserve the transparent, chrome-free HUD editor while replacing generic generated-looking UI assets.
+
+## July 30 version 0.9.750 Bazaar Order Competition
+
+The Lyra declaration audit found `bazaarUndercutAlert` was visible but unused. `LyraBazaarHelper.java` and `LyraConfig.java` now port SkyHanni LGPL-3.0-or-later `features/inventory/bazaar/BazaarOrderHelper.kt` order parsing and buy/sell comparison semantics, plus CaribouStonks LGPL-3.0 `config/categories/GeneralCategory.java` transition-notification model. Bazaar Utils was inspected for behavior only and no line was copied because it remains reimplementation-only.
+
+Only exact `Your Bazaar Orders` and `Co-op Bazaar Orders` screens create snapshots. BUY/SELL type comes from the exact cleaned order item name rather than a fragile slot-row assumption. Existing filled, partial, expired and expiring markers remain; current highest buy and lowest sell data add independently configurable outbid and matched markers. An already-outbid order is baselined silently. A later competitive-to-outbid transition can produce independently configurable local chat, title and sound with editable `{item}`, `{type}`, `{price}` and `{market}` templates, ARGB color and one-to-3,600-second cooldown. Optional competitive-again notices use the same channels. Repeated refreshes in one state do not repeat alerts, and profile/connection changes discard snapshots.
+
+Version `0.9.750` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `57dc731b1acc5abe7750085d7c914fbbfd1ce9dcb7f1040c507875b396271421`.
+
+The previous `0.9.749` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133717-0.9.750/`; only `constellation-0.9.750.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
