@@ -13,6 +13,7 @@ import com.froggylord.constellation.api.ProfileMiningCalculator;
 import com.froggylord.constellation.api.ProfileMuseumData;
 import com.froggylord.constellation.api.ProfileCrimsonCalculator;
 import com.froggylord.constellation.api.ProfileGardenCalculator;
+import com.froggylord.constellation.api.ProfileRiftCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -40,7 +41,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -125,7 +126,7 @@ public final class ProfileViewerScreen extends Screen {
         }
         int tx = 12;
         for (int i = 0; i < TABS.length; i++) {
-            int bw = font.width(TABS[i]) + 10;
+            int bw = font.width(TABS[i]) + 6;
             chip(g, tx, 80, bw, TABS[i], i == tab, mx, my);
             tx += bw + 4;
         }
@@ -163,6 +164,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 13) {
             drawGarden(g);
+            return;
+        }
+        if (tab == 14) {
+            drawRift(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -802,6 +807,91 @@ public final class ProfileViewerScreen extends Screen {
         return rows;
     }
 
+    // ported from SkyBlockPv (modified MIT): screens/windowed/tabs/rift/MainRiftScreen.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    private void drawRift(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileRift) {
+            g.text(font, "Rift viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        ProfileRiftCalculator.Result data = riftRows();
+        if (!data.available()) {
+            g.text(font, "Rift API data is unavailable for this profile.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        drawRows(g, riftDisplayRows(true));
+    }
+
+    private ProfileRiftCalculator.Result riftRows() {
+        var cfg = ConstellationClient.cfg().lyra;
+        return ProfileRiftCalculator.calculate(member(profile()), cfg.profileRiftTrophySort,
+            cfg.profileRiftHideMissingTrophies);
+    }
+
+    private List<Row> riftDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileRiftCalculator.Result data = riftRows();
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileRiftShowSummary) {
+            rows.add(row("Motes", values ? whole(data.motes()) : ""));
+            rows.add(row("Lifetime Motes", values ? whole(data.lifetimeMotes()) : ""));
+            rows.add(row("Rift visits", values ? whole(data.visits()) : ""));
+            rows.add(row("Time sitting with Avaelix", values ? duration(data.secondsSitting() * 1_000L) : ""));
+            rows.add(row("Grubber stacks", values ? data.grubberStacks() + "/5" : ""));
+        }
+        if (cfg.profileRiftShowSouls) {
+            rows.add(row("Enigma Souls", values ? data.souls().size() + "/" + data.soulMaximum() : ""));
+            if (cfg.profileRiftShowSoulIds) {
+                int limit = Math.clamp(cfg.profileRiftSoulLimit, 0, 100);
+                int shown = 0;
+                for (String soul : data.souls().stream().sorted().toList()) {
+                    if (limit > 0 && shown >= limit) break;
+                    shown++;
+                    rows.add(row("  " + title(soul), values ? "Found" : ""));
+                }
+            }
+        }
+        if (cfg.profileRiftShowEyes) {
+            long found = data.eyes().stream().filter(ProfileRiftCalculator.Collectible::found).count();
+            rows.add(row("Rift eyes", values ? found + "/" + data.eyeMaximum() : ""));
+            for (ProfileRiftCalculator.Collectible eye : data.eyes()) {
+                if (cfg.profileRiftHideFoundEyes && eye.found()) continue;
+                rows.add(new Row("  " + (eye.unknown() ? "Unknown  " : "") + eye.name(),
+                    values ? (eye.found() ? "Unlocked" : "Locked") : "",
+                    eye.unknown() ? 0xFFFFAA55 : eye.found() ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+            }
+        }
+        if (cfg.profileRiftShowCats) {
+            long found = data.cats().stream().filter(ProfileRiftCalculator.Collectible::found).count();
+            rows.add(row("Montezuma cats", values ? found + "/" + data.catMaximum() : ""));
+            for (ProfileRiftCalculator.Collectible cat : data.cats()) {
+                if (cfg.profileRiftHideFoundCats && cat.found()) continue;
+                rows.add(new Row("  " + (cat.unknown() ? "Unknown  " : "") + cat.name(),
+                    values ? (cat.found() ? "Found" : "Missing") : "",
+                    cat.unknown() ? 0xFFFFAA55 : cat.found() ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+            }
+        }
+        if (cfg.profileRiftShowTrophies) {
+            rows.add(row("Timecharms", values ? data.trophiesUnlocked() + "/8" : ""));
+            int limit = Math.clamp(cfg.profileRiftTrophyLimit, 0, 100);
+            int shown = 0;
+            for (ProfileRiftCalculator.Trophy trophy : data.trophies()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String value = trophy.unlocked() ? "Secured" : "Missing";
+                if (trophy.unlocked() && cfg.profileRiftShowTrophyVisits)
+                    value += "  after " + trophy.visits() + " visits";
+                if (trophy.unlocked() && cfg.profileRiftShowTrophyDates && trophy.timestamp() > 0)
+                    value += "  " + date(trophy.timestamp());
+                rows.add(new Row((trophy.unknown() ? "Unknown  " : "") + trophy.name(),
+                    values ? value : "", trophy.unknown() ? 0xFFFFAA55
+                        : trophy.unlocked() ? 0xFF55FF55 : ConstellationTheme.TEXT_MUTED));
+            }
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -1033,7 +1123,7 @@ public final class ProfileViewerScreen extends Screen {
             }
             x = 12;
             for (int i = 0; i < TABS.length; i++) {
-                int bw = font.width(TABS[i]) + 10;
+                int bw = font.width(TABS[i]) + 6;
                 if (inside(mx, my, x, 80, bw, 16)) {
                     tab = i; scroll = 0;
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
@@ -1101,6 +1191,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 13 && gardenResult != null && gardenProfile == profileIndex) {
             int max = Math.max(0, gardenDisplayRows(false).size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 14) {
+            int max = Math.max(0, riftDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }

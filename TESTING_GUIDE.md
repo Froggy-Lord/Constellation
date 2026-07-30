@@ -2299,3 +2299,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Compare greenhouse spaces and Growth Speed, Yield and Plot Limit upgrades. Expected: spaces include the twelve initial slots and cap at 100.
 - [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
 - [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.
+
+### Profile Rift
+
+- [ ] Enable `profileRift`, open `/pv` and select Rift. Expected: current/lifetime Motes, visits, time sitting with Avaelix and Grubber stacks match the selected profile.
+- [ ] Compare Enigma Souls. Expected: the summary is out of 52; optional sorted found-ID rows obey the configurable limit.
+- [ ] Compare all seven Rift eyes. Expected: Wizard Tower through Mountaintop show exact Unlocked/Locked state; `profileRiftHideFoundEyes` leaves only locked entries.
+- [ ] Compare all nine Montezuma cats. Expected: First through Ninth show exact Found/Missing state; `profileRiftHideFoundCats` leaves only missing entries.
+- [ ] Compare all eight Timecharms. Expected: secured/missing state, visits at discovery and timestamp match the profile.
+- [ ] Test missing-Timecharm hiding, DEFAULT/STATUS/VISITS/DATE/NAME sorting, the trophy limit and visit/date detail toggles. Expected: only intended rows change and scrolling remains bounded.
+- [ ] Open a profile containing an API ID newer than the bundled eyes, cats or Timecharms. Expected: it remains visible with an Unknown marker rather than disappearing.
+- [ ] Switch profiles and disable `profileRift`. Expected: Rift state changes immediately with the selected member and the disabled message appears without requests or crashes.

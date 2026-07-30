@@ -3042,7 +3042,19 @@ Each section and subordinate detail can be hidden independently. Garden cache li
 
 Version `0.9.776` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `94b5b6c494ca9b8b2d1c481eeebcbbcaac402ada21192fb51a175a283198f6b4`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172224-0.9.776/`; only `constellation-0.9.776.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172224-0.9.776/`; only `constellation-0.9.776.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `3fc9a2863c`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.777 Complete Profile Rift Progression
+
+`ProfileRiftCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add complete persistent Rift progression. The member/player-stat split, current/lifetime Motes, visits, sitting duration, Enigma Souls, unlocked eyes, Montezuma cats, Grubber stacks and secured Timecharm model port SkyBlockPv modified-MIT `data/api/RiftData.kt`, `data/repo/RiftCodecs.kt` and `screens/windowed/tabs/rift/MainRiftScreen.kt`. Required notices are beside every derived block.
+
+The canonical licensed repository data contains seven eyes, nine cats and eight Timecharms. Each eye and cat shows exact found/missing state. Each Timecharm shows secured/missing state plus visits at discovery and timestamp when available. Unknown future IDs in all three sets remain visible and marked rather than being discarded.
+
+Summaries, found Soul IDs, eyes, cats, Timecharms, discovery visits and dates are independently configurable. Found eyes/cats and missing Timecharms can be hidden; Soul and Timecharm rows have independent limits; Timecharms support canonical, status, visits, date and name sorts. The tab is calculated entirely from the selected profile member and is read-only.
+
+Version `0.9.777` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `e81d6deeb86a8a9f0a3e93e3d06ef81aecec8f620df482b8a917be0c87c10353`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-172904-0.9.777/`; only `constellation-0.9.777.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

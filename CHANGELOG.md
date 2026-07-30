@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.777 (2026-07-30) — Complete Profile Rift Progression
+
+- added current/lifetime Motes, visits, sitting time, Enigma Souls and Grubber stacks
+- added all seven Rift eyes and all nine Montezuma cats with found/missing breakdowns
+- added all eight Timecharms with secure state, discovery visit count and timestamp
+- added missing/found hiding, soul/trophy limits, five trophy sorts and independent detail controls
+- kept unknown future eyes, cats and Timecharms visible and marked
+
 ## 0.9.776 (2026-07-30) — Complete Profile Garden Progression
 
 - added the separately authenticated Garden endpoint with profile-safe caching and refresh
