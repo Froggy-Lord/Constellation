@@ -1435,6 +1435,9 @@ Enable Lyra and Phoenix protection/inventory features. Use inexpensive test item
 
 ### Test
 
+- [ ] Enable Lyra, `auctionHelper` and `auctionOutbidAlert`, then have another player outbid one of your auctions. Expected: the original Hypixel chat remains, the configured local title appears and the configured sound plays once.
+- [ ] Toggle `auctionOutbidTitle` and `auctionOutbidSound` independently, then change `auctionOutbidTitleText` and `auctionOutbidColor`. Expected: only the selected presentation channels change; unrelated `[Auction]` messages never trigger it.
+- [ ] Run `/auctionhelper option outbid off|on`, `/auctionhelper option outbidtitle off|on` and `/auctionhelper option outbidsound off|on`. Expected: each setting persists and reconnecting clears only transient duplicate-message state.
 - [ ] Enable Phoenix and `wardrobeKeybinds`, then open Wardrobe, Armor Sets and Equipment Sets. Expected: the helper activates only in the enabled exact menus.
 - [ ] With `wardrobeKeyStyle` set to `HOTBAR`, press each configured hotbar key over slots 1 through 9. Expected: the corresponding visible set is selected once.
 - [ ] Run `/wardrobekeys style number`. Expected: the physical number-row keys select sets even if Minecraft hotbar keys were rebound.

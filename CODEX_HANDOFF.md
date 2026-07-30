@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.748 Andromeda Configuration Truthfulness.
+Last updated: 2026-07-30 for version 0.9.749 Auction Outbid Alerts.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.748`.
+- Current artifact version: `0.9.749`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2690,4 +2690,14 @@ All 22 dead fields were removed. The working `riftLowTimeAlert` master remains b
 
 The release adds a structural verification command to the build procedure: enumerate every public Andromeda Boolean and fail if `rg` finds it only in `AndromedaConfig.java`. It returned no names. Version `0.9.748` then built with exactly 11 successful tests and zero failures. Its full headless client loaded the existing older configuration, exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d9d3a7796af829955ca92a32163c0c35f656d8e4abe553f4142ebfa078aad241`.
 
-The previous `0.9.747` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-132342-0.9.748/`; only `constellation-0.9.748.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous `0.9.747` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-132342-0.9.748/`; only `constellation-0.9.748.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `5fec1fcd26`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.749 Auction Outbid Alerts
+
+The live Froggy__Lord 26.1.2 profile comparison found that SkyHanni's Auction outbid warning was enabled while Constellation's matching `auctionOutbidAlert` setting was declaration-only. `LyraAuctionHelper.java` and `LyraConfig.java` now port SkyHanni LGPL-3.0-or-later `features/inventory/AuctionOutbidWarning.kt`.
+
+The listener requires the exact cleaned `[Auction] ... outbid you by ... for ... CLICK` shape, keeps the original Hypixel message, ignores overlays and suppresses duplicate callbacks for two seconds. Master, title and sound are independent. Title text and ARGB color are editable, and `/auctionhelper option outbid`, `outbidtitle` and `outbidsound` expose the Boolean controls. Connection changes clear only transient deduplication state. The feature sends no chat, command, click or gameplay packet.
+
+Version `0.9.749` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d70ca253176a1bc69002d8aeded6dfedf0cd50e0d13cba390758026e1f91aa66`.
+
+The previous `0.9.748` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-133054-0.9.749/`; only `constellation-0.9.749.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. A cohesive hand-designed icon pack and visual-language pass remain a standing request; preserve the transparent, chrome-free HUD editor while replacing generic generated-looking UI assets.

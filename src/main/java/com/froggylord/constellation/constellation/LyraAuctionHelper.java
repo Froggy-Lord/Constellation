@@ -10,6 +10,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemLore;
@@ -36,7 +38,11 @@ import java.util.regex.Pattern;
 public final class LyraAuctionHelper {
     private static final Pattern PRICE = Pattern.compile("(?:Buy it now|Starting bid|Top bid|Price|Cost): ?([0-9,.]+) coins", Pattern.CASE_INSENSITIVE);
     private static final Pattern ITEM_PRICE = Pattern.compile("Item price: ?([0-9,.]+) coins", Pattern.CASE_INSENSITIVE);
+    private static final Pattern OUTBID = Pattern.compile("^\\[Auction] .+ outbid you by .+ for .+ CLICK$");
     private static LyraConfig cfg;
+    private static boolean initialized;
+    private static String lastOutbid = "";
+    private static long lastOutbidAt;
     private static AbstractContainerScreen<?> copiedScreen;
     private static String copiedFingerprint = "";
     private static String riskKey = "";
@@ -48,8 +54,30 @@ public final class LyraAuctionHelper {
     public static void init(LyraConfig config) {
         cfg = config;
         normalize();
+        if (initialized) return;
+        initialized = true;
+        ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (!overlay) onChat(plain(message).strip());
+            return true;
+        });
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> clear());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clear());
+    }
+
+    // ported from SkyHanni (LGPL-3.0-or-later): features/inventory/AuctionOutbidWarning.kt
+    private static void onChat(String message) {
+        if (!active() || !cfg.auctionOutbidAlert || !OUTBID.matcher(message).matches()) return;
+        long now = System.currentTimeMillis();
+        if (message.equals(lastOutbid) && now - lastOutbidAt < 2_000) return;
+        lastOutbid = message;
+        lastOutbidAt = now;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+        if (cfg.auctionOutbidTitle) {
+            mc.gui.hud.resetTitleTimes();
+            mc.gui.hud.setTitle(Component.literal(cfg.auctionOutbidTitleText).withColor(cfg.auctionOutbidColor & 0xFFFFFF));
+        }
+        if (cfg.auctionOutbidSound) mc.player.playSound(SoundEvents.NOTE_BLOCK_PLING.value(), 0.9f, 0.7f);
     }
 
     public static void drawSlot(GuiGraphicsExtractor graphics, AbstractContainerScreen<?> screen, Slot slot) {
@@ -255,12 +283,15 @@ public final class LyraAuctionHelper {
             case "tooltip" -> cfg.auctionPriceTooltip = value;
             case "highlight" -> cfg.auctionPriceHighlight = value;
             case "copy" -> cfg.auctionAutoCopyPrice = value;
+            case "outbid" -> cfg.auctionOutbidAlert = value;
+            case "outbidtitle" -> cfg.auctionOutbidTitle = value;
+            case "outbidsound" -> cfg.auctionOutbidSound = value;
             case "completecopy" -> cfg.auctionCopyOnlyCompleteEstimate = value;
             case "listing" -> cfg.auctionProtectListings = value;
             case "purchase" -> cfg.auctionProtectPurchases = value;
             case "partial" -> cfg.auctionUseIncompleteEstimate = value;
             case "sold" -> cfg.auctionSoldAlert = value;
-            default -> { local("§cOption must be enabled, compare, tooltip, highlight, copy, completecopy, listing, purchase, partial, or sold."); return 0; }
+            default -> { local("§cUnknown auction-helper option."); return 0; }
         }
         save(); local("§aAuction-helper option updated."); return 1;
     }
@@ -282,7 +313,7 @@ public final class LyraAuctionHelper {
     private static boolean active() { return cfg != null && cfg.enabled && cfg.auctionHelper && ConstellationClient.loc().onHypixel(); }
     private static void local(String message) { Minecraft mc = Minecraft.getInstance(); if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§5Lyra §8> §f" + message)); }
     private static void resetRisk() { riskKey = ""; riskClicks = 0; }
-    private static void clear() { copiedScreen = null; copiedFingerprint = ""; protectionBypass = false; resetRisk(); }
+    private static void clear() { copiedScreen = null; copiedFingerprint = ""; lastOutbid = ""; lastOutbidAt = 0; protectionBypass = false; resetRisk(); }
 
     private record Risk(String kind, String itemId, double price, double reference) {}
     private record Reference(String id, double value, boolean complete) {}

@@ -151,6 +151,10 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean profileCommand = true; 
     public boolean auctionHelper = true;
     public boolean auctionOutbidAlert = true;
+    public boolean auctionOutbidTitle = true;
+    public boolean auctionOutbidSound = true;
+    public int auctionOutbidColor = 0xFFFF5555;
+    public String auctionOutbidTitleText = "You have been outbid!";
     public boolean auctionSoldAlert = true;
     public boolean tooltipAttributeShards = true; 
     public boolean bazaarUndercutAlert = true; 

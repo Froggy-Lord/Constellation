@@ -364,6 +364,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Bazaar and Auction House pricing
 - Item-price and value tooltips
 - Auction comparison and purchase safeguards
+- Exact Auction outbid recognition with configurable title, sound, text and color
 - Bazaar order information
 - Storage, backpack and container previews
 - Container total-value calculation

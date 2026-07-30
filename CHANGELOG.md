@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.749 (2026-07-30) — Auction Outbid Alerts
+
+- made Lyra's existing auction-outbid setting functional instead of declaration-only
+- ported SkyHanni's exact Auction outbid chat recognition with a local title and sound
+- added independent title, sound, title text and color controls plus duplicate-message suppression
+- added command controls and connection-safe transient reset
+
 ## 0.9.748 (2026-07-30) — Andromeda Configuration Truthfulness
 
 - removed 22 legacy Andromeda toggles that were visible in generated settings but had no runtime consumer
