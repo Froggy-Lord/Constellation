@@ -763,7 +763,9 @@ public final class ProfileViewerScreen extends Screen {
         return ProfileGardenCalculator.calculate(member(profile()), gardenResult,
             gardenData,
             cfg.profileGardenCropSort, cfg.profileGardenVisitorFilter, cfg.profileGardenVisitorSort,
-            cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors);
+            cfg.profileGardenHideZeroCrops, cfg.profileGardenHideZeroVisitors,
+            cfg.profileGardenMutationFilter, cfg.profileGardenMutationRarity,
+            cfg.profileGardenMutationSort, cfg.profileGardenMutationSearch);
     }
 
     private List<Row> gardenDisplayRows(boolean values) {
@@ -875,6 +877,38 @@ public final class ProfileViewerScreen extends Screen {
                 if (cfg.profileGardenShowGreenhouseCosts && !upgrade.total().isEmpty())
                     value += "  paid " + gardenCost(upgrade.paid()) + " / " + gardenCost(upgrade.total());
                 rows.add(row("  " + upgrade.name(), values ? value : ""));
+            }
+        }
+        if (cfg.profileGardenShowMutations) {
+            rows.add(row("Greenhouse mutations", values ? data.mutationsDiscovered() + "/"
+                + data.mutationTotal() + " discovered  " + data.mutationsAnalyzed() + " analyzed" : ""));
+            if (cfg.profileGardenShowGlowingMushrooms)
+                rows.add(row("Glowing mushrooms broken", values ? whole(data.glowingMushrooms()) : ""));
+            int limit = Math.clamp(cfg.profileGardenMutationLimit, 0, 100);
+            int shown = 0;
+            for (ProfileGardenCalculator.Mutation mutation : data.mutations()) {
+                if (limit > 0 && shown >= limit) break;
+                shown++;
+                String state = !mutation.discovered() ? "Undiscovered"
+                    : !mutation.analyzable() ? "Discovered  analysis N/A"
+                    : mutation.analyzed() ? "Discovered  analyzed" : "Discovered  not analyzed";
+                if (cfg.profileGardenShowMutationRarity) state += "  " + title(mutation.rarity());
+                rows.add(new Row("  " + (mutation.unknown() ? "Unknown  " : "") + mutation.name(),
+                    values ? state : "", mutation.unknown() ? 0xFFFFAA55
+                        : mutation.discovered() ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED));
+            }
+        } else if (cfg.profileGardenShowGlowingMushrooms) {
+            rows.add(row("Glowing mushrooms broken", values ? whole(data.glowingMushrooms()) : ""));
+        }
+        if (cfg.profileGardenShowChips) {
+            rows.add(row("Garden Chips", values ? data.chips().stream().filter(chip -> chip.level() > 0).count()
+                + "/" + data.chips().size() + " installed" : ""));
+            for (ProfileGardenCalculator.Chip chip : data.chips()) {
+                String value = "Level " + chip.level() + (chip.maximum() > 0 ? "/" + chip.maximum() : "");
+                if (cfg.profileGardenShowChipSowdust && chip.sowdustMaximum() > 0)
+                    value += "  " + whole(chip.sowdustPaid()) + "/" + whole(chip.sowdustMaximum()) + " Sowdust";
+                rows.add(new Row("  " + (chip.unknown() ? "Unknown  " : "") + chip.name(),
+                    values ? value : "", chip.unknown() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
             }
         }
         return rows;

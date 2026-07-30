@@ -61,6 +61,7 @@ the profile viewer calculates exact skill levels and progress from hypixel's pub
 garden crop records use the maintained licensed 46-level milestone tables and exact nine-upgrade copper costs, with validated offline caching.
 garden visitor and composter records use all 139 maintained visitor identities and exact 25-level cumulative upgrade costs.
 garden plots use the maintained 24-plot layout and tier-aware unlock costs; greenhouse records include exact reward and cumulative material progress.
+garden mutation records cover all 41 maintained crops with discovery/analysis state, while all ten chips show exact 25-million-Sowdust progression.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

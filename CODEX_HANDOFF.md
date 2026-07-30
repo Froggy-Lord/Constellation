@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.783 Exact Profile Garden Plots and Greenhouse.
+Last updated: 2026-07-30 for version 0.9.784 Exact Profile Garden Mutations and Chips.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.783`.
+- Current artifact version: `0.9.784`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3136,7 +3136,21 @@ The live July 30 probe validated 24 unique plot numbers/locations; four cost tie
 
 Version `0.9.783` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `606e8953279c48ee3f2865580a3062ccfd3f7aa0c9000fa90bf1f2a5c63bf9cc`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181142-0.9.783/`; only `constellation-0.9.783.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181142-0.9.783/`; only `constellation-0.9.783.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `3302a6232a`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.784 Exact Profile Garden Mutations and Chips
+
+`ProfileGardenData.java`, `ProfileGardenCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` complete the Mutation and Garden Chip profile depth. Mutation catalogue/state union, the Deadplant non-analyzable exception, state filters, chip field model and cumulative Sowdust codec port SkyBlockPv modified-MIT `data/repo/StaticGardenData.kt`, `api/data/profile/SkyBlockProfile.kt`, `data/api/skills/farming/ChipsData.kt`, `MutationScreen.kt` and `FarmingScreen.kt`. Required notices are beside the derived blocks.
+
+All 41 maintained mutations show canonical name/rarity and distinct discovered, discovered-not-analyzed, analyzed or analysis-not-applicable state. API-only future IDs from either discovery array remain visible as Unknown. State and rarity filters, partial name/ID search, rarity/status/name sorting, the zero-to-100 limit and rarity detail are independent. Glowing Mushrooms broken comes from `player_stats.glowing_mushrooms_broken` and can remain visible without mutation rows.
+
+All ten current chips read their distinct `player_data.garden_chips` field. The 19 licensed incremental Sowdust steps are cumulatively decoded: zero levels correctly cost zero, level one is 100,000 and level 19 reaches 25,000,000. Unknown future chip keys remain visible. Chip rows and Sowdust detail are independent.
+
+The live July 30 probe validated 41 unique mutations: nine Common, seven Uncommon, nine Rare, nine Epic and seven Legendary; 40 analyzable and one not applicable. It also validated 19 chip steps totaling 25,000,000 Sowdust. It was archived under `~/Desktop/To-Delete/constellation-probes/20260730-181500-garden-mutations-chips/`. Both resources join the all-or-nothing Garden last-good cache, so an old partial cache refreshes while core profile/Garden endpoints remain independent.
+
+Version `0.9.784` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `10b6ca41f97673a48cbcc4b6b9e44057e7b16a14962ecd6b8d777bb8a20349b1`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-181848-0.9.784/`; only `constellation-0.9.784.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten.
 
 ## Required dedicated visual-design pass
 

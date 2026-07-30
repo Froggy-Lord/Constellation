@@ -2308,9 +2308,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Compare greenhouse rewards. Expected: Growth Speed reaches 50%, Crop Yield reaches 20% and Plot Limit reaches +2 at maximum.
 - [ ] Compare greenhouse cumulative costs. Expected: each nine-level percentage upgrade totals 15,900 Copper, 20 Compost and 15 Enchanted Compost; Plot Limit totals 30 Enchanted Compost and 250 Ethereal Vines.
 - [ ] Toggle greenhouse rewards and costs independently. Expected: the level and maximum remain visible while only the selected details hide.
+- [ ] Compare the Greenhouse mutation catalogue. Expected: all 41 maintained mutations appear across nine Common, seven Uncommon, nine Rare, nine Epic and seven Legendary entries.
+- [ ] Compare discovered and analyzed mutation sets with the Garden API. Expected: undiscovered, discovered/not analyzed and analyzed states match; Deadplant reports analysis N/A.
+- [ ] Test ALL, DISCOVERED, ANALYZED, PENDING and UNDISCOVERED state filters; every rarity/UNKNOWN filter; partial name/ID search; RARITY/STATUS/NAME sorts; and the zero-to-100 limit. Expected: controls compose without altering summary totals and unknown future IDs remain marked.
+- [ ] Compare Glowing Mushrooms broken with profile statistics, then toggle it independently from mutation rows. Expected: the lifetime count matches and remains independently visible.
+- [ ] Compare Cropshot, Evergreen, Hypercharge, Mechamind, Overdrive, Quickdraw, Rarefinder, Sowledge, Synthesis and Vermin Vaporizer levels. Expected: each reads its distinct `garden_chips` field and future keys remain visible.
+- [ ] Compare chip levels from zero through 19. Expected: level zero reports zero paid; cumulative Sowdust starts at 100,000 for level one and reaches 25,000,000/25,000,000 at level 19.
+- [ ] Toggle chip rows and Sowdust details independently. Expected: installed totals and levels remain stable while only the selected presentation changes.
 - [ ] Switch profiles and press Refresh. Expected: each profile uses an isolated Garden cache; refresh bypasses it and no state leaks.
 - [ ] Disable `profileGarden` or open a profile without Garden data. Expected: a readable disabled/unavailable message appears and no request loops or crashes occur.
-- [ ] Refresh online, restart offline and reopen Garden. Expected: the validated crop, visitor, composter, 24-plot and three-upgrade greenhouse catalogue survives for the configured one-to-168-hour cache period.
+- [ ] Refresh online, restart offline and reopen Garden. Expected: the validated crop, visitor, composter, plot, greenhouse, 41-mutation and 19-step chip catalogue survives for the configured one-to-168-hour cache period.
 - [ ] Force the progression catalogue unavailable with no cache. Expected: core Garden totals, visitors, contests, composter and greenhouse still render; crop progression says unavailable.
 
 ### Profile Rift

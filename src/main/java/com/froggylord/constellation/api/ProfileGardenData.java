@@ -38,6 +38,10 @@ public final class ProfileGardenData {
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/plot_cost.json");
     private static final URI GREENHOUSE = URI.create(
         "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/greenhouse_upgrades.json");
+    private static final URI MUTATIONS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/mutations.json");
+    private static final URI CHIPS = URI.create(
+        "https://raw.githubusercontent.com/meowdding/meowdding-repo/master/repo/pv/garden_data/chips.json");
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static volatile Catalogue catalogue;
     private static volatile CompletableFuture<Catalogue> loading;
@@ -64,6 +68,8 @@ public final class ProfileGardenData {
                 root.add("plots", fetch(PLOTS));
                 root.add("plot_costs", fetch(PLOT_COSTS));
                 root.add("greenhouse", fetch(GREENHOUSE));
+                root.add("mutations", fetch(MUTATIONS));
+                root.add("chips", fetch(CHIPS));
                 String body = root.toString();
                 Catalogue loaded = parse(body, System.currentTimeMillis(), false);
                 Files.writeString(cachePath(), body, StandardCharsets.UTF_8);
@@ -108,6 +114,8 @@ public final class ProfileGardenData {
         JsonArray rawPlots = array(root.get("plots"));
         JsonObject rawPlotCosts = object(root, "plot_costs");
         JsonObject rawGreenhouse = object(root, "greenhouse");
+        JsonArray rawMutations = array(root.get("mutations"));
+        JsonArray rawChips = array(root.get("chips"));
         Map<String, List<Long>> milestones = new LinkedHashMap<>();
         for (var entry : rawMilestones.entrySet()) {
             if (!entry.getValue().isJsonArray()) continue;
@@ -185,9 +193,24 @@ public final class ProfileGardenData {
             || greenhouse.get("YIELD") == null || greenhouse.get("YIELD").maximum() != 9
             || greenhouse.get("PLOT_LIMIT") == null || greenhouse.get("PLOT_LIMIT").maximum() != 2)
             throw new IllegalArgumentException("Garden plot or greenhouse catalogue is incomplete.");
+
+        // ported from SkyBlockPv (modified MIT): data/repo/StaticGardenData.kt, screens/windowed/tabs/farming/MutationScreen.kt, FarmingScreen.kt
+        // Portions of this code are from the SkyBlockPv mod.
+        Map<String, Mutation> mutations = new LinkedHashMap<>();
+        for (JsonElement value : rawMutations) {
+            if (!value.isJsonObject()) continue;
+            JsonObject mutation = value.getAsJsonObject();
+            String id = string(mutation.get("id"), "");
+            if (!id.isBlank()) mutations.put(id, new Mutation(id, string(mutation.get("name"), id),
+                string(mutation.get("rarity"), "UNKNOWN"),
+                !mutation.has("analyzable") || mutation.get("analyzable").getAsBoolean()));
+        }
+        List<Long> chips = cumulative(rawChips);
+        if (mutations.size() != 41 || chips.size() != 19 || chips.getLast() != 25_000_000L)
+            throw new IllegalArgumentException("Garden mutation or chip catalogue is incomplete.");
         return new Catalogue(Map.copyOf(milestones), List.copyOf(upgradeCosts), Map.copyOf(visitors),
             Map.copyOf(composter), Map.copyOf(plots), Map.copyOf(plotCosts), Map.copyOf(greenhouse),
-            loadedAt, cached);
+            Map.copyOf(mutations), List.copyOf(chips), loadedAt, cached);
     }
 
     private static List<Long> cumulative(JsonArray steps) {
@@ -236,9 +259,11 @@ public final class ProfileGardenData {
     }
     public record Greenhouse(String id, String name, String rewardFormula, int maximum,
                              List<Map<String, Integer>> costs) {}
+    public record Mutation(String id, String name, String rarity, boolean analyzable) {}
     public record Catalogue(Map<String, List<Long>> milestones, List<Integer> cropUpgradeCosts,
                             Map<String, Visitor> visitors, Map<String, Composter> composter,
                             Map<String, Plot> plots, Map<String, List<PlotCost>> plotCosts,
                             Map<String, Greenhouse> greenhouse,
+                            Map<String, Mutation> mutations, List<Long> chipCosts,
                             long loadedAt, boolean cached) {}
 }

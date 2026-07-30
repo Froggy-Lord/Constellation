@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.784 (2026-07-30) — Exact Profile Garden Mutations and Chips
+
+- added all 41 maintained mutations with discovered, analyzed and non-analyzable states
+- added unknown-future mutation preservation, state/rarity filters, search, sorting and limits
+- added Glowing Mushrooms broken from the profile statistics
+- added all ten Garden Chip levels with exact 19-level cumulative Sowdust progress
+- expanded the validated Garden catalogue while retaining core endpoint fallback behavior
+
 ## 0.9.783 (2026-07-30) — Exact Profile Garden Plots and Greenhouse
 
 - added all 24 numbered plots with exact 5×5 catalogue coordinates and unlock state

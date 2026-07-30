@@ -21,13 +21,17 @@ public final class ProfileGardenCalculator {
         "CARROT_ITEM", "INK_SACK:3", "NETHER_STALK", "CACTUS", "MUSHROOM_COLLECTION", "MOONFLOWER",
         "DOUBLE_PLANT", "WILD_ROSE");
     private static final List<String> COMPOSTER = List.of("SPEED", "MULTI_DROP", "FUEL_CAP", "ORGANIC_MATTER_CAP", "COST_REDUCTION");
+    private static final List<String> CHIPS = List.of("cropshot", "evergreen", "hypercharge", "mechamind",
+        "overdrive", "quickdraw", "rarefinder", "sowledge", "synthesis", "vermin_vaporizer");
 
     private ProfileGardenCalculator() {}
 
     public static Result calculate(JsonObject member, ProfileViewerApi.GardenResult response,
                                    ProfileGardenData.Catalogue catalogue,
                                    String cropSort, String visitorFilter, String visitorSort,
-                                   boolean hideZeroCrops, boolean hideZeroVisitors) {
+                                   boolean hideZeroCrops, boolean hideZeroVisitors,
+                                   String mutationFilter, String mutationRarity, String mutationSort,
+                                   String mutationSearch) {
         JsonObject garden = response.garden();
         JsonObject player = object(member, "garden_player_data");
         JsonObject contests = object(member, "jacobs_contest");
@@ -127,6 +131,42 @@ public final class ProfileGardenCalculator {
                     upgradeLevel, maximum, reward, Map.copyOf(paid), Map.copyOf(total));
             }).toList();
 
+        // ported from SkyBlockPv (modified MIT): api/data/profile/SkyBlockProfile.kt, data/api/skills/farming/ChipsData.kt, screens/windowed/tabs/farming/MutationScreen.kt, FarmingScreen.kt
+        // Portions of this code are from the SkyBlockPv mod.
+        Set<String> analyzedIds = stringSet(player.get("analyzed_greenhouse_crops"));
+        Set<String> discoveredIds = stringSet(player.get("discovered_greenhouse_crops"));
+        Set<String> mutationIds = new HashSet<>(analyzedIds);
+        mutationIds.addAll(discoveredIds);
+        if (catalogue != null) mutationIds.addAll(catalogue.mutations().keySet());
+        List<Mutation> allMutations = new ArrayList<>();
+        for (String id : mutationIds) {
+            ProfileGardenData.Mutation definition = catalogue == null ? null : catalogue.mutations().get(id);
+            boolean analyzable = definition == null || definition.analyzable();
+            allMutations.add(new Mutation(id, definition == null ? title(id) : definition.name(),
+                definition == null ? "UNKNOWN" : definition.rarity(), discoveredIds.contains(id),
+                analyzedIds.contains(id) || !analyzable, analyzable, definition == null));
+        }
+        int mutationsDiscovered = (int) allMutations.stream().filter(Mutation::discovered).count();
+        int mutationsAnalyzed = (int) allMutations.stream().filter(value -> value.analyzed() && value.analyzable()).count();
+        List<Mutation> mutations = allMutations.stream()
+            .filter(value -> mutationMatches(value, mutationFilter, mutationRarity, mutationSearch))
+            .sorted(mutationComparator(mutationSort)).toList();
+
+        JsonObject playerData = object(member, "player_data");
+        JsonObject rawChips = object(playerData, "garden_chips");
+        Set<String> chipIds = new java.util.LinkedHashSet<>(CHIPS);
+        chipIds.addAll(rawChips.keySet());
+        int chipMaximum = catalogue == null ? 0 : catalogue.chipCosts().size();
+        long chipSowdustMaximum = catalogue == null || catalogue.chipCosts().isEmpty()
+            ? 0 : catalogue.chipCosts().getLast();
+        List<Chip> chips = chipIds.stream().map(id -> {
+            int chipLevel = integer(rawChips.get(id));
+            long sowdust = catalogue == null || chipLevel <= 0 ? 0
+                : catalogue.chipCosts().get(Math.min(chipLevel, chipMaximum) - 1);
+            return new Chip(id, title(id), chipLevel, chipMaximum, sowdust, chipSowdustMaximum,
+                !CHIPS.contains(id));
+        }).toList();
+
         JsonObject medals = object(contests, "medals_inv");
         JsonObject perks = object(contests, "perks");
         JsonObject contestRows = object(contests, "contests");
@@ -147,7 +187,9 @@ public final class ProfileGardenCalculator {
             decimal(composter.get("fuel_units")), decimal(composter.get("compost_units")),
             integer(composter.get("compost_items")), integer(composter.get("conversion_ticks")),
             whole(composter.get("last_save")), composterRows, plotRows,
-            arraySize(garden, "greenhouse_slots"), greenhouseRows, response.cached());
+            arraySize(garden, "greenhouse_slots"), greenhouseRows,
+            whole(object(member, "player_stats").get("glowing_mushrooms_broken")),
+            mutationsDiscovered, mutationsAnalyzed, allMutations.size(), mutations, chips, response.cached());
     }
 
     private static Crop crop(String id, JsonObject resources, JsonObject upgrades,
@@ -193,6 +235,33 @@ public final class ProfileGardenCalculator {
         };
     }
 
+    private static boolean mutationMatches(Mutation value, String filter, String rarity, String search) {
+        String mode = filter == null ? "ALL" : filter.toUpperCase(Locale.ROOT);
+        if (mode.equals("DISCOVERED") && !value.discovered()
+            || mode.equals("ANALYZED") && !value.analyzed()
+            || (mode.equals("PENDING") || mode.equals("DISCOVERED_NOT_ANALYZED"))
+                && (!value.discovered() || value.analyzed())
+            || mode.equals("UNDISCOVERED") && value.discovered()) return false;
+        String wantedRarity = rarity == null ? "ALL" : rarity.toUpperCase(Locale.ROOT);
+        if (!wantedRarity.equals("ALL") && !value.rarity().equalsIgnoreCase(wantedRarity)
+            && !(wantedRarity.equals("UNKNOWN") && value.unknown())) return false;
+        String query = search == null ? "" : search.strip().toLowerCase(Locale.ROOT);
+        return query.isEmpty() || value.name().toLowerCase(Locale.ROOT).contains(query)
+            || value.id().toLowerCase(Locale.ROOT).contains(query);
+    }
+
+    private static Comparator<Mutation> mutationComparator(String sort) {
+        Comparator<Mutation> rarity = Comparator.<Mutation>comparingInt(value -> rarityOrder(value.rarity()))
+            .reversed().thenComparing(Mutation::name);
+        return switch (sort == null ? "" : sort.toUpperCase(Locale.ROOT)) {
+            case "NAME" -> Comparator.comparing(Mutation::name);
+            case "STATUS" -> Comparator.<Mutation>comparingInt(value -> value.analyzed() ? 2
+                : value.discovered() ? 1 : 0).thenComparing(rarity);
+            case "RARITY" -> rarity;
+            default -> rarity;
+        };
+    }
+
     private static int rarityOrder(String rarity) {
         return switch (rarity.toUpperCase(Locale.ROOT)) {
             case "SPECIAL" -> 5;
@@ -224,6 +293,16 @@ public final class ProfileGardenCalculator {
             case "DOUBLE_PLANT" -> "Sunflower";
             default -> title(id);
         };
+    }
+
+    private static Set<String> stringSet(JsonElement value) {
+        Set<String> values = new HashSet<>();
+        if (value == null || !value.isJsonArray()) return values;
+        for (JsonElement element : value.getAsJsonArray()) {
+            try { values.add(element.getAsString().toUpperCase(Locale.ROOT)); }
+            catch (RuntimeException ignored) {}
+        }
+        return values;
     }
 
     private static JsonObject object(JsonObject root, String key) {
@@ -267,6 +346,10 @@ public final class ProfileGardenCalculator {
                        String nextCostItem, int nextCostAmount) {}
     public record GreenhouseUpgrade(String id, String name, int level, int maximum, int reward,
                                     Map<String, Integer> paid, Map<String, Integer> total) {}
+    public record Mutation(String id, String name, String rarity, boolean discovered, boolean analyzed,
+                           boolean analyzable, boolean unknown) {}
+    public record Chip(String id, String name, int level, int maximum, long sowdustPaid,
+                       long sowdustMaximum, boolean unknown) {}
     public record Result(boolean available, long gardenXp, int gardenLevel, long levelProgress, long levelRequired,
                          int copper, int larvaConsumed, int unlockedPlots, String selectedBarnSkin,
                          int unlockedBarnSkins, List<Crop> crops, long cropsCollected, int visitorsCompleted,
@@ -276,5 +359,7 @@ public final class ProfileGardenCalculator {
                          double compostUnits, int compostItems, int conversionTicks, long composterLastSave,
                          List<Upgrade> composterUpgrades, List<Plot> plots,
                          int greenhouseSlots, List<GreenhouseUpgrade> greenhouseUpgrades,
+                         long glowingMushrooms, int mutationsDiscovered, int mutationsAnalyzed,
+                         int mutationTotal, List<Mutation> mutations, List<Chip> chips,
                          boolean cached) {}
 }
