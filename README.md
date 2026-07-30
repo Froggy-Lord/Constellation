@@ -65,6 +65,8 @@ the slayer page calculates exact progression for all six slayers, with boss and 
 
 the pet page uses the current licensed neu leveling data, including tier boost, bingo and all three level-200 dragons, with full progression, metadata, sorting and filtering controls.
 
+the bestiary page follows the current licensed neu family catalogue, aggregates every mob alias correctly and exposes levels, kills, deaths, next thresholds, completion, categories and uncatalogued api kills.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.

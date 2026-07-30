@@ -684,3 +684,14 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Total, maxed and total-XP profile summaries without collapsing duplicate pets
 - Rarity, level, XP or name sorting plus active-first, active-only, search, minimum-rarity and row-limit filters
 - Independent XP, progress, remaining, overflow, candy, item, skin, UUID and summary visibility
+
+## Profile Bestiary
+
+- Current MIT NEU catalogue with 268 validated families across 19 categories
+- Alias-aware family kills and deaths using the selected profile's dedicated Bestiary fields
+- Exact bracket/cap level, next threshold, remaining kills and total-cap completion
+- Family-level, tracked-kill, tracked-death and uncatalogued-kill summaries
+- Category and search filtering plus independent zero-family and maxed-family hiding
+- Category, kills, level, remaining or completion sorting and a configurable result limit
+- One-to-168-hour cache age, bounded network timeouts, validated last-good disk fallback and manual viewer refresh
+- No network work in rendering and no unknown family assigned to a guessed category or cap

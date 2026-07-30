@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.770 (2026-07-30) — Complete Profile Bestiary
+
+- added a full Bestiary page backed by the current MIT NEU family, category, bracket and cap catalogue
+- added exact alias-aware kills, deaths, family levels, next thresholds, completion and remaining kills
+- added category/search filtering, zero/maxed hiding, category/kills/level/remaining/completion sorting and limits
+- added bounded asynchronous refresh, validated last-good disk caching and visible uncatalogued kill totals
+
 ## 0.9.769 (2026-07-30) — Complete Profile Pet Progression
 
 - replaced raw pet XP with exact rarity-offset levels, next/max progress, remaining XP and overflow

@@ -6,6 +6,7 @@ import com.froggylord.constellation.api.ProfileDungeonCalculator;
 import com.froggylord.constellation.api.ProfileSkillCalculator;
 import com.froggylord.constellation.api.ProfileSlayerCalculator;
 import com.froggylord.constellation.api.ProfilePetCalculator;
+import com.froggylord.constellation.api.ProfileBestiaryData;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -33,7 +34,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -54,6 +55,9 @@ public final class ProfileViewerScreen extends Screen {
     private int wealthProfile = -1;
     private int wealthCategory = -1;
     private int wealthGeneration;
+    private ProfileBestiaryData.Catalogue bestiaryData;
+    private String bestiaryError = "";
+    private boolean bestiaryLoading;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -113,6 +117,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 6) {
             drawWealth(g, mx, my);
+            return;
+        }
+        if (tab == 7) {
+            drawBestiary(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -256,6 +264,64 @@ public final class ProfileViewerScreen extends Screen {
             }
         }
         return lines;
+    }
+
+    private void drawBestiary(GuiGraphicsExtractor g) {
+        if (!ConstellationClient.cfg().lyra.profileBestiary) {
+            g.text(font, "Bestiary viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if (bestiaryData == null && !bestiaryLoading && bestiaryError.isEmpty()) startBestiary(false);
+        if (bestiaryLoading && bestiaryData == null) {
+            g.text(font, "Loading Bestiary catalogue...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (bestiaryData == null) {
+            g.text(font, bestiaryError.isEmpty() ? "Bestiary data is unavailable." : bestiaryError,
+                14, 112, 0xFFFF7777, false);
+            return;
+        }
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileBestiaryData.Result data = ProfileBestiaryData.calculate(bestiaryData, member(profile()),
+            cfg.profileBestiaryCategory, cfg.profileBestiarySearch, cfg.profileBestiarySort,
+            cfg.profileBestiaryHideZero, cfg.profileBestiaryHideMaxed);
+        int decimals = Math.clamp(cfg.profileBestiaryDecimals, 0, 2);
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileBestiaryShowSummary) {
+            rows.add(row("Bestiary levels", data.levels() + "/" + data.maxLevels()));
+            rows.add(row("Tracked kills", whole(data.totalKills())));
+            if (cfg.profileBestiaryShowDeaths) rows.add(row("Tracked deaths", whole(data.totalDeaths())));
+            if (data.unknownKills() > 0) rows.add(new Row("Uncatalogued kills", whole(data.unknownKills()), 0xFFFFAA55));
+            rows.add(row("Catalogue", bestiaryData.families().size() + " families  "
+                + (bestiaryData.cached() ? "cached" : "current")));
+        }
+        int limit = Math.clamp(cfg.profileBestiaryLimit, 0, 1000);
+        int shown = 0;
+        for (ProfileBestiaryData.Family family : data.families()) {
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            String label = cfg.profileBestiaryShowCategory ? family.category() + "  " + family.name() : family.name();
+            StringBuilder value = new StringBuilder("Level ").append(family.level()).append("/").append(family.maxLevel());
+            if (cfg.profileBestiaryShowKills) value.append("  ").append(compact(family.kills())).append(" kills");
+            if (cfg.profileBestiaryShowDeaths && family.deaths() > 0)
+                value.append("  ").append(compact(family.deaths())).append(" deaths");
+            if (cfg.profileBestiaryShowCompletion)
+                value.append("  ").append(fixed(family.completion() * 100, decimals)).append("%");
+            if (cfg.profileBestiaryShowNext && family.nextThreshold() > 0)
+                value.append("  ").append(compact(family.remaining())).append(" left");
+            rows.add(new Row(label, value.toString(),
+                family.level() >= family.maxLevel() ? 0xFFFFAA55 : ConstellationTheme.TEXT));
+        }
+        int y = 108 - scroll;
+        for (Row row : rows) {
+            if (y > 98 && y < height - 22) {
+                g.fill(12, y, width - 12, y + 18, 0xA0181825);
+                g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
+                g.text(font, row.value, width - 19 - font.width(row.value), y + 6, row.color, false);
+            }
+            y += 21;
+        }
+        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
     }
 
     private List<Row> overview(JsonObject profile, JsonObject m) {
@@ -494,6 +560,7 @@ public final class ProfileViewerScreen extends Screen {
                     tab = i; scroll = 0;
                     if (tab == 5 && itemProfile != profileIndex) startItemDecode();
                     if (tab == 6 && wealthProfile != profileIndex) startWealth();
+                    if (tab == 7 && bestiaryData == null) startBestiary(false);
                     return true;
                 }
                 x += bw + 4;
@@ -541,6 +608,18 @@ public final class ProfileViewerScreen extends Screen {
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
+        if (tab == 7 && bestiaryData != null) {
+            var cfg = ConstellationClient.cfg().lyra;
+            ProfileBestiaryData.Result data = ProfileBestiaryData.calculate(bestiaryData, member(profile()),
+                cfg.profileBestiaryCategory, cfg.profileBestiarySearch, cfg.profileBestiarySort,
+                cfg.profileBestiaryHideZero, cfg.profileBestiaryHideMaxed);
+            int summary = cfg.profileBestiaryShowSummary ? (data.unknownKills() > 0 ? 5 : 4) : 0;
+            int shown = cfg.profileBestiaryLimit <= 0 ? data.families().size()
+                : Math.min(data.families().size(), cfg.profileBestiaryLimit);
+            int max = Math.max(0, (summary + shown) * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
         int max = Math.max(0, rows(profile(), member(profile())).size() * 21 - (height - 132));
         scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
         return true;
@@ -567,6 +646,7 @@ public final class ProfileViewerScreen extends Screen {
                 player.setValue(loaded.name());
                 profileIndex = selectedIndex(loaded.profiles());
                 resetItems();
+                if (tab == 7) startBestiary(refresh);
             }
         }));
     }
@@ -612,6 +692,21 @@ public final class ProfileViewerScreen extends Screen {
             () -> generation != wealthGeneration || requestedProfile != profileIndex
         ).whenComplete((unused, failure) -> Minecraft.getInstance().execute(() -> {
             if (generation == wealthGeneration && requestedProfile == profileIndex) wealthLoading = false;
+        }));
+    }
+
+    private void startBestiary(boolean refresh) {
+        if (bestiaryLoading || !ConstellationClient.cfg().lyra.profileBestiary) return;
+        bestiaryLoading = true;
+        bestiaryError = "";
+        ProfileBestiaryData.load(refresh).whenComplete((loaded, failure) -> Minecraft.getInstance().execute(() -> {
+            bestiaryLoading = false;
+            if (failure == null) {
+                bestiaryData = loaded;
+            } else {
+                bestiaryData = null;
+                bestiaryError = "Bestiary catalogue is unavailable.";
+            }
         }));
     }
 

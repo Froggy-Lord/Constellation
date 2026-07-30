@@ -2193,3 +2193,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Test RARITY, LEVEL, XP and NAME sorting, active-first/active-only, search, minimum rarity and zero/nonzero limits. Expected: each filter composes without altering the summary totals.
 - [ ] Toggle every `profilePetsShow*` option and decimal precision. Expected: each controls only its documented values and persists after restart.
 - [ ] Open a profile with pet APIs disabled and one with an empty pet list. Expected: the former says API disabled while the latter honestly says None.
+
+### Profile Bestiary
+
+- [ ] Enable `profileBestiary`, open `/pv`, then select Bestiary. Expected: the catalogue loads asynchronously without freezing the screen and reports at least 268 families.
+- [ ] Compare several families whose NEU entry contains multiple mob IDs. Expected: their displayed kills and deaths equal the sum of every listed API alias exactly once.
+- [ ] Check a family below its first threshold, between thresholds, at its cap and beyond its cap. Expected: level, remaining kills, completion and maxed color are exact.
+- [ ] Compare Family levels with the sum of all family levels. Expected: filters and limits never change the unfiltered summary total.
+- [ ] Test every named category, ALL, a partial search, hide-zero and hide-maxed together. Expected: filters compose and nested Fishing subcategories remain under Fishing.
+- [ ] Test CATEGORY, KILLS, LEVEL, REMAINING and COMPLETION sorts. Expected: ties are stable by name and maxed families sort last for REMAINING.
+- [ ] Set `profileBestiaryLimit` to zero and several positive values. Expected: zero is unlimited and summaries remain unchanged.
+- [ ] Toggle kills, deaths, category, next, completion and summary rows plus zero-to-two decimals. Expected: each changes only its documented presentation.
+- [ ] Inspect a profile with API mob IDs newer than the local catalogue. Expected: their kills appear in the amber uncatalogued total and are not assigned guessed levels.
+- [ ] Refresh online, restart offline and corrupt a temporary copy of the cache. Expected: validated current data becomes a last-good cache, offline uses it, and incomplete data never replaces it.
+- [ ] Set cache age from one to 168 hours and press viewer Refresh. Expected: normal opens respect the TTL while Refresh attempts a bounded source update.
+- [ ] Disable `profileBestiary`. Expected: the tab reports disabled and starts no request.

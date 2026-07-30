@@ -2948,7 +2948,19 @@ The page calculates fractional level, next-level and total-max progress, XP rema
 
 Version `0.9.769` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `6140bcaeb2f939bfc3039289c2b81e5a059510bc64b0d1c509fe639f2c34eeb3`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-162155-0.9.769/`; only `constellation-0.9.769.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-162155-0.9.769/`; only `constellation-0.9.769.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `1f83cf3338`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.770 Complete Profile Bestiary
+
+`ProfileBestiaryData.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Bestiary page. The category/family/bracket/cap data source ports current NotEnoughUpdates-REPO MIT `constants/bestiary.json` at commit `1fa24d3ee172ab82e85418551da77ef252e1a66c`. Alias aggregation, member parsing, family levels, next thresholds, completion and category presentation port SkyBlockPv modified-MIT `data/repo/BestiaryCodecs.kt`, `data/api/skills/combat/MobData.kt`, `api/data/profile/SkyBlockProfile.kt` and `screens/windowed/tabs/combat/BestiaryScreen.kt`; its required notice sits beside the implementation.
+
+The loader fetches the licensed raw catalogue asynchronously with eight/15-second timeouts, requires at least eight bracket groups, 100 families and 15 categories, and writes only a validated last-good cache under `config/constellation-bestiary.json`. A one-to-168-hour TTL defaults to 24 hours; viewer Refresh requests current data, and failures retain valid cached data. Rendering reads only in-memory structures.
+
+Every family sums all API mob aliases exactly once, then calculates its cap-bounded level, next threshold, remaining kills and full-cap completion. Nested categories are flattened without losing their parent category. Summary totals are calculated before category/search/zero/maxed/limit filters. Unknown API IDs remain visible as uncatalogued kills instead of receiving guessed metadata. Category, kills, level, remaining and completion sorts plus every displayed field are independently configurable.
+
+The current NEU catalogue was parsed through Constellation's own validator and produced exactly 268 families across 19 categories. Version `0.9.770` then built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `bc9812f0a3a849ce0ff9d4b87599cbae2e5a6082334a158ecc8b11ed17c3ab87`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-163102-0.9.770/`; only `constellation-0.9.770.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
 
 ## Required dedicated visual-design pass
 
