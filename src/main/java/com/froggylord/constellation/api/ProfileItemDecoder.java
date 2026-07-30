@@ -30,6 +30,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static net.azureaaron.legacyitemdfu.LegacyItemStackFixer.getFirstVersion;
 import static net.azureaaron.legacyitemdfu.LegacyItemStackFixer.getFixer;
@@ -43,6 +45,31 @@ public final class ProfileItemDecoder {
 
     public static CompletableFuture<Result> decode(JsonObject member) {
         return CompletableFuture.supplyAsync(() -> decodeNow(member));
+    }
+
+    // ported from SkyBlockPv (modified MIT): data/museum/MuseumData.kt
+    // Portions of this code are from the SkyBlockPv mod.
+    public static SpecialIds decodeMuseumSpecial(JsonElement encodedSpecial) {
+        Set<String> ids = new LinkedHashSet<>();
+        int failures = 0;
+        if (encodedSpecial == null || !encodedSpecial.isJsonArray()) return new SpecialIds(Set.of(), 0);
+        for (JsonElement element : encodedSpecial.getAsJsonArray()) {
+            try {
+                JsonObject wrapper = element.getAsJsonObject();
+                JsonObject items = object(wrapper, "items");
+                for (ItemStack stack : decodeData(items)) {
+                    CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+                    if (data == null) continue;
+                    CompoundTag root = data.copyTag();
+                    CompoundTag extra = root.getCompoundOrEmpty("ExtraAttributes");
+                    String id = (extra.isEmpty() ? root : extra).getStringOr("id", "");
+                    if (!id.isBlank()) ids.add(id.toUpperCase(Locale.ROOT));
+                }
+            } catch (Exception ignored) {
+                failures++;
+            }
+        }
+        return new SpecialIds(Set.copyOf(ids), failures);
     }
 
     private static Result decodeNow(JsonObject member) {
@@ -233,4 +260,5 @@ public final class ProfileItemDecoder {
 
     public record Container(String name, int rows, List<ItemStack> items, boolean hotbar) {}
     public record Result(List<Container> containers, List<String> failures) {}
+    public record SpecialIds(Set<String> ids, int failures) {}
 }

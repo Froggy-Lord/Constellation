@@ -10,6 +10,7 @@ import com.froggylord.constellation.api.ProfileBestiaryData;
 import com.froggylord.constellation.api.ProfileCollectionData;
 import com.froggylord.constellation.api.ProfileMinionCalculator;
 import com.froggylord.constellation.api.ProfileMiningCalculator;
+import com.froggylord.constellation.api.ProfileMuseumData;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.render.ConstellationTheme;
@@ -37,7 +38,7 @@ import java.util.Locale;
 // ported from SkyBlockPv (modified MIT): screens/BasePvScreen.kt, screens/PvTab.kt
 // Portions of this code are from the SkyBlockPv mod.
 public final class ProfileViewerScreen extends Screen {
-    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining"};
+    private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
     private EditBox player;
@@ -64,6 +65,11 @@ public final class ProfileViewerScreen extends Screen {
     private ProfileCollectionData.Catalogue collectionData;
     private String collectionError = "";
     private boolean collectionLoading;
+    private ProfileMuseumData.Catalogue museumData;
+    private ProfileViewerApi.MuseumResult museumResult;
+    private String museumError = "";
+    private boolean museumLoading;
+    private int museumProfile = -1;
 
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
@@ -139,6 +145,10 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 10) {
             drawMining(g);
+            return;
+        }
+        if (tab == 11) {
+            drawMuseum(g);
             return;
         }
         List<Row> rows = rows(profile, member);
@@ -531,6 +541,78 @@ public final class ProfileViewerScreen extends Screen {
         drawRows(g, rows);
     }
 
+    private void drawMuseum(GuiGraphicsExtractor g) {
+        var cfg = ConstellationClient.cfg().lyra;
+        if (!cfg.profileMuseum) {
+            g.text(font, "Museum viewer is disabled.", 14, 112, ConstellationTheme.TEXT_MUTED, false);
+            return;
+        }
+        if ((museumData == null || museumResult == null || museumProfile != profileIndex)
+            && !museumLoading && museumError.isEmpty()) startMuseum(false);
+        if (museumLoading && (museumData == null || museumResult == null)) {
+            g.text(font, "Loading Museum...", 14, 112, ConstellationTheme.TEXT, false);
+            return;
+        }
+        if (museumData == null || museumResult == null || museumProfile != profileIndex) {
+            g.text(font, museumError.isEmpty() ? "Museum data is unavailable." : museumError,
+                14, 112, 0xFFFF7777, false);
+            return;
+        }
+        drawRows(g, museumDisplayRows(true));
+    }
+
+    private List<Row> museumDisplayRows(boolean values) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileMuseumData.Result data = ProfileMuseumData.calculate(museumData, museumResult,
+            cfg.profileMuseumCategory, cfg.profileMuseumSearch, cfg.profileMuseumFilter,
+            cfg.profileMuseumSort, cfg.profileMuseumIncludeBorrowed);
+        List<Row> rows = new ArrayList<>();
+        if (cfg.profileMuseumShowSummary) {
+            rows.add(row("Museum donations", values ? data.donated() + " direct  " + data.throughParent()
+                + " through parent  " + data.total() + " total" : ""));
+            rows.add(row("Missing donations", values ? Integer.toString(data.missing()) : ""));
+            if (data.borrowed() > 0) rows.add(row("Borrowed donations", values ? Integer.toString(data.borrowed()) : ""));
+            rows.add(row("Special items", values ? data.specialDonated() + "/" + data.specialTotal() : ""));
+            if (data.unknownSpecial() > 0)
+                rows.add(new Row("Uncatalogued special items", values ? Long.toString(data.unknownSpecial()) : "", 0xFFFFAA55));
+            if (data.specialFailures() > 0)
+                rows.add(new Row("Unreadable special entries", values ? Integer.toString(data.specialFailures()) : "", 0xFFFFAA55));
+            rows.add(row("Catalogue", values ? data.total() + " donations  "
+                + (data.cached() || museumData.cached() ? "cached" : "current") : ""));
+        }
+        int limit = Math.clamp(cfg.profileMuseumLimit, 0, 2000);
+        int pieceLimit = Math.clamp(cfg.profileMuseumPieceLimit, 0, 12);
+        int shown = 0;
+        for (ProfileMuseumData.Entry entry : data.entries()) {
+            if (limit > 0 && shown >= limit) break;
+            shown++;
+            String label = cfg.profileMuseumShowCategory ? entry.category() + "  " + entry.name() : entry.name();
+            StringBuilder value = new StringBuilder();
+            if (cfg.profileMuseumShowStatus) value.append(switch (entry.status()) {
+                case DONATED -> "Donated";
+                case BORROWED -> "Borrowed";
+                case PARENT -> "Through parent";
+                case MISSING -> "Missing";
+            });
+            if (cfg.profileMuseumShowType)
+                value.append(value.isEmpty() ? "" : "  ").append(entry.armor() ? "Set" : "Item");
+            if (cfg.profileMuseumShowParent && entry.parent() != null)
+                value.append(value.isEmpty() ? "" : "  ").append("parent ").append(title(entry.parent()));
+            if (cfg.profileMuseumShowPieces && entry.armor() && pieceLimit > 0) {
+                String pieces = String.join(", ", entry.pieces().stream().limit(pieceLimit).map(ProfileViewerScreen::title).toList());
+                value.append(value.isEmpty() ? "" : "  ").append(pieces);
+                if (entry.pieces().size() > pieceLimit) value.append(" +").append(entry.pieces().size() - pieceLimit);
+            }
+            int color = switch (entry.status()) {
+                case DONATED -> 0xFF55FF55;
+                case BORROWED, PARENT -> 0xFFFFAA55;
+                case MISSING -> ConstellationTheme.TEXT;
+            };
+            rows.add(new Row(label, values ? value.toString() : "", color));
+        }
+        return rows;
+    }
+
     private List<Row> overview(JsonObject profile, JsonObject m) {
         List<Row> out = new ArrayList<>();
         out.add(row("SkyBlock level", compact(number(path(m, "leveling.experience")) / 100.0)));
@@ -769,6 +851,7 @@ public final class ProfileViewerScreen extends Screen {
                     if (tab == 6 && wealthProfile != profileIndex) startWealth();
                     if (tab == 7 && bestiaryData == null) startBestiary(false);
                     if (tab == 8 && collectionData == null) startCollections(false);
+                    if (tab == 11 && (museumResult == null || museumProfile != profileIndex)) startMuseum(false);
                     return true;
                 }
                 x += bw + 4;
@@ -813,6 +896,11 @@ public final class ProfileViewerScreen extends Screen {
         }
         if (tab == 10) {
             int max = Math.max(0, miningDisplayRows().size() * 21 - (height - 132));
+            scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
+            return true;
+        }
+        if (tab == 11 && museumData != null && museumResult != null && museumProfile == profileIndex) {
+            int max = Math.max(0, museumDisplayRows(false).size() * 21 - (height - 132));
             scroll = Math.clamp(scroll - (int) (sy * 24), 0, max);
             return true;
         }
@@ -886,6 +974,7 @@ public final class ProfileViewerScreen extends Screen {
                 resetItems();
                 if (tab == 7) startBestiary(refresh);
                 if (tab == 8) startCollections(refresh);
+                if (tab == 11) startMuseum(refresh);
             }
         }));
     }
@@ -1027,6 +1116,34 @@ public final class ProfileViewerScreen extends Screen {
         }));
     }
 
+    private void startMuseum(boolean refresh) {
+        if (result == null || museumLoading || !ConstellationClient.cfg().lyra.profileMuseum) return;
+        int requestedProfile = profileIndex;
+        String profileId = string(profile(), "profile_id", "");
+        String memberId = result.uuid().toString().replace("-", "");
+        museumLoading = true;
+        museumError = "";
+        var catalogueFuture = ProfileMuseumData.load(refresh);
+        var museumFuture = ProfileViewerApi.loadMuseum(profileId, memberId, refresh);
+        java.util.concurrent.CompletableFuture.allOf(catalogueFuture, museumFuture)
+            .whenComplete((unused, failure) -> Minecraft.getInstance().execute(() -> {
+                if (requestedProfile != profileIndex) {
+                    museumLoading = false;
+                    return;
+                }
+                museumLoading = false;
+                if (failure == null) {
+                    museumData = catalogueFuture.join();
+                    museumResult = museumFuture.join();
+                    museumProfile = requestedProfile;
+                } else {
+                    museumResult = null;
+                    museumProfile = -1;
+                    museumError = "Museum data is unavailable.";
+                }
+            }));
+    }
+
     private void resetItems() {
         itemResult = null;
         itemLoading = false;
@@ -1037,6 +1154,10 @@ public final class ProfileViewerScreen extends Screen {
         wealthLoading = false;
         wealthProfile = -1;
         wealthCategory = -1;
+        museumResult = null;
+        museumLoading = false;
+        museumProfile = -1;
+        museumError = "";
     }
 
     private JsonObject profile() { return result.profiles().get(Math.clamp(profileIndex, 0, result.profiles().size() - 1)).getAsJsonObject(); }

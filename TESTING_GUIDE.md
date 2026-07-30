@@ -2256,3 +2256,22 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle HotM, tree, powder, crystals, Rock, Glacite, fossils and corpses independently. Expected: scrolling remains bounded and each option controls only its section.
 - [ ] Open a Stranded or API-restricted profile. Expected: genuinely missing mining data reports unavailable rather than borrowing another profile or inventing zero progress.
 - [ ] Disable `profileMining`. Expected: the tab reports disabled and does no calculation.
+
+### Profile Museum
+
+- [ ] Enable `profileMuseum`, open `/pv`, then select Museum. Expected: the separate Museum request loads asynchronously for the selected profile and the official item catalogue reports 627 canonical donations and 335 special items.
+- [ ] Switch between two profiles with different Museums. Expected: each profile starts its own request/cache entry and no donation state leaks between profiles.
+- [ ] Press Refresh while on Museum. Expected: both profile Museum data and the official catalogue refresh without blocking rendering or exposing authentication data.
+- [ ] Compare direct donations with Hypixel. Expected: directly donated item IDs and armor-set IDs show Donated in green.
+- [ ] Find an upgraded item whose earlier tier is satisfied by its upgrade parent. Expected: the earlier entry shows Through parent in amber and follows multi-step parent chains without looping.
+- [ ] Test a borrowed Museum item with `profileMuseumIncludeBorrowed` enabled and disabled. Expected: enabled shows Borrowed separately; disabled treats it as missing and does not let it satisfy a parent chain.
+- [ ] Inspect armor sets and equipment sets. Expected: canonical set donation IDs are grouped once and the configured zero-to-12 piece limit bounds their component list.
+- [ ] Compare special items. Expected: legacy NBT is decoded to exact SkyBlock IDs, known special completion is counted once and unknown IDs remain reported.
+- [ ] Supply or encounter a malformed special entry. Expected: other special items still decode and the unreadable-entry summary increments without crashing.
+- [ ] Test ALL and each of the seven official categories with partial display-name, canonical-ID and armor-piece search. Expected: all three search sources compose with the category.
+- [ ] Test ALL, DONATED, BORROWED, PARENT, MISSING and COMPLETE filters. Expected: COMPLETE includes every non-missing state and the other filters are exact.
+- [ ] Test CATEGORY, NAME, STATUS and TYPE sorts and zero/positive limits. Expected: zero is unlimited, armor/item type sorting is stable and summaries remain unfiltered.
+- [ ] Toggle summary, category, status, type, pieces and parent text independently. Expected: each changes only its own presentation and scrolling remains bounded.
+- [ ] Refresh online, restart offline and reopen Museum. Expected: a validated one-to-168-hour official catalogue cache survives offline; incomplete resources never replace it.
+- [ ] Open a profile with Museum API disabled. Expected: a readable unavailable message appears without borrowing another profile's data.
+- [ ] Disable `profileMuseum`. Expected: the tab reports disabled and starts neither endpoint nor catalogue work.

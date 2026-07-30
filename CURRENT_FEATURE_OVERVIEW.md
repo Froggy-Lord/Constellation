@@ -28,6 +28,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Collection and Minion pages support independent search, category, sorting, hiding, limit, precision and presentation controls; unknown future IDs stay visible
 - Mining shows exact Heart of the Mountain XP and selected-tree state, all powder balances, crystal lifecycle totals, nucleus runs, Rock milestones and Glacite progression
 - Mining sections are independently visible; crystals can be filtered by nucleus/Glacite/other, hidden by state, sorted and limited
+- Museum loads the selected profile's separate authenticated donation data and shows 627 canonical items/armor sets plus 335 special items
+- Direct, borrowed, donated-through-upgrade-parent and missing states remain distinct; armor entries show bounded piece lists
+- Museum supports category/search/status filters, four sorts, limits, borrowed-item policy, cache age and independent detail controls
 - Category rows show valued/total stack coverage and expand to the highest-value individual items with counts and modifier-completeness warnings
 - Base items, potato books, recombobulators, master stars, scrolls, drill parts, gemstones, runes, skins, dyes and supported enchants use the shared modifier-aware valuation engine
 - Missing auction prices are deduplicated and warmed progressively at a configurable 250–5,000 ms interval and zero-to-200 request cap; no render pass launches requests

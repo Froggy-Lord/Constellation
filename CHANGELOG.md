@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.774 (2026-07-30) — Complete Profile Museum
+
+- added the separately authenticated Museum endpoint with profile-safe caching and refresh
+- added all 627 canonical donation entries across seven categories plus 335 special items
+- added direct, borrowed, parent-chain and missing donation states with armor-set piece details
+- added category/search/status filters, four sorts, limits and independent presentation controls
+- added exact legacy-NBT special-item identification with isolated unreadable-entry reporting
+
 ## 0.9.773 (2026-07-30) — Complete Profile Mining Progression
 
 - added exact Heart of the Mountain level/progress, selected tree, ability and node-state summaries

@@ -2998,7 +2998,23 @@ The page also ports exact Rock Pet ore thresholds, current and remaining ores, G
 
 Version `0.9.773` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `d94cbbf9aaccdf880b46547e0275c85c9f769245c8937a51dcab5a1af8b84475`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-165616-0.9.773/`; only `constellation-0.9.773.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-165616-0.9.773/`; only `constellation-0.9.773.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `35eae88570`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.774 Complete Profile Museum
+
+`ProfileMuseumData.java`, `ProfileViewerApi.java`, `ProfileItemDecoder.java`, `ProfileViewerScreen.java` and `LyraConfig.java` add the missing Museum page. The separate authenticated `/museum/{profileId}` request, member selection, item/special extraction, borrowing behavior and parent-chain model port SkyBlockPv modified-MIT `api/CachedApis.kt`, `data/museum/MuseumData.kt`, `RepoMuseumData.kt`, `CategorizedMuseumScreen.kt` and `MiscMuseumScreen.kt`; required notices sit beside the derived blocks.
+
+The catalogue generator ports SkyBlockPv's modified-MIT `buildSrc/museum/CreateMuseumDataTask.kt`, `ItemParser.kt` and `ArmorParser.kt` directly against the keyless official Hypixel item resource. It groups armor/equipment pieces by canonical set donation ID, retains mapped IDs, preserves directed upgrade-parent chains, and separately catalogues special Museum items. Constellation's parser was run against the current live resource and validated exactly 627 canonical entries across seven categories plus 335 special IDs. The temporary exact-count probe was archived under `~/Desktop/To-Delete/constellation-probes/20260730-170225-museum-exact/`.
+
+Museum profile requests share the existing Minecraft-session authentication but use a profile-ID/member-ID cache key, bounded timeouts and the configured one-to-60-minute profile TTL. Official catalogue loading is independent, asynchronous, validated before writing `config/constellation-museum-items.json`, retained as last-good data and configurable from one to 168 hours. Refresh bypasses both layers.
+
+Direct, borrowed, donated-through-parent and missing states remain distinct. Parent traversal supports multiple upgrade steps, detects cycles and cannot use excluded borrowed parents. Normal mapped IDs and armor-set pieces participate exactly. Special entry NBT reuses the maintained Skyblocker/legacy-item-dfu decoding pipeline, extracts exact ExtraAttributes IDs, deduplicates them and isolates malformed entries. Unknown future special IDs and failures remain visible in summaries.
+
+Category/display-name/canonical-ID/armor-piece search, direct/borrowed/parent/missing/complete filters, category/name/status/type sorts, limits, borrowed policy, armor piece bounds and each presentation group are configurable. Summaries are calculated before filters.
+
+Version `0.9.774` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `5620147c6ed9652f0e98885753def95996f963b9f9d90e69f3431801b3d6920a`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-170650-0.9.774/`; only `constellation-0.9.774.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued through the drip queue, authored only as Froggy-Lord.
 
 ## Required dedicated visual-design pass
 

@@ -26,6 +26,7 @@ public final class ProfileViewerApi {
     private static final String API = "https://skyblock-pv.thatgravyboat.tech";
     private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     private static final Map<UUID, Cached> CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, CachedMuseum> MUSEUM_CACHE = new ConcurrentHashMap<>();
     private static volatile String key;
 
     private ProfileViewerApi() {}
@@ -47,6 +48,35 @@ public final class ProfileViewerApi {
                 if (profiles.isEmpty()) throw new IllegalStateException("No SkyBlock profiles were returned.");
                 CACHE.put(profile.uuid, new Cached(profiles, System.currentTimeMillis()));
                 return new Result(profile.name, profile.uuid, profiles, System.currentTimeMillis(), false);
+            } catch (Exception e) {
+                throw new RuntimeException(readable(e), e);
+            }
+        });
+    }
+
+    public static CompletableFuture<MuseumResult> loadMuseum(String profileId, String memberId, boolean refresh) {
+        String cleanProfile = profileId == null ? "" : profileId.replace("-", "");
+        String cleanMember = memberId == null ? "" : memberId.replace("-", "");
+        if (!cleanProfile.matches("[0-9a-fA-F]{32}") || !cleanMember.matches("[0-9a-fA-F]{32}"))
+            return CompletableFuture.failedFuture(new IllegalArgumentException("This profile has no valid Museum identifier."));
+        String cacheKey = cleanProfile + ":" + cleanMember;
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                long ttl = Math.clamp(ConstellationClient.cfg().lyra.profileCacheMinutes, 1, 60) * 60_000L;
+                CachedMuseum cached = MUSEUM_CACHE.get(cacheKey);
+                if (!refresh && cached != null && System.currentTimeMillis() - cached.time < ttl)
+                    return new MuseumResult(cached.member, cached.specialIds, cached.specialFailures, cached.time, true);
+                ensureAuthenticated(false);
+                JsonObject response = get("/museum/" + cleanProfile);
+                JsonObject members = response.has("members") && response.get("members").isJsonObject()
+                    ? response.getAsJsonObject("members") : new JsonObject();
+                JsonObject member = members.has(cleanMember) && members.get(cleanMember).isJsonObject()
+                    ? members.getAsJsonObject(cleanMember) : new JsonObject();
+                if (member.isEmpty()) throw new IllegalStateException("No Museum data was returned for this profile.");
+                ProfileItemDecoder.SpecialIds special = ProfileItemDecoder.decodeMuseumSpecial(member.get("special"));
+                long time = System.currentTimeMillis();
+                MUSEUM_CACHE.put(cacheKey, new CachedMuseum(member, special.ids(), special.failures(), time));
+                return new MuseumResult(member, special.ids(), special.failures(), time, false);
             } catch (Exception e) {
                 throw new RuntimeException(readable(e), e);
             }
@@ -107,6 +137,9 @@ public final class ProfileViewerApi {
     }
 
     public record Result(String name, UUID uuid, JsonArray profiles, long fetchedAt, boolean cached) {}
+    public record MuseumResult(JsonObject member, java.util.Set<String> specialIds, int specialFailures,
+                               long fetchedAt, boolean cached) {}
     private record Cached(JsonArray profiles, long time) {}
+    private record CachedMuseum(JsonObject member, java.util.Set<String> specialIds, int specialFailures, long time) {}
     private record GameProfile(String name, UUID uuid) {}
 }
