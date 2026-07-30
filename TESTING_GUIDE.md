@@ -16,6 +16,13 @@ Enable Apollo and Custom Scoreboard, then join Hypixel SkyBlock. Open `/customsc
 - [ ] Move and resize Custom Scoreboard in `/cn hud`. Expected: placement and scale persist.
 - [ ] Disable Hide Vanilla while leaving the custom scoreboard on. Expected: both sidebars render for comparison; reenabling it hides only vanilla.
 - [ ] Join a non-Hypixel server or leave SkyBlock. Expected: Constellation does not hide that server's scoreboard.
+- [ ] Compare SkyBlock date and time against Hypixel. Expected: season, ordinal day, optional year, 12/24-hour mode and exact/ten-minute mode track SkyBlock time.
+- [ ] Change the lobby date format and switch islands. Expected: the real date and learned `mini` or `mega` server ID update without inventing an ID while unavailable.
+- [ ] Inspect an island tab widget with a Players or Guests count. Expected: current and maximum values are learned; the manual maximum is used only when no maximum has been observed.
+- [ ] Enable active events and compare all/highest modes. Expected: cached calendar events show their remaining time; upcoming rows appear only when enabled.
+- [ ] Enable mayor perks and extra mayor. Expected: the current mayor, active perks, minister and minister perk come from the shared mayor cache without another request.
+- [ ] View a Party Leader and Party Members tab field. Expected: leader and bounded member rows update; missing party data hides the group when empty-line filtering is enabled.
+- [ ] Edit footer text and toggle each date, time, lobby, players, events, mayor, party and footer element. Expected: every group is independently visible and reorderable.
 
 ## Deep Caverns Guide
 

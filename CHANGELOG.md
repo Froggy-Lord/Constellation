@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.731 (2026-07-30) — Scoreboard Information Suite
+
+- added exact SkyBlock date and configurable 12/24-hour time elements plus dated lobby IDs and learned current/maximum player counts
+- added all-active or highest-priority calendar event rows with optional upcoming events
+- added authoritative mayor, perk, minister and party leader/member groups by reusing existing cached state
+- added configurable footer, date format, row limits, individual element toggles and complete ordering-editor integration
+
 ## 0.9.730 (2026-07-30) — Custom SkyBlock Scoreboard
 
 - added a movable and scalable custom scoreboard that safely replaces the vanilla sidebar only while active on Hypixel SkyBlock

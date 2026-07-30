@@ -89,6 +89,13 @@ public final class CygnusCalendar {
         return rows.isEmpty()?null:String.join(" | ",rows);
     }
 
+    // ported from SkyHanni (LGPL-3.0-or-later): features/gui/customscoreboard/elements/ScoreboardElementEvents.kt
+    public static List<String> scoreboardLines(boolean showAll,int limit,boolean includeUpcoming){
+        long now=System.currentTimeMillis()/1000;List<String> out=new ArrayList<>();
+        for(Event event:EVENTS){if(out.size()>=Math.clamp(limit,1,8)||event.end()<now||!included(event.name))continue;boolean active=event.start<=now;if(!active&&!includeUpcoming)continue;out.add(event.name+" "+(active?"ends "+format(event.end()-now):"in "+format(event.start-now)));}
+        if(!showAll&&out.size()>1)return List.of(out.get(0));return List.copyOf(out);
+    }
+
     // ported from SkyHanni (LGPL-2.1): utils/SkyBlockTime.kt
     private static String skyblockDate(long millis){
         final long epoch=1559829300000L,yearMs=124L*60*60*1000,monthMs=yearMs/12,dayMs=monthMs/31;

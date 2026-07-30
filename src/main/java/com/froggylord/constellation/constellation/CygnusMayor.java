@@ -81,6 +81,14 @@ public final class CygnusMayor {
         LinkedHashMap<String,Perk> unique=new LinkedHashMap<>();for(Perk p:out)unique.putIfAbsent(p.name.toLowerCase(Locale.ROOT),p);return List.copyOf(unique.values());
     }
 
+    // ported from SkyHanni (LGPL-3.0-or-later): features/gui/customscoreboard/elements/ScoreboardElementMayor.kt
+    public static List<String> scoreboardLines(boolean showPerks,boolean showExtra,int perkLimit){
+        State value=state;if(value==null)return List.of();List<String> out=new ArrayList<>();out.add(value.mayor);
+        if(showPerks)activePerks().stream().filter(p->!p.minister).limit(Math.clamp(perkLimit,1,20)).forEach(p->out.add("- "+p.name));
+        if(showExtra&&value.minister!=null&&!value.minister.name.isBlank()){out.add("Minister "+value.minister.name);if(showPerks&&value.minister.perk!=null&&!value.minister.perk.name.isBlank())out.add("- "+value.minister.perk.name);}
+        return List.copyOf(out);
+    }
+
     private static void refresh(boolean force){
         if(fetching||!force&&lastFetch>0&&System.currentTimeMillis()-lastFetch<60_000)return;
         fetching=true;lastFetch=System.currentTimeMillis();

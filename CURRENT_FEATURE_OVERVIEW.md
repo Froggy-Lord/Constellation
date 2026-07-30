@@ -17,6 +17,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Live ordered server lines plus cached Purse, Bank, Bits, level, Magical Power, tuning, power, Gems, Quiver, God Pot, mayor, party, election and area values
 - Searchable per-line ordering and visibility editor with fail-open unknown-line preservation
 - Configurable filtering, title, alignment, spacing, row cap, background, outline, shadow, colors and persistence
+- Exact SkyBlock date/time, dated lobby ID, learned player count/cap, configurable footer and independent element ordering
+- Reused event-calendar, mayor/perk/minister and observed party leader/member groups with per-group row limits
 
 ## Andromeda: Rift
 
