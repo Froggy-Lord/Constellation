@@ -2,6 +2,7 @@ package com.froggylord.constellation.ui;
 
 import com.froggylord.constellation.api.ProfileViewerApi;
 import com.froggylord.constellation.api.ProfileItemDecoder;
+import com.froggylord.constellation.api.ProfileDungeonCalculator;
 import com.froggylord.constellation.api.ProfileSkillCalculator;
 import com.froggylord.constellation.api.ProfileWealthCalculator;
 import com.froggylord.constellation.ConstellationClient;
@@ -304,20 +305,61 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private List<Row> dungeons(JsonObject m) {
+        var cfg = ConstellationClient.cfg().lyra;
+        ProfileDungeonCalculator.Result data = ProfileDungeonCalculator.calculate(m);
+        int decimals = Math.clamp(cfg.profileDungeonsDecimals, 0, 2);
         List<Row> out = new ArrayList<>();
-        JsonObject d = object(m, "dungeons");
-        out.add(row("Catacombs XP", compact(number(path(d, "dungeon_types.catacombs.experience")))));
-        out.add(row("Secrets found", whole(number(number(path(m, "player_stats.secrets")), number(path(m, "secrets"))))));
-        JsonObject classes = object(d, "player_classes");
-        for (String name : List.of("healer", "mage", "berserk", "archer", "tank"))
-            out.add(row(title(name) + " XP", compact(number(path(classes, name + ".experience")))));
-        JsonObject normal = object(path(d, "dungeon_types"), "catacombs");
-        JsonObject master = object(path(d, "dungeon_types"), "master_catacombs");
-        for (int floor = 1; floor <= 7; floor++) {
-            out.add(row("F" + floor + " completions", whole(number(path(normal, "tier_completions." + floor)))));
-            out.add(row("M" + floor + " completions", whole(number(path(master, "tier_completions." + floor)))));
+        if (!data.available()) {
+            out.add(row("Dungeons", "API disabled or no dungeon data"));
+            return out;
+        }
+        out.add(row("Catacombs", dungeonLevel(data.catacombs(), decimals, cfg.profileDungeonsShowOverflow,
+            cfg.profileDungeonsShowClassProgress, cfg.profileDungeonsShowClassXp)));
+        if (cfg.profileDungeonsShowClassAverage)
+            out.add(row("Class average", fixed(ProfileDungeonCalculator.classAverage(data, cfg.profileDungeonsShowOverflow), decimals)));
+        for (ProfileDungeonCalculator.ClassLevel entry : data.classes()) {
+            String label = (entry.selected() ? "Selected  " : "") + title(entry.id());
+            out.add(new Row(label, dungeonLevel(entry.level(), decimals, cfg.profileDungeonsShowOverflow,
+                cfg.profileDungeonsShowClassProgress, cfg.profileDungeonsShowClassXp),
+                entry.selected() ? 0xFF55FF55 : ConstellationTheme.TEXT));
+        }
+        out.add(row("Dungeon runs", whole(data.runs())));
+        if (cfg.profileDungeonsShowSecrets) out.add(row("Secrets found", whole(data.secrets())));
+        if (cfg.profileDungeonsShowSecretsPerRun)
+            out.add(row("Secrets per run", data.runs() == 0 ? "No runs" : fixed(data.secrets() / (double) data.runs(), decimals)));
+        for (ProfileDungeonCalculator.Floor floor : data.floors()) {
+            if (!cfg.profileDungeonsShowEntrance && floor.floor() == 0) continue;
+            if (!cfg.profileDungeonsShowEmptyFloors && floor.completions() == 0) continue;
+            if (cfg.profileDungeonsShowFloorRuns)
+                out.add(row(floor.name() + " completions", whole(floor.completions())));
+            if (cfg.profileDungeonsShowFloorTimes) {
+                if (floor.fastest() > 0) out.add(row("  Fastest completion", duration(floor.fastest())));
+                if (floor.fastestS() > 0) out.add(row("  Fastest S", duration(floor.fastestS())));
+                if (floor.fastestSPlus() > 0) out.add(row("  Fastest S+", duration(floor.fastestSPlus())));
+            }
+            if (cfg.profileDungeonsShowFloorScores && floor.bestScore() > 0)
+                out.add(row("  Best score", whole(floor.bestScore())));
         }
         return out;
+    }
+
+    private static String dungeonLevel(ProfileDungeonCalculator.Level level, int decimals, boolean overflow,
+                                       boolean progress, boolean xp) {
+        double shown = overflow ? level.levelWithOverflow() : Math.min(50, level.level());
+        StringBuilder value = new StringBuilder("Level ").append(fixed(shown, decimals));
+        if (progress && level.level() < 50) value.append("  ").append(Math.round(level.progress() * 100)).append("%");
+        if (xp) value.append("  ").append(compact(level.xp())).append(" XP");
+        else if (overflow && level.overflowXp() > 0) value.append("  +").append(compact(level.overflowXp())).append(" XP");
+        return value.toString();
+    }
+
+    private static String duration(long milliseconds) {
+        long totalSeconds = milliseconds / 1000;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        long millis = milliseconds % 1000;
+        return millis == 0 ? String.format(Locale.ROOT, "%d:%02d", minutes, seconds)
+            : String.format(Locale.ROOT, "%d:%02d.%03d", minutes, seconds, millis);
     }
 
     private List<Row> slayers(JsonObject m) {

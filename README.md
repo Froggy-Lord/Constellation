@@ -59,6 +59,8 @@ For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. 
 
 the profile viewer calculates exact skill levels and progress from hypixel's published curves, including hunting, the current foraging cap and profile-specific farming/taming caps.
 
+its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
+
 ## scrapes
 
 the mod auto-scrapes as you play — sidebar, tab, entities, gui contents, chat. everything goes to `config/constellation-scrapes/`. useful if you're reporting a bug or want to see what data the mod sees.

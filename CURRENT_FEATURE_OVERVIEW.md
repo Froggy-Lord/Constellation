@@ -656,3 +656,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Fractional level, next-level percentage, remaining XP, maxed state and overflow XP
 - Configurable conventional skill average, total XP, decimal precision and included skill groups
 - Explicit API-disabled state instead of treating a legitimate zero-XP skill as unavailable
+
+## Profile dungeon progression
+
+- Exact Catacombs and five-class levels, next-level progress and optional level-50 overflow
+- Selected-class marker, class average, total run count, secrets and secrets per run
+- Entrance, F1–F7 and M1–M7 completions without trusting the API's sometimes-wrong aggregate total
+- Independent fastest completion, S, S+ and best-score personal records for every played floor
+- Configurable precision, XP, progress, overflow, summary, empty-floor and record visibility
+- Explicit unavailable state when the selected profile has no dungeon API data

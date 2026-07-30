@@ -2918,7 +2918,17 @@ The page covers every current skill including Hunting. It uses the exact regular
 
 Version `0.9.766` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `ccda8cd58467fd761d127873cb835e2974dd55ace183eb58abf103a0633fb019`.
 
-The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-155846-0.9.766/`; only `constellation-0.9.766.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-155846-0.9.766/`; only `constellation-0.9.766.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. The verified release was enqueued as drip commit `756f26eff4`, authored only as Froggy-Lord.
+
+## July 30 version 0.9.767 Complete Profile Dungeon Progression
+
+`ProfileDungeonCalculator.java`, `ProfileViewerScreen.java` and `LyraConfig.java` replace the raw-XP dungeon page. Level curves, page composition and floor-run semantics port Skyblocker LGPL `skyblock/profileviewer2/utils/LevelCalculator.java`, legacy `profileviewer/dungeons/DungeonsPage.java`, `DungeonFloorRunsWidget.java` and `profileviewer2/model/GenericCatacombs.java`. Summary calculations, class selection, per-floor parsing and all-record presentation port SkyBlockPv modified-MIT `data/api/skills/combat/DungeonData.kt` and `screens/windowed/tabs/combat/DungeonScreen.kt`; its required notice sits beside the derived calculator.
+
+The page calculates Catacombs and all five class levels from the exact 50-level curve, exposes fractional progress and optional 200-million-XP overflow levels, marks the selected class and calculates class average. It manually sums Entrance/F/M completions rather than trusting the known-inaccurate aggregate `total`, then calculates secrets per run. Every played floor can show completions, fastest completion, fastest S, fastest S+ and best score independently. Entrance, empty floors, XP, progress, overflow, summaries, records and zero-to-two decimals are separately configurable. Missing dungeon data fails to one honest unavailable row.
+
+Version `0.9.767` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `271067a3b09d0269a97bbc9e2d2d9718c9f388a06f0fa4dccc1ab8570e584aff`.
+
+The previous Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-160531-0.9.767/`; only `constellation-0.9.767.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; existing preferences were not rewritten. Append the drip hash after enqueue.
 
 ## Required dedicated visual-design pass
 

@@ -2156,3 +2156,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Check a maxed skill with excess XP. Expected: it says Level cap, turns green and reports overflow separately without inventing levels beyond the cap.
 - [ ] Check a real zero-XP skill and a profile with skill APIs disabled. Expected: zero XP reports Level 0 while a missing field reports API disabled.
 - [ ] Toggle every `profileSkillsShow*` option, average inclusion option and decimal precision from zero to two. Expected: each changes only Skills presentation and persists after restart.
+
+### Profile dungeon progression
+
+- [ ] Open Dungeons for a player with dungeon data. Expected: Catacombs and all five classes show exact fractional levels; the API-selected class is marked green.
+- [ ] Compare a level below 50, exactly 50 and one with overflow XP. Expected: progress is correct below 50 and overflow appears only when enabled without changing the real cap.
+- [ ] Compare Class Average with the five displayed classes. Expected: it is their arithmetic mean, capped at 50 unless dungeon overflow is enabled.
+- [ ] Compare total runs with all visible Entrance, F and M completion counts. Expected: Constellation sums per-floor values and does not trust the API's `total` field.
+- [ ] Compare Secrets and Secrets per run. Expected: secrets use the selected member's total and the ratio uses the calculated run count; zero runs says No runs.
+- [ ] Check played floors with completion, S, S+ and score records. Expected: every available record appears independently with millisecond precision when supplied.
+- [ ] Enable Entrance and empty floors. Expected: Entrance appears only as a normal Catacombs floor, all empty F/M floors can be shown, and M0 never appears.
+- [ ] Toggle every `profileDungeonsShow*` option, XP and decimal precision. Expected: each controls only its documented dungeon row group and persists after restart.
+- [ ] Open a profile with no dungeon data. Expected: one clear unavailable row appears and no fabricated zero-level floor table is shown.

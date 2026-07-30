@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.767 (2026-07-30) — Complete Profile Dungeon Progression
+
+- replaced raw dungeon XP with exact Catacombs and class levels, progress, selected class and optional overflow
+- added configurable class average, total runs, secrets and secrets-per-run summaries
+- added Entrance, F1–F7 and M1–M7 completions with independent completion, S, S+ and best-score records
+- added empty-floor, Entrance, precision, XP and record visibility controls plus honest missing-API handling
+
 ## 0.9.766 (2026-07-30) — Exact Profile Skill Progression
 
 - replaced raw profile XP rows with exact Hypixel skill levels, caps, progress, remaining XP and overflow
