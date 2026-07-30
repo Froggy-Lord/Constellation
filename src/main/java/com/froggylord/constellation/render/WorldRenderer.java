@@ -51,11 +51,15 @@ public class WorldRenderer {
         }
 
         public void line(Vec3 from, Vec3 to, int colour, boolean throughWalls) {
-            lines.add(new LinePrim(from, to, colour, throughWalls));
+            line(from, to, colour, throughWalls, 2.0f);
+        }
+
+        public void line(Vec3 from, Vec3 to, int colour, boolean throughWalls, float lineWidth) {
+            lines.add(new LinePrim(from, to, colour, throughWalls, Math.clamp(lineWidth, 0.1f, 15.0f)));
         }
 
         public void beam(double x, double y, double z, int colour, int height, boolean throughWalls) {
-            lines.add(new LinePrim(new Vec3(x, y, z), new Vec3(x, y + height, z), colour, throughWalls));
+            lines.add(new LinePrim(new Vec3(x, y, z), new Vec3(x, y + height, z), colour, throughWalls, 2.0f));
         }
 
         public void label(Vec3 pos, String text, int colour, boolean throughWalls) {
@@ -64,7 +68,7 @@ public class WorldRenderer {
     }
 
     public record BoxPrim(AABB box, int colour, boolean throughWalls, boolean filled, float lineWidth) {}
-    public record LinePrim(Vec3 from, Vec3 to, int colour, boolean throughWalls) {}
+    public record LinePrim(Vec3 from, Vec3 to, int colour, boolean throughWalls, float lineWidth) {}
     public record LabelPrim(Vec3 pos, String text, int colour, boolean throughWalls) {}
 
     public record Handle(UUID id) {}
@@ -146,7 +150,7 @@ public class WorldRenderer {
             }
             for (LinePrim l : ctx.lines) {
                 if (l.throughWalls() != tw) continue;
-                try { submitLine(collector, pose, l.from().subtract(cam), l.to().subtract(cam), l.colour(), tw); }
+                try { submitLine(collector, pose, l.from().subtract(cam), l.to().subtract(cam), l.colour(), tw, l.lineWidth()); }
                 catch (Exception e) { warnDrawFailure(e); }
             }
         }
@@ -195,9 +199,9 @@ public class WorldRenderer {
         });
     }
 
-    private void submitLine(SubmitNodeCollector collector, PoseStack pose, Vec3 from, Vec3 to, int argb, boolean throughWalls) {
+    private void submitLine(SubmitNodeCollector collector, PoseStack pose, Vec3 from, Vec3 to, int argb, boolean throughWalls, float lineWidth) {
         collector.submitCustomGeometry(pose, lineType(throughWalls), (p, buf) -> {
-            try { seg(buf, p, argb, 2.0f, (float) from.x, (float) from.y, (float) from.z, (float) to.x, (float) to.y, (float) to.z); }
+            try { seg(buf, p, argb, lineWidth, (float) from.x, (float) from.y, (float) from.z, (float) to.x, (float) to.y, (float) to.z); }
             catch (Exception e) { warnDrawFailure(e); }
         });
     }

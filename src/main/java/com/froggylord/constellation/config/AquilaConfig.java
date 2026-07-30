@@ -500,4 +500,34 @@ public class AquilaConfig extends BaseConfigGroup {
     public int hotmLevelTextColor = 0xFFFFFF55;
     public int hotmTokenTextColor = 0xFF55FFFF;
     public String hotmPowderSpentDesign = "NUMBER_AND_PERCENTAGE";
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/mining/glacite/TunnelMapsConfig.kt
+    public boolean tunnelMaps = true;
+    public boolean tunnelMapsAutoCommission = false;
+    public boolean tunnelMapsTravelScroll = false;
+    public boolean tunnelMapsLeftClickPigeon = true;
+    public boolean tunnelMapsDynamicPathColor = true;
+    public boolean tunnelMapsThroughWalls = true;
+    public boolean tunnelMapsDistanceFirst = false;
+    public boolean tunnelMapsExcludeFairy = false;
+    public boolean tunnelMapsGoalBox = true;
+    public boolean tunnelMapsGoalBeam = false;
+    public boolean tunnelMapsGoalLabel = true;
+    public boolean tunnelMapsDistanceLabel = true;
+    public boolean tunnelMapsNodeLabels = true;
+    public boolean tunnelMapsArrivalMessage = true;
+    public boolean tunnelMapsHud = true;
+    public boolean tunnelMapsHudActive = true;
+    public boolean tunnelMapsHudDistance = true;
+    public boolean tunnelMapsHudNodes = true;
+    public int tunnelMapsPathColor = 0xFF00FF00;
+    public int tunnelMapsCommissionColor = 0xFFFFFF55;
+    public int tunnelMapsLookAheadNodes = 825;
+    public int tunnelMapsPathWidth = 4;
+    public int tunnelMapsArrivalRange = 6;
+    public int tunnelMapsCampfireArrivalRange = 15;
+    public int tunnelMapsArrivalCooldownSeconds = 60;
+    public int tunnelMapsSelectionCooldownSeconds = 5;
+    public int tunnelMapsBeamHeight = 20;
+    public int tunnelMapsGoalOutlineWidth = 4;
 }

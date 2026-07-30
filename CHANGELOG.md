@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.729 (2026-07-30) — Glacite Tunnel Maps
+
+- added the complete 825-node Glacite Tunnels navigation graph with nearest-node recovery and weighted shortest paths
+- added searchable destination selection, repeated-location cycling, Base Camp routing and optional travel-scroll warping
+- added commission right-click and optional automatic destination selection plus Royal Pigeon left-click progression
+- added dynamic or fixed path colors, configurable width/look-ahead/wall visibility, goal guidance, arrival handling, keybinds, HUD and complete `/tunnelmap` controls
+
 ## 0.9.728 (2026-07-30) — Heart of the Mountain Helper
 
 - added exact all-perk HOTM parsing with enabled, disabled and locked highlights plus perk-level and unused-token slot text

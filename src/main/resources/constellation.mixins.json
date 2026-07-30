@@ -21,6 +21,7 @@
         "PreventWeaponPlaceMixin",
         "MapDataAccessor",
         "MainHeadlessMixin",
+        "MinecraftAttackMixin",
         "MouseSensitivityMixin",
         "MiningToolDurabilityMixin",
         "PlayerTabOverlayAccessor",

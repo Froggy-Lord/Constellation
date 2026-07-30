@@ -83,6 +83,9 @@ This is the readable map of what Constellation currently contains. It is organiz
 ## Aquila: mining
 
 - Complete 46-perk Heart of the Mountain parsing with enabled, disabled and locked slot highlights
+- Complete 825-node Glacite Tunnels map with weighted shortest paths, searchable destinations and repeated-location cycling
+- Commission right-click/optional automatic tunnel routing, Royal Pigeon progression and Base Camp travel controls
+- Configurable tunnel route width, look-ahead, dynamic/fixed colors, wall visibility, goal guidance, arrival handling and HUD
 - Exact Mithril, Gemstone and Glacite perk-cost totals, ten-level planning and current-powder guidance
 - Perk-level and unused-token slot text, selectable spent display design and a movable menu summary
 - Profile-safe Sky Mall effect learning with mining-only or everywhere display modes

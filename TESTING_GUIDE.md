@@ -40,6 +40,21 @@ Enable Aquila and Heart of the Mountain Helper, then open the exact `Heart of th
 - [ ] Test `/hotmhelper skymall off|mining_only|everywhere`. Expected: the Sky Mall row follows the selected scope; the full summary remains menu-only.
 - [ ] Toggle every `/hotmhelper option`, set each `/hotmhelper color`, and reopen the menu. Expected: all options persist independently.
 - [ ] Move and resize Heart of the Mountain in `/cn hud`. Expected: its placement and scale persist and the widget appears only in its configured useful scope.
+
+## Glacite Tunnel Maps
+
+Enable Aquila and Tunnel Maps, then enter the Glacite Tunnels. Use `/tunnelmap` or its menu keybind.
+
+- [ ] Search for and click a gemstone or mining destination. Expected: a weighted route starts at the nearest graph node and recovers after moving away from it.
+- [ ] Check a destination with several locations. Expected: Next spot and the configured keybind select another eligible location without sending a command to the server.
+- [ ] Change path width, dynamic color, look-ahead and through-walls settings. Expected: the route immediately uses the saved choices; dynamic color follows the selected destination.
+- [ ] Enable goal box, beam, name, distance and node labels independently. Expected: only the selected guidance layers render.
+- [ ] Reach the configured arrival radius. Expected: the route clears, repeats cycle with its cooldown, and the optional local arrival message appears once.
+- [ ] Open `Commissions`. Expected: eligible Glacite collector commissions show an `R`, right-clicking routes locally, and optional automatic selection follows the first eligible commission.
+- [ ] Hold a Royal Pigeon and left-click with Pigeon progression enabled. Expected: the next destination is selected without cancelling the normal attack input.
+- [ ] Test Campfire with travel-scroll off and on. Expected: off routes to the Campfire graph node; on deliberately sends `/warp basecamp`.
+- [ ] Leave the Glacite Tunnels and try the menu/keybind. Expected: all world/HUD guidance stops and a local availability message replaces the selector.
+- [ ] Move and resize Tunnel Maps in `/cn hud`. Expected: placement and scale persist and it is visible only with an active tunnel destination.
 - [ ] Observe the entire run. Expected: no movement, jump, aim, click, warp, item use, chat or gameplay packet is generated automatically.
 
 ## Crystal Nucleus barriers
