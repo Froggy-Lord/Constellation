@@ -519,6 +519,13 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Preset aliases in `/setmaxspeed` and Rancher's Boots speed-cap signs
 - Menu, next, previous and seven direct preset keybinds
 - Configurable command cooldown, action-bar/chat/sound feedback and recent-use HUD rows
+- Full numeric-sign calculator for Bazaar prices, auction amounts and other recognized server input signs
+- Precedence-aware `+`, `-`, `*`, `/`, `%` and `^` expressions with parentheses
+- SkyBlock stack, enchanted-stack, thousand, million, billion, trillion and quadrillion suffixes
+- Optional live purse input through `p` or `purse`
+- Square root, logarithm, factorial, trigonometric, hyperbolic, rounding and absolute-value functions
+- Live valid/error preview, optional leading-equals requirement and configurable Enter-close behavior
+- Independent price decimal precision, rounded amount output and bounded sign length
 - General collection tracker synchronized from the exact Collections inventory rather than item pickups
 - Profile-safe cached totals for every visited collection, tracked collection selection and automatic first selection
 - Session gain, elapsed time, rate, last synchronized gain, explicit or next-tier goal, remaining amount and ETA

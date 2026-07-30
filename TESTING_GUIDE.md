@@ -2453,3 +2453,22 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Disable Hide Attached Arrows while Phoenix remains enabled. Expected: attached arrows render normally.
 - [ ] Toggle Hide Status Effects with Phoenix enabled and disabled. Expected: inventory status effects hide only when both the feature and Phoenix master are enabled.
 - [ ] Run `/phoenixinput` and change every named option. Expected: status matches the typed browser and changes persist through the single normal config file.
+
+## Complete sign calculator
+
+- [ ] Enable Phoenix and Sign Calculator, then open Bazaar price, auction amount and ordinary numeric-entry signs. Expected: recognized signs show a live calculation preview without changing unrelated signs.
+- [ ] Open search signs ending in `your` or `query`, the alternate `Enter name` sign and an unrelated sign. Expected: calculator preview and submission replacement stay completely inactive.
+- [ ] Enter `2+3*4`, `(2+3)*4` and `2^3^2`. Expected: results are 14, 20 and 512, proving precedence, parentheses and right-associative exponentiation.
+- [ ] Test `/`, `%` and negative or excessive function inputs. Expected: divide-by-zero, modulo-zero, invalid domains and overflow show concise red errors and the original typed text is preserved on submission.
+- [ ] Enter `1s`, `1e`, `1k`, `1m`, `1b`, `1t` and `1q`. Expected: the multipliers are 64, 160, thousand, million, billion, trillion and quadrillion.
+- [ ] Enter `p` and `purse`, then change purse balance while keeping the same expression visible. Expected: both use the latest tracked purse and the preview never reuses a stale cached result.
+- [ ] Disable purse input and repeat both aliases. Expected: both report that purse input is disabled and preserve the original text.
+- [ ] Test `sqrt`, `log`, `lg`, `ln`, `factorial`, `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sinh`, `cosh`, `tanh`, `abs`, `floor`, `ceil` and `round`. Expected: every function evaluates, trigonometric input/output uses degrees and invalid domains fail safely.
+- [ ] Enable Requires Equals. Expected: ordinary text is untouched while an expression beginning with `=` previews and resolves normally.
+- [ ] Set price decimals from zero through eight and submit values ending in zero such as `10.00`. Expected: price output rounds to the selected precision without corrupting `10` into `1`.
+- [ ] Submit the same fractional expression in an amount sign. Expected: the result rounds to a whole number independently of price precision.
+- [ ] Set output length from one through fifteen and submit an oversized result. Expected: the replacement is bounded to the configured sign length and never crashes the screen.
+- [ ] Toggle live preview and Enter close independently. Expected: preview can be hidden without disabling calculation; confirmation closes only when its option is enabled.
+- [ ] Use a Rancher's Boots speed-cap sign while both systems are enabled. Expected: speed-preset alias preview and replacement retain priority.
+- [ ] Disable Phoenix, disable Sign Calculator and test off Hypixel separately. Expected: the mixin leaves every sign entirely vanilla.
+- [ ] Run `/signcalculator` and every `option`, `decimals` and `length` control, then restart. Expected: values match the typed configuration browser and persist in the normal config.

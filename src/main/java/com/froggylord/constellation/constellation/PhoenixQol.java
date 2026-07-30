@@ -23,6 +23,7 @@ public class PhoenixQol extends BaseConstellation {
     @Override
     public void init(InitContext ctx) {
         PhoenixInputControls.init((PhoenixConfig) config);
+        PhoenixSignCalculator.init((PhoenixConfig) config);
         PhoenixWardrobeKeybinds.init((PhoenixConfig) config);
         PhoenixSlotBinding.init((PhoenixConfig) config);
         PhoenixCenturyCake.init((PhoenixConfig) config);
@@ -36,6 +37,7 @@ public class PhoenixQol extends BaseConstellation {
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         PhoenixInputControls.registerCommands(dispatcher);
+        PhoenixSignCalculator.registerCommands(dispatcher);
         PhoenixWardrobeKeybinds.registerCommands(dispatcher);
         PhoenixSlotBinding.registerCommands(dispatcher);
         PhoenixCenturyCake.registerCommands(dispatcher);
@@ -61,31 +63,4 @@ public class PhoenixQol extends BaseConstellation {
             HudPosition.of(76, 44), () -> cfg.enabled && cfg.collectionTracker && cfg.collectionTrackerHud));
     }
 
-    private static long lastSaveAt = 0;
-    private static int hotbarLockSlot = 0;
-
-    private static void evaluateSign(String expr) {
-        
-        String[] parts = expr.split("\\s+");
-        if (parts.length < 3) return;
-        double a = Double.parseDouble(parts[0].replace(",", ""));
-        double b = Double.parseDouble(parts[2].replace(",", ""));
-        double result = switch (parts[1]) {
-            case "*", "x", "×" -> a * b;
-            case "+" -> a + b;
-            case "-" -> a - b;
-            case "/" -> b != 0 ? a / b : 0;
-            default -> throw new IllegalArgumentException();
-        };
-        var mc = Minecraft.getInstance();
-        if (mc.player != null) {
-            String out = "§eSign calc: §f" + a + " " + parts[1] + " " + b + " = §a" + format(result);
-            mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(out));
-        }
-    }
-
-    private static String format(double n) {
-        if (n == Math.floor(n) && n < Long.MAX_VALUE) return String.format("%,d", (long) n);
-        return String.format("%,.1f", n);
-    }
 }

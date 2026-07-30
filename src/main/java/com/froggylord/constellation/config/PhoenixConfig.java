@@ -25,6 +25,13 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean disableFog = false;
     public boolean instantSneak = false;
     public boolean signCalculator = true;
+    // ported from Skyblocker (LGPL-3.0-or-later): utils/Calculator.java, skyblock/calculators/SignCalculator.java
+    public boolean signCalculatorRequiresEquals = false;
+    public boolean signCalculatorPreview = true;
+    public boolean signCalculatorCloseOnEnter = true;
+    public boolean signCalculatorUsePurse = true;
+    public int signCalculatorDecimalPlaces = 2;
+    public int signCalculatorMaxLength = 15;
     public boolean hideAttachedArrows = true;
     public boolean itemProtection = true;
     public boolean preventDroppingValuable = true;

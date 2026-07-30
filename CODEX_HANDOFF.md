@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.791 Phoenix Input and Visual Integrity.
+Last updated: 2026-07-30 for version 0.9.792 Complete Sign Calculator.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.791`.
+- Current artifact version: `0.9.792`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3263,6 +3263,26 @@ The drip helper allowlist includes all three new runtime/mixin files and both co
 Release verification passed on July 30: `./gradlew build -q` completed with 11 tests successful and zero failed. The 160-second headless client ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no target, redirect, injection, mixin-apply, transformer, initializer, fatal or crash signature. The exact tested jar SHA-256 is `d2780499153c6a677702380d5a9c146f462a5823067bd705b91c41a1f725c623`.
 
 The tested `constellation-0.9.791.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-192403-0.9.791/`. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; Phoenix therefore remains in the user's existing disabled state until deliberately enabled.
+
+The release is queued in the drip repository as Froggy-Lord commit `e6fbeaaa92`.
+
+## July 30 version 0.9.792 Complete Sign Calculator
+
+`PhoenixSignCalculator.java`, `PhoenixConfig.java`, `PhoenixQol.java` and `SignEditScreenMixin.java` port Skyblocker LGPL-3.0-or-later `utils/Calculator.java`, `skyblock/calculators/SignCalculator.java` and `mixins/AbstractSignEditScreenMixin.java`. This replaces the unused three-token helper in `PhoenixQol` with the licensed reference's complete numeric-sign flow.
+
+The exact ordinary, alternate and Bazaar-flipping sign markers are recognized. Search signs ending in `your` or `query` and the player-name sign are explicitly excluded. Rancher's Boots speed-preset handling keeps priority when both features can see the same screen.
+
+The evaluator supports precedence-aware addition, subtraction, multiplication, division, modulo and right-associative exponentiation; parentheses; stack, enchanted-stack, thousand, million, billion, trillion and quadrillion magnitudes; `p` and `purse`; and square-root, logarithmic, factorial, trigonometric, inverse-trigonometric, hyperbolic, absolute, floor, ceiling and rounding functions. Domain errors, division/modulo by zero, malformed numbers, unknown functions, unbalanced parentheses, non-finite values and overflow fail safely.
+
+Valid expressions receive a local green preview and invalid expressions a concise local red error. Submission replaces only a recognized numeric sign; invalid or inactive input is returned verbatim. Price fields use independently configurable zero-to-eight decimal places with trailing-zero removal, amount fields round to an integer, and output is bounded to one through fifteen characters. A stale-result bug found during review was removed so an unchanged expression still reflects the latest purse and configuration. The decimal formatter also preserves integer trailing zeroes such as `10`.
+
+Requires-equals, preview, Enter-close, purse use, decimal precision and output length are independently saved. `/signcalculator` exposes the same operational controls as the typed configuration browser. The calculator changes only the text submitted by the player's real sign confirmation; it never clicks, trades, buys, lists or sends an additional command or packet.
+
+The drip helper allowlist includes `PhoenixSignCalculator.java`.
+
+Release verification passed on July 30: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The full 160-second headless client ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no calculator/mixin, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `62655198159bde9b88623c337af593e44a9242bf7bc93eafe9f41308f5d28768`.
+
+The tested `constellation-0.9.792.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260730-193252-0.9.792/`. The live and build artifact checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; Phoenix and the calculator therefore retain the user's existing disabled state until deliberately enabled.
 
 ## Required dedicated visual-design pass
 

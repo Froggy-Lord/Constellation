@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.792 (2026-07-30) — Complete Sign Calculator
+
+- replaced the inert three-token sign helper with a complete expression engine
+- added operators, parentheses, magnitudes, purse input and eighteen mathematical functions
+- added exact numeric-sign recognition with search and player-name exclusions
+- added live previews, safe invalid-input fallback, price precision, amount rounding and output limits
+- added requires-equals, purse, preview, Enter-close and command controls
+
 ## 0.9.791 (2026-07-30) — Phoenix Input and Visual Integrity
 
 - implemented the previously inert Auto Sprint with an independent water policy
