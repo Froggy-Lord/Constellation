@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.745 (2026-07-30) — Temporal Pillar Navigation
+
+- ported SkyHanni's Temporal Pillar dodge into the complete Rift graph router
+- named pillars now disable navigation nodes inside a configurable radius and immediately rebuild active routes
+- added optional avoidance-volume box, beam, label and distance rendering with independent range, color and wall controls
+- extended `/riftnav` with pillar status, dodge, visualization, radius, scan range, beam height and color controls
+
 ## 0.9.744 (2026-07-30) — Rift-wide Progression Suite
 
 - ported SkyHanni's Crux Talisman progress/bonus display with compact-maxed, percentage, tier and color controls

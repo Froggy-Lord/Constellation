@@ -429,5 +429,17 @@ public class AndromedaConfig extends BaseConfigGroup {
     public boolean riftGuideHighlightText = true;
     public int riftGuideMissingColor = 0xFFFFFF55;
     public boolean riftHorsezookaHider = false;
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/rift/RiftConfig.kt
+    public boolean riftTemporalPillarDodge = true;
+    public int riftTemporalPillarRadius = 7;
+    public int riftTemporalPillarScanRange = 160;
+    public boolean riftTemporalPillarShowDanger = false;
+    public boolean riftTemporalPillarBox = true;
+    public boolean riftTemporalPillarBeam = false;
+    public boolean riftTemporalPillarLabel = true;
+    public boolean riftTemporalPillarDistance = false;
+    public boolean riftTemporalPillarThroughWalls = true;
+    public int riftTemporalPillarBeamHeight = 8;
+    public int riftTemporalPillarColor = 0x80FF5555;
     public java.util.Map<String, java.util.Set<String>> riftFoundSouls = new java.util.LinkedHashMap<>();
 }

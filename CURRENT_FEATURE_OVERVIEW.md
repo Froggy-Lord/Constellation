@@ -474,6 +474,14 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Optional Horsezooka horse-render hiding
 - Local `/riftprogress` status, reset, Boolean and numeric controls
 
+## Rift Temporal Pillar Navigation
+
+- Real named Temporal Pillars are discovered inside a bounded configurable range
+- Every graph node inside the configurable avoidance radius is excluded from nearest-node selection and shortest-path traversal
+- Active Enigma Soul routes rebuild whenever the live pillar set changes
+- Optional danger-volume box, beam, label and distance overlays with independent color, beam height and through-wall controls
+- `/riftnav` reports detected pillars and blocked node count and exposes all pillar settings
+
 ## Scatha Mining
 
 - Exact Crystal Hollows spawn-message recognition followed by a bounded nearby level-5 Worm or level-10 Scatha pairing window

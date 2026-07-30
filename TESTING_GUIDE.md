@@ -1929,3 +1929,15 @@ Enable Andromeda and enter the Rift. Run `/riftprogress`; it should report Crux,
 - [ ] Open the Rift Guide. Expected: incomplete entries receive a colored border and optional `M`; completed entries and unrelated inventories are untouched.
 - [ ] Hold a Horsezooka with Horsezooka hiding enabled. Expected: horses stop rendering only while in the Rift and holding that exact item; no entities are removed or modified.
 - [ ] Leave the Rift or disable Andromeda. Expected: both HUDs, player highlights, Guide marks and Horsezooka filtering stop immediately.
+
+## Rift Temporal Pillar Navigation
+
+Enable Andromeda, enable Rift pathfinding, select a missing soul with `/riftnav nearest`, and travel near a real Temporal Pillar.
+
+- [ ] Run `/riftnav`. Expected: status includes the detected Temporal Pillar count and the number of graph nodes currently blocked.
+- [ ] Observe the route before and after a Pillar enters scan range. Expected: it rebuilds away from nodes inside the default seven-block danger radius without moving or steering the player.
+- [ ] Run `/riftnav option pillardodge off`. Expected: the route may use those graph nodes again. Turn it back on after comparison.
+- [ ] Enable `/riftnav option pillardanger on`. Expected: each detected Pillar receives the configured danger box and label even if detouring is temporarily disabled.
+- [ ] Test `pillarbox`, `pillarbeam`, `pillarlabel`, `pillardistance` and `pillarwalls`. Expected: each affects only its named visual channel.
+- [ ] Test `/riftnav pillarradius 10`, `/riftnav pillarrange 100`, `/riftnav pillarbeamheight 12` and `/riftnav pillarcolor 80FF5555`. Expected: status remains local, routing uses the new radius, and rendering follows the new range/height/color.
+- [ ] Leave the Rift, disable Andromeda or disable Rift pathfinding. Expected: discovery, graph blocking and all danger rendering stop immediately.

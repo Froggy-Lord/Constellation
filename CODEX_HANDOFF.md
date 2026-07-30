@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-30 for version 0.9.744 Rift-wide Progression Suite.
+Last updated: 2026-07-30 for version 0.9.745 Temporal Pillar Navigation.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.744`.
+- Current artifact version: `0.9.745`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -2642,4 +2642,16 @@ Rift Guide marking requires the exact slot-40 `To Rift Guide` signature and only
 
 Version `0.9.744` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `bdac68b9dd7aff4d41239e9c97e07dc384ad49281b2a660b6cd2e620a6d01613`.
 
-The previous `0.9.743` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-125425-0.9.744/`; only `constellation-0.9.744.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. A cohesive hand-designed icon pack and legacy UI visual pass remain requested upcoming work; preserve the existing translucent, chrome-free HUD editor.
+The previous `0.9.743` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-125425-0.9.744/`; only `constellation-0.9.744.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten. The verified release was enqueued as drip commit `34623fd1c3`, authored only as Froggy-Lord. A cohesive hand-designed icon pack and legacy UI visual pass remain requested upcoming work; preserve the existing translucent, chrome-free HUD editor.
+
+## July 30 version 0.9.745 Temporal Pillar Navigation
+
+`AndromedaRiftNavigation.java` and `AndromedaConfig.java` port SkyHanni LGPL-3.0-or-later `features/rift/RiftApi.kt`, `data/IslandGraphs.kt` and `config/features/rift/RiftConfig.kt`. The live 26.1.2 default is preserved: Temporal Pillar dodge is enabled with the source's exact seven-block avoidance radius.
+
+The existing 2,201-node Rift graph now discovers real network entities with the exact cleaned `Temporal Pillar` name, resolves a named ArmorStand to its nearby Enderman base when needed, deduplicates and stably orders those positions, and excludes every graph node whose Euclidean distance is below the configured radius. Both nearest-node selection and Dijkstra traversal honor the disabled set. A pillar-set change immediately invalidates and rebuilds the route; leaving the Rift, disabling Andromeda or disabling pathfinding clears transient state.
+
+The feature adds a bounded 20-to-256-block scan range, two-to-20-block avoidance radius and optional avoidance-volume box, beam, label and distance display with independent color, beam height and through-wall state. Visualization can stay active for comparison while detouring is disabled. `/riftnav` reports detected Pillars and blocked graph nodes and exposes every pillar setting. The feature does not move, steer, aim, click, send chat, issue a server command or construct a gameplay packet.
+
+Version `0.9.745` built with exactly 11 successful tests and zero failures. Its full headless client exited at healthy timeout 124, loaded 138 rooms across nine shapes, loaded the 2,201-node/5,293-edge Rift graph and printed `Constellation ready. 14 constellations loaded.` It contained zero mixin-apply, crash-report, fatal-error, exception-in-initializer, illegal-class-load or transformer-error signatures. Main-jar SHA-256: `b81fc0bee4ecb2483b423d8db18d27bb0f7427e345b1cf7053711943d5fe6e96`.
+
+The previous `0.9.744` Gather jar was archived at `~/Desktop/To-Delete/gather-jars/20260730-130107-0.9.745/`; only `constellation-0.9.745.jar` is live and its checksum matches the build artifact. Gather's config checksum stayed `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`, so Andromeda remains disabled until deliberately enabled and no preference was rewritten.
