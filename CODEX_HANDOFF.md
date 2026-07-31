@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.796 Workflow Editor UI Migration.
+Last updated: 2026-07-31 for version 0.9.797 Compact Screen UI Completion.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.796`.
+- Current artifact version: `0.9.797`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3351,6 +3351,20 @@ Inventory Buttons retains fourteen item-backed commands, button reset, reset-all
 Carry rows are now clipped inside a shared panel and expose a proportional scrollbar. Mouse handling applies the same visible top/bottom bounds and adjusted row geometry, so scrolled-off buttons cannot change or remove a carry. Party Guard no longer converts malformed numeric text to zero: malformed values retain the last valid setting, show a field-specific error and keep the explicit Save button on screen. Valid numeric values still clamp to their established safety ranges; Escape safely closes without replacing malformed fields.
 
 Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The successful non-interactive boot used the workstation's long-lived Xvfb display `:99` because stale retained auto-display locks make `xvfb-run -a` unreliable. It ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. Do not allocate a PTY for this boot command: a PTY caused the Gradle wrapper to enter terminal-job stop state on timeout and incorrectly report 137. The exact tested jar SHA-256 is `c8d377eaba8595e6c9892faf6df73620aa4ae7f4d94da73753c04c887ee92334`.
+
+The tested `constellation-0.9.796.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-125846-0.9.796/`. Live and build checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The release is queued in the drip repository as Froggy-Lord commit `68f74cc768`.
+
+## July 31 version 0.9.797 Compact Screen UI Completion
+
+`SpeedPresetScreen.java`, `ScoreboardOrderScreen.java`, `TunnelMapScreen.java` and `DungeonStatsScreen.java` complete the first migration of every compact purpose-built screen to `ConstellationUi`. The underlying licensed implementations remain unchanged: Speed Presets is a Skyblocker LGPL port, Scoreboard Order is a CryptKit GPL port cross-checked with SkyHanni's LGPL implementation, and Tunnel Maps is a SkyHanni LGPL port. Dungeon Records continues to present Constellation's existing saved `RunStats` model.
+
+All three searchable lists now share a bounded panel, render scissor, proportional scrollbar and identical top/bottom hit-test guard. Before this release, entries scrolled behind the search/action regions could still be selected because only drawing was conditionally hidden. Long scoreboard labels and dungeon record lines now use the shared width-safe truncation helper.
+
+Dungeon Records previously stacked sixteen floor buttons vertically, making later Master Mode floors unreachable at short GUI heights. The selector is now an eight-row, two-column grid inside the same 70-pixel sidebar. Clear is now a deliberate two-click action scoped to the selected floor: first click changes the control to Confirm, changing floor or clicking elsewhere cancels it, and only Confirm calls `RunStats.clear`. JSON export is unaffected.
+
+Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The non-interactive boot on the persistent Xvfb display `:99` ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `032438af534798a1af2abbfb36efc48c6b0fde5bbcca40c2ff8b410a0e8cd2d2`.
 
 ## Required dedicated visual-design pass
 

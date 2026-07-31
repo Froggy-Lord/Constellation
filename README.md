@@ -73,6 +73,7 @@ the profile Overview separates every liquid balance and adds Cookie, profile age
 
 the party-message, Smart Sack Refill and slot-binding editors share the same restrained constellation screen language, including bounded content, clear focus states and real scroll position feedback.
 inventory buttons, Spirit Leap, Party Guard and carry tracking use the same system while retaining their purpose-built controls and deliberate-click behavior.
+speed presets, scoreboard ordering, tunnel routing and dungeon records complete the compact-screen migration with clipped searchable lists and safe deletion controls.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

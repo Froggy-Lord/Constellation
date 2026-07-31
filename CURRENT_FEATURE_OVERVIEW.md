@@ -758,3 +758,7 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Spirit Leap settings with sorting, static roles, press behavior, scale, background and custom-order status
 - Party Guard editor with safe validation for floor, Cata, secrets, average secrets, MP, PB and kick-message variables
 - Carry Tracker with clipped scrolling, payment progress and separate left/right-click run adjustment
+- Speed Presets with profile-aware search, create/update/delete/use/reset controls and validated 0–500 values
+- Scoreboard Order with search, show/hide controls and saved line reordering
+- Glacite Tunnel Maps with destination search, active-route status, next-spot and Campfire controls
+- Dungeon Records with floor filtering, summary statistics, terminal milestones, JSON export and confirmed deletion

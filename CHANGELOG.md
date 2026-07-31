@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.797 (2026-07-31) — Compact Screen UI Completion
+
+- migrated Speed Presets, Scoreboard Order, Tunnel Maps and Dungeon Records to the shared visual system
+- made all searchable lists use matching render clipping, hit-test bounds and proportional scrollbars
+- converted the dungeon floor selector to a two-column grid that remains usable at short GUI heights
+- added a deliberate second-click confirmation before clearing dungeon run records
+- made long scoreboard labels and dungeon records width-safe without altering saved data
+
 ## 0.9.796 (2026-07-31) — Workflow Editor UI Migration
 
 - migrated Inventory Buttons, Spirit Leap, Party Guard and Carry Tracker to the shared visual system

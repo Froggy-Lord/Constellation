@@ -2518,3 +2518,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
 - [ ] Populate enough carries to scroll. Expected: rows stay clipped inside the panel, the scrollbar tracks position and buttons on hidden rows cannot be clicked.
 - [ ] Left- and right-click Carry plus/minus buttons. Expected: left changes completed runs, right changes total runs, and remove still requires its visible button.
+
+## Compact screen UI completion
+
+- [ ] Open Speed Presets at multiple GUI scales, search enough entries to scroll and select a visible row. Expected: list rows remain clipped, the scrollbar tracks position and hidden rows cannot be selected.
+- [ ] Create, rename, delete, use and reset presets. Expected: validation still limits names and speeds to the licensed feature rules and every action updates the selected state correctly.
+- [ ] Open Scoreboard Order, filter to a small subset and move lines up/down. Expected: movement updates the complete saved order, long labels do not overlap controls and off-screen rows cannot toggle.
+- [ ] Hide and show scoreboard lines, close and reopen the screen. Expected: visibility and complete ordering persist.
+- [ ] Open Tunnel Maps, search and scroll destinations, then select a visible route. Expected: only visible rows accept clicks and active route status, Clear, Next spot and Campfire remain functional.
+- [ ] Open Dungeon Records at a short window height. Expected: ALL, E, F1–F7 and M1–M7 remain reachable in the two-column selector.
+- [ ] Scroll a long dungeon history. Expected: records remain clipped inside the panel, long terminal lines truncate safely and the scrollbar represents position.
+- [ ] Click Clear once. Expected: the button changes to Confirm without deleting anything. Click elsewhere or change floors to cancel; click Confirm to delete only the selected floor scope.
+- [ ] Export records. Expected: JSON export remains independent of clear confirmation and preserves all configured record fields.
