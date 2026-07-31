@@ -762,3 +762,4 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Scoreboard Order with search, show/hide controls and saved line reordering
 - Glacite Tunnel Maps with destination search, active-route status, next-spot and Campfire controls
 - Dungeon Records with floor filtering, summary statistics, terminal milestones, JSON export and confirmed deletion
+- Twenty-page Profile Viewer shell with profile tabs, paged category navigation, animated loading/error states, Ctrl+L search focus and F5 refresh

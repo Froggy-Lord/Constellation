@@ -2530,3 +2530,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Scroll a long dungeon history. Expected: records remain clipped inside the panel, long terminal lines truncate safely and the scrollbar represents position.
 - [ ] Click Clear once. Expected: the button changes to Confirm without deleting anything. Click elsewhere or change floors to cancel; click Confirm to delete only the selected floor scope.
 - [ ] Export records. Expected: JSON export remains independent of clear confirmation and preserves all configured record fields.
+
+## Profile Viewer visual shell
+
+- [ ] Open the Profile Viewer without a supplied name. Expected: a centered empty-state card explains that blank input opens your own public profile.
+- [ ] Enter a valid player and press Enter or Open. Expected: an animated loading card appears, then profiles and the complete twenty-page navigation become available.
+- [ ] Press Ctrl+L from any page. Expected: the player field focuses with its full current value selected for replacement.
+- [ ] Press F5. Expected: a forced refresh runs, updates the fetched/cached status and does not change the selected tab.
+- [ ] Cause a refresh failure after a successful load. Expected: a concise red refresh error appears while the last successfully loaded profile remains usable.
+- [ ] Cause an initial lookup failure. Expected: a centered error card appears with no stale profile controls beneath it.
+- [ ] Resize the window while a profile is open. Expected: the screen keeps the loaded result and does not issue another profile request solely because `init()` ran.
+- [ ] Navigate all twenty tabs and multiple profiles. Expected: profile chips, paged tab chips, arrows, Open and Refresh share consistent focus/hover treatment.
+- [ ] Scroll long Overview, Skills, Dungeons, Slayers, Pets and calculator-backed pages. Expected: rows stay clipped inside the content panel and the scrollbar tracks position.
+- [ ] Check narrow windows and long values. Expected: row values, error text and state-card detail remain within their panels.

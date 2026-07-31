@@ -50,6 +50,7 @@ public final class ProfileViewerScreen extends Screen {
     private static final String[] TABS = {"Overview", "Skills", "Dungeons", "Slayers", "Pets", "Items", "Wealth", "Bestiary", "Collections", "Minions", "Mining", "Museum", "Crimson", "Garden", "Rift", "Fishing", "Chocolate", "Foraging", "Mobs", "Loadouts"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("d MMM HH:mm").withZone(ZoneId.systemDefault());
     private final Screen parent;
+    private final String initialName;
     private EditBox player;
     private ProfileViewerApi.Result result;
     private String error = "";
@@ -96,33 +97,44 @@ public final class ProfileViewerScreen extends Screen {
     public ProfileViewerScreen(Screen parent, String name) {
         super(Component.literal("Profile Viewer"));
         this.parent = parent;
-        this.error = name == null ? "" : name;
+        this.initialName = name == null ? "" : name;
     }
 
     @Override protected void init() {
-        String initial = error;
-        error = "";
-        player = new EditBox(font, 12, 12, 132, 18, Component.literal("Player"));
+        String initial = result == null ? initialName : result.name();
+        player = new EditBox(font, 12, 6, 132, 18, Component.literal("Player"));
         player.setHint(Component.literal("player name"));
         player.setMaxLength(16);
         player.setValue(initial);
         addRenderableWidget(player);
-        if (!initial.isBlank()) load(false);
+        if (result == null && !initialName.isBlank()) load(false);
     }
 
     @Override public boolean isPauseScreen() { return false; }
 
     @Override public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        g.fill(0, 0, width, height, 0xE0080810);
-        button(g, 150, 12, 48, "Open", mx, my);
-        button(g, 202, 12, 56, "Refresh", mx, my);
+        ConstellationUi.background(g, width, height, delta);
+        g.fill(0, 0, width, 28, 0xF20E0E1A);
+        g.fill(0, 27, width, 28, ConstellationTheme.BORDER_SOFT);
+        g.fill(0, 27, Math.min(72, width), 28, ConstellationTheme.ACCENT);
+        ConstellationTheme.search(g, 10, 4, 136, 22, player.isFocused());
+        button(g, 150, 6, 48, "Open", mx, my);
+        button(g, 202, 6, 56, "Refresh", mx, my);
+        if (width > 390)
+            g.text(font, "PROFILE VIEWER", width - 12 - font.width("PROFILE VIEWER"), 10,
+                ConstellationTheme.ACCENT_BRIGHT, false);
         if (loading) {
-            g.text(font, "Loading profile...", 12, 42, ConstellationTheme.TEXT, false);
+            String dots = ".".repeat((int) (System.currentTimeMillis() / 350L % 4L));
+            stateCard(g, "Loading profile" + dots, "Fetching public profile data for " + player.getValue() + ".");
             return;
         }
-        if (!error.isBlank()) g.text(font, error, 12, 42, 0xFFFF7777, false);
+        if (!error.isBlank() && result == null) {
+            stateCard(g, "Profile unavailable", error);
+            return;
+        }
         if (result == null) {
-            g.text(font, "Search for a player to view their public SkyBlock profiles.", 12, 58, ConstellationTheme.TEXT_MUTED, false);
+            stateCard(g, "Find a SkyBlock profile",
+                "Enter a player name, or leave it empty to open your own profile.");
             return;
         }
         JsonObject profile = profile();
@@ -130,7 +142,12 @@ public final class ProfileViewerScreen extends Screen {
         String profileName = string(profile, "cute_name", "Profile " + (profileIndex + 1));
         String mode = string(profile, "game_mode", "normal");
         String fetched = TIME.format(Instant.ofEpochMilli(result.fetchedAt()));
-        g.text(font, result.name() + "  " + profileName + "  " + mode, 12, 42, ConstellationTheme.ACCENT_BRIGHT, false);
+        if (error.isBlank())
+            g.text(font, result.name() + "  " + profileName + "  " + mode, 12, 42,
+                ConstellationTheme.ACCENT_BRIGHT, false);
+        else
+            g.text(font, ConstellationUi.fit(font, "Refresh failed: " + error, Math.max(80, width - 190)),
+                12, 42, 0xFFFF7777, false);
         g.text(font, (result.cached() ? "cached " : "updated ") + fetched, width - 12 - font.width((result.cached() ? "cached " : "updated ") + fetched), 43, ConstellationTheme.TEXT_MUTED, false);
         int px = 12;
         for (int i = 0; i < result.profiles().size(); i++) {
@@ -148,6 +165,7 @@ public final class ProfileViewerScreen extends Screen {
         }
         chip(g, width - 48, 80, 20, "<", false, mx, my);
         chip(g, width - 24, 80, 20, ">", false, mx, my);
+        ConstellationUi.panel(g, 8, 102, width - 16, height - 124);
         if (tab == 5) {
             drawItems(g, mx, my);
             return;
@@ -208,17 +226,7 @@ public final class ProfileViewerScreen extends Screen {
             drawLoadouts(g, mx, my);
             return;
         }
-        List<Row> rows = rows(profile, member);
-        int y = 108 - scroll;
-        for (Row row : rows) {
-            if (y > 98 && y < height - 22) {
-                g.fill(12, y, width - 12, y + 18, 0xA0181825);
-                g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
-                g.text(font, row.value, width - 19 - font.width(row.value), y + 6, row.color, false);
-            }
-            y += 21;
-        }
-        g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
+        drawRows(g, rows(profile, member));
     }
 
     private List<Row> rows(JsonObject profile, JsonObject member) {
@@ -1844,8 +1852,8 @@ public final class ProfileViewerScreen extends Screen {
 
     @Override public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         int mx = (int) event.x(), my = (int) event.y();
-        if (inside(mx, my, 150, 12, 48, 18)) { load(false); return true; }
-        if (inside(mx, my, 202, 12, 56, 18)) { load(true); return true; }
+        if (inside(mx, my, 150, 6, 48, 18)) { load(false); return true; }
+        if (inside(mx, my, 202, 6, 56, 18)) { load(true); return true; }
         if (result != null) {
             if (inside(mx, my, width - 48, 80, 20, 16)) {
                 tabPageStart = Math.max(0, tabPageStart - 1);
@@ -2039,6 +2047,13 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     @Override public boolean keyPressed(KeyEvent event) {
+        if (event.hasControlDown() && event.key() == GLFW.GLFW_KEY_L) {
+            player.setFocused(true);
+            player.setHighlightPos(0);
+            player.setCursorPosition(player.getValue().length());
+            return true;
+        }
+        if (event.key() == GLFW.GLFW_KEY_F5) { load(true); return true; }
         if (event.key() == GLFW.GLFW_KEY_ENTER) { load(false); return true; }
         if (event.key() == GLFW.GLFW_KEY_ESCAPE) { onClose(); return true; }
         return super.keyPressed(event);
@@ -2180,10 +2195,12 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     private void drawRows(GuiGraphicsExtractor g, List<Row> rows) {
-        int y = 108 - scroll;
+        int top = 108, bottom = height - 22, y = top - scroll;
+        g.enableScissor(10, top, width - 10, bottom);
         for (Row row : rows) {
-            if (y > 98 && y < height - 22) {
-                g.fill(12, y, width - 12, y + 18, 0xA0181825);
+            if (y + 18 >= top && y < bottom) {
+                ConstellationTheme.surface(g, 12, y, width - 24, 18,
+                    0xA0181825, ConstellationTheme.BORDER_SOFT);
                 g.text(font, row.label, 19, y + 6, ConstellationTheme.TEXT_MUTED, false);
                 String value = font.width(row.value) > width / 2
                     ? font.plainSubstrByWidth(row.value, width / 2 - 24) + "..." : row.value;
@@ -2191,6 +2208,9 @@ public final class ProfileViewerScreen extends Screen {
             }
             y += 21;
         }
+        g.disableScissor();
+        ConstellationUi.scrollbar(g, width - 13, top, bottom - top,
+            bottom - top, rows.size() * 21, scroll);
         g.text(font, "Esc to close", 12, height - 13, ConstellationTheme.TEXT_FAINT, false);
     }
 
@@ -2316,9 +2336,16 @@ public final class ProfileViewerScreen extends Screen {
     private JsonObject member(JsonObject profile) { return object(object(profile, "members"), result.uuid().toString().replace("-", "")); }
     private static int selectedIndex(JsonArray profiles) { for (int i = 0; i < profiles.size(); i++) if (bool(profiles.get(i).getAsJsonObject(), "selected")) return i; return 0; }
     private static Row row(String label, String value) { return new Row(label, value, ConstellationTheme.TEXT); }
-    private void chip(GuiGraphicsExtractor g, int x, int y, int w, String text, boolean selected, int mx, int my) { g.fill(x,y,x+w,y+16,selected?0xFF34506A:inside(mx,my,x,y,w,16)?0xFF303044:0xFF20202C);g.text(font,text,x+(w-font.width(text))/2,y+5,selected?0xFFFFFFFF:ConstellationTheme.TEXT_MUTED,false); }
+    private void stateCard(GuiGraphicsExtractor g, String title, String detail) {
+        int w = Math.min(360, width - 32), h = 64, x = (width - w) / 2, y = Math.max(42, (height - h) / 2);
+        ConstellationUi.panel(g, x, y, w, h);
+        g.centeredText(font, title, width / 2, y + 17, ConstellationTheme.ACCENT_BRIGHT);
+        g.centeredText(font, ConstellationUi.fit(font, detail, w - 24), width / 2, y + 38,
+            ConstellationTheme.TEXT_MUTED);
+    }
+    private void chip(GuiGraphicsExtractor g, int x, int y, int w, String text, boolean selected, int mx, int my) { boolean hover=inside(mx,my,x,y,w,16);ConstellationTheme.surface(g,x,y,w,16,selected?0xFF34506A:hover?0xFF303044:0xCC101024,selected?ConstellationTheme.ACCENT_DIM:ConstellationTheme.BORDER_SOFT);g.text(font,text,x+(w-font.width(text))/2,y+5,selected?0xFFFFFFFF:ConstellationTheme.TEXT_MUTED,false); }
     private int lastVisibleTab(){int x=12;int last=tabPageStart-1;for(int i=tabPageStart;i<TABS.length;i++){int width=font.width(TABS[i])+10;if(x+width>this.width-56)break;last=i;x+=width+4;}return Math.max(tabPageStart,last);}
-    private void button(GuiGraphicsExtractor g,int x,int y,int w,String text,int mx,int my){g.fill(x,y,x+w,y+18,inside(mx,my,x,y,w,18)?0xFF3C3C55:0xFF252538);g.text(font,text,x+(w-font.width(text))/2,y+6,ConstellationTheme.TEXT,false);}
+    private void button(GuiGraphicsExtractor g,int x,int y,int w,String text,int mx,int my){ConstellationUi.button(g,font,x,y,w,18,text,inside(mx,my,x,y,w,18),false);}
     private static boolean inside(int mx,int my,int x,int y,int w,int h){return mx>=x&&mx<x+w&&my>=y&&my<y+h;}
     private static JsonElement path(JsonObject root, String path) { JsonElement e=root; for(String part:path.split("\\.")){if(e==null||!e.isJsonObject()||!e.getAsJsonObject().has(part))return null;e=e.getAsJsonObject().get(part);}return e; }
     private static JsonObject object(JsonObject root,String key){return root!=null&&root.has(key)&&root.get(key).isJsonObject()?root.getAsJsonObject(key):new JsonObject();}

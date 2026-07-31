@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.798 (2026-07-31) — Profile Viewer Visual Shell
+
+- migrated the complete twenty-page Profile Viewer shell to the constellation visual system
+- added focused player search, animated loading, empty and error cards, and retained last-good data
+- added Ctrl+L player-field focus and F5 forced refresh controls
+- replaced flat tabs, buttons and default rows with clipped, bordered and width-safe shared components
+- fixed initial-player state so screen reinitialization cannot trigger an unintended profile reload
+
 ## 0.9.797 (2026-07-31) — Compact Screen UI Completion
 
 - migrated Speed Presets, Scoreboard Order, Tunnel Maps and Dungeon Records to the shared visual system
