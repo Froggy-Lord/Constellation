@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.801 (2026-07-31) — Semantic Editor Actions
+
+- expanded the hand-authored semantic icon family from twelve to sixteen glyphs
+- added dedicated Add, Edit, Export and Import marks to the retained SVG design master
+- ported Skyblocker's readable text-plus-icon button convention into the shared editor renderer
+- added width-aware action icons across migrated editors without crowding narrow controls
+- made Mod Menu's configure action open the searchable Constellation hub instead of bypassing it for Apollo
+- preserved text labels, hit boxes, actions and the deliberately chrome-free HUD editor
+
 ## 0.9.800 (2026-07-31) — Searchable Configuration Navigation
 
 - ported module name and description filtering behavior from Athen and Stella

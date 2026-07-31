@@ -2570,3 +2570,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Click the X inside the focused search field. Expected: the query clears, all cards return and search remains focused.
 - [ ] Resize the window and reopen the screen. Expected: the search field, All settings action, category rail, cards and scroll bar remain inside the central panel.
 - [ ] Open the HUD editor. Expected: it remains translucent and chrome-free; the new icon system does not appear there.
+
+## Semantic editor actions
+
+- [ ] Click Constellation's configure button in Mod Menu. Expected: the searchable constellation hub opens instead of Apollo's settings.
+- [ ] Open Party Messages, Inventory Buttons, Speed Presets, Scoreboard Order, Tunnel Maps, Dungeon Records and the Profile Viewer. Expected: wide recognized actions pair their existing text with a crisp semantic icon.
+- [ ] Check Save, Done, Reset, Clear, Delete, Sort, Export, Refresh, New profile and Save and close controls. Expected: icons appear only where text and the sixteen-pixel mark both fit comfortably.
+- [ ] Check narrow row controls, plus/minus controls and compact selectors. Expected: they remain text-only rather than clipping or replacing their labels.
+- [ ] Activate several icon-bearing controls. Expected: their hit boxes and behavior are unchanged; the icon is presentation only.
+- [ ] Hover and select icon-bearing controls. Expected: existing hover and active surfaces remain legible behind the gold icon and text.
+- [ ] Resize to a narrow GUI scale. Expected: buttons automatically omit icons before labels would crowd or overlap.
+- [ ] Open the HUD editor. Expected: it still contains only the translucent overlay and HUD elements, with no semantic action chrome.

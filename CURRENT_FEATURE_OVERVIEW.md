@@ -543,8 +543,10 @@ This is the readable map of what Constellation currently contains. It is organiz
 ## Shared systems
 
 - One configuration screen for all constellations
+- Mod Menu configuration entry opens the searchable constellation hub rather than one arbitrary module
 - Search module names, descriptions and option labels with category result counts, Ctrl+F focus and Escape-to-clear
-- Hand-authored constellation and semantic action icon families with retained SVG design masters
+- Hand-authored constellation and sixteen-glyph semantic action icon families with retained SVG design masters
+- Width-aware text-plus-icon treatment for suitable Save, Reset, Delete, Sort, Add, Edit, Export, Import and navigation actions
 - Searchable/sortable customizable party-message editor
 - Per-message variables and variant messages
 - Persistent HUD positions and scales
@@ -558,7 +560,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 
 - Remaining Garden progression depth
 - Additional non-dungeon gaps from the active 26.1.2 instance
-- Continue carrying the semantic icon family into suitable legacy actions without decorating dense gameplay surfaces; preserve the chrome-free, translucent HUD editor
+- Continue focused visual inspections and spacing/accessibility refinement without decorating dense gameplay surfaces; preserve the chrome-free, translucent HUD editor
 
 ## Rift-wide Progression
 

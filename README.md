@@ -8,7 +8,7 @@ skyblocker does alot but you still need like 3 other mods alongside it for the s
 
 this is just one jar. one config file. one hud editor. everythings in the same place with the same toggles and the same keybinds. and if you dont want a feature you just turn off that constellation — no need to remove the whole mod because it has one thing you hate. also its gpl3 and doesnt need 4 libraries to launch.
 
-the main hub uses a hand-drawn star-map icon family for all 15 constellations, a matching mod mark, a twelve-glyph semantic action strip, original low-contrast space artwork, searchable module navigation, clear direct toggles and consistent clipped-corner controls. each module screen can also search names, descriptions and option labels with category result feedback.
+the main hub uses a hand-drawn star-map icon family for all 15 constellations, a matching mod mark, a sixteen-glyph semantic action strip, original low-contrast space artwork, searchable module navigation, clear direct toggles and consistent clipped-corner controls. each module screen can also search names, descriptions and option labels with category result feedback, while suitable editor actions pair readable labels with matching icons.
 
 each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
 

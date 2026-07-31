@@ -1,5 +1,6 @@
 package com.froggylord.constellation.ui;
 
+import com.froggylord.constellation.render.ConstellationIcons;
 import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -29,7 +30,33 @@ public final class ConstellationUi {
                               String text, boolean hover, boolean active) {
         ConstellationTheme.button(graphics, x, y, width, height, hover, active);
         int color = active || hover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT;
-        graphics.text(font, text, x + (width - font.width(text)) / 2, y + (height - font.lineHeight) / 2 + 1, color, false);
+        // ported from Skyblocker (LGPL-3.0-or-later): utils/render/gui/CyclingIconButtonWidget.java
+        String icon = actionIcon(text);
+        boolean drawIcon = icon != null && height >= 18 && width >= font.width(text) + 25;
+        int contentWidth = font.width(text) + (drawIcon ? 19 : 0);
+        int contentX = x + (width - contentWidth) / 2;
+        if (drawIcon) {
+            ConstellationIcons.drawAction(graphics, icon, contentX, y + (height - 16) / 2, 16);
+            contentX += 19;
+        }
+        graphics.text(font, text, contentX, y + (height - font.lineHeight) / 2 + 1, color, false);
+    }
+
+    private static String actionIcon(String text) {
+        String value = text == null ? "" : text.strip().toLowerCase(java.util.Locale.ROOT);
+        if (value.startsWith("reset") || value.startsWith("refresh") || value.startsWith("reload")) return "reset";
+        if (value.startsWith("save") || value.equals("done") || value.startsWith("apply")) return "save";
+        if (value.startsWith("delete") || value.startsWith("remove") || value.startsWith("clear")) return "delete";
+        if (value.startsWith("sort")) return "sort";
+        if (value.startsWith("add") || value.startsWith("new") || value.startsWith("create")) return "add";
+        if (value.startsWith("edit") || value.startsWith("rename")) return "edit";
+        if (value.startsWith("export") || value.startsWith("copy")) return "export";
+        if (value.startsWith("import") || value.startsWith("load")) return "import";
+        if (value.startsWith("back")) return "back";
+        if (value.startsWith("close") || value.startsWith("cancel")) return "close";
+        if (value.startsWith("settings") || value.startsWith("config")) return "settings";
+        if (value.startsWith("info") || value.startsWith("stats")) return "info";
+        return null;
     }
 
     public static void scrollbar(GuiGraphicsExtractor graphics, int x, int y, int height,

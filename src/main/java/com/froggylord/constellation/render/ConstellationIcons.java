@@ -20,7 +20,8 @@ public final class ConstellationIcons {
     private static final int WIDTH = IDS.size() * TILE;
     private static final List<String> ACTION_IDS = List.of(
         "search", "settings", "hud", "filter", "back", "close",
-        "info", "next", "reset", "save", "delete", "sort"
+        "info", "next", "reset", "save", "delete", "sort",
+        "add", "edit", "export", "import"
     );
     private static final int ACTION_TILE = 16;
     private static final int ACTION_WIDTH = ACTION_IDS.size() * ACTION_TILE;

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.800 Searchable Configuration Navigation.
+Last updated: 2026-07-31 for version 0.9.801 Semantic Editor Actions.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.800`.
+- Current artifact version: `0.9.801`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3409,6 +3409,20 @@ The verified jar was deployed to the Gather instance. The previous live jar is a
 Visual inspection used the real 26.2 client on Xvfb. Both normal and filtered Apollo configuration states were inspected at the native GUI scale; the search field, semantic glyphs, two matching `fps` results, category heading and card grid remained aligned. The single-category rail suppresses redundant result counts so its label stays readable. The HUD editor remains intentionally untouched and outside this decorative system.
 
 Verification passed on 2026-07-31: the sprite is 192-by-16, eight-bit sRGB with alpha; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error or texture-load failure signature. Release jar SHA-256: `769447b0be57a87e3a00e08f0690f9060b75fc862841e4b6fb72fc835a678e64`.
+
+The verified jar was deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260731-132825-0.9.800/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. Drip release `8048b15c3b` was queued as Froggy-Lord with message `add searchable configuration navigation and action icons`.
+
+## July 31 version 0.9.801 Semantic Editor Actions
+
+`interface-icons.svg`, `interface_icons.png`, `ConstellationIcons.java` and `ConstellationUi.java` expand the semantic action family from twelve to sixteen marks with dedicated Add, Edit, Export and Import glyphs. The retained SVG remains the design master and deterministically produces a 256-by-16, eight-bit sprite. No third-party artwork was copied.
+
+The shared button composition ports Skyblocker LGPL-3.0-or-later `utils/render/gui/CyclingIconButtonWidget.java`: recognized actions keep their readable text and place the current semantic mark beside it. Constellation adds a strict available-width gate so the icon appears only when a sixteen-pixel mark, three-pixel gap and full existing label fit. Narrow row controls, compact selectors and unknown actions are unchanged. This automatically covers suitable Reset, Refresh, Save, Done, Apply, Delete, Remove, Clear, Sort, Add, New, Create, Edit, Rename, Export, Copy, Import, Load, Back, Close, Cancel, Settings, Config, Info and Stats actions across every editor already migrated to `ConstellationUi`.
+
+No editor click handler, control geometry, saved value or screen lifecycle changed. `ModMenuIntegration.java` fixes the external navigation entry point discovered during real-client inspection: Mod Menu's configure button now opens `HubScreen` instead of bypassing the hub for Apollo. The HUD editor is still excluded from `ConstellationUi` and remains the user-mandated translucent, chrome-free positioning overlay.
+
+Real-client inspection followed Mod Menu configure into the corrected hub, searched for Orion, entered Party settings, searched option labels for `message`, opened Message Editor and inspected the icon-bearing Sort and Reset actions. The hub search, module/category result counts, settings icon, editor sort icon, labels and control surfaces remained aligned at the native GUI scale.
+
+Verification passed on 2026-07-31: the atlas is 256-by-16, eight-bit sRGB with alpha; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error or texture-load failure signature. Release jar SHA-256: `8c4f105d06a3261cddde0af5b64f9d1696615dfc94d0df7173053b6da5d9e49e`.
 
 ## Required dedicated visual-design pass
 
