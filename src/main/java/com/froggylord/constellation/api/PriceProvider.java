@@ -89,6 +89,26 @@ public final class PriceProvider {
         return 0;
     }
 
+    /** Liquidation value for loot: lowest BIN, then the highest bazaar buy order, then NPC. */
+    public static double sellValue(String itemId) {
+        Double lbin = AuctionApi.getLbin(itemId);
+        if (lbin != null && lbin > 0) return lbin;
+        double[] bz = BazaarApi.get(itemId);
+        if (bz != null && bz[0] > 0) return bz[0];
+        Double npc = NPC.get(itemId);
+        return npc == null ? 0 : npc;
+    }
+
+    /** Replacement cost: lowest BIN, then the lowest bazaar sell offer, then NPC. */
+    public static double purchaseValue(String itemId) {
+        Double lbin = AuctionApi.getLbin(itemId);
+        if (lbin != null && lbin > 0) return lbin;
+        double[] bz = BazaarApi.get(itemId);
+        if (bz != null && bz[1] > 0) return bz[1];
+        Double npc = NPC.get(itemId);
+        return npc == null ? 0 : npc;
+    }
+
     /** trigger an async fetch for an item if we don't have recent LBIN data */
     public static void warm(String itemId) {
         if (AuctionApi.getLbin(itemId) == null) {
@@ -97,4 +117,5 @@ public final class PriceProvider {
     }
 
     public static int npcEntries() { return NPC.size(); }
+    public static double npcValue(String itemId) { return NPC.getOrDefault(itemId, 0.0); }
 }
