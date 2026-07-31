@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.799 (2026-07-31) — Complete Terminal Practice
+
+- ported configurable artificial simulator ping from Athen and simulator PB timing from Odin
+- added live time, PB, click, mistake and pending-ping feedback without changing Hypixel-style boards
+- added persistent per-terminal PB, run, click, mistake and accuracy statistics
+- added direct mode, ping, statistics and reset command controls
+- added optional automatic replay and configurable Melody inclusion in Random
+
 ## 0.9.798 (2026-07-31) — Profile Viewer Visual Shell
 
 - migrated the complete twenty-page Profile Viewer shell to the constellation visual system

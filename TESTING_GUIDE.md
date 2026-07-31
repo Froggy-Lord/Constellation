@@ -2543,3 +2543,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Navigate all twenty tabs and multiple profiles. Expected: profile chips, paged tab chips, arrows, Open and Refresh share consistent focus/hover treatment.
 - [ ] Scroll long Overview, Skills, Dungeons, Slayers, Pets and calculator-backed pages. Expected: rows stay clipped inside the content panel and the scrollbar tracks position.
 - [ ] Check narrow windows and long values. Expected: row values, error text and state-card detail remain within their panels.
+
+## Complete Terminal Simulator practice
+
+- [ ] Run `/termsim` and open every named mode from the chest menu. Expected: Panes, Rubix, Numbers, Starts With, Select All and Melody retain Hypixel-style layouts and solve rules.
+- [ ] Run `/termsim panes`, `rubix`, `numbers`, `startswith`, `selectall`, `melody` and `random`. Expected: every direct command opens the requested local board without sending a server packet.
+- [ ] Run `/termsim ping 0`, then test 50, 250 and 5000. Expected: board clicks apply after the configured delay, the overlay says it is waiting, and a second click cannot bypass the pending one.
+- [ ] Enable Live timer and Personal best. Expected: the overlay updates time continuously and shows the saved PB for that terminal type.
+- [ ] Make deliberate wrong clicks in Numbers, Starts With, Select All and Melody. Expected: the mistake count rises; Panes and valid Rubix cycling do not invent mistakes.
+- [ ] Solve each terminal. Expected: chat reports time, mistakes and first/new/existing PB; the next screen is the simulator menu by default.
+- [ ] Enable Automatic replay. Expected: completing a terminal immediately opens a newly randomized board of the same type.
+- [ ] Disable Track statistics, solve a terminal and reopen stats. Expected: that run does not alter PB, run, click or mistake totals.
+- [ ] Run `/termsim stats`. Expected: each practiced type reports runs, PB and click-based accuracy.
+- [ ] Run `/termsim reset`, then `stats`. Expected: all simulator-only history is cleared and real dungeon terminal records remain untouched.
+- [ ] Disable Melody in random and repeatedly use Random. Expected: Melody is excluded; named Melody practice remains available.
+- [ ] Disable Terminal Simulator and run its direct mode commands. Expected: no simulator screen opens.

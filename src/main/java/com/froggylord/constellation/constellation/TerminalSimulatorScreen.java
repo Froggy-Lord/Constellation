@@ -1,6 +1,7 @@
 package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.component.DataComponents;
@@ -27,6 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 // ported from Athen (BSD-3-Clause): modules/impl/dungeon/terminals/simulator/base/ITerminalSim.kt
 // ported from Athen (BSD-3-Clause): modules/impl/dungeon/terminals/simulator/base/SimulatorMenu.kt
 // ported from Athen (BSD-3-Clause): modules/impl/dungeon/terminals/simulator/impl/*.kt
+// ported from Odin (BSD-3-Clause): features/impl/boss/TerminalSimulator.kt and TerminalTimes.kt
 public final class TerminalSimulatorScreen extends ContainerScreen {
     // 26.2 exposes block-items through the registry instead of Items constants
     private static final class Items {
@@ -78,6 +80,12 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
     private int melodyDirection = 1;
     private int melodyRow = 1;
     private int melodyTicks;
+    private final long openedAtNanos = System.nanoTime();
+    private int clicks;
+    private int mistakes;
+    private int pendingSlot = -1;
+    private int pendingButton;
+    private long pendingAtNanos;
 
     private TerminalSimulatorScreen(Type type, String letter, DyeColor color) {
         this(type, letter, color, setup(type));
@@ -97,6 +105,63 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
         Minecraft mc = Minecraft.getInstance();
         if (cfg == null || !cfg.terminalSimulator || mc.player == null) return;
         mc.setScreenAndShow(new TerminalSimulatorScreen(Type.MENU, "", DyeColor.WHITE));
+    }
+
+    public static int openNamed(String name) {
+        var cfg = ConstellationClient.cfg().orion;
+        if (!cfg.terminalSimulator || Minecraft.getInstance().player == null) return 0;
+        Type type = switch (name.toLowerCase(Locale.ROOT)) {
+            case "panes" -> Type.PANES;
+            case "rubix" -> Type.RUBIX;
+            case "numbers" -> Type.NUMBERS;
+            case "starts", "startswith", "starts_with" -> Type.STARTS_WITH;
+            case "select", "selectall", "select_all" -> Type.SELECT_ALL;
+            case "melody" -> Type.MELODY;
+            case "random" -> randomType();
+            default -> Type.MENU;
+        };
+        Minecraft.getInstance().execute(() -> openType(type));
+        return 1;
+    }
+
+    public static int setPing(int milliseconds) {
+        var cfg = ConstellationClient.cfg().orion;
+        cfg.terminalSimulatorPingMs = Math.clamp(milliseconds, 0, 5_000);
+        ConstellationClient.saveConfig();
+        message("Terminal Simulator ping: " + cfg.terminalSimulatorPingMs + " ms");
+        return 1;
+    }
+
+    public static int resetStats() {
+        var cfg = ConstellationClient.cfg().orion;
+        cfg.terminalSimulatorBestMs.clear();
+        cfg.terminalSimulatorRuns.clear();
+        cfg.terminalSimulatorClicks.clear();
+        cfg.terminalSimulatorMistakes.clear();
+        ConstellationClient.saveConfig();
+        message("Terminal Simulator statistics reset.");
+        return 1;
+    }
+
+    public static int showStats() {
+        var cfg = ConstellationClient.cfg().orion;
+        if (cfg.terminalSimulatorRuns.isEmpty()) {
+            message("Terminal Simulator: no completed runs.");
+            return 1;
+        }
+        for (Type type : Type.values()) {
+            if (type == Type.MENU) continue;
+            String key = key(type);
+            int runs = cfg.terminalSimulatorRuns.getOrDefault(key, 0);
+            if (runs == 0) continue;
+            long clicks = cfg.terminalSimulatorClicks.getOrDefault(key, 0L);
+            long mistakes = cfg.terminalSimulatorMistakes.getOrDefault(key, 0L);
+            double accuracy = clicks <= 0 ? 100 : (clicks - mistakes) * 100.0 / clicks;
+            message(display(type) + ": " + runs + " runs, PB "
+                + time(cfg.terminalSimulatorBestMs.getOrDefault(key, 0L)) + ", "
+                + String.format(Locale.ROOT, "%.1f%% accuracy", accuracy));
+        }
+        return 1;
     }
 
     private static Setup setup(Type type) {
@@ -210,6 +275,12 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
     @Override
     public void containerTick() {
         super.containerTick();
+        if (pendingSlot >= 0 && System.nanoTime() >= pendingAtNanos) {
+            int slot = pendingSlot;
+            int button = pendingButton;
+            pendingSlot = -1;
+            processClick(slot, button);
+        }
         if (type != Type.MELODY || melodyTicks++ % 10 != 0) return;
         melodyPointer += melodyDirection;
         if (melodyPointer == 1 || melodyPointer == 5) melodyDirection *= -1;
@@ -220,6 +291,19 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
     protected void slotClicked(Slot slot, int slotId, int button, ContainerInput input) {
         if (slot == null || slot.container != simulated || slotId < 0 || slotId >= type.size) return;
         if (slot.getItem().is(Items.BLACK_STAINED_GLASS_PANE)) return;
+        if (type != Type.MENU && pendingSlot >= 0) return;
+        int ping = type == Type.MENU ? 0 : Math.clamp(ConstellationClient.cfg().orion.terminalSimulatorPingMs, 0, 5_000);
+        if (ping > 0) {
+            pendingSlot = slotId;
+            pendingButton = button;
+            pendingAtNanos = System.nanoTime() + ping * 1_000_000L;
+            return;
+        }
+        processClick(slotId, button);
+    }
+
+    private void processClick(int slotId, int button) {
+        if (type != Type.MENU) clicks++;
         switch (type) {
             case MENU -> menuClick(slotId);
             case PANES -> panesClick(slotId);
@@ -229,6 +313,30 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
             case SELECT_ALL -> selectAllClick(slotId);
             case MELODY -> melodyClick(slotId);
         }
+    }
+
+    @Override
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        var cfg = ConstellationClient.cfg().orion;
+        if (type == Type.MENU) {
+            String hint = "Ping " + Math.clamp(cfg.terminalSimulatorPingMs, 0, 5_000) + " ms"
+                + (cfg.terminalSimulatorAutoReplay ? " | auto replay" : "");
+            graphics.centeredText(font, hint, width / 2, Math.max(4, topPos - 13), 0xFFA0A0A0);
+            return;
+        }
+        StringBuilder line = new StringBuilder();
+        if (cfg.terminalSimulatorShowTimer) line.append(time(elapsedMs()));
+        if (cfg.terminalSimulatorShowPersonalBest) {
+            long best = cfg.terminalSimulatorBestMs.getOrDefault(key(type), 0L);
+            if (!line.isEmpty()) line.append(" | ");
+            line.append("PB ").append(time(best));
+        }
+        if (clicks > 0) line.append(" | ").append(clicks).append(" clicks");
+        if (mistakes > 0) line.append(" | ").append(mistakes).append(" mistakes");
+        if (pendingSlot >= 0) line.append(" | waiting for ping");
+        if (!line.isEmpty())
+            graphics.centeredText(font, line.toString(), width / 2, Math.max(4, topPos - 13), 0xFFFFCC55);
     }
 
     @Override
@@ -245,7 +353,7 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
             case 14 -> Type.STARTS_WITH;
             case 15 -> Type.SELECT_ALL;
             case 16 -> Type.MELODY;
-            case 13 -> Type.values()[1 + random(Type.values().length - 1)];
+            case 13 -> randomType();
             default -> null;
         };
         if (next != null) open(next);
@@ -277,7 +385,7 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
             ItemStack stack = simulated.getItem(i);
             if (stack.is(Items.RED_STAINED_GLASS_PANE)) smallest = Math.min(smallest, stack.getCount());
         }
-        if (clicked.getCount() != smallest) return;
+        if (clicked.getCount() != smallest) { mistakes++; return; }
         ItemStack done = pane(Items.LIME_STAINED_GLASS_PANE);
         done.setCount(clicked.getCount());
         set(slot, done);
@@ -287,7 +395,10 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
 
     private void startsWithClick(int slot) {
         ItemStack stack = simulated.getItem(slot);
-        if (!stack.getHoverName().getString().toUpperCase(Locale.ROOT).startsWith(targetLetter) || stack.hasFoil()) return;
+        if (!stack.getHoverName().getString().toUpperCase(Locale.ROOT).startsWith(targetLetter) || stack.hasFoil()) {
+            mistakes++;
+            return;
+        }
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         for (int board : boardSlots(3)) {
             ItemStack other = simulated.getItem(board);
@@ -299,7 +410,10 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
     private void selectAllClick(int slot) {
         ItemStack stack = simulated.getItem(slot);
         List<Item> matching = coloredItems(targetColor);
-        if (!matching.contains(stack.getItem()) || stack.hasFoil()) return;
+        if (!matching.contains(stack.getItem()) || stack.hasFoil()) {
+            mistakes++;
+            return;
+        }
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         for (int board : boardSlots(4)) {
             ItemStack other = simulated.getItem(board);
@@ -309,7 +423,10 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
     }
 
     private void melodyClick(int slot) {
-        if (slot % 9 != 7 || slot / 9 != melodyRow || melodyPointer != melodyTarget) return;
+        if (slot % 9 != 7 || slot / 9 != melodyRow || melodyPointer != melodyTarget) {
+            mistakes++;
+            return;
+        }
         melodyRow++;
         if (melodyRow >= 5) { complete(); return; }
         melodyTarget = 1 + random(5);
@@ -330,14 +447,48 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
 
     private void complete() {
         sound();
-        Minecraft.getInstance().execute(TerminalSimulatorScreen::openMenu);
+        long elapsed = elapsedMs();
+        var cfg = ConstellationClient.cfg().orion;
+        String key = key(type);
+        long previous = cfg.terminalSimulatorBestMs.getOrDefault(key, 0L);
+        boolean personalBest = previous <= 0 || elapsed < previous;
+        if (cfg.terminalSimulatorTrackStats) {
+            cfg.terminalSimulatorRuns.merge(key, 1, Integer::sum);
+            cfg.terminalSimulatorClicks.merge(key, (long) clicks, Long::sum);
+            cfg.terminalSimulatorMistakes.merge(key, (long) mistakes, Long::sum);
+            if (personalBest) cfg.terminalSimulatorBestMs.put(key, elapsed);
+            ConstellationClient.saveConfig();
+        }
+        if (cfg.terminalSimulatorCompletionMessage) {
+            String result = display(type) + " solved in " + time(elapsed) + " with " + mistakes
+                + (mistakes == 1 ? " mistake" : " mistakes");
+            if (cfg.terminalSimulatorTrackStats && personalBest)
+                result += previous > 0 ? " | new PB by " + time(previous - elapsed) : " | first PB";
+            else if (previous > 0) result += " | PB " + time(previous);
+            message(result);
+        }
+        Minecraft.getInstance().execute(() -> {
+            if (cfg.terminalSimulatorAutoReplay) openType(type);
+            else openMenu();
+        });
     }
 
     private void open(Type next) {
+        openType(next);
+    }
+
+    private static void openType(Type next) {
         String letter = next == Type.STARTS_WITH ? LETTERS.get(random(LETTERS.size())) : "";
         DyeColor[] colors = DyeColor.values();
         DyeColor color = next == Type.SELECT_ALL ? colors[random(colors.length)] : DyeColor.WHITE;
         Minecraft.getInstance().setScreenAndShow(new TerminalSimulatorScreen(next, letter, color));
+    }
+
+    private static Type randomType() {
+        Type[] pool = ConstellationClient.cfg().orion.terminalSimulatorRandomIncludesMelody
+            ? new Type[]{Type.PANES, Type.RUBIX, Type.NUMBERS, Type.STARTS_WITH, Type.SELECT_ALL, Type.MELODY}
+            : new Type[]{Type.PANES, Type.RUBIX, Type.NUMBERS, Type.STARTS_WITH, Type.SELECT_ALL};
+        return pool[random(pool.length)];
     }
 
     private List<Item> letterItems(boolean matching) {
@@ -396,6 +547,36 @@ public final class TerminalSimulatorScreen extends ContainerScreen {
 
     private static int random(int bound) {
         return ThreadLocalRandom.current().nextInt(bound);
+    }
+
+    private long elapsedMs() {
+        return Math.max(0L, (System.nanoTime() - openedAtNanos) / 1_000_000L);
+    }
+
+    private static String key(Type type) {
+        return type.name().toLowerCase(Locale.ROOT);
+    }
+
+    private static String display(Type type) {
+        return switch (type) {
+            case MENU -> "Menu";
+            case PANES -> "Panes";
+            case RUBIX -> "Rubix";
+            case NUMBERS -> "Numbers";
+            case STARTS_WITH -> "Starts With";
+            case SELECT_ALL -> "Select All";
+            case MELODY -> "Melody";
+        };
+    }
+
+    private static String time(long milliseconds) {
+        if (milliseconds <= 0) return "-";
+        return String.format(Locale.ROOT, "%.3fs", milliseconds / 1000.0);
+    }
+
+    private static void message(String value) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§6[Terminal Simulator] §f" + value));
     }
 
     private static void sound() {

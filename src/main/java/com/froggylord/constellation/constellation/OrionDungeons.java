@@ -521,7 +521,32 @@ public class OrionDungeons extends BaseConstellation {
             .executes(ctx -> {
                 Minecraft.getInstance().execute(TerminalSimulatorScreen::openMenu);
                 return 1;
-            }));
+            })
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("menu")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("menu")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("random")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("random")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("panes")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("panes")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("rubix")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("rubix")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("numbers")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("numbers")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("startswith")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("startswith")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("selectall")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("selectall")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("melody")
+                .executes(ctx -> TerminalSimulatorScreen.openNamed("melody")))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ping")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument(
+                        "milliseconds", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 5_000))
+                    .executes(ctx -> TerminalSimulatorScreen.setPing(
+                        com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "milliseconds")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stats")
+                .executes(ctx -> TerminalSimulatorScreen.showStats()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("reset")
+                .executes(ctx -> TerminalSimulatorScreen.resetStats())));
 
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("requeue")
             .executes(ctx -> AutoRequeue.status())

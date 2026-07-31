@@ -75,6 +75,7 @@ the party-message, Smart Sack Refill and slot-binding editors share the same res
 inventory buttons, Spirit Leap, Party Guard and carry tracking use the same system while retaining their purpose-built controls and deliberate-click behavior.
 speed presets, scoreboard ordering, tunnel routing and dungeon records complete the compact-screen migration with clipped searchable lists and safe deletion controls.
 the twenty-page Profile Viewer now uses the same constellation shell, with animated loading, last-good refresh behavior, keyboard navigation and bounded record lists.
+terminal practice mirrors Hypixel’s boards while adding configurable artificial ping, live timing, PBs, accuracy history, direct mode commands and optional automatic replay.
 
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 

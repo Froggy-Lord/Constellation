@@ -440,7 +440,14 @@ public class ConfigScreen extends Screen {
                 modules.add(new Module("melodyTerminalHelper", "Melody terminal helper", "Devices",
                     () -> c.melodyTerminalHelper, v -> { c.melodyTerminalHelper = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("terminalSimulator", "Terminal simulator command", "Devices",
-                    () -> c.terminalSimulator, v -> { c.terminalSimulator = v; ConstellationClient.saveConfig(); }));
+                    () -> c.terminalSimulator, v -> { c.terminalSimulator = v; ConstellationClient.saveConfig(); })
+                    .b("Live timer", () -> c.terminalSimulatorShowTimer, v -> { c.terminalSimulatorShowTimer = v; ConstellationClient.saveConfig(); })
+                    .b("Personal best", () -> c.terminalSimulatorShowPersonalBest, v -> { c.terminalSimulatorShowPersonalBest = v; ConstellationClient.saveConfig(); })
+                    .b("Track statistics", () -> c.terminalSimulatorTrackStats, v -> { c.terminalSimulatorTrackStats = v; ConstellationClient.saveConfig(); })
+                    .b("Completion message", () -> c.terminalSimulatorCompletionMessage, v -> { c.terminalSimulatorCompletionMessage = v; ConstellationClient.saveConfig(); })
+                    .b("Automatic replay", () -> c.terminalSimulatorAutoReplay, v -> { c.terminalSimulatorAutoReplay = v; ConstellationClient.saveConfig(); })
+                    .b("Melody in random", () -> c.terminalSimulatorRandomIncludesMelody, v -> { c.terminalSimulatorRandomIncludesMelody = v; ConstellationClient.saveConfig(); })
+                    .sub("Artificial ping is set in All settings or /termsim ping.", true));
                 modules.add(new Module("goldorInactiveTerminals", "Goldor inactive objectives", "Devices",
                     () -> c.goldorInactiveTerminals, v -> { c.goldorInactiveTerminals = v; ConstellationClient.saveConfig(); })
                     .sub("Armor-stand fallback; requires objective waypoints with fixed positions off", true));

@@ -763,3 +763,4 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Glacite Tunnel Maps with destination search, active-route status, next-spot and Campfire controls
 - Dungeon Records with floor filtering, summary statistics, terminal milestones, JSON export and confirmed deletion
 - Twenty-page Profile Viewer shell with profile tabs, paged category navigation, animated loading/error states, Ctrl+L search focus and F5 refresh
+- Complete local Terminal Simulator for Panes, Rubix, Numbers, Starts With, Select All and Melody with artificial ping, PBs, accuracy and replay controls

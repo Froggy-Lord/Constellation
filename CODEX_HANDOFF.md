@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.798 Profile Viewer Visual Shell.
+Last updated: 2026-07-31 for version 0.9.799 Complete Terminal Practice.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.798`.
+- Current artifact version: `0.9.799`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3381,6 +3381,22 @@ The top bar contains a focused player field, Open and Refresh controls, plus a r
 Profiles, paged category tabs and navigation arrows now share the clipped surface language. The common row renderer scissors all content to the central panel, adds proportional scroll feedback and uses width-safe values. The shell panel also provides consistent framing for the specialized Items, Wealth, Bestiary, Collections, Minions, Mining, Museum, Crimson, Garden, Rift, Fishing, Chocolate, Foraging, Mobs and Loadouts pages.
 
 Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The non-interactive boot on persistent Xvfb display `:99` ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `7f5ebc65d26c037f541aa3e600b1895a54047c89cbde8323dd2b0e6c0724ec6f`.
+
+The tested `constellation-0.9.798.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-131050-0.9.798/`. Live and build checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The release is queued in the drip repository as Froggy-Lord commit `ceaf0f7065`.
+
+## July 31 version 0.9.799 Complete Terminal Practice
+
+`TerminalSimulatorScreen.java`, `OrionConfig.java`, `OrionDungeons.java` and `ConfigScreen.java` deepen the local Terminal Simulator without decorating or replacing its deliberately Hypixel-faithful chest boards. The delayed-click gate is ported from Athen BSD-3-Clause `modules/impl/dungeon/terminals/simulator/base/ITerminalSim.kt`; simulator-specific PB timing follows Odin BSD-3-Clause `features/impl/boss/TerminalSimulator.kt` and `TerminalTimes.kt`. Existing terminal generation and solving remain the Athen simulator ports already credited in the file.
+
+Artificial latency is configurable from zero through 5000 milliseconds. A pending delayed click blocks additional simulator clicks until it applies, matching the reference's one-request-at-a-time behavior. Melody continues moving during the delay, making latency practice meaningful. The overlay independently supports live elapsed time, saved PB, current clicks, mistakes and pending-ping state.
+
+When tracking is enabled, each terminal type persists its best milliseconds, completed runs, clicks and mistakes in Orion's normal config. `/termsim stats` calculates click-based accuracy from those totals. `/termsim reset` clears only simulator history. Completion chat reports the run, mistakes and first/new/existing PB. Automatic replay is optional; otherwise completion returns to the simulator menu. Random can include or exclude Melody without disabling named Melody practice.
+
+The command now supports `menu`, `random`, `panes`, `rubix`, `numbers`, `startswith`, `selectall`, `melody`, `ping <0..5000>`, `stats` and `reset`. Every board and click remains entirely local; this feature does not send container, click or network packets.
+
+Verification passed on 2026-07-31: `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with the expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, or fatal-error signature. Release jar SHA-256: `84654850abecdbc31d3dd073bfb1038fbccc00eb6eb1b02f49c08be163424a90`.
 
 ## Required dedicated visual-design pass
 

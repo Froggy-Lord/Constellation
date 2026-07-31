@@ -373,5 +373,16 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean arrowAlignSolver = true;    
     public boolean targetPracticeSolver = true;
     public boolean terminalSimulator = true;
+    public int terminalSimulatorPingMs = 0;
+    public boolean terminalSimulatorShowTimer = true;
+    public boolean terminalSimulatorShowPersonalBest = true;
+    public boolean terminalSimulatorTrackStats = true;
+    public boolean terminalSimulatorCompletionMessage = true;
+    public boolean terminalSimulatorAutoReplay = false;
+    public boolean terminalSimulatorRandomIncludesMelody = true;
+    public java.util.Map<String, Long> terminalSimulatorBestMs = new java.util.HashMap<>();
+    public java.util.Map<String, Integer> terminalSimulatorRuns = new java.util.HashMap<>();
+    public java.util.Map<String, Long> terminalSimulatorClicks = new java.util.HashMap<>();
+    public java.util.Map<String, Long> terminalSimulatorMistakes = new java.util.HashMap<>();
     public boolean secretRoutesOnlineDb = true;
 }
