@@ -2558,3 +2558,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Run `/termsim reset`, then `stats`. Expected: all simulator-only history is cleared and real dungeon terminal records remain untouched.
 - [ ] Disable Melody in random and repeatedly use Random. Expected: Melody is excluded; named Melody practice remains available.
 - [ ] Disable Terminal Simulator and run its direct mode commands. Expected: no simulator screen opens.
+
+## Searchable configuration navigation
+
+- [ ] Open the main Constellation hub. Expected: Search, filter, HUD Editor and Config actions use crisp gold semantic icons while every constellation keeps its distinct star-map mark.
+- [ ] Open a module configuration screen and press Ctrl+F. Expected: the module search field focuses without changing a setting.
+- [ ] Search a module name, visible description and a word found only in a right-click option label. Expected: all three forms find the matching card.
+- [ ] Search in a module with several categories. Expected: the current category remains selected when it has matches; otherwise the first matching category is selected, and each category shows its result count.
+- [ ] Search for an impossible value. Expected: a centered `No modules match this search` state appears and no hidden card accepts a click.
+- [ ] Press Escape while the query is nonempty. Expected: the query clears and the screen stays open. Press Escape again to close.
+- [ ] Click the X inside the focused search field. Expected: the query clears, all cards return and search remains focused.
+- [ ] Resize the window and reopen the screen. Expected: the search field, All settings action, category rail, cards and scroll bar remain inside the central panel.
+- [ ] Open the HUD editor. Expected: it remains translucent and chrome-free; the new icon system does not appear there.

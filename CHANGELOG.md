@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.800 (2026-07-31) — Searchable Configuration Navigation
+
+- ported module name and description filtering behavior from Athen and Stella
+- added option-label matching, category result counts, empty states, Ctrl+F focus and Escape-to-clear
+- added a hand-authored twelve-glyph semantic action icon strip with a retained SVG design master
+- integrated search, filter, HUD and settings icons into the main hub and module configuration screen
+- visually inspected normal and filtered configuration states in a real client at native GUI scale
+
 ## 0.9.799 (2026-07-31) — Complete Terminal Practice
 
 - ported configurable artificial simulator ping from Athen and simulator PB timing from Odin

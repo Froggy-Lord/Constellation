@@ -7,6 +7,7 @@ import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -56,6 +57,7 @@ public class ConfigScreen extends Screen {
     private int scrollTarget = 0, maxScroll = 0;
     private int lastMx, lastMy;
     private long lastNanos = 0;
+    private EditBox search;
     private static final int TB = 34;
     private static final int CARD_H = 44;
     private static final int CARD_GAP = 4;
@@ -67,7 +69,32 @@ public class ConfigScreen extends Screen {
         buildModules();
     }
 
-    
+    @Override
+    protected void init() {
+        int w = panelW(width);
+        int px = (width - w) / 2;
+        int searchX = w - 158;
+        search = new EditBox(font, px + searchX + 20, (height - panelH(height)) / 2 + TB + 4,
+            106, 18, Component.literal("Search modules"));
+        search.setBordered(false);
+        search.setHint(Component.literal("search modules"));
+        search.setMaxLength(48);
+        // ported from Athen (BSD-3-Clause): src/main/kotlin/xyz/aerii/athen/config/ui/SearchBar.kt
+        // ported from Stella (LGPL-3.0): src/main/kotlin/co/stellarskys/stella/api/config/ui/ConfigUI.kt
+        search.setResponder(value -> {
+            scrollTarget = 0;
+            scrollF = 0;
+            if (!value.isBlank() && categoryMatchCount(selectedCat) == 0) {
+                for (int i = 0; i < cats.length; i++) {
+                    if (categoryMatchCount(i) > 0) {
+                        selectedCat = i;
+                        break;
+                    }
+                }
+            }
+        });
+        addRenderableWidget(search);
+    }
     
     private static String autoLabel(String camel) {
         StringBuilder sb = new StringBuilder();
@@ -691,7 +718,15 @@ public class ConfigScreen extends Screen {
             if (sel) g.fill(0, y, sw, y + 24, 0xFF1A1A28);
             else if (hov) g.fill(0, y, sw, y + 24, 0xFF252535);
             if (sel) g.fill(0, y, 3, y + 24, ConstellationTheme.ACCENT);
-            g.text(mc.font, cats[i], 12, y + 7, sel ? ConstellationTheme.ACCENT_BRIGHT : (hov ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED), false);
+            int matches = categoryMatchCount(i);
+            boolean showCount = searching() && cats.length > 1;
+            String category = fitCategory(mc.font, cats[i], sw - (showCount ? 20 : 18));
+            g.text(mc.font, category, 12, y + 7, sel ? ConstellationTheme.ACCENT_BRIGHT : (hov ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED), false);
+            if (showCount) {
+                String count = Integer.toString(matches);
+                g.text(mc.font, count, sw - mc.font.width(count) - 7, y + 7,
+                    matches == 0 ? ConstellationTheme.TEXT_FAINT : ConstellationTheme.ACCENT_BRIGHT, false);
+            }
         }
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
@@ -702,10 +737,11 @@ public class ConfigScreen extends Screen {
             .map(com.froggylord.constellation.core.BaseConstellation::displayName)
             .orElse(constellationId);
         g.text(mc.font, constellationName, 36, 10, ConstellationTheme.ACCENT_BRIGHT, false);
-        int allX = Math.max(sw + 6, w - 265);
-        boolean allHover = mx >= allX && mx < allX + 72 && my >= 7 && my < 27;
-        ConstellationTheme.button(g, allX, 7, 72, 20, allHover, false);
-        g.text(mc.font, "All settings", allX + 7, 13,
+        int allX = Math.max(sw + 6, w - 285);
+        boolean allHover = mx >= allX && mx < allX + 92 && my >= 7 && my < 27;
+        ConstellationTheme.button(g, allX, 7, 92, 20, allHover, false);
+        ConstellationIcons.drawAction(g, "settings", allX + 5, 9, 16);
+        g.text(mc.font, "All settings", allX + 24, 13,
             allHover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
         String esc = "esc close  ·  right-click details";
         g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
@@ -721,8 +757,15 @@ public class ConfigScreen extends Screen {
         scrollF += (scrollTarget - scrollF) * Math.min(1, dt * 16);
         if (Math.abs(scrollF - scrollTarget) < 0.5f) scrollF = scrollTarget;
 
-        g.text(mc.font, cats[selectedCat], gridX(w), TB + 8, ConstellationTheme.TEXT, false);
-        g.text(mc.font, vis.size() + " modules", gridX(w) + mc.font.width(cats[selectedCat]) + 10, TB + 9, ConstellationTheme.TEXT_MUTED, false);
+        String heading = searching() ? cats[selectedCat] + " results" : cats[selectedCat];
+        g.text(mc.font, heading, gridX(w), TB + 8, ConstellationTheme.TEXT, false);
+        g.text(mc.font, vis.size() + (vis.size() == 1 ? " module" : " modules"),
+            gridX(w) + mc.font.width(heading) + 10, TB + 9, ConstellationTheme.TEXT_MUTED, false);
+
+        int searchX = w - 158;
+        ConstellationTheme.search(g, searchX, TB + 3, 148, 20, search != null && search.isFocused());
+        ConstellationIcons.drawAction(g, "search", searchX + 3, TB + 5, 16);
+        if (searching()) ConstellationIcons.drawAction(g, "close", searchX + 130, TB + 5, 16);
 
         g.enableScissor(sw, gridTop(), w, h);
         int gx = gridX(w), gTop = gridTop(), sc = Math.round(scrollF);
@@ -735,6 +778,14 @@ public class ConfigScreen extends Screen {
             drawCard(g, m, cx, cy, cardW, hov, dt);
         }
         g.disableScissor();
+
+        if (vis.isEmpty()) {
+            String empty = searching() ? "No modules match this search" : "No modules in this category";
+            int emptyX = sw + (w - sw - mc.font.width(empty)) / 2;
+            int emptyY = gridTop() + Math.max(16, (h - gridTop() - mc.font.lineHeight) / 2);
+            ConstellationIcons.drawAction(g, "search", emptyX - 20, emptyY - 3, 16);
+            g.text(mc.font, empty, emptyX, emptyY, ConstellationTheme.TEXT_MUTED, false);
+        }
 
         if (maxScroll > 0) {
             int tx = w - 5, barH = Math.max(20, viewH * viewH / contentH);
@@ -773,6 +824,7 @@ public class ConfigScreen extends Screen {
         int dotAlpha = dotPulse == 0 ? 100 : 50;
         g.fill(w + (fullW - w) / 2 - 4, fullH - 10, w + (fullW - w) / 2, fullH - 6, (dotAlpha << 24) | ConstellationTheme.ACCENT);
         g.pose().popMatrix();
+        super.extractRenderState(g, lastMx, lastMy, delta);
     }
 
     private void drawCard(GuiGraphicsExtractor g, Module m, int cx, int cy, int cardW, boolean hov, float dt) {
@@ -804,11 +856,41 @@ public class ConfigScreen extends Screen {
     private List<Module> visibleModules() {
         if (cats.length == 0) return modules;
         List<Module> out = new ArrayList<>();
-        for (Module m : modules) if (m.cat.equals(cats[selectedCat])) out.add(m);
+        for (Module m : modules) {
+            if (m.cat.equals(cats[selectedCat]) && matchesSearch(m)) out.add(m);
+        }
         return out;
     }
 
-    
+    private boolean searching() {
+        return search != null && !search.getValue().trim().isEmpty();
+    }
+
+    private boolean matchesSearch(Module module) {
+        if (!searching()) return true;
+        String query = search.getValue().trim().toLowerCase(Locale.ROOT);
+        if (module.name.toLowerCase(Locale.ROOT).contains(query)
+            || autoLabel(module.name).toLowerCase(Locale.ROOT).contains(query)
+            || module.desc.toLowerCase(Locale.ROOT).contains(query)) return true;
+        for (Module.SubOpt option : module.subs) {
+            if (option.label.toLowerCase(Locale.ROOT).contains(query)) return true;
+        }
+        return false;
+    }
+
+    private int categoryMatchCount(int categoryIndex) {
+        if (categoryIndex < 0 || categoryIndex >= cats.length) return 0;
+        int count = 0;
+        for (Module module : modules) {
+            if (module.cat.equals(cats[categoryIndex]) && matchesSearch(module)) count++;
+        }
+        return count;
+    }
+
+    private static String fitCategory(Font font, String value, int maxWidth) {
+        if (font.width(value) <= maxWidth) return value;
+        return font.plainSubstrByWidth(value, Math.max(1, maxWidth - font.width("..."))) + "...";
+    }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
@@ -818,9 +900,17 @@ public class ConfigScreen extends Screen {
         int px = (fullW - w) / 2, py = (fullH - h) / 2;
         mx -= px; my -= py;
 
-        int allX = Math.max(sideW(w) + 6, w - 265);
-        if (mx >= allX && mx < allX + 72 && my >= 7 && my < 27) {
+        int allX = Math.max(sideW(w) + 6, w - 285);
+        if (mx >= allX && mx < allX + 92 && my >= 7 && my < 27) {
             Minecraft.getInstance().setScreenAndShow(new AdvancedConfigScreen(this, constellationId));
+            return true;
+        }
+
+        int searchX = w - 158;
+        if (searching() && mx >= searchX + 128 && mx < searchX + 148 && my >= TB + 3 && my < TB + 23) {
+            search.setValue("");
+            search.setFocused(true);
+            setFocused(search);
             return true;
         }
 
@@ -906,8 +996,19 @@ public class ConfigScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent event) {
+        if (event.hasControlDown() && event.key() == GLFW.GLFW_KEY_F) {
+            search.setFocused(true);
+            setFocused(search);
+            return true;
+        }
         if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
             if (openModule != null) { openModule = null; return true; }
+            if (searching()) {
+                search.setValue("");
+                search.setFocused(false);
+                setFocused(null);
+                return true;
+            }
             onClose();
             return true;
         }

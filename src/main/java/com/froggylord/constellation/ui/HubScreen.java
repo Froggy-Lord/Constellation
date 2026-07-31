@@ -40,7 +40,7 @@ public class HubScreen extends Screen {
     @Override protected void init() {
         this.openTime = System.currentTimeMillis();
         this.lastFrame = openTime;
-        search = new EditBox(font, 125, 11, Math.max(70, Math.min(200, width - 225)), 18, Component.literal("Search modules"));
+        search = new EditBox(font, 141, 11, Math.max(54, Math.min(184, width - 241)), 18, Component.literal("Search modules"));
         search.setBordered(false);
         search.setHint(Component.literal("search modules"));
         search.setMaxLength(48);
@@ -67,13 +67,16 @@ public class HubScreen extends Screen {
         g.text(font, title, 12, 9, ConstellationTheme.ACCENT_BRIGHT, false);
         g.text(font, "SkyBlock client", 12, 23, ConstellationTheme.TEXT_MUTED, false);
         ConstellationTheme.search(g, 119, 7, search.getWidth() + 12, 24, search.isFocused());
+        ConstellationIcons.drawAction(g, "search", 122, 11, 16);
 
         int filterW = 68;
         int filterX = w - filterW - 10;
         boolean filterHover = inside(mx, my, filterX, 8, filterW, 22);
         ConstellationTheme.button(g, filterX, 8, filterW, 22, filterHover, filter != Filter.ALL);
         String filterText = filter.label;
-        g.text(font, filterText, filterX + (filterW - font.width(filterText)) / 2, 15,
+        int filterContent = 16 + 4 + font.width(filterText);
+        ConstellationIcons.drawAction(g, "filter", filterX + (filterW - filterContent) / 2, 11, 16);
+        g.text(font, filterText, filterX + (filterW - filterContent) / 2 + 20, 15,
             filter == Filter.ALL ? ConstellationTheme.TEXT_DIM : ConstellationTheme.ACCENT_BRIGHT, false);
 
         var visibleIds = visibleIds();
@@ -158,14 +161,18 @@ public class HubScreen extends Screen {
         long hudAge = System.currentTimeMillis() - hudFlashAt;
         if (hudAge < 200) g.fill(hudX, btnY, hudX + btnW, btnY + btnH, ((int)((1f-hudAge/200f)*40) << 24) | 0xFFCC33);
         String hudLabel = "HUD Editor";
-        g.text(font, hudLabel, hudX + btnW / 2 - font.width(hudLabel) / 2, btnY + 7,
+        int hudContent = 16 + 5 + font.width(hudLabel);
+        ConstellationIcons.drawAction(g, "hud", hudX + (btnW - hudContent) / 2, btnY + 4, 16);
+        g.text(font, hudLabel, hudX + (btnW - hudContent) / 2 + 21, btnY + 7,
             hoverHud ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
         ConstellationTheme.button(g, cfgX, btnY, btnW, btnH, hoverCfg, false);
         long cfgAge = System.currentTimeMillis() - cfgFlashAt;
         if (cfgAge < 200) g.fill(cfgX, btnY, cfgX + btnW, btnY + btnH, ((int)((1f-cfgAge/200f)*40) << 24) | 0xFFCC33);
         String cfgLabel = "Config";
-        g.text(font, cfgLabel, cfgX + btnW / 2 - font.width(cfgLabel) / 2, btnY + 7,
+        int cfgContent = 16 + 5 + font.width(cfgLabel);
+        ConstellationIcons.drawAction(g, "settings", cfgX + (btnW - cfgContent) / 2, btnY + 4, 16);
+        g.text(font, cfgLabel, cfgX + (btnW - cfgContent) / 2 + 21, btnY + 7,
             hoverCfg ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
         // hint

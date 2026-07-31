@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.799 Complete Terminal Practice.
+Last updated: 2026-07-31 for version 0.9.800 Searchable Configuration Navigation.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.799`.
+- Current artifact version: `0.9.800`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3397,6 +3397,18 @@ When tracking is enabled, each terminal type persists its best milliseconds, com
 The command now supports `menu`, `random`, `panes`, `rubix`, `numbers`, `startswith`, `selectall`, `melody`, `ping <0..5000>`, `stats` and `reset`. Every board and click remains entirely local; this feature does not send container, click or network packets.
 
 Verification passed on 2026-07-31: `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with the expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, or fatal-error signature. Release jar SHA-256: `84654850abecdbc31d3dd073bfb1038fbccc00eb6eb1b02f49c08be163424a90`.
+
+The verified jar was deployed to the Gather instance. The previous live jar is archived at `~/Desktop/To-Delete/gather-jars/20260731-131945-0.9.799/`; the live config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. Drip release `ed3d9081b7` was queued as Froggy-Lord with message `complete terminal simulator practice tracking`.
+
+## July 31 version 0.9.800 Searchable Configuration Navigation
+
+`ConfigScreen.java` now ports the proven search model from Athen BSD-3-Clause `config/ui/SearchBar.kt` and Stella LGPL-3.0 `api/config/ui/ConfigUI.kt`. Search matches the module's internal and display names, visible description and every right-click option label. A nonempty query keeps the current category when possible or selects the first category with a match. Multi-category modules show per-category result counts, impossible searches render a deliberate empty state, Ctrl+F focuses the field, Escape clears before closing and the X clears without surrendering focus.
+
+`interface-icons.svg`, `interface_icons.png`, `ConstellationIcons.java`, `HubScreen.java` and `ConfigScreen.java` add a hand-authored twelve-glyph semantic action family for search, settings, HUD positioning, filters, navigation, close, information, reset, save, delete and sorting. The retained SVG is the design master and the PNG is a deterministic 192-by-16, eight-bit sprite. The hub now uses the matching search, filter, HUD and settings marks; the module screen uses search, close and settings marks. No third-party artwork was copied.
+
+Visual inspection used the real 26.2 client on Xvfb. Both normal and filtered Apollo configuration states were inspected at the native GUI scale; the search field, semantic glyphs, two matching `fps` results, category heading and card grid remained aligned. The single-category rail suppresses redundant result counts so its label stays readable. The HUD editor remains intentionally untouched and outside this decorative system.
+
+Verification passed on 2026-07-31: the sprite is 192-by-16, eight-bit sRGB with alpha; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error or texture-load failure signature. Release jar SHA-256: `769447b0be57a87e3a00e08f0690f9060b75fc862841e4b6fb72fc835a678e64`.
 
 ## Required dedicated visual-design pass
 
