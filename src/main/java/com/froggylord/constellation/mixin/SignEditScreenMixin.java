@@ -45,12 +45,13 @@ public abstract class SignEditScreenMixin extends Screen {
             messages[0]=PhoenixSignCalculator.resolve(messages[0],messages[2].contains("price"));
     }
 
-    // ported from Skyblocker (LGPL-3.0-or-later): mixins/AbstractSignEditScreenMixin.java
-    @Inject(method = "keyPressed", at = @At("HEAD"))
-    private void constellation$closeCalculatorWithEnter(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if(PhoenixSignCalculator.active()&&PhoenixSignCalculator.isInput(messages)
-            &&com.froggylord.constellation.ConstellationClient.cfg().phoenix.signCalculatorCloseOnEnter
-            &&event.isConfirmation())onClose();
+    // ported from Devonian (GPL-3.0-only): features/misc/Misc.kt, mixin/AbstractSignEditScreenMixin.java
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    private void constellation$finishWithEnter(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        var cfg=com.froggylord.constellation.ConstellationClient.cfg().phoenix;
+        if(!cfg.enabled||!cfg.signEnterToDone||!event.isConfirmation()||event.hasShiftDown())return;
+        onClose();
+        cir.setReturnValue(true);
     }
 
     private boolean isSpeedInput(){return messages.length>3&&messages[3].equals("speed cap!");}

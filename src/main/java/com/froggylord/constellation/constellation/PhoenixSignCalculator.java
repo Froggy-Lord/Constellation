@@ -299,9 +299,8 @@ public final class PhoenixSignCalculator {
             case "enabled" -> cfg.signCalculator = value;
             case "equals" -> cfg.signCalculatorRequiresEquals = value;
             case "preview" -> cfg.signCalculatorPreview = value;
-            case "enter" -> cfg.signCalculatorCloseOnEnter = value;
             case "purse" -> cfg.signCalculatorUsePurse = value;
-            default -> { local("Option must be enabled, equals, preview, enter, or purse."); return 0; }
+            default -> { local("Option must be enabled, equals, preview, or purse."); return 0; }
         }
         save();
         return status();
@@ -312,8 +311,8 @@ public final class PhoenixSignCalculator {
     private static void save() { ConstellationClient.saveConfig(); }
     private static int status() {
         local("Sign calculator " + on(cfg.signCalculator) + ", equals " + on(cfg.signCalculatorRequiresEquals)
-            + ", preview " + on(cfg.signCalculatorPreview) + ", Enter " + on(cfg.signCalculatorCloseOnEnter)
-            + ", purse " + on(cfg.signCalculatorUsePurse) + ", decimals " + cfg.signCalculatorDecimalPlaces
+            + ", preview " + on(cfg.signCalculatorPreview) + ", purse " + on(cfg.signCalculatorUsePurse)
+            + ", decimals " + cfg.signCalculatorDecimalPlaces
             + ", length " + cfg.signCalculatorMaxLength + ".");
         return 1;
     }

@@ -66,8 +66,9 @@ public final class PhoenixInputControls {
             case "scrolllock" -> cfg.hotbarScrollLock = value;
             case "arrows" -> cfg.hideAttachedArrows = value;
             case "effects" -> cfg.hideStatusEffects = value;
+            case "signenter" -> cfg.signEnterToDone = value;
             default -> {
-                local("Option must be autosprint, water, instantsneak, scrolllock, arrows, or effects.");
+                local("Option must be autosprint, water, instantsneak, scrolllock, arrows, effects, or signenter.");
                 return 0;
             }
         }
@@ -78,7 +79,8 @@ public final class PhoenixInputControls {
     private static int status() {
         local("Phoenix input: auto sprint " + on(cfg.autoSprint) + ", water " + on(cfg.autoSprintInWater)
             + ", instant sneak " + on(cfg.instantSneak) + ", scroll lock " + on(cfg.hotbarScrollLock)
-            + ", arrows " + on(cfg.hideAttachedArrows) + ", effects " + on(cfg.hideStatusEffects) + ".");
+            + ", arrows " + on(cfg.hideAttachedArrows) + ", effects " + on(cfg.hideStatusEffects)
+            + ", sign Enter " + on(cfg.signEnterToDone) + ".");
         return 1;
     }
 

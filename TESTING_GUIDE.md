@@ -2468,7 +2468,17 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Set price decimals from zero through eight and submit values ending in zero such as `10.00`. Expected: price output rounds to the selected precision without corrupting `10` into `1`.
 - [ ] Submit the same fractional expression in an amount sign. Expected: the result rounds to a whole number independently of price precision.
 - [ ] Set output length from one through fifteen and submit an oversized result. Expected: the replacement is bounded to the configured sign length and never crashes the screen.
-- [ ] Toggle live preview and Enter close independently. Expected: preview can be hidden without disabling calculation; confirmation closes only when its option is enabled.
+- [ ] Toggle live preview independently. Expected: preview can be hidden without disabling calculation or changing submission.
 - [ ] Use a Rancher's Boots speed-cap sign while both systems are enabled. Expected: speed-preset alias preview and replacement retain priority.
 - [ ] Disable Phoenix, disable Sign Calculator and test off Hypixel separately. Expected: the mixin leaves every sign entirely vanilla.
 - [ ] Run `/signcalculator` and every `option`, `decimals` and `length` control, then restart. Expected: values match the typed configuration browser and persist in the normal config.
+
+## Sign Enter controls
+
+- [ ] Enable Phoenix and Sign Enter, type on any ordinary four-line sign and press Enter without modifiers. Expected: the screen submits and closes exactly as if Done was clicked.
+- [ ] Repeat on Bazaar, Auction House, Rancher's Boots and other server input signs. Expected: calculator or speed-preset replacement runs before the sign update is sent.
+- [ ] Hold either Shift key and press Enter repeatedly. Expected: the editor stays open and advances one line per press using vanilla wrapping from line four to line one.
+- [ ] Release Shift and press Enter. Expected: the current four lines submit once; no extra blank line or second packet is created.
+- [ ] Disable Sign Enter while Phoenix remains enabled. Expected: plain Enter returns to vanilla next-line behavior.
+- [ ] Disable Phoenix while Sign Enter remains enabled. Expected: plain Enter returns to vanilla next-line behavior.
+- [ ] Run `/phoenixinput option signenter off`, then `on`, and restart. Expected: command state, typed-browser state and persisted behavior agree.

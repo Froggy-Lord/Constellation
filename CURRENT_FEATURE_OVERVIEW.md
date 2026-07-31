@@ -498,6 +498,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Auto sprint with an independent water policy and exact synthesized-key cleanup
 - Instant camera-height sneak without changing player movement or server state
 - Non-wrapping hotbar wheel selection that still allows every adjacent slot change
+- Configurable Enter-to-submit for every sign editor, with Shift+Enter reserved for changing lines
 - Etherwarp target overlay
 - Armor and equipment wardrobe keys with hotbar, number-row or custom slot mapping
 - Wardrobe page, open, unequip and two-slot swap keys

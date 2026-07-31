@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.793 (2026-07-31) — Sign Enter Controls
+
+- made unmodified Enter submit every sign through the same path as the Done button
+- retained Shift+Enter as the explicit next-line control
+- added an independent saved toggle and `/phoenixinput` command control
+- removed the calculator-only Enter setting now superseded by the general behavior
+
 ## 0.9.792 (2026-07-30) — Complete Sign Calculator
 
 - replaced the inert three-token sign helper with a complete expression engine
