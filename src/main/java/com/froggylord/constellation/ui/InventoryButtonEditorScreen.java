@@ -58,16 +58,16 @@ public final class InventoryButtonEditorScreen extends Screen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        graphics.fill(0, 0, width, height, 0xE6080810);
-        graphics.fill(0, 0, width, 24, 0xFF12121E);
-        graphics.fill(0, 23, width, 24, ConstellationTheme.ACCENT);
-        graphics.text(font, "Inventory Button Editor", 10, 8, ConstellationTheme.ACCENT_BRIGHT, false);
-        button(graphics, width - 82, 3, 72, layoutPage ? "Buttons" : "Layout", false, mouseX, mouseY);
+        ConstellationUi.background(graphics, width, height, delta);
+        ConstellationUi.header(graphics, font, "Inventory Buttons",
+            layoutPage ? "Layout" : "Button " + (selected + 1), width);
+        button(graphics, width - 82, 31, 72, layoutPage ? "Buttons" : "Layout", layoutPage, mouseX, mouseY);
         if (layoutPage) drawLayout(graphics, mouseX, mouseY);
         else drawButtonEditor(graphics, mouseX, mouseY);
     }
 
     private void drawButtonEditor(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        ConstellationUi.panel(graphics, 8, 52, width - 16, height - 66);
         drawButtonGrid(graphics, mouseX, mouseY);
         LyraConfig.InventoryButtonEntry value = current();
         label(graphics, "Icon item ID", 12, 80);
@@ -81,7 +81,12 @@ public final class InventoryButtonEditorScreen extends Screen {
         button(graphics, 20 + third * 2, actionsY, Math.max(60, width - (20 + third * 2) - 12), "Reset all", false, mouseX, mouseY);
         boolean valid = validRegex(value.title);
         String status = valid ? "Button " + (selected + 1) + " selected" : "Invalid regex; literal title matching will be used";
-        graphics.text(font, fit(status, width - 24), 12, height - 11, valid ? ConstellationTheme.TEXT_MUTED : 0xFFFF7777, false);
+        graphics.text(font, ConstellationUi.fit(font, status, width - 24), 12, height - 11,
+            valid ? ConstellationTheme.TEXT_MUTED : 0xFFFF7777, false);
+        fieldSurface(graphics, icon);
+        fieldSurface(graphics, command);
+        fieldSurface(graphics, title);
+        fieldSurface(graphics, tooltip);
     }
 
     private void drawButtonGrid(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
@@ -90,8 +95,9 @@ public final class InventoryButtonEditorScreen extends Screen {
             int x = startX + (i % 7) * (size + gap), y = i < 7 ? 29 : 54;
             boolean hover = inside(mouseX, mouseY, x, y, size, size);
             LyraConfig.InventoryButtonEntry value = entries().get(i);
-            graphics.fill(x, y, x + size, y + size, i == selected ? 0xFF3A315C : hover ? 0xFF29293D : 0xFF191925);
-            graphics.fill(x, y, x + size, y + 1, i == selected ? ConstellationTheme.ACCENT_BRIGHT : 0xFF504860);
+            ConstellationTheme.surface(graphics, x, y, size, size,
+                i == selected ? 0xFF3A315C : hover ? 0xFF29293D : 0xFF191925,
+                i == selected ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.BORDER_SOFT);
             graphics.item(LyraInventoryButtons.iconStack(value.icon), x + 3, y + 3);
             if (!value.enabled) graphics.fill(x + 2, y + 2, x + size - 2, y + size - 2, 0x99000000);
         }
@@ -99,7 +105,8 @@ public final class InventoryButtonEditorScreen extends Screen {
 
     private void drawLayout(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         LyraConfig cfg = ConstellationClient.cfg().lyra;
-        int x = 12, gap = 6, col = Math.max(100, (width - 24 - gap) / 2), y = 34;
+        ConstellationUi.panel(graphics, 8, 52, width - 16, height - 66);
+        int x = 14, gap = 6, col = Math.max(100, (width - 28 - gap) / 2), y = 62;
         toggle(graphics, x, y, col, "Feature enabled", cfg.inventoryButtons, mouseX, mouseY);
         toggle(graphics, x + col + gap, y, col, "Top row", cfg.inventoryButtonsTop, mouseX, mouseY); y += 24;
         toggle(graphics, x, y, col, "Bottom row", cfg.inventoryButtonsBottom, mouseX, mouseY);
@@ -113,14 +120,16 @@ public final class InventoryButtonEditorScreen extends Screen {
         numeric(graphics, x, y, col, "Gap", cfg.inventoryButtonsGap + " px", mouseX, mouseY);
         numeric(graphics, x + col + gap, y, col, "Overlap", cfg.inventoryButtonsOffset + " px", mouseX, mouseY); y += 24;
         numeric(graphics, x, y, col, "Tooltip delay", cfg.inventoryButtonsTooltipDelayMs + " ms", mouseX, mouseY);
-        graphics.text(font, fit("Colors remain editable as ARGB values in Lyra configuration.", width - 24), 12, height - 24, ConstellationTheme.TEXT_MUTED, false);
+        graphics.text(font, ConstellationUi.fit(font,
+            "Colors remain editable as ARGB values in Lyra configuration.", width - 24),
+            12, height - 24, ConstellationTheme.TEXT_MUTED, false);
         graphics.text(font, "Every command requires a deliberate left click.", 12, height - 11, ConstellationTheme.TEXT_MUTED, false);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
         int mouseX = (int) event.x(), mouseY = (int) event.y();
-        if (inside(mouseX, mouseY, width - 82, 3, 72, 19)) { layoutPage = !layoutPage; updateFieldVisibility(); return true; }
+        if (inside(mouseX, mouseY, width - 82, 31, 72, 19)) { layoutPage = !layoutPage; updateFieldVisibility(); return true; }
         if (layoutPage) return clickLayout(mouseX, mouseY) || super.mouseClicked(event, doubled);
         int index = gridIndex(mouseX, mouseY);
         if (index >= 0) { select(index); return true; }
@@ -133,7 +142,7 @@ public final class InventoryButtonEditorScreen extends Screen {
 
     private boolean clickLayout(int mouseX, int mouseY) {
         LyraConfig cfg = ConstellationClient.cfg().lyra;
-        int x = 12, gap = 6, col = Math.max(100, (width - 24 - gap) / 2), y = 34;
+        int x = 14, gap = 6, col = Math.max(100, (width - 28 - gap) / 2), y = 62;
         if (hit(mouseX, mouseY, x, y, col)) cfg.inventoryButtons = !cfg.inventoryButtons;
         else if (hit(mouseX, mouseY, x + col + gap, y, col)) cfg.inventoryButtonsTop = !cfg.inventoryButtonsTop;
         else if (hit(mouseX, mouseY, x, y += 24, col)) cfg.inventoryButtonsBottom = !cfg.inventoryButtonsBottom;
@@ -178,9 +187,9 @@ public final class InventoryButtonEditorScreen extends Screen {
     private boolean validRegex(String value) { if (value.isBlank()) return true; try { Pattern.compile(value); return true; } catch (PatternSyntaxException ignored) { return false; } }
     private void label(GuiGraphicsExtractor graphics, String value, int x, int y) { graphics.text(font, value, x, y, ConstellationTheme.TEXT_MUTED, false); }
     private void toggle(GuiGraphicsExtractor graphics, int x, int y, int width, String text, boolean value, int mouseX, int mouseY) { button(graphics, x, y, width, (value ? "ON  " : "OFF ") + text, value, mouseX, mouseY); }
-    private void numeric(GuiGraphicsExtractor graphics, int x, int y, int width, String name, String value, int mouseX, int mouseY) { button(graphics, x, y, 22, "-", false, mouseX, mouseY); button(graphics, x + width - 22, y, 22, "+", false, mouseX, mouseY); graphics.text(font, fit(name + " " + value, width - 52), x + 27, y + 5, ConstellationTheme.TEXT, false); }
-    private void button(GuiGraphicsExtractor graphics, int x, int y, int width, String text, boolean selected, int mouseX, int mouseY) { boolean hover = inside(mouseX, mouseY, x, y, width, 19); graphics.fill(x, y, x + width, y + 19, selected ? 0xFF30305A : hover ? 0xFF29293D : 0xFF222233); graphics.text(font, fit(text, width - 8), x + 4, y + 5, selected ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false); }
-    private String fit(String value, int maxWidth) { if (font.width(value) <= maxWidth) return value; String out = value; while (!out.isEmpty() && font.width(out + "...") > maxWidth) out = out.substring(0, out.length() - 1); return out + "..."; }
+    private void numeric(GuiGraphicsExtractor graphics, int x, int y, int width, String name, String value, int mouseX, int mouseY) { button(graphics, x, y, 22, "-", false, mouseX, mouseY); button(graphics, x + width - 22, y, 22, "+", false, mouseX, mouseY); graphics.text(font, ConstellationUi.fit(font, name + " " + value, width - 52), x + 27, y + 5, ConstellationTheme.TEXT, false); }
+    private void button(GuiGraphicsExtractor graphics, int x, int y, int width, String text, boolean selected, int mouseX, int mouseY) { boolean hover = inside(mouseX, mouseY, x, y, width, 19); ConstellationUi.button(graphics, font, x, y, width, 19, ConstellationUi.fit(font, text, width - 8), hover, selected); }
+    private void fieldSurface(GuiGraphicsExtractor graphics, EditBox box) { ConstellationTheme.search(graphics, box.getX() - 2, box.getY() - 2, box.getWidth() + 4, box.getHeight() + 4, box.isFocused()); }
     private static boolean hit(int mouseX, int mouseY, int x, int y, int width) { return inside(mouseX, mouseY, x, y, width, 19); }
     private static boolean inside(int mouseX, int mouseY, int x, int y, int width, int height) { return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height; }
 

@@ -2508,3 +2508,13 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Toggle refill mode and targets, left-click plus/minus and right-click a quantity button. Expected: one/all mode, enable state and the existing one/eight/sixteen quantity steps remain intact.
 - [ ] Open Slot Binding Editor, create/select/delete profiles and test left, middle and right clicks on inventory and hotbar slots. Expected: the redesigned panels do not alter profile confirmation, binding, color cycling or unbinding.
 - [ ] Inspect the HUD editor separately. Expected: it still has no decorative panels, borders or screen background; the game remains visible and wheel resizing/current-or-recent element rules are unchanged.
+
+## Workflow editor UI migration
+
+- [ ] Open Inventory Buttons and switch between Buttons and Layout. Expected: all fourteen icons, four text fields, resets and every layout toggle/quantity remain usable at each GUI scale.
+- [ ] Enter an invalid title regular expression. Expected: the editor clearly reports literal matching fallback without losing the entered value or disabling the button.
+- [ ] Open Spirit Leap settings and test every sorting mode, scale limit, background choice and toggle. Expected: controls retain their exact behavior and the custom-order line remains width-safe.
+- [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save and close. Expected: a readable error remains on screen, invalid fields do not overwrite prior values, and valid values still save.
+- [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
+- [ ] Populate enough carries to scroll. Expected: rows stay clipped inside the panel, the scrollbar tracks position and buttons on hidden rows cannot be clicked.
+- [ ] Left- and right-click Carry plus/minus buttons. Expected: left changes completed runs, right changes total runs, and remove still requires its visible button.

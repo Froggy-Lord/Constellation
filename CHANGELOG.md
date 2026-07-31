@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.796 (2026-07-31) — Workflow Editor UI Migration
+
+- migrated Inventory Buttons, Spirit Leap, Party Guard and Carry Tracker to the shared visual system
+- added bounded panels, consistent focus states and scroll-position feedback to workflow editors
+- prevented clipped Carry Tracker rows from accepting invisible button clicks
+- made Party Guard reject malformed floor and numeric input visibly instead of silently saving zero
+- retained every licensed command, profile, sorting, binding and deliberate-click interaction
+
 ## 0.9.795 (2026-07-31) — Bespoke Editor UI Migration
 
 - added shared screen background, header, panel, button, truncation and scrollbar primitives

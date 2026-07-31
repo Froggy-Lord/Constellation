@@ -28,60 +28,73 @@ public final class CarryTrackerScreen extends Screen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        g.fill(0, 0, width, height, 0xB8080810);
-        int w = Math.min(430, width - 30), x = (width - w) / 2, y = 20;
-        g.fill(x, y, x + w, y + 28, 0xEE151524);
-        g.text(font, "Carry Tracker", x + 10, y + 10, ConstellationTheme.ACCENT_BRIGHT, false);
-        g.text(font, "/carry add <type> <player> <runs> <target> <price> | left: progress, right: total", x + 10, y + 35, ConstellationTheme.TEXT_MUTED, false);
+        ConstellationUi.background(g, width, height, delta);
+        int w = Math.min(430, width - 30), x = (width - w) / 2, y = 35;
         List<PegasusConfig.CarryData> carries = tracker.activeCarries();
+        ConstellationUi.header(g, font, "Carry Tracker", carries.size() + " active", width);
+        ConstellationUi.panel(g, x, y, w, height - y - 12);
+        g.text(font, "/carry add <type> <player> <runs> <target> <price>",
+            x + 10, y + 11, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "Left click changes progress. Right click changes total.",
+            x + 10, y + 24, ConstellationTheme.TEXT_MUTED, false);
         if (carries.isEmpty()) {
             g.text(font, "No active carries", x + (w - font.width("No active carries")) / 2, height / 2, ConstellationTheme.TEXT_MUTED, false);
             return;
         }
-        int rowY = y + 52 - (int) scroll;
+        int top = y + 44, bottom = height - 19;
+        int rowY = top - (int) scroll;
+        g.enableScissor(x + 4, top, x + w - 4, bottom);
         for (PegasusConfig.CarryData c : carries) {
-            if (rowY > 48 && rowY < height - 35) drawRow(g, c, x, rowY, w, mx, my);
+            if (rowY + 42 >= top && rowY < bottom) drawRow(g, c, x + 7, rowY, w - 14, mx, my);
             rowY += 48;
         }
+        g.disableScissor();
+        ConstellationUi.scrollbar(g, x + w - 7, top, bottom - top,
+            bottom - top, carries.size() * 48, (int) scroll);
     }
 
     private void drawRow(GuiGraphicsExtractor g, PegasusConfig.CarryData c, int x, int y, int w, int mx, int my) {
-        g.fill(x, y, x + w, y + 42, 0xDD1B1B2A);
+        ConstellationTheme.surface(g, x, y, w, 42, 0xDD1B1B2A, ConstellationTheme.BORDER_SOFT);
         g.text(font, c.player + "  " + c.type + " " + c.target, x + 9, y + 6, ConstellationTheme.TEXT, false);
         g.text(font, c.completed + "/" + c.total + "  price " + money(c.pricePerRun) + "/run", x + 9, y + 19, ConstellationTheme.TEXT_MUTED, false);
         g.text(font, "paid " + money(c.paid) + "/" + money(expected(c)) + " (" + c.paidRuns + " exact runs)", x + 9, y + 31, ConstellationTheme.TEXT_MUTED, false);
-        button(g, x + w - 92, y + 11, 24, "+", 0xFF24543D, mx, my);
-        button(g, x + w - 62, y + 11, 24, "-", 0xFF60482A, mx, my);
-        button(g, x + w - 32, y + 11, 24, "x", 0xFF5B2931, mx, my);
+        button(g, x + w - 92, y + 11, 24, "+", mx, my);
+        button(g, x + w - 62, y + 11, 24, "-", mx, my);
+        button(g, x + w - 32, y + 11, 24, "x", mx, my);
     }
 
-    private void button(GuiGraphicsExtractor g, int x, int y, int w, String label, int colour, int mx, int my) {
-        g.fill(x, y, x + w, y + 20, inside(mx, my, x, y, w, 20) ? 0xFF45455B : colour);
-        g.text(font, label, x + (w - font.width(label)) / 2, y + 6, 0xFFFFFFFF, false);
+    private void button(GuiGraphicsExtractor g, int x, int y, int w, String label, int mx, int my) {
+        ConstellationUi.button(g, font, x, y, w, 20, label, inside(mx, my, x, y, w, 20), false);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         int w = Math.min(430, width - 30), x = (width - w) / 2;
-        int rowY = 72 - (int) scroll;
+        int top = 79, bottom = height - 19, rowY = top - (int) scroll;
         int button = event.button();
         for (PegasusConfig.CarryData c : tracker.activeCarries()) {
-            if (inside((int) event.x(), (int) event.y(), x + w - 92, rowY + 11, 24, 20)) {
+            int mouseY = (int) event.y();
+            if (mouseY >= top && mouseY < bottom
+                && inside((int) event.x(), mouseY, x + w - 99, rowY + 11, 24, 20)) {
                 if (button == 1) tracker.screenAdjustTotal(c.player, 1); else tracker.screenAdjust(c.player, 1);
                 return true;
             }
-            if (inside((int) event.x(), (int) event.y(), x + w - 62, rowY + 11, 24, 20)) {
+            if (mouseY >= top && mouseY < bottom
+                && inside((int) event.x(), mouseY, x + w - 69, rowY + 11, 24, 20)) {
                 if (button == 1) tracker.screenAdjustTotal(c.player, -1); else tracker.screenAdjust(c.player, -1);
                 return true;
             }
-            if (inside((int) event.x(), (int) event.y(), x + w - 32, rowY + 11, 24, 20)) { tracker.screenRemove(c.player); return true; }
+            if (mouseY >= top && mouseY < bottom
+                && inside((int) event.x(), mouseY, x + w - 39, rowY + 11, 24, 20)) {
+                tracker.screenRemove(c.player); return true;
+            }
             rowY += 48;
         }
         return super.mouseClicked(event, dbl);
     }
 
     @Override public boolean mouseScrolled(double mx, double my, double sx, double sy) {
-        int max = Math.max(0, tracker.activeCarries().size() * 48 - (height - 105));
+        int max = Math.max(0, tracker.activeCarries().size() * 48 - (height - 98));
         scroll = Math.clamp(scroll - sy * 24, 0, max);
         return true;
     }

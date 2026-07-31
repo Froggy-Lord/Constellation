@@ -31,16 +31,17 @@ public final class SpiritLeapSettingsScreen extends Screen {
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         lastMouseX = mouseX;
         lastMouseY = mouseY;
-        graphics.fill(0, 0, width, height, 0xD0101018);
+        ConstellationUi.background(graphics, width, height, delta);
+        ConstellationUi.header(graphics, font, "Spirit Leap",
+            cfg.spiritLeapCustomGui ? "Custom interface enabled" : "Vanilla interface", width);
         int panelWidth = Math.min(430, width - 24);
         int x = (width - panelWidth) / 2;
-        int y = 18;
-        graphics.fill(x, y, x + panelWidth, height - 18, 0xF0181824);
-        graphics.fill(x, y, x + panelWidth, y + 3, ConstellationTheme.ACCENT);
-        graphics.text(font, "Spirit Leap interface", x + 12, y + 12, ConstellationTheme.ACCENT_BRIGHT, false);
-        graphics.text(font, "Every action is a deliberate click on the original server slot.", x + 12, y + 27, ConstellationTheme.TEXT_MUTED, false);
+        int y = 34;
+        ConstellationUi.panel(graphics, x, y, panelWidth, height - y - 12);
+        graphics.text(font, "Every action uses the original server slot you click.",
+            x + 12, y + 12, ConstellationTheme.TEXT_MUTED, false);
 
-        int row = y + 48;
+        int row = y + 31;
         toggle(graphics, x + 12, row, 194, "Replace vanilla menu", cfg.spiritLeapCustomGui, mouseX, mouseY); row += 24;
         toggle(graphics, x + 12, row, 194, "Static role slots", cfg.spiritLeapStaticSlots, mouseX, mouseY);
         toggle(graphics, x + 218, row, 194, "Act on mouse press", cfg.spiritLeapClickOnPress, mouseX, mouseY); row += 24;
@@ -64,7 +65,8 @@ public final class SpiritLeapSettingsScreen extends Screen {
         graphics.text(font, "Custom order", x + 12, row, ConstellationTheme.TEXT, false);
         row += 14;
         String order = cfg.spiritLeapCustomOrder.isEmpty() ? "Not set" : String.join(" > ", cfg.spiritLeapCustomOrder);
-        graphics.text(font, fit(order, panelWidth - 24), x + 12, row, ConstellationTheme.TEXT_MUTED, false);
+        graphics.text(font, ConstellationUi.fit(font, order, panelWidth - 24), x + 12, row,
+            ConstellationTheme.TEXT_MUTED, false);
         row += 15;
         graphics.text(font, "Set exact names with /leapgui order <top-left> <top-right> <bottom-left> <bottom-right>",
             x + 12, row, ConstellationTheme.TEXT_MUTED, false);
@@ -76,8 +78,8 @@ public final class SpiritLeapSettingsScreen extends Screen {
     public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
         int panelWidth = Math.min(430, width - 24);
         int x = (width - panelWidth) / 2;
-        int y = 18;
-        int row = y + 48;
+        int y = 34;
+        int row = y + 31;
         if (hit(x + 12, row, 194, 19)) return flip(value -> cfg.spiritLeapCustomGui = value, cfg.spiritLeapCustomGui);
         row += 24;
         if (hit(x + 12, row, 194, 19)) return flip(value -> cfg.spiritLeapStaticSlots = value, cfg.spiritLeapStaticSlots);
@@ -128,17 +130,8 @@ public final class SpiritLeapSettingsScreen extends Screen {
 
     private void button(GuiGraphicsExtractor graphics, int x, int y, int w, String text, boolean selected, int mouseX, int mouseY) {
         boolean hover = mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + 19;
-        int colour = selected ? 0xFF30305A : hover ? 0xFF29293D : 0xFF222233;
-        graphics.fill(x, y, x + w, y + 19, colour);
-        graphics.text(font, fit(text, w - 8), x + 4, y + 5,
-            selected ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
-    }
-
-    private String fit(String text, int maxWidth) {
-        if (font.width(text) <= maxWidth) return text;
-        String value = text;
-        while (!value.isEmpty() && font.width(value + "...") > maxWidth) value = value.substring(0, value.length() - 1);
-        return value + "...";
+        ConstellationUi.button(graphics, font, x, y, w, 19,
+            ConstellationUi.fit(font, text, w - 8), hover, selected);
     }
 
     @Override

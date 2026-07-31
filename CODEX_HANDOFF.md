@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.795 Bespoke Editor UI Migration.
+Last updated: 2026-07-31 for version 0.9.796 Workflow Editor UI Migration.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.795`.
+- Current artifact version: `0.9.796`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3337,6 +3337,20 @@ The release is queued in the drip repository as Froggy-Lord commit `54b177551e`.
 Keep `HudEditScreen.java` excluded from these primitives. Its transparent, game-visible, chrome-free behavior is an explicit user requirement, as are showing only current or last-five-second elements and wheel-over-element resizing.
 
 Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. Stale `/tmp/.X*-lock` files made `xvfb-run -a` choose dead display `:128`; do not delete those retained workstation files. The successful retry used the existing long-lived Xvfb display `:99`. It loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, remained healthy beyond the timeout window and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. GNU `timeout` stopped its Gradle wrapper without stopping the running client child, so the already-verified child was explicitly terminated afterward. The exact tested jar SHA-256 is `bcac62f8d615c6574239e24ab2972a13625f21a2201c7085aa50a2d4bf20efa3`.
+
+The tested `constellation-0.9.795.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-124455-0.9.795/`. Live and build artifact checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The release is queued in the drip repository as Froggy-Lord commit `1e173700eb`.
+
+## July 31 version 0.9.796 Workflow Editor UI Migration
+
+`InventoryButtonEditorScreen.java`, `SpiritLeapSettingsScreen.java`, `PartyGuardScreen.java` and `CarryTrackerScreen.java` now use `ConstellationUi` and `ConstellationTheme` instead of four separate flat-rectangle styles. Their existing licensed feature lineage remains authoritative: Inventory Buttons comes from SkyOcean MIT and Cryptkit GPL, Spirit Leap from Devonian GPL and NoFrills GPL, Party Guard from Devonian GPL, and Carry Tracker layout behavior from Athen BSD-3-Clause. This release changes the 26.2 presentation glue and two unsafe edge cases, not the reference-derived feature semantics.
+
+Inventory Buttons retains fourteen item-backed commands, button reset, reset-all, screen-title regular expressions and its complete layout page. Spirit Leap retains server-slot clicks, five sorting modes, static roles, press behavior, dead/class display, scale, backgrounds and custom order. Party Guard retains all API-backed rules, allow/block lists, dry-run behavior and customizable reason messages. Carry Tracker retains payment matching and separate left-click progress/right-click total adjustment.
+
+Carry rows are now clipped inside a shared panel and expose a proportional scrollbar. Mouse handling applies the same visible top/bottom bounds and adjusted row geometry, so scrolled-off buttons cannot change or remove a carry. Party Guard no longer converts malformed numeric text to zero: malformed values retain the last valid setting, show a field-specific error and keep the explicit Save button on screen. Valid numeric values still clamp to their established safety ranges; Escape safely closes without replacing malformed fields.
+
+Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The successful non-interactive boot used the workstation's long-lived Xvfb display `:99` because stale retained auto-display locks make `xvfb-run -a` unreliable. It ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. Do not allocate a PTY for this boot command: a PTY caused the Gradle wrapper to enter terminal-job stop state on timeout and incorrectly report 137. The exact tested jar SHA-256 is `c8d377eaba8595e6c9892faf6df73620aa4ae7f4d94da73753c04c887ee92334`.
 
 ## Required dedicated visual-design pass
 

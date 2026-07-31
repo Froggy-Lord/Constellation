@@ -754,3 +754,7 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Smart Sack Refill editor with clipped targets, mode control, enable toggles and left/right-click quantity steps
 - Slot-binding editor with profiles, delete confirmation, inventory/hotbar binding, color cycling and swapping
 - Deliberate HUD editor exclusion so the game remains visible beneath its mostly transparent overlay
+- Inventory Button editor with fourteen icon-backed actions, per-button fields and a complete layout page
+- Spirit Leap settings with sorting, static roles, press behavior, scale, background and custom-order status
+- Party Guard editor with safe validation for floor, Cata, secrets, average secrets, MP, PB and kick-message variables
+- Carry Tracker with clipped scrolling, payment progress and separate left/right-click run adjustment
