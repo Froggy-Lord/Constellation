@@ -71,6 +71,8 @@ mob records preserve every lifetime kill/death API ID with optional numeric-vari
 saved Loadouts preserve all 27 template positions, exact armor/equipment links, pets, HOTM/HOTF presets, power stones and tuning slots.
 the profile Overview separates every liquid balance and adds Cookie, profile age, co-op, skills, combat, pet, Essence and Maxwell summaries.
 
+the party-message, Smart Sack Refill and slot-binding editors share the same restrained constellation screen language, including bounded content, clear focus states and real scroll position feedback.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

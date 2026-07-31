@@ -43,22 +43,21 @@ public final class SlotBindingEditorScreen extends Screen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        graphics.fill(0, 0, width, height, 0xE60A0A12);
-        graphics.fill(0, 0, width, 24, 0xFF151522);
-        graphics.fill(0, 23, width, 24, ConstellationTheme.ACCENT);
-        graphics.text(font, "Slot Binding Editor", 10, 8, ConstellationTheme.ACCENT_BRIGHT, false);
+        ConstellationUi.background(graphics, width, height, delta);
+        ConstellationUi.header(graphics, font, "Slot Binding Editor",
+            PhoenixSlotBinding.profileNames().size() + " profiles", width);
         drawProfiles(graphics, mouseX, mouseY);
         drawInventory(graphics, mouseX, mouseY);
         String help = PhoenixSlotBinding.editorSelection() == null
             ? "Left: select   Middle: cycle color   Right: unbind   Shift-left in inventory: swap"
             : "Select one slot from the other inventory section";
-        graphics.text(font, fit(help, width - 136), 126, height - 11, ConstellationTheme.TEXT_MUTED, false);
+        graphics.text(font, ConstellationUi.fit(font, help, width - 136), 126, height - 11,
+            ConstellationTheme.TEXT_MUTED, false);
     }
 
     private void drawProfiles(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         int x = 8, y = 30, width = 108, height = this.height - 68;
-        graphics.fill(x, y, x + width, y + height, 0xFF171722);
-        graphics.outline(x, y, width, height, 0xFF3C3C54);
+        ConstellationUi.panel(graphics, x, y, width, height);
         graphics.text(font, "Profiles", x + 5, y + 5, ConstellationTheme.TEXT, false);
         int rowY = y + 18 - profileScroll * 19;
         for (String name : PhoenixSlotBinding.profileNames()) {
@@ -66,8 +65,9 @@ public final class SlotBindingEditorScreen extends Screen {
                 boolean selected = name.equals(PhoenixSlotBinding.selectedProfile());
                 boolean hover = inside(mouseX, mouseY, x + 3, rowY, width - 6, 18);
                 int color = name.equals(confirmDelete) ? 0xFF5A252B : selected ? 0xFF363052 : hover ? 0xFF29293B : 0xFF1C1C2A;
-                graphics.fill(x + 3, rowY, x + width - 3, rowY + 18, color);
-                graphics.text(font, fit(name, width - 14), x + 7, rowY + 5,
+                ConstellationTheme.surface(graphics, x + 3, rowY, width - 6, 18, color,
+                    selected ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
+                graphics.text(font, ConstellationUi.fit(font, name, width - 14), x + 7, rowY + 5,
                     selected ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
             }
             rowY += 19;
@@ -80,6 +80,7 @@ public final class SlotBindingEditorScreen extends Screen {
         int gridWidth = 9 * cell - 3;
         int startX = Math.max(126, 126 + (width - 126 - gridWidth) / 2);
         int startY = Math.max(39, (height - 4 * cell) / 2);
+        ConstellationUi.panel(graphics, startX - 9, startY - 22, gridWidth + 18, 4 * cell + 49);
         graphics.text(font, "Inventory", startX, startY - 13, ConstellationTheme.TEXT_MUTED, false);
         Map<Integer, List<Integer>> binds = PhoenixSlotBinding.bindings();
         Integer selected = PhoenixSlotBinding.editorSelection();
@@ -103,7 +104,8 @@ public final class SlotBindingEditorScreen extends Screen {
         boolean chosen = selected != null && selected == canonical;
         boolean hover = inside(mouseX, mouseY, x, y, size, size);
         int color = chosen ? 0xFF40345F : bound ? 0xFF2B3340 : hover ? 0xFF29293B : 0xFF1C1C2A;
-        graphics.fill(x, y, x + size, y + size, color);
+        ConstellationTheme.surface(graphics, x, y, size, size, color, chosen ? ConstellationTheme.ACCENT_BRIGHT
+            : bound ? PhoenixSlotBinding.bindingColor(canonical) : 0xFF4A4A62);
         graphics.outline(x, y, size, size, chosen ? ConstellationTheme.ACCENT_BRIGHT
             : bound ? PhoenixSlotBinding.bindingColor(canonical) : 0xFF4A4A62);
         String label = Integer.toString(canonical);
@@ -218,15 +220,7 @@ public final class SlotBindingEditorScreen extends Screen {
 
     private void button(GuiGraphicsExtractor graphics, int x, int y, int width, String text, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, width, 18);
-        graphics.fill(x, y, x + width, y + 18, hover ? 0xFF303046 : 0xFF222232);
-        graphics.text(font, text, x + (width - font.width(text)) / 2, y + 5, ConstellationTheme.TEXT, false);
-    }
-
-    private String fit(String value, int maxWidth) {
-        if (font.width(value) <= maxWidth) return value;
-        String out = value;
-        while (!out.isEmpty() && font.width(out + "...") > maxWidth) out = out.substring(0, out.length() - 1);
-        return out + "...";
+        ConstellationUi.button(graphics, font, x, y, width, 18, text, hover, false);
     }
 
     private static boolean inside(double mouseX, double mouseY, int x, int y, int width, int height) {

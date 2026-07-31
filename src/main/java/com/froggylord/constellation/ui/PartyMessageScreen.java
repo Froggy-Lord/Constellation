@@ -1,6 +1,5 @@
 package com.froggylord.constellation.ui;
 
-import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.constellation.PartyMessages;
 import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
@@ -56,22 +55,21 @@ public final class PartyMessageScreen extends Screen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float delta) {
-        g.fill(0, 0, width, height, 0xEE090912);
-        g.fill(0, 0, width, 22, 0xFF10101C);
-        g.fill(0, 21, width, 22, ConstellationTheme.ACCENT);
-        g.text(font, "Party Message Editor", 12, 7, ConstellationTheme.ACCENT_BRIGHT, false);
         String summary = enabledCount() + "/" + PartyMessages.definitions().size() + " enabled";
-        g.text(font, summary, width - font.width(summary) - 12, 7, ConstellationTheme.TEXT_MUTED, false);
+        ConstellationUi.background(g, width, height, delta);
+        ConstellationUi.header(g, font, "Party Messages", summary, width);
 
-        button(g, 18, 51, 104, 18, "Sort: " + label(sort.name()), mx, my);
-        button(g, 126, 51, 104, 18, "Filter: " + label(filter.name()), mx, my);
+        ConstellationTheme.search(g, 16, 26, Math.min(244, width / 3 + 4), 22, search.isFocused());
+        button(g, 18, 53, 104, 18, "Sort: " + label(sort.name()), mx, my, false);
+        button(g, 126, 53, 104, 18, "Filter: " + label(filter.name()), mx, my, filter != Filter.ALL);
 
         int split = width / 2;
-        g.fill(split, 22, split + 1, height, 0xFF29293A);
         List<PartyMessages.Definition> shown = visible();
-        int listTop = 75, rowH = 24, viewBottom = height - 12;
+        int listTop = 77, rowH = 24, viewBottom = height - 13;
         maxScroll = Math.max(0, shown.size() * rowH - (viewBottom - listTop));
         scroll = Math.clamp(scroll, 0, maxScroll);
+        ConstellationUi.panel(g, 8, listTop - 4, split - 16, viewBottom - listTop + 8);
+        ConstellationUi.panel(g, split + 6, 31, width - split - 14, height - 44);
         g.enableScissor(8, listTop, split - 7, viewBottom);
         for (int i = 0; i < shown.size(); i++) {
             PartyMessages.Definition definition = shown.get(i);
@@ -79,12 +77,17 @@ public final class PartyMessageScreen extends Screen {
             boolean enabled = PartyMessages.enabled(definition.id());
             boolean selectedNow = selected != null && selected.id().equals(definition.id());
             boolean hover = mx >= 10 && mx < split - 10 && my >= y && my < y + 21;
-            g.fill(10, y, split - 10, y + 21, selectedNow ? 0xFF29294A : hover ? 0xFF222232 : 0xFF171722);
+            ConstellationTheme.surface(g, 10, y, split - 20, 21,
+                selectedNow ? 0xFF29294A : hover ? 0xFF222232 : 0xD8171722,
+                selectedNow ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
             g.fill(14, y + 6, 23, y + 15, enabled ? ConstellationTheme.ACCENT : 0xFF44444F);
-            g.text(font, definition.name(), 29, y + 3, enabled ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED, false);
+            g.text(font, ConstellationUi.fit(font, definition.name(), split - 49), 29, y + 3,
+                enabled ? ConstellationTheme.TEXT : ConstellationTheme.TEXT_MUTED, false);
             g.text(font, definition.category(), 29, y + 12, ConstellationTheme.TEXT_MUTED, false);
         }
         g.disableScissor();
+        ConstellationUi.scrollbar(g, split - 13, listTop, viewBottom - listTop,
+            viewBottom - listTop, shown.size() * rowH, scroll);
 
         int rx = split + 12;
         if (selected == null) {
@@ -100,12 +103,15 @@ public final class PartyMessageScreen extends Screen {
             .map(value -> "{" + value + "}").reduce((a, b) -> a + "  " + b).orElse("none");
         g.text(font, vars, rx, 102, ConstellationTheme.ACCENT_BRIGHT, false);
         g.text(font, "Default", rx, 126, ConstellationTheme.TEXT, false);
-        g.text(font, selected.defaultTemplate(), rx, 140, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, ConstellationUi.fit(font, selected.defaultTemplate(), width - rx - 18),
+            rx, 140, ConstellationTheme.TEXT_MUTED, false);
         g.text(font, "Current preview", rx, 164, ConstellationTheme.TEXT, false);
-        g.text(font, preview(selected, PartyMessages.template(selected.id())), rx, 178, 0xFFFFFFFF, false);
-        button(g, rx, height - 82, 70, 18, "Toggle", mx, my);
-        button(g, rx + 76, height - 82, 70, 18, "Reset", mx, my);
+        g.text(font, ConstellationUi.fit(font, preview(selected, PartyMessages.template(selected.id())),
+            width - rx - 18), rx, 178, 0xFFFFFFFF, false);
+        button(g, rx, height - 82, 70, 18, "Toggle", mx, my, PartyMessages.enabled(selected.id()));
+        button(g, rx + 76, height - 82, 70, 18, "Reset", mx, my, false);
         g.text(font, "Template", rx, height - 66, ConstellationTheme.TEXT_MUTED, false);
+        ConstellationTheme.search(g, width / 2 + 8, height - 56, width / 2 - 24, 22, template.isFocused());
         g.text(font, "esc to return", width - font.width("esc to return") - 12, height - 12, ConstellationTheme.TEXT_MUTED, false);
     }
 
@@ -180,9 +186,8 @@ public final class PartyMessageScreen extends Screen {
         return count;
     }
 
-    private void button(GuiGraphicsExtractor g, int x, int y, int w, int h, String text, int mx, int my) {
-        g.fill(x, y, x + w, y + h, inside(mx, my, x, y, w, h) ? 0xFF30304A : 0xFF202030);
-        g.text(font, text, x + 5, y + 5, ConstellationTheme.TEXT, false);
+    private void button(GuiGraphicsExtractor g, int x, int y, int w, int h, String text, int mx, int my, boolean active) {
+        ConstellationUi.button(g, font, x, y, w, h, text, inside(mx, my, x, y, w, h), active);
     }
 
     private static boolean inside(int mx, int my, int x, int y, int w, int h) {

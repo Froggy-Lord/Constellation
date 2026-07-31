@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.794 Visual System Foundation.
+Last updated: 2026-07-31 for version 0.9.795 Bespoke Editor UI Migration.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.794`.
+- Current artifact version: `0.9.795`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3325,6 +3325,18 @@ Visual inspection used a real 1280-by-720 Xvfb client, Minecraft's accessibility
 Release verification passed on July 31: all three PNG assets have their exact expected RGBA dimensions, `./gradlew build -q` completed with exactly 11 successful tests and zero failed, and the full 160-second unattended client ended at expected timeout code 124. It loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no texture-load, broken-icon, screen, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `ef577268a1399b14c94d6cb8c21ecab5bc979225b88ce6541e153d47104c7655`.
 
 The tested `constellation-0.9.794.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-122637-0.9.794/`. The live and build artifact checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The release is queued in the drip repository as Froggy-Lord commit `54b177551e`.
+
+## July 31 version 0.9.795 Bespoke Editor UI Migration
+
+`ConstellationUi.java` is the small shared presentation layer for purpose-built editors. It composes the existing `SpaceBackground` and `ConstellationTheme` primitives into a consistent header, clipped panel, button, scrollbar and width-safe text helper. This is original glue around the visual foundation; no reference UI implementation or artwork was copied.
+
+`PartyMessageScreen.java`, `SmartRefillScreen.java` and `SlotBindingEditorScreen.java` now use that layer. The migration is presentation-only: party-message selection, sorting, filtering, variables and template persistence; refill mode, enabled targets and left/right-click quantity steps; and Athen-derived profile/slot binding behavior are unchanged. Lists now have bounded panels, clipping and visible scroll position, and long message/template text is width-safe.
+
+Keep `HudEditScreen.java` excluded from these primitives. Its transparent, game-visible, chrome-free behavior is an explicit user requirement, as are showing only current or last-five-second elements and wheel-over-element resizing.
+
+Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. Stale `/tmp/.X*-lock` files made `xvfb-run -a` choose dead display `:128`; do not delete those retained workstation files. The successful retry used the existing long-lived Xvfb display `:99`. It loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, remained healthy beyond the timeout window and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. GNU `timeout` stopped its Gradle wrapper without stopping the running client child, so the already-verified child was explicitly terminated afterward. The exact tested jar SHA-256 is `bcac62f8d615c6574239e24ab2972a13625f21a2201c7085aa50a2d4bf20efa3`.
 
 ## Required dedicated visual-design pass
 

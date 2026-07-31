@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.795 (2026-07-31) — Bespoke Editor UI Migration
+
+- added shared screen background, header, panel, button, truncation and scrollbar primitives
+- migrated the party-message editor to the current visual system without changing template behavior
+- migrated Smart Sack Refill with a clipped list, clearer hierarchy and visible scroll position
+- migrated the slot-binding editor while preserving its complete profile and mouse control scheme
+- kept the HUD editor entirely outside the decorative screen system
+
 ## 0.9.794 (2026-07-31) — Visual System Foundation
 
 - replaced malformed JPEG-backed backgrounds with original correctly sampled PNG artwork

@@ -2499,3 +2499,12 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Disable Sign Enter while Phoenix remains enabled. Expected: plain Enter returns to vanilla next-line behavior.
 - [ ] Disable Phoenix while Sign Enter remains enabled. Expected: plain Enter returns to vanilla next-line behavior.
 - [ ] Run `/phoenixinput option signenter off`, then `on`, and restart. Expected: command state, typed-browser state and persisted behavior agree.
+
+## Bespoke editor UI migration
+
+- [ ] Open Party Messages at small, normal and large GUI scale. Expected: search, sort, filter, list and detail editor remain readable without escaping their panels.
+- [ ] Search and scroll a long Party Messages result set. Expected: the thumb tracks position, rows stay clipped and selecting/toggling/resetting templates works exactly as before.
+- [ ] Open Smart Sack Refill at several window heights. Expected: target rows stay inside the central panel, the scrollbar appears only when needed and no hidden row accepts a click.
+- [ ] Toggle refill mode and targets, left-click plus/minus and right-click a quantity button. Expected: one/all mode, enable state and the existing one/eight/sixteen quantity steps remain intact.
+- [ ] Open Slot Binding Editor, create/select/delete profiles and test left, middle and right clicks on inventory and hotbar slots. Expected: the redesigned panels do not alter profile confirmation, binding, color cycling or unbinding.
+- [ ] Inspect the HUD editor separately. Expected: it still has no decorative panels, borders or screen background; the game remains visible and wheel resizing/current-or-recent element rules are unchanged.

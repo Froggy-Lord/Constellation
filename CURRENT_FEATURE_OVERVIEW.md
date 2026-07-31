@@ -746,3 +746,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Category, amount, tier, remaining, completion or name sorting and a configurable result limit
 - One-to-168-hour validated official-resource cache with bounded timeouts and manual Refresh
 - Unknown future API collection IDs remain amber and visible without guessed tiers or categories
+
+## Bespoke editor visual system
+
+- Shared constellation background, header, clipped panel, button, search and scrollbar primitives
+- Party-message editor with searchable/sortable/filterable definitions and unchanged per-message templates
+- Smart Sack Refill editor with clipped targets, mode control, enable toggles and left/right-click quantity steps
+- Slot-binding editor with profiles, delete confirmation, inventory/hotbar binding, color cycling and swapping
+- Deliberate HUD editor exclusion so the game remains visible beneath its mostly transparent overlay
