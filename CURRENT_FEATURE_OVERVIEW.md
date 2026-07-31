@@ -8,6 +8,8 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Enable or disable an entire area with `/cn toggle <constellation>`.
 - Open the transparent HUD editor with `/cn hud`.
 - The Hub and config header use a distinct hand-authored star-map icon for every constellation.
+- Search modules directly in the Hub, filter by enabled state, click a card for settings or its switch for an immediate module toggle.
+- The Hub and configuration surfaces share original correctly sampled space artwork, clipped-corner geometry, coherent focus states and time-based motion.
 - Select `All settings` in any module config to search and edit its toggles, numbers, text and ARGB colors; right-clicking a row restores its built-in default.
 - HUD elements only appear in the editor when they are currently useful or were visible during the last five seconds. Hover an element and scroll to resize it; drag it to move it.
 - Most individual features have their own toggle and detailed settings inside their constellation.

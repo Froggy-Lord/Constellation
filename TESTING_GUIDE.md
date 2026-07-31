@@ -2424,6 +2424,23 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Resize the window while the Hub or config is open. Expected: icons remain 28 pixels on cards and 24 pixels in config headers without stretching neighboring text.
 - [ ] Verify the HUD editor separately. Expected: it remains a mostly transparent, chrome-free overlay and receives no module-card decoration from this icon release.
 
+## Visual system foundation
+
+- [ ] Open the Hub at small, normal and large GUI scales. Expected: the background is a sharp low-contrast space field with no stretched edge, JPEG block artifact or sampling seam.
+- [ ] Compare Hub and configuration backgrounds. Expected: both are native 2048×2048 RGBA PNG assets; config is slightly quieter while retaining the same visual identity.
+- [ ] Inspect cards, panels, buttons, search fields and modal surfaces. Expected: each uses the same two-pixel clipped corners and border hierarchy without generic gradients.
+- [ ] Type partial module IDs, names and descriptions into Hub search. Expected: matching cards update immediately, scrolling resets safely and an empty result leaves no stale hit target.
+- [ ] Press Ctrl+F in the Hub. Expected: module search focuses. Press Escape with text present, then again. Expected: the first press clears search and the second closes the Hub.
+- [ ] Cycle All, Enabled and Disabled. Expected: the displayed cards and shown count match the selected state without changing modules.
+- [ ] Click a card body. Expected: its settings open without toggling the module. Click only the switch area. Expected: the module toggles immediately without opening settings.
+- [ ] Toggle a module from filtered views. Expected: it disappears only when it no longer matches the active filter and its normal init/disable lifecycle runs.
+- [ ] Move the pointer rapidly between cards at different frame rates. Expected: hover and switch motion remain consistent in time rather than accelerating with FPS.
+- [ ] Reopen the Hub. Expected: card entry motion is short, staggered and eased, with no input lock beyond the existing brief Escape guard.
+- [ ] Open `All settings`. Expected: its search and value editor fields visibly render above the custom background and modal rather than accepting invisible input.
+- [ ] Search, filter, edit, cancel and right-click reset in `All settings`. Expected: the visual changes do not alter any established behavior.
+- [ ] Open the HUD editor. Expected: the game remains visible under a mostly transparent overlay with no new background, cards, borders or decorative chrome.
+- [ ] Open Mod Menu. Expected: Constellation uses the crisp dark constellation-C mark instead of the missing-icon question mark at every GUI scale.
+
 ## Complete typed configuration browser
 
 - [ ] Open every constellation's config and select `All settings`. Expected: the matching icon/name remain visible and the browser lists that module's public toggles, numbers, text and colors.

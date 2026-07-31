@@ -84,6 +84,7 @@ public final class AdvancedConfigScreen extends Screen {
         graphics.text(font, "left click edit  right click reset", width - font.width("left click edit  right click reset") - 8,
             9, ConstellationTheme.TEXT_MUTED, false);
 
+        ConstellationTheme.search(graphics, 8, SEARCH_Y - 2, Math.max(80, width - 108), 22, search.isFocused());
         button(graphics, width - 98, SEARCH_Y, 86, filter.label, mouseX, mouseY);
         List<Entry> visible = visible();
         int view = Math.max(1, height - LIST_Y - 13);
@@ -106,11 +107,13 @@ public final class AdvancedConfigScreen extends Screen {
             graphics.fill(width - 5, barY, width - 2, barY + barH, ConstellationTheme.ACCENT_DIM);
         }
         if (editing != null) drawEditor(graphics, mouseX, mouseY);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
     }
 
     private void drawRow(GuiGraphicsExtractor graphics, Entry entry, int x, int y, int rowWidth, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, rowWidth, ROW_H - 2);
-        graphics.fill(x, y, x + rowWidth, y + ROW_H - 2, hover ? 0xEE24243A : 0xDD171727);
+        ConstellationTheme.surface(graphics, x, y, rowWidth, ROW_H - 2,
+            hover ? ConstellationTheme.SURFACE_HOVER : 0xDD171727, ConstellationTheme.BORDER);
         graphics.fill(x, y, x + 2, y + ROW_H - 2, color(entry.kind));
         graphics.text(font, fit(label(entry.field.getName()), rowWidth / 2 - 14), x + 8, y + 6,
             ConstellationTheme.TEXT, false);
@@ -129,8 +132,7 @@ public final class AdvancedConfigScreen extends Screen {
     private void drawEditor(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.fill(0, 0, width, height, 0x99000000);
         int x = width / 2 - 150, y = height / 2 - 48;
-        graphics.fill(x, y, x + 300, y + 96, 0xFF171727);
-        graphics.fill(x, y, x + 300, y + 2, ConstellationTheme.ACCENT);
+        ConstellationTheme.surface(graphics, x, y, 300, 96, 0xFF171727, ConstellationTheme.ACCENT);
         graphics.text(font, label(editing.field.getName()), x + 12, y + 10, ConstellationTheme.ACCENT_BRIGHT, false);
         graphics.text(font, editing.kind.label, x + 12, y + 24, ConstellationTheme.TEXT_MUTED, false);
         button(graphics, x + 12, y + 67, 132, "Save", mouseX, mouseY);
@@ -327,7 +329,7 @@ public final class AdvancedConfigScreen extends Screen {
 
     private void button(GuiGraphicsExtractor graphics, int x, int y, int buttonWidth, String text, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, buttonWidth, 18);
-        graphics.fill(x, y, x + buttonWidth, y + 18, hover ? 0xFF30304A : 0xFF202033);
+        ConstellationTheme.button(graphics, x, y, buttonWidth, 18, hover, false);
         graphics.text(font, fit(text, buttonWidth - 8), x + 4, y + 5,
             hover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
     }

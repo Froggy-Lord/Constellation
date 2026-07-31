@@ -94,25 +94,90 @@ public class ConfigScreen extends Screen {
 
         switch (constellationId) {
             case "phoenix" -> {
-                cats = new String[]{"Visual", "Gameplay"};
+                cats = new String[]{"Visual", "Input", "Safety", "Tracking", "Misc"};
                 PhoenixConfig c = cfg.phoenix;
-                var visFields = Set.of("fullbright","hideLightning","hideFallingBlocks","hideFireOverlay","hideUnderwaterBlur","disableVignette","disableFog","hideStatusEffects");
+                var visFields = Set.of("fullbright","noHurtCam","noViewBob","hideLightning","hideFallingBlocks",
+                    "hideFireOverlay","hideUnderwaterBlur","hideStatusEffects","hidePlayersInDungeon",
+                    "noDeathAnimation","disableVignette","disableFog","instantSneak","hideAttachedArrows","nameTagShadows");
                 for (var field : PhoenixConfig.class.getFields()) {
-                    if (field.getName().equals("enabled") || field.getName().equals("version")) continue;
-                    if (field.getType() != boolean.class) continue;
-                    String cat = visFields.contains(field.getName()) ? "Visual" : "Gameplay";
+                    if (field.getType() != boolean.class || !visFields.contains(field.getName())) continue;
                     try {
-                        boolean val = field.getBoolean(c);
-                        String label = field.getName().replaceAll("([A-Z])", " $1").trim();
-                        if (!label.isEmpty()) label = label.substring(0,1).toUpperCase() + label.substring(1);
-                        modules.add(new Module(field.getName(), label, cat,
+                        modules.add(new Module(field.getName(), autoLabel(field.getName()), "Visual",
                             () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
-                            v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
-                            .b("Master", () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
-                                v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception e) {} })
-                            .sub("Also in dungeons", false));
+                            v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));
                     } catch (Exception e) {}
                 }
+                modules.add(new Module("autoSprint", "Sprint, scroll and sign keyboard behavior", "Input",
+                    () -> c.autoSprint, v -> { c.autoSprint = v; ConstellationClient.saveConfig(); })
+                    .b("Sprint in water", () -> c.autoSprintInWater, v -> { c.autoSprintInWater = v; ConstellationClient.saveConfig(); })
+                    .b("Hotbar scroll lock", () -> c.hotbarScrollLock, v -> { c.hotbarScrollLock = v; ConstellationClient.saveConfig(); })
+                    .b("Enter submits signs", () -> c.signEnterToDone, v -> { c.signEnterToDone = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("signCalculator", "Expressions and purse values in number signs", "Input",
+                    () -> c.signCalculator, v -> { c.signCalculator = v; ConstellationClient.saveConfig(); })
+                    .b("Require leading equals", () -> c.signCalculatorRequiresEquals, v -> { c.signCalculatorRequiresEquals = v; ConstellationClient.saveConfig(); })
+                    .b("Live preview", () -> c.signCalculatorPreview, v -> { c.signCalculatorPreview = v; ConstellationClient.saveConfig(); })
+                    .b("Purse input", () -> c.signCalculatorUsePurse, v -> { c.signCalculatorUsePurse = v; ConstellationClient.saveConfig(); })
+                    .sub("Decimals and length are in All settings", true));
+                modules.add(new Module("wardrobeKeybinds", "Armor, equipment, pages and swaps", "Input",
+                    () -> c.wardrobeKeybinds, v -> { c.wardrobeKeybinds = v; ConstellationClient.saveConfig(); })
+                    .b("Armor sets", () -> c.wardrobeArmorSets, v -> { c.wardrobeArmorSets = v; ConstellationClient.saveConfig(); })
+                    .b("Equipment sets", () -> c.wardrobeEquipmentSets, v -> { c.wardrobeEquipmentSets = v; ConstellationClient.saveConfig(); })
+                    .b("Prevent unequip", () -> c.wardrobePreventUnequip, v -> { c.wardrobePreventUnequip = v; ConstellationClient.saveConfig(); })
+                    .b("Slot labels", () -> c.wardrobeSlotLabels, v -> { c.wardrobeSlotLabels = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("slotBinding", "Inventory-to-hotbar binding profiles", "Input",
+                    () -> c.slotBinding, v -> { c.slotBinding = v; ConstellationClient.saveConfig(); })
+                    .b("Protect bound slots", () -> c.slotBindingProtect, v -> { c.slotBindingProtect = v; ConstellationClient.saveConfig(); })
+                    .b("Area profiles", () -> c.slotBindingDynamicProfiles, v -> { c.slotBindingDynamicProfiles = v; ConstellationClient.saveConfig(); })
+                    .b("Borders", () -> c.slotBindingBorders, v -> { c.slotBindingBorders = v; ConstellationClient.saveConfig(); })
+                    .b("Lines", () -> c.slotBindingLines, v -> { c.slotBindingLines = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("itemProtection", "Prevent valuable item loss", "Safety",
+                    () -> c.itemProtection, v -> { c.itemProtection = v; ConstellationClient.saveConfig(); })
+                    .b("World drops", () -> c.preventDroppingValuable, v -> { c.preventDroppingValuable = v; ConstellationClient.saveConfig(); })
+                    .b("Starred items", () -> c.protectStarredItems, v -> { c.protectStarredItems = v; ConstellationClient.saveConfig(); })
+                    .b("Recombobulated items", () -> c.protectRecombobulatedItems, v -> { c.protectRecombobulatedItems = v; ConstellationClient.saveConfig(); })
+                    .b("Valuable consumables", () -> c.protectValuableConsumables, v -> { c.protectValuableConsumables = v; ConstellationClient.saveConfig(); })
+                    .b("Inventory marker", () -> c.showProtectedItemMarker, v -> { c.showProtectedItemMarker = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("preventPlacingWeapons", "Block accidental weapon placement", "Safety",
+                    () -> c.preventPlacingWeapons, v -> { c.preventPlacingWeapons = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("centuryCakeTimer", "Cake effects, expiry and reminders", "Tracking",
+                    () -> c.centuryCakeTimer, v -> { c.centuryCakeTimer = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.centuryCakeHud, v -> { c.centuryCakeHud = v; ConstellationClient.saveConfig(); })
+                    .b("Eating helper", () -> c.centuryCakeChatHelper, v -> { c.centuryCakeChatHelper = v; ConstellationClient.saveConfig(); })
+                    .b("Expiry warning", () -> c.centuryCakeWarning, v -> { c.centuryCakeWarning = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("worldAge", "Server day, clock and phase", "Tracking",
+                    () -> c.worldAge, v -> { c.worldAge = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.worldAgeHud, v -> { c.worldAgeHud = v; ConstellationClient.saveConfig(); })
+                    .b("Clock", () -> c.worldAgeShowClock, v -> { c.worldAgeShowClock = v; ConstellationClient.saveConfig(); })
+                    .b("Phase", () -> c.worldAgeShowPhase, v -> { c.worldAgeShowPhase = v; ConstellationClient.saveConfig(); })
+                    .b("Next transition", () -> c.worldAgeShowTransition, v -> { c.worldAgeShowTransition = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("speedPresets", "Named farming speed profiles", "Tracking",
+                    () -> c.speedPresets, v -> { c.speedPresets = v; ConstellationClient.saveConfig(); })
+                    .b("Automatic profile", () -> c.speedPresetsAutoProfile, v -> { c.speedPresetsAutoProfile = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.speedPresetsHud, v -> { c.speedPresetsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Action-bar feedback", () -> c.speedPresetsFeedbackActionbar, v -> { c.speedPresetsFeedbackActionbar = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("petDisplay", "Active pet details and progress", "Tracking",
+                    () -> c.petDisplay, v -> { c.petDisplay = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.petDisplayHud, v -> { c.petDisplayHud = v; ConstellationClient.saveConfig(); })
+                    .b("Pet icon", () -> c.petDisplayIcon, v -> { c.petDisplayIcon = v; ConstellationClient.saveConfig(); })
+                    .b("XP rate", () -> c.petDisplayRate, v -> { c.petDisplayRate = v; ConstellationClient.saveConfig(); })
+                    .b("ETA", () -> c.petDisplayEta, v -> { c.petDisplayEta = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("collectionTracker", "Collection totals, goals and rates", "Tracking",
+                    () -> c.collectionTracker, v -> { c.collectionTracker = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.collectionTrackerHud, v -> { c.collectionTrackerHud = v; ConstellationClient.saveConfig(); })
+                    .b("Automatic selection", () -> c.collectionTrackerAutoSelect, v -> { c.collectionTrackerAutoSelect = v; ConstellationClient.saveConfig(); })
+                    .b("Rate", () -> c.collectionTrackerShowRate, v -> { c.collectionTrackerShowRate = v; ConstellationClient.saveConfig(); })
+                    .b("ETA", () -> c.collectionTrackerShowEta, v -> { c.collectionTrackerShowEta = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("autoCopyScreenshot", "Copy screenshots to the clipboard", "Misc",
+                    () -> c.autoCopyScreenshot, v -> { c.autoCopyScreenshot = v; ConstellationClient.saveConfig(); })
+                    .b("Action-bar success", () -> c.screenshotClipboardSuccessActionbar, v -> { c.screenshotClipboardSuccessActionbar = v; ConstellationClient.saveConfig(); })
+                    .b("Failure chat", () -> c.screenshotClipboardFailureChat, v -> { c.screenshotClipboardFailureChat = v; ConstellationClient.saveConfig(); })
+                    .b("Keep last screenshot", () -> c.screenshotClipboardKeepLast, v -> { c.screenshotClipboardKeepLast = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("scrollableTooltips", "Tooltips, hotbar, saves and dialogue", "Misc",
+                    () -> c.scrollableTooltips, v -> { c.scrollableTooltips = v; ConstellationClient.saveConfig(); })
+                    .b("Auto-save reminder", () -> c.autoSaveReminder, v -> { c.autoSaveReminder = v; ConstellationClient.saveConfig(); })
+                    .b("Hotbar lock", () -> c.hotbarLock, v -> { c.hotbarLock = v; ConstellationClient.saveConfig(); })
+                    .b("Hotbar swap helper", () -> c.hotbarSwapHelper, v -> { c.hotbarSwapHelper = v; ConstellationClient.saveConfig(); })
+                    .b("Disable NPC dialogue", () -> c.disableNpcDialogue, v -> { c.disableNpcDialogue = v; ConstellationClient.saveConfig(); }));
             }
             case "cassiopeia" -> {
                 cats = new String[]{"Filters", "Chat", "Commands", "Party"};
@@ -623,7 +688,8 @@ public class ConfigScreen extends Screen {
         }
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
-        g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT);
+        g.fill(0, TB - 1, w, TB, ConstellationTheme.BORDER_SOFT);
+        g.fill(0, TB - 1, 62, TB, ConstellationTheme.ACCENT);
         ConstellationIcons.draw(g, constellationId, 8, 5, 24);
         String constellationName = ConstellationClient.featureManager().get(constellationId)
             .map(com.froggylord.constellation.core.BaseConstellation::displayName)
@@ -631,7 +697,7 @@ public class ConfigScreen extends Screen {
         g.text(mc.font, constellationName, 36, 10, ConstellationTheme.ACCENT_BRIGHT, false);
         int allX = Math.max(sw + 6, w - 265);
         boolean allHover = mx >= allX && mx < allX + 72 && my >= 7 && my < 27;
-        g.fill(allX, 7, allX + 72, 27, allHover ? 0xFF30304A : 0xFF202033);
+        ConstellationTheme.button(g, allX, 7, 72, 20, allHover, false);
         g.text(mc.font, "All settings", allX + 7, 13,
             allHover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
         String esc = "esc close  ·  right-click details";
@@ -674,8 +740,7 @@ public class ConfigScreen extends Screen {
         modalAnim += ((modalUp ? 1f : 0f) - modalAnim) * Math.min(1, dt * 14);
         if (modalAnim > 0.01f && openModule != null) {
             int mx2 = w/2 - 180, my2 = h/2 - 120;
-            g.fill(mx2, my2, mx2 + 360, my2 + 240, 0xF21A1A28);
-            g.fill(mx2, my2, mx2 + 360, my2 + 3, ConstellationTheme.ACCENT);
+            ConstellationTheme.surface(g, mx2, my2, 360, 240, 0xF21A1A28, ConstellationTheme.ACCENT);
             g.text(mc.font, openModule.name.replaceAll("([A-Z])", " $1").trim(), mx2 + 10, my2 + 10, ConstellationTheme.ACCENT_BRIGHT, false);
             g.text(mc.font, openModule.desc, mx2 + 10, my2 + 24, ConstellationTheme.TEXT_MUTED, false);
             int oy = my2 + 44;
@@ -690,7 +755,8 @@ public class ConfigScreen extends Screen {
             g.text(mc.font, "click to close", mx2 + 360 - mc.font.width("click to close") - 10, my2 + 230, ConstellationTheme.TEXT_MUTED, false);
         }
 
-        g.fill(0, 0, w, 1, ConstellationTheme.ACCENT);
+        g.fill(0, 0, w, 1, ConstellationTheme.BORDER_SOFT);
+        g.fill(0, 0, 62, 1, ConstellationTheme.ACCENT);
         g.fill(0, h - 1, w, h, ConstellationTheme.ACCENT_DIM);
         g.fill(0, 0, 1, h, ConstellationTheme.ACCENT_DIM);
         g.fill(w - 1, 0, w, h, ConstellationTheme.ACCENT_DIM);
@@ -704,23 +770,28 @@ public class ConfigScreen extends Screen {
 
     private void drawCard(GuiGraphicsExtractor g, Module m, int cx, int cy, int cardW, boolean hov, float dt) {
         boolean on = m.get.getAsBoolean();
-        m.knob += ((on ? 1f : 0f) - m.knob) * Math.min(1, dt * 16);
-        m.hover += ((hov ? 1f : 0f) - m.hover) * Math.min(1, dt * 14);
-        g.fill(cx, cy, cx + cardW, cy + CARD_H, on ? 0xFF222240 : (hov ? 0xFF252535 : 0xFF1A1A28));
-        int knobCol = lerp(0xFF333333, ConstellationTheme.ACCENT, m.knob);
-        g.fill(cx, cy, cx + cardW, cy + 3, knobCol);
-        String name = m.name.replaceAll("([A-Z])", " $1").trim();
-        if (!name.isEmpty()) name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        if (name.length() > 18) name = name.substring(0, 17) + "…";
+        m.knob = ConstellationTheme.approach(m.knob, on ? 1f : 0f, dt, 16f);
+        m.hover = ConstellationTheme.approach(m.hover, hov ? 1f : 0f, dt, 14f);
+        int fill = on ? 0xF022223B : hov ? ConstellationTheme.SURFACE_HOVER : 0xF01A1A28;
+        ConstellationTheme.surface(g, cx, cy, cardW, CARD_H, fill, on ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER);
+        if (on) g.fill(cx, cy + 4, cx + 2, cy + CARD_H - 4, ConstellationTheme.ACCENT);
         Minecraft mc = Minecraft.getInstance();
+        String name = autoLabel(m.name);
+        if (mc.font.width(name) > cardW - 45) name = mc.font.plainSubstrByWidth(name, cardW - 51) + "...";
         g.text(mc.font, name, cx + 5, cy + 8, m.knob > 0.5f ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
-        g.text(mc.font, m.desc, cx + 5, cy + 22, ConstellationTheme.TEXT_MUTED, false);
-        
+        ConstellationTheme.toggle(g, cx + cardW - 32, cy + 6, m.knob);
+
+        String badge = "";
         if (!m.subs.isEmpty()) {
             long editable = m.subs.stream().filter(sub -> sub.editable).count();
-            String badge = editable > 0 ? editable + " opts" : "details";
-            g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 32, ConstellationTheme.ACCENT_DIM, false);
+            badge = editable > 0 ? editable + " opts" : "details";
         }
+        int descWidth = cardW - 10 - (badge.isBlank() ? 0 : mc.font.width(badge) + 9);
+        String desc = m.desc;
+        if (mc.font.width(desc) > descWidth) desc = mc.font.plainSubstrByWidth(desc, Math.max(1, descWidth - 6)) + "...";
+        g.text(mc.font, desc, cx + 5, cy + 25, ConstellationTheme.TEXT_MUTED, false);
+        if (!badge.isBlank()) g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 25,
+            on ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_FAINT, false);
     }
 
     private List<Module> visibleModules() {
@@ -842,10 +913,4 @@ public class ConfigScreen extends Screen {
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(p));
     }
 
-    private static int lerp(int a, int b, float t) {
-        t = Math.clamp(t, 0, 1);
-        int ar = (a>>16)&0xFF, ag = (a>>8)&0xFF, ab = a&0xFF;
-        int br = (b>>16)&0xFF, bg = (b>>8)&0xFF, bb = b&0xFF;
-        return 0xFF000000 | ((int)(ar+(br-ar)*t)<<16) | ((int)(ag+(bg-ag)*t)<<8) | (int)(ab+(bb-ab)*t);
-    }
 }

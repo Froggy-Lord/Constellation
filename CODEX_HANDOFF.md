@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.793 Sign Enter Controls.
+Last updated: 2026-07-31 for version 0.9.794 Visual System Foundation.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.793`.
+- Current artifact version: `0.9.794`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3297,6 +3297,34 @@ The behavior is independently saved, defaults on inside Phoenix, appears in the 
 Release verification passed on July 31: `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The full 160-second headless client ended at expected timeout code 124, loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no sign-mixin, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `641fb250d332589c1666be40c62f67fc15f32b1098e4bcdb640b76cdd9a92d0c`.
 
 The tested `constellation-0.9.793.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-121033-0.9.793/`. The live and build artifact checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; Phoenix remains in the user's existing state.
+
+The release is queued in the drip repository as Froggy-Lord commit `800c5a0c4b`.
+
+## July 31 version 0.9.794 Visual System Foundation
+
+`ConstellationTheme.java`, `SpaceBackground.java`, `HubScreen.java`, `AdvancedConfigScreen.java`, `background.png` and `bg_config.png` begin the broad UI/UX replacement requested by Zaden. This is original visual/code work; no reference UI code or artwork was copied.
+
+The old files named `background.png` and `bg_config.png` were actually 2007-by-2048 JPEG payloads while `SpaceBackground` sampled them as 2048-by-2048 textures. They are replaced by true 2048-by-2048 RGBA PNGs. The originals are preserved under `~/Desktop/To-Delete/constellation-ui-backgrounds-20260731-121329/`.
+
+The new artwork was produced through the built-in image-generation workflow with this design brief: a restrained near-black astronomical field, faint violet-blue nebula detail at the edges, sparse warm-gold navigation stars, quiet central and lower negative space, no text/logo/panels/planets/spacecraft, no neon cyberpunk, no generic gradient and no bright bloom behind content. The generated source remains at `/home/zadenz/.codex/generated_images/019f591b-7c6d-7532-8c17-6a53933cb542/call_l8bmsL9fgNDNhq1Z64i8wYre.png`; project copies were resized and stripped to exact texture dimensions, with a quieter color-treated config variant.
+
+The shared theme now owns two-pixel clipped-corner surfaces, coherent hard borders, panel accents, buttons, search focus, pills and frame-rate-independent exponential motion plus cubic entrance easing. Existing callers of `panel`, `card` and `toggle` inherit the new geometry without duplicating styling.
+
+The Hub adds live search across module ID, name and description; All, Enabled and Disabled filtering; enabled/shown counts; Ctrl+F focus; first-Escape search clearing; and a deliberately separate right-hand switch hit target. Clicking the card body navigates to settings, while clicking the switch uses `FeatureManager.setEnabled` so normal init, disable, HUD registration and persistence all run. Filtered hit-testing uses the same visible list and smoothed scroll position as rendering.
+
+Card entry, hover, toggle and pulse motion are time-based rather than frame-count based. The module config screen now uses restrained accent segments, clipped surfaces, right-side switches, width-aware names/descriptions and compact option counts instead of full-width gold dividers and character-count truncation. Phoenix's former 72-card Boolean dump is replaced by five readable categories and grouped top-level features; every scalar remains available in All settings. The complete typed settings browser now calls the base screen extractor, repairing its previously invisible `EditBox` widgets, and its rows, editor modal, filter button and search focus use the shared surface language.
+
+Rendered inspection through Xvfb and Mod Menu found that `fabric.mod.json` referenced a nonexistent icon, producing Mod Menu's question-mark placeholder. `tools/ui-assets/constellation-mark.svg` is a hand-authored clipped-square constellation-C mark with one gold anchor star. It is deterministically rasterized to the required 128-by-128 RGBA `assets/constellation/icon.png`; keep the SVG as the design master.
+
+The HUD editor remains deliberately excluded from this visual system. Preserve its user-mandated game-visible, mostly transparent, chrome-free behavior; only current or last-five-second elements appear and wheel-over-element resizing remains.
+
+The mandatory recent-design research workflow detected first-run state and requires user consent before its optional browser-cookie/source-helper setup. Do not silently run that setup. Continue the local screen inventory meanwhile, then complete the research after consent and record the findings without copying unlicensed artwork.
+
+Visual inspection used a real 1280-by-720 Xvfb client, Minecraft's accessibility/main menu and Mod Menu path. The first pass exposed the missing icon and overbearing config dividers; both were corrected, the client restarted and the resulting config screen inspected again. The final screenshot is `/tmp/constellation-config-0.9.794-final.png`. The backdrop and 128-pixel brand mark were also inspected independently at project resolution.
+
+Release verification passed on July 31: all three PNG assets have their exact expected RGBA dimensions, `./gradlew build -q` completed with exactly 11 successful tests and zero failed, and the full 160-second unattended client ended at expected timeout code 124. It loaded `138 rooms across 9 shapes`, reached `Constellation ready. 14 constellations loaded.`, and contained no texture-load, broken-icon, screen, mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The exact tested jar SHA-256 is `ef577268a1399b14c94d6cb8c21ecab5bc979225b88ce6541e153d47104c7655`.
+
+The tested `constellation-0.9.794.jar` is deployed to Gather. The former live jar is preserved under `~/Desktop/To-Delete/gather-jars/20260731-122637-0.9.794/`. The live and build artifact checksums match. Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
 
 ## Required dedicated visual-design pass
 

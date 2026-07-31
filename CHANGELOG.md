@@ -1,5 +1,15 @@
 # Constellation Changelog
 
+## 0.9.794 (2026-07-31) — Visual System Foundation
+
+- replaced malformed JPEG-backed backgrounds with original correctly sampled PNG artwork
+- added clipped-corner surfaces, coherent borders, search fields, buttons and focus states
+- added searchable module navigation with enabled and disabled filters
+- separated card navigation from direct module toggles and added live module counts
+- replaced frame-rate-dependent card motion with time-based easing
+- restored actual widget rendering in the complete typed configuration browser
+- replaced Mod Menu's broken placeholder with a hand-authored vector constellation mark
+
 ## 0.9.793 (2026-07-31) — Sign Enter Controls
 
 - made unmodified Enter submit every sign through the same path as the Done button

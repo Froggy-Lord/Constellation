@@ -6,6 +6,7 @@ import com.froggylord.constellation.render.ConstellationTheme;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -16,6 +17,9 @@ public class HubScreen extends Screen {
 
     private final Screen parent;
     private long openTime;
+    private long lastFrame;
+    private EditBox search;
+    private Filter filter = Filter.ALL;
     private float scrollOff = 0;
     private float scrollTarget = 0;
     private int maxScroll = 0;
@@ -33,7 +37,16 @@ public class HubScreen extends Screen {
         this.parent = parent;
     }
 
-    @Override protected void init() { this.openTime = System.currentTimeMillis(); }
+    @Override protected void init() {
+        this.openTime = System.currentTimeMillis();
+        this.lastFrame = openTime;
+        search = new EditBox(font, 125, 11, Math.max(70, Math.min(200, width - 225)), 18, Component.literal("Search modules"));
+        search.setBordered(false);
+        search.setHint(Component.literal("search modules"));
+        search.setMaxLength(48);
+        search.setResponder(value -> { scrollOff = 0; scrollTarget = 0; });
+        addRenderableWidget(search);
+    }
     @Override public boolean isPauseScreen() { return false; }
 
     @Override
@@ -42,41 +55,46 @@ public class HubScreen extends Screen {
         int w = mc.getWindow().getGuiScaledWidth();
         int h = mc.getWindow().getGuiScaledHeight();
         Font font = mc.font;
+        long now = System.currentTimeMillis();
+        float frameDelta = Math.min(0.1f, Math.max(0f, (now - lastFrame) / 1000f));
+        lastFrame = now;
 
         SpaceBackground.render(g, w, h, delta);
 
-        // ---- header panel ----
-        int headerH = 36;
+        int headerH = 42;
         ConstellationTheme.panel(g, 0, 0, w, headerH);
         String title = "Constellation";
-        int tw = font.width(title);
-        g.text(font, title, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
-        String sub = "15 modules — right shift to open, esc to close";
-        g.text(font, sub, 14 + tw, 14, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, title, 12, 9, ConstellationTheme.ACCENT_BRIGHT, false);
+        g.text(font, "SkyBlock client", 12, 23, ConstellationTheme.TEXT_MUTED, false);
+        ConstellationTheme.search(g, 119, 7, search.getWidth() + 12, 24, search.isFocused());
 
-        // ---- constellation cards ----
+        int filterW = 68;
+        int filterX = w - filterW - 10;
+        boolean filterHover = inside(mx, my, filterX, 8, filterW, 22);
+        ConstellationTheme.button(g, filterX, 8, filterW, 22, filterHover, filter != Filter.ALL);
+        String filterText = filter.label;
+        g.text(font, filterText, filterX + (filterW - font.width(filterText)) / 2, 15,
+            filter == Filter.ALL ? ConstellationTheme.TEXT_DIM : ConstellationTheme.ACCENT_BRIGHT, false);
+
+        var visibleIds = visibleIds();
+        long enabledCount = ConstellationClient.featureManager().getAllIds().stream()
+            .flatMap(id -> ConstellationClient.featureManager().get(id).stream()).filter(c -> c.isEnabled()).count();
+        String count = enabledCount + " enabled  " + visibleIds.size() + " shown";
+        if (w > 600) g.text(font, count, filterX - font.width(count) - 10, 15, ConstellationTheme.TEXT_MUTED, false);
+
         int cols = Math.max(1, Math.min(4, (w - 20) / 240));
         int cardW = Math.min(280, ((w - 20) - (cols - 1) * 8) / cols);
         int cardH = 50;
         int gridX = 10, gridY = headerH + 10;
 
-        var allIds = ConstellationClient.featureManager().getAllIds();
         int idx = 0;
-        for (String id : allIds) {
+        for (String id : visibleIds) {
             var opt = ConstellationClient.featureManager().get(id);
             if (opt.isEmpty()) continue;
             var c = opt.get();
-            int col = idx % cols, row = idx / cols;
+            int col = idx % cols;
             int cx = gridX + col * (cardW + 8);
-            int cy = gridY + row * (cardH + 6) - (int) scrollOff;
-
-            // staggered entrance — cards slide up from slightly below on first open
-            long openAge = System.currentTimeMillis() - openTime;
-            if (openAge < 600) {
-                int stagger = idx * 40; // each card delayed by 40ms
-                float slide = Math.clamp((openAge - stagger) / 300f, 0f, 1f);
-                cy += (int) ((1f - slide) * 20); // slide up 20px
-            }
+            int cy = cardY(idx, scrollOff);
 
             if (cy + cardH > headerH && cy < h - 80) {
                 boolean enabled = c.isEnabled();
@@ -85,13 +103,13 @@ public class HubScreen extends Screen {
 
                 // hover glow fade
                 float hGlow = cardHover.getOrDefault(id, 0f);
-                hGlow += (hover ? 0.15f : -0.08f);
-                hGlow = Math.clamp(hGlow, 0f, 1f);
+                hGlow = ConstellationTheme.approach(hGlow, hover ? 1f : 0f, frameDelta, hover ? 16f : 10f);
                 cardHover.put(id, hGlow);
                 if (hGlow > 0.01f) ConstellationTheme.glow(g, cx, cy, cardW, cardH, hGlow);
 
                 ConstellationIcons.draw(g, id, cx + 7, cy + 9, 28);
                 String name = c.displayName();
+                if (font.width(name) > cardW - 82) name = font.plainSubstrByWidth(name, cardW - 88) + "...";
                 g.text(font, name, cx + 42, cy + 7,
                     enabled ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
@@ -104,7 +122,7 @@ public class HubScreen extends Screen {
                 int tx = cx + cardW - 32, ty = cy + 6;
                 float target = enabled ? 1f : 0f;
                 float cur = toggleAnim.getOrDefault(id, target);
-                cur += (target - cur) * 0.18f; // smooth lerp
+                cur = ConstellationTheme.approach(cur, target, frameDelta, 16f);
                 if (Math.abs(cur - target) < 0.01f) cur = target;
                 toggleAnim.put(id, cur);
                 ConstellationTheme.toggle(g, tx, ty, cur);
@@ -115,7 +133,7 @@ public class HubScreen extends Screen {
         int totalRows = (int) Math.ceil((double) idx / cols);
         maxScroll = Math.max(0, totalRows * (cardH + 6) - (h - headerH - 90));
         scrollTarget = Math.clamp(scrollTarget, 0, maxScroll);
-        scrollOff += (scrollTarget - scrollOff) * 0.2f; // smooth lerp
+        scrollOff = ConstellationTheme.approach(scrollOff, scrollTarget, frameDelta, 18f);
         if (Math.abs(scrollOff - scrollTarget) < 0.5f) scrollOff = scrollTarget;
 
         // ---- scrollbar ----
@@ -128,7 +146,6 @@ public class HubScreen extends Screen {
             g.fill(sbX, thumbY, sbX + 4, thumbY + thumbH, ConstellationTheme.ACCENT);
         }
 
-        // ---- bottom buttons ----
         int btnW = 140, btnH = 24, btnGap = 10;
         int hudX = w / 2 - btnW - btnGap / 2, cfgX = w / 2 + btnGap / 2;
         int btnY = h - btnH - 10;
@@ -136,8 +153,7 @@ public class HubScreen extends Screen {
         boolean hoverHud = mx >= hudX && mx <= hudX + btnW && my >= btnY && my <= btnY + btnH;
         boolean hoverCfg = mx >= cfgX && mx <= cfgX + btnW && my >= btnY && my <= btnY + btnH;
 
-        ConstellationTheme.panel(g, hudX, btnY, btnW, btnH);
-        if (hoverHud) g.fill(hudX, btnY, hudX + 3, btnY + btnH, ConstellationTheme.ACCENT);
+        ConstellationTheme.button(g, hudX, btnY, btnW, btnH, hoverHud, false);
         // click flash
         long hudAge = System.currentTimeMillis() - hudFlashAt;
         if (hudAge < 200) g.fill(hudX, btnY, hudX + btnW, btnY + btnH, ((int)((1f-hudAge/200f)*40) << 24) | 0xFFCC33);
@@ -145,8 +161,7 @@ public class HubScreen extends Screen {
         g.text(font, hudLabel, hudX + btnW / 2 - font.width(hudLabel) / 2, btnY + 7,
             hoverHud ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
-        ConstellationTheme.panel(g, cfgX, btnY, btnW, btnH);
-        if (hoverCfg) g.fill(cfgX, btnY, cfgX + 3, btnY + btnH, ConstellationTheme.ACCENT);
+        ConstellationTheme.button(g, cfgX, btnY, btnW, btnH, hoverCfg, false);
         long cfgAge = System.currentTimeMillis() - cfgFlashAt;
         if (cfgAge < 200) g.fill(cfgX, btnY, cfgX + btnW, btnY + btnH, ((int)((1f-cfgAge/200f)*40) << 24) | 0xFFCC33);
         String cfgLabel = "Config";
@@ -161,9 +176,10 @@ public class HubScreen extends Screen {
         SpaceBackground.fadeIn(g, w, h, openTime);
 
         // subtle pulsing indicator dot — shows the overlay is active
-        long dotPulse = (System.currentTimeMillis() / 2000) % 2;
-        int dotAlpha = dotPulse == 0 ? 120 : 60;
+        double pulse = (Math.sin(now / 650.0) + 1.0) * 0.5;
+        int dotAlpha = 55 + (int) (pulse * 65);
         g.fill(6, h - 8, 10, h - 4, (dotAlpha << 24) | ConstellationTheme.ACCENT);
+        super.extractRenderState(g, mx, my, delta);
     }
 
     // ---- input (unchanged logic) ----
@@ -188,14 +204,35 @@ public class HubScreen extends Screen {
             return true;
         }
 
+        int filterW = 68;
+        int filterX = w - filterW - 10;
+        if (inside(mx, my, filterX, 8, filterW, 22)) {
+            filter = filter.next();
+            scrollOff = 0;
+            scrollTarget = 0;
+            return true;
+        }
+
+        int toggleW = 40;
+        var visibleIds = visibleIds();
         int cols = Math.max(1, Math.min(4, (w - 20) / 240));
         int cardW = Math.min(280, ((w - 20) - (cols - 1) * 8) / cols);
-        var allIds = ConstellationClient.featureManager().getAllIds();
+        for (int idx = 0; idx < visibleIds.size(); idx++) {
+            String id = visibleIds.get(idx);
+            int cx = 10 + idx % cols * (cardW + 8);
+            int cy = cardY(idx, scrollOff);
+            if (inside(mx, my, cx + cardW - toggleW, cy, toggleW, 31)) {
+                ConstellationClient.featureManager().get(id).ifPresent(c ->
+                    ConstellationClient.featureManager().setEnabled(id, !c.isEnabled()));
+                return true;
+            }
+        }
+
         int idx = 0;
-        for (String id : allIds) {
-            int col = idx % cols, row = idx / cols;
+        for (String id : visibleIds) {
+            int col = idx % cols;
             int cx = 10 + col * (cardW + 8);
-            int cy = 46 + row * 56 - (int) scrollTarget;
+            int cy = cardY(idx, scrollOff);
             var opt = ConstellationClient.featureManager().get(id);
             if (opt.isEmpty()) continue;
             if (mx >= cx && mx <= cx + cardW && my >= cy && my <= cy + 50) {
@@ -227,7 +264,18 @@ public class HubScreen extends Screen {
     }
 
     @Override public boolean keyPressed(KeyEvent event) {
+        if (event.hasControlDown() && event.key() == GLFW.GLFW_KEY_F) {
+            search.setFocused(true);
+            setFocused(search);
+            return true;
+        }
         if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            if (!search.getValue().isBlank()) {
+                search.setValue("");
+                search.setFocused(false);
+                setFocused(null);
+                return true;
+            }
             if (System.currentTimeMillis() - openTime < 400) return true;
             onClose(); return true;
         }
@@ -238,5 +286,39 @@ public class HubScreen extends Screen {
     @Override public void onClose() {
         var p = parent;
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(p));
+    }
+
+    private java.util.List<String> visibleIds() {
+        String query = search == null ? "" : search.getValue().trim().toLowerCase(java.util.Locale.ROOT);
+        return ConstellationClient.featureManager().getAllIds().stream().filter(id ->
+            ConstellationClient.featureManager().get(id).map(c -> filter.accepts(c.isEnabled())
+                && (query.isBlank() || id.toLowerCase(java.util.Locale.ROOT).contains(query)
+                || c.displayName().toLowerCase(java.util.Locale.ROOT).contains(query)
+                || c.description().toLowerCase(java.util.Locale.ROOT).contains(query))).orElse(false)).toList();
+    }
+
+    private int cardY(int index, float offset) {
+        int cols = Math.max(1, Math.min(4, (width - 20) / 240));
+        int y = 52 + index / cols * 56 - (int) offset;
+        long age = System.currentTimeMillis() - openTime;
+        if (age < 600) {
+            float shown = ConstellationTheme.easeOutCubic(Math.clamp((age - index * 28) / 260f, 0f, 1f));
+            y += (int) ((1f - shown) * 14);
+        }
+        return y;
+    }
+
+    private static boolean inside(int mx, int my, int x, int y, int w, int h) {
+        return mx >= x && mx < x + w && my >= y && my < y + h;
+    }
+
+    private enum Filter {
+        ALL("All"), ENABLED("Enabled"), DISABLED("Disabled");
+        final String label;
+        Filter(String label) { this.label = label; }
+        boolean accepts(boolean enabled) {
+            return this == ALL || this == ENABLED && enabled || this == DISABLED && !enabled;
+        }
+        Filter next() { return values()[(ordinal() + 1) % values().length]; }
     }
 }
