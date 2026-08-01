@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.818 (2026-08-01) — SkyBlock Craft Item Interface
+
+- ported Skyblocker's server-slot-preserving Craft Item layout for Hypixel's normal and Mirrorverse crafting menus
+- added a readable 3×3 grid, result stage, quick-craft column and licensed More Crafts control without fabricating recipes or clicks
+- preserved original server slot indices, inventory routing, carried stacks, tooltips and close behavior while hiding only recognized filler items
+- added independent interface, local-test, slot, stage, quick-craft, More Crafts, filler, Mirrorverse and color settings
+
 ## 0.9.817 (2026-08-01) — Safe Crafter Visuals
 
 - added an exact-class Constellation Crafter panel with independently configurable recipe-grid, power-indicator, output and slot treatments

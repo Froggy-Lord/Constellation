@@ -48,6 +48,7 @@
         "StonecutterScreenThemeMixin",
         "SlayerDeathMixin",
         "ScreenshotMixin",
+        "SkyblockCraftingTableScreenMixin",
         "ScoreboardSidebarMixin",
         "SignEditScreenMixin",
         "TerminalClickBlockMixin",

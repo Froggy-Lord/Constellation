@@ -110,6 +110,18 @@ public final class VisualConfig extends BaseConfigGroup {
     public int crafterGridStageColor = 0xE6121229;
     public int crafterPowerStageColor = 0xE6080814;
     public int crafterOutputStageColor = 0xE6080814;
+    public boolean skyblockCraftingTable = true;
+    public boolean skyblockCraftingTableLocalWorlds = true;
+    public boolean skyblockCraftingTableSlotFrames = true;
+    public boolean skyblockCraftingTableGridStage = true;
+    public boolean skyblockCraftingTableOutputStage = true;
+    public boolean skyblockCraftingTableQuickCrafts = true;
+    public boolean skyblockCraftingTableMoreCrafts = true;
+    public boolean skyblockCraftingTableHideFillers = true;
+    public boolean skyblockCraftingTableMirrorverseLayout = true;
+    public int skyblockCraftingTableGridColor = 0xE6121229;
+    public int skyblockCraftingTableOutputColor = 0xE6080814;
+    public int skyblockCraftingTableQuickCraftColor = 0xE6080814;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

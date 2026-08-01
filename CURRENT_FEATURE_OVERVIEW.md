@@ -882,6 +882,16 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Theme, slot frames, grid stage, power stage, output stage, three stage colors and Hypixel use are independently configurable
 - Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual
 
+## SkyBlock Craft Item interface
+
+- Converts only Hypixel's chest-backed title containing `Craft Item` into a readable 3×3 crafting interface while retaining the original `ChestMenu` container and synchronization ID
+- Ports Skyblocker's exact normal grid/result/three-quick-craft slot mapping and its separate Mirrorverse grid/result mapping
+- Every visible slot retains its original server index, container slot and stack; clicking, Shift-clicking, dragging, hotbar moves, carried stacks, tooltips and close behavior remain server-owned
+- The More Crafts image control uses Skyblocker's licensed three-state sprites and sends the original slot-26 pickup only after a deliberate click
+- Empty quick-craft/result filler panes and barriers can be hidden without suppressing real SkyBlock items carrying IDs
+- Interface, local-world test support, slot frames, grid stage, output stage, quick crafts, More Crafts, filler hiding, Mirrorverse layout and all three surface colors are independently configurable
+- Local support requires the same Craft Item title and at least four chest rows; unrelated chest titles and menu types retain their existing screen
+
 ## Safe Cartography Table visuals
 
 - Exact vanilla `CartographyTableScreen` treatment with bounded dark panel, readable labels, framed input column, palette operation arrow and dedicated live-map stage

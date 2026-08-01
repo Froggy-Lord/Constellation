@@ -2837,3 +2837,26 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Crafter-specific stage.
 - [ ] Join Hypixel with Crafters on Hypixel disabled. Expected: exact Crafter screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, grid, disabled sprites, tooltip, power sprite, output, labels and slots remain bounded and aligned.
+
+## SkyBlock Craft Item interface
+
+Open Hypixel's `/craft` screen with Visuals and SkyBlock Crafting Table enabled. Test while stationary.
+
+- [ ] Open the normal Craft Item menu. Expected: its original chest view becomes a readable 3×3 grid, result stage, three-entry quick-craft column and More Crafts control.
+- [ ] Compare all nine grid positions against the original menu. Expected: the exact ingredients occupy the same logical server slots and no filler item appears as an ingredient.
+- [ ] Hover grid, result and quick-craft stacks. Expected: native SkyBlock names, lore, counts and Constellation tooltip additions remain available.
+- [ ] Pick up, return, drag and Shift-click ingredients. Expected: every action targets the original Hypixel slot, carried stacks remain synchronized and reopening shows the authoritative server state.
+- [ ] Complete an ordinary valid craft through normal clicks. Expected: Hypixel owns the result, consumption and transfer; Constellation sends no automatic click.
+- [ ] Click each quick craft once. Expected: the corresponding original server slot is clicked once and no other slot moves.
+- [ ] Hover More Crafts. Expected: the licensed highlighted state and delayed `More Crafts` tooltip appear.
+- [ ] Click More Crafts once. Expected: original slot 26 receives one pickup click and Hypixel performs its normal navigation; disabled state prevents unavailable use.
+- [ ] Inspect empty quick-craft and result positions with Hide Fillers enabled. Expected: only plain gray panes without a SkyBlock ID and the result barrier disappear; real identified items remain.
+- [ ] Disable Hide Fillers. Expected: the original filler stacks return without changing their slots or behavior.
+- [ ] Enter the Mirrorverse crafting room and open its Craft Item menu. Expected: the shifted Mirrorverse 3×3 grid and result appear with no normal quick-craft column or More Crafts control.
+- [ ] Toggle Slot Frames, Grid Stage, Output Stage and Quick Crafts independently. Expected: only the named presentation layer changes; items and hit boxes stay fixed.
+- [ ] Disable More Crafts while retaining Quick Crafts. Expected: the three server quick-craft stacks remain but the navigation control is absent.
+- [ ] Change Grid, Output and Quick Craft colors. Expected: each surface updates independently with readable labels and item contrast.
+- [ ] Disable Mirrorverse Layout and reopen that screen. Expected: Hypixel's original chest screen is retained so normal slot indices are never applied to the Mirrorverse; restore the option afterward.
+- [ ] Disable SkyBlock Crafting Table and reopen `/craft`. Expected: Hypixel's complete original chest screen returns.
+- [ ] Open Storage, Bazaar, Auction, trade, Museum, dungeon puzzle and ordinary chest screens. Expected: none are converted by this feature.
+- [ ] Test a narrow and wide window. Expected: title, inventory label, grid, result, quick crafts, More Crafts, tooltips and carried stacks remain bounded.
