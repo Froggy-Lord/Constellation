@@ -2676,3 +2676,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Join Hypixel with Furnaces on Hypixel disabled. Expected: every furnace-family screen stays vanilla. Opt in only for a controlled check; unrelated server menus must remain untouched.
 - [ ] Open another specialized or third-party furnace subclass if installed. Expected: it remains owned by that mod because only the three exact vanilla runtime classes are accepted.
 - [ ] Test narrow and wide windows plus multiple GUI scales. Expected: panel, labels, indicators, recipe panel and every slot remain bounded and aligned.
+
+## Safe brewing-stand visuals
+
+- [ ] In a local creative world, place and open a vanilla Brewing Stand. Expected: the exact screen receives a bounded dark panel, gold top rule, readable labels, connected apparatus and aligned machine/player wells.
+- [ ] Check all five empty machine slots. Expected: the fuel, ingredient and three potion empty-slot icons remain visible and centered inside their wells.
+- [ ] Add Blaze Powder. Expected: Minecraft's yellow fuel-length sprite fills above the custom static backplate without clipping or floating outside the apparatus.
+- [ ] Load three Water Bottles and Nether Wart. Expected: all three bottles route to their own slots, brewing begins and the original seven-step bubbles plus brew-progress sprite animate above the panel.
+- [ ] Let the full cycle complete. Expected: the ingredient is consumed, the animated progress clears, fuel decreases correctly and all three resulting potions remain collectible.
+- [ ] Shift-click each valid fuel, ingredient, bottle and completed potion. Expected: Minecraft's normal slot routing remains authoritative with no blocked click, duplication or lost carried item.
+- [ ] Hover every machine and player slot during idle and active states. Expected: item names, potion details and hover highlights remain vanilla and unobscured.
+- [ ] Disable Brewing Stand Slots, Apparatus and Progress Backplates independently. Expected: only the selected presentation layer disappears; live fuel, bubbles and brewing logic continue functioning.
+- [ ] Change Brewing Stand Apparatus Color. Expected: the fuel feed, bubble column and ingredient-to-bottle branches update together and remain readable against the panel.
+- [ ] Change Inventory Label Color, then disable Brewing Stand Theme. Expected: themed labels update with strong contrast, while disabling the theme restores the complete vanilla texture and original label color.
+- [ ] Join Hypixel with Brewing Stands on Hypixel disabled. Expected: the screen stays vanilla. Opt in only for a controlled check; no chest, trade, market or custom server screen changes.
+- [ ] Test multiple GUI scales and window sizes. Expected: apparatus, static/dynamic indicators, labels, items and every slot remain bounded and aligned.

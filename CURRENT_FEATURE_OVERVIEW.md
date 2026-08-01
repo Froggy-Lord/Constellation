@@ -808,3 +808,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Configurable high-contrast labels shared with the other enabled Constellation inventory treatments
 - Recipe book open and closed positions, filtering, labels, carried stacks, tooltips, output collection, keyboard controls and narration stay vanilla
 - Other `AbstractFurnaceScreen` subclasses and unrelated server containers cannot inherit the treatment accidentally
+
+## Safe brewing-stand visuals
+
+- Exact vanilla `BrewingStandScreen` treatment with a bounded panel, readable labels and purpose-built connected apparatus
+- Independent theme, machine/player slot-frame, apparatus, progress-backplate and Hypixel controls
+- Dedicated apparatus color with a complete fuel-well-to-gauge feed and ingredient-to-bottle branches
+- Minecraft's fuel-length, brew-progress and seven-step bubble sprites retain their original calculations and render after the custom background
+- All three bottle slots, ingredient and Blaze Powder slots, empty-slot icons, hover state, carried stacks, Shift-click routing and potion output remain vanilla
+- Non-vanilla subclasses and unrelated server containers cannot inherit the treatment accidentally

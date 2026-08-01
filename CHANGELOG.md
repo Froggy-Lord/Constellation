@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.809 (2026-08-01) — Safe Brewing Stand Visuals
+
+- added an exact-class Constellation brewing-stand panel with a purpose-built apparatus and bounded machine/player slots
+- preserved Minecraft's live fuel, brew-progress and bubble sprites plus all bottle, ingredient and fuel interactions
+- added independent brewing theme, slot, apparatus, progress-backplate and default-off Hypixel controls
+- retained readable configurable labels, hover state, carried items, Shift-click routing and potion output collection
+- added a configurable higher-contrast apparatus color and a connected fuel-feed path after live visual review
+
 ## 0.9.808 (2026-08-01) — Safe Furnace-family Visuals
 
 - added exact-class Constellation panels for the vanilla furnace, blast furnace and smoker

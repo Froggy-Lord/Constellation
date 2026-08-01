@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
@@ -68,6 +69,13 @@ public final class ContainerTheme {
             && (!ConstellationClient.loc().onHypixel() || config.furnacesOnHypixel);
     }
 
+    public static boolean brewingStand(BrewingStandScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.brewingStandTheme
+            && screen.getClass() == BrewingStandScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.brewingStandsOnHypixel);
+    }
+
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
     public static void drawPlayerInventory(GuiGraphicsExtractor graphics, InventoryScreen screen,
                                            int x, int y, int width, int height) {
@@ -124,14 +132,57 @@ public final class ContainerTheme {
         if (config.furnaceSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawBrewingStand(GuiGraphicsExtractor graphics, BrewingStandScreen screen,
+                                        int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.brewingStandApparatus) brewingApparatus(graphics, x, y, config);
+        if (config.brewingStandProgressBackplates) brewingProgressBackplates(graphics, x, y, config);
+        if (config.brewingStandSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
         boolean themed = screen instanceof InventoryScreen inventory && playerInventory(inventory)
             || screen instanceof CraftingScreen crafting && craftingTable(crafting)
             || screen instanceof AbstractFurnaceScreen<?> furnace && furnace(furnace)
+            || screen instanceof BrewingStandScreen brewing && brewingStand(brewing)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
+    }
+
+    private static void brewingApparatus(GuiGraphicsExtractor graphics, int x, int y,
+                                         VisualConfig config) {
+        int edge = config.brewingStandApparatusColor;
+        graphics.fill(x + 34, y + 24, x + 43, y + 27, edge);
+        graphics.fill(x + 40, y + 24, x + 43, y + 37, edge);
+        graphics.fill(x + 40, y + 34, x + 53, y + 37, edge);
+        graphics.fill(x + 50, y + 34, x + 53, y + 47, edge);
+        graphics.fill(x + 50, y + 44, x + 60, y + 47, edge);
+        graphics.fill(x + 86, y + 34, x + 89, y + 49, edge);
+        graphics.fill(x + 64, y + 47, x + 111, y + 50, edge);
+        graphics.fill(x + 63, y + 47, x + 66, y + 52, edge);
+        graphics.fill(x + 86, y + 47, x + 89, y + 59, edge);
+        graphics.fill(x + 109, y + 47, x + 112, y + 52, edge);
+        graphics.fill(x + 65, y + 36, x + 68, y + 39, edge);
+        graphics.fill(x + 69, y + 29, x + 72, y + 32, edge);
+        graphics.fill(x + 66, y + 22, x + 69, y + 25, edge);
+        graphics.fill(x + 70, y + 16, x + 73, y + 19, edge);
+    }
+
+    private static void brewingProgressBackplates(GuiGraphicsExtractor graphics, int x, int y,
+                                                   VisualConfig config) {
+        int well = config.inventorySlotColor;
+        int edge = config.brewingStandApparatusColor;
+        graphics.fill(x + 59, y + 43, x + 79, y + 49, well);
+        graphics.fill(x + 59, y + 43, x + 79, y + 44, edge);
+        graphics.fill(x + 59, y + 43, x + 60, y + 49, edge);
+        graphics.fill(x + 96, y + 15, x + 107, y + 45, well);
+        graphics.fill(x + 96, y + 15, x + 107, y + 16, edge);
+        graphics.fill(x + 96, y + 15, x + 97, y + 45, edge);
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,
