@@ -33,6 +33,7 @@ public class KeybindRegistry {
             }
         });
 
+        net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(hubKey);
         binds.add(hubKey);
     }
 
@@ -43,6 +44,7 @@ public class KeybindRegistry {
             defaultKey,
             CATEGORY
         );
+        net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper.registerKeyMapping(kb);
         binds.add(kb);
         return kb;
     }
