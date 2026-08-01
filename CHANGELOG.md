@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.817 (2026-08-01) — Safe Crafter Visuals
+
+- added an exact-class Constellation Crafter panel with independently configurable recipe-grid, power-indicator, output and slot treatments
+- preserved toggleable and disabled recipe slots, hover guidance, pointer cursor, recipe preview, powered/unpowered state, crafting pulses and item routing
+- kept the non-interactive result slot, authoritative recipe calculation, input consumption and world ejection behavior unchanged
+- added a separate default-off Hypixel opt-in plus independent Crafter stage colors
+
 ## 0.9.816 (2026-08-01) — Safe Cartography Table Visuals
 
 - added an exact-class Constellation Cartography Table panel with configurable input, operation and live-map preview surfaces

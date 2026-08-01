@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.CartographyTableScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CrafterScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
@@ -130,6 +131,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.cartographyTableTheme
             && screen.getClass() == CartographyTableScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.cartographyTablesOnHypixel);
+    }
+
+    public static boolean crafter(CrafterScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.crafterTheme
+            && screen.getClass() == CrafterScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.craftersOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -372,6 +380,30 @@ public final class ContainerTheme {
         if (config.cartographyTableSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawCrafter(GuiGraphicsExtractor graphics, CrafterScreen screen,
+                                   int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.crafterGridStage) {
+            graphics.fill(x + 16, y + 14, x + 84, y + 73, config.crafterGridStageColor);
+            frame(graphics, x + 16, y + 14, 68, 59,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.crafterPowerStage) {
+            graphics.fill(x + 93, y + 30, x + 118, y + 57, config.crafterPowerStageColor);
+            frame(graphics, x + 93, y + 30, 25, 27,
+                config.inventoryBorderColor, config.inventoryBorderColor);
+        }
+        if (config.crafterOutputStage) {
+            graphics.fill(x + 123, y + 24, x + 158, y + 64, config.crafterOutputStageColor);
+            frame(graphics, x + 123, y + 24, 35, 40,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.crafterSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -386,6 +418,7 @@ public final class ContainerTheme {
             || screen instanceof StonecutterScreen stonecutter && stonecutter(stonecutter)
             || screen instanceof LoomScreen loom && loom(loom)
             || screen instanceof CartographyTableScreen cartography && cartographyTable(cartography)
+            || screen instanceof CrafterScreen crafter && crafter(crafter)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }

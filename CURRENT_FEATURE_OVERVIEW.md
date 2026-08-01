@@ -873,6 +873,15 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Theme, slot frames, input stage, pattern-grid frame, scroll-track frame, preview stage, three stage colors and Hypixel use are independently configurable
 - Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual
 
+## Safe Crafter visuals
+
+- Exact vanilla `CrafterScreen` treatment with bounded dark panel, readable centered title and separate recipe-grid, power-indicator and output stages
+- All nine recipe slots retain Minecraft's click-to-disable behavior, disabled sprites, empty-slot guidance tooltip and pointing-hand cursor
+- The powered and unpowered redstone sprites remain dynamic and render above the themed power stage
+- Recipe result calculation, ingredient routing, crafting pulse consumption, world ejection and the intentionally non-interactive preview slot remain authoritative
+- Theme, slot frames, grid stage, power stage, output stage, three stage colors and Hypixel use are independently configurable
+- Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual
+
 ## Safe Cartography Table visuals
 
 - Exact vanilla `CartographyTableScreen` treatment with bounded dark panel, readable labels, framed input column, palette operation arrow and dedicated live-map stage

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.816 Safe Cartography Table Visuals.
+Last updated: 2026-08-01 for version 0.9.817 Safe Crafter Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.816`.
+- Current artifact version: `0.9.817`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3627,3 +3627,15 @@ Real-client testing used the local `Anvil Visual 2` creative world with an exact
 The adversarial audit confirmed exact one-call background interception, complete fallback arguments, untouched slots/routing/map renderer/scale/duplicate/lock/error logic, exact-class and Hypixel gates, config ownership, registration, allowlisting and attribution. Its blocking title-strike finding was fixed by moving the input-stage top from y=7 to y=14 and reducing its height to 63; the restarted screenshots above confirm the fix. The remaining low-severity observation is Minecraft's intentionally preserved opaque invalid-operation sprite, which stays vanilla-owned so invalid-state behavior cannot drift.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `38b829289ad672180103ce7ee8ad0a3a3d136807165ba94bded3b0015356b5e9`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.815 was moved to `~/Desktop/To-Delete/gather-jars/20260801-212702-0.9.816/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `6b13b22c4f` is authored only by Froggy-Lord with subject `add safe cartography table visuals and preserved map operations`.
+
+## August 1 version 0.9.817 safe Crafter visuals
+
+`ContainerTheme.java` and `CrafterScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `CrafterScreen`. No copy-OK reference mod has Crafter GUI treatment to port. Minecraft 26.2 has exactly one base-texture `blit` in `extractBackground`; the pinned `require = 1` redirect draws the treatment only for the exact runtime class and replays every original argument when disabled, on Hypixel by default, or for a fallback path.
+
+The accepted path draws the shared bounded panel and active wells plus independently configurable 3x3 recipe-grid, power-indicator and output stages. Minecraft's later disabled-slot sprites, pointing-hand cursor, empty-slot guidance tooltip and powered/unpowered redstone sprite remain unchanged and render after the background. Slot enable/disable packets, recipe refresh, result construction, Shift-click routing, carried stacks, redstone edge behavior, ingredient consumption and crafted-item ejection stay authoritative. The result remains Minecraft's intentionally non-interactive preview rather than a collectable output. Theme, Hypixel use, slots, all three stages and their three colors are independently persisted.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Crafter. It covered the empty unpowered layout; enabled-slot hover guidance; disabling and reenabling a recipe slot; Shift-click routing of a Copper Block stack around the disabled slot; nine-Copper-Ingot result calculation and tooltip; a real neighboring Redstone Block rising edge changing the indicator to red and consuming exactly one block; and removing power returning the indicator to gray without altering the computed preview. Screenshots are `/tmp/crafter-empty817.png`, `/tmp/crafter-disabled-hover817.png`, `/tmp/crafter-toggle-tooltip817.png`, `/tmp/crafter-result817.png`, `/tmp/crafter-result-tooltip817.png`, `/tmp/crafter-powered-final817.png`, `/tmp/crafter-unpowered-after-pulse817.png` and `/tmp/crafter-reenabled817.png`. No Hypixel interaction was needed.
+
+The adversarial audit found no high or medium defect. It confirmed exact redirect/fallback behavior, render order, grid/power/output geometry, disabled-slot replacement, hover tooltip and cursor, non-interactive result ownership, redstone sprite placement, exact-class and Hypixel gates, config ownership, manifest, drip allowlist, attribution and forbidden-source cleanliness. Its first low note asked for continuous-power evidence: the powered screen was retained from the 21:33:03 scrape until power removal at 21:34:01, and the follow-up screenshot still showed 63 input blocks, proving no second craft without another rising edge. Its other low note is intentional configuration behavior: disabling a named decorative Power or Output Stage leaves Minecraft's required functional sprite or result preview on the base panel rather than hiding functionality.
+
+Final release verification belongs below after `tools/release.sh` completes.

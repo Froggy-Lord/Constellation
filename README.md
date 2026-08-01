@@ -14,7 +14,7 @@ the optional menu shell uses the same artwork and control language without repla
 
 the player inventory can use a matching panel, model frame and slot treatment without replacing its recipe book, equipment, effects, items or input. ordinary vanilla chests have a separately scoped theme that is off on hypixel by default and always protects puzzle, spirit leap, auction, bazaar, trade, salvage and museum menus.
 
-vanilla crafting, furnace-family, brewing, enchanting, anvil, grindstone, smithing, stonecutter, loom and cartography screens can use exact-class workstation treatments with independently configurable stages, slots, machine details and colors. every treatment is off on hypixel by default and leaves minecraft's recipes, validation, dynamic sprites, tooltips, hit boxes and output behavior authoritative.
+vanilla crafting, furnace-family, brewing, enchanting, anvil, grindstone, smithing, stonecutter, loom, cartography and crafter screens can use exact-class workstation treatments with independently configurable stages, slots, machine details and colors. every treatment is off on hypixel by default and leaves minecraft's recipes, validation, dynamic sprites, tooltips, hit boxes and output behavior authoritative.
 
 each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
 

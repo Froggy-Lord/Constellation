@@ -2819,3 +2819,21 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Cartography-specific stage.
 - [ ] Join Hypixel with Cartography Tables on Hypixel disabled. Expected: exact Cartography screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, arrow/error, map frames/pixels, lock badge, labels, slots and tooltips remain bounded and aligned.
+
+## Safe Crafter visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Crafter. Expected: a bounded dark panel, readable centered title, framed 3×3 grid, power stage, output stage and machine/player slot wells appear.
+- [ ] Open it empty and hover an enabled empty recipe slot. Expected: Minecraft's `Click to disable slot` tooltip and pointing-hand cursor appear without changing the recipe.
+- [ ] Click several empty recipe slots. Expected: Minecraft's disabled-slot sprites replace their wells and clicking again restores them; occupied slots cannot be disabled.
+- [ ] Shift-click a recipe ingredient from inventory. Expected: it routes only into enabled recipe slots and the authoritative result preview updates.
+- [ ] Hover the result. Expected: the native item tooltip appears while the result remains intentionally non-interactive and cannot be collected from this screen.
+- [ ] Power the Crafter with a redstone edge. Expected: the native indicator switches from gray to red, one valid recipe pulse consumes one ingredient set and the crafted stack ejects into the world.
+- [ ] Leave the Crafter continuously powered, reopen it and change inputs. Expected: it does not repeatedly craft without another redstone edge.
+- [ ] Remove and restore power. Expected: the indicator returns to gray, then the next rising edge crafts exactly once.
+- [ ] Shift-click unrelated items and move carried stacks through every enabled/disabled layout. Expected: vanilla routing, stack limits and carried-item behavior remain authoritative.
+- [ ] Toggle Crafter Slot Frames, Grid Stage, Power Stage and Output Stage independently. Expected: only decoration changes; disabled slots, guidance, redstone sprites and result preview remain.
+- [ ] Change Crafter Grid Stage Color, Power Stage Color, Output Stage Color and Inventory Label Color. Expected: each surface updates independently with readable contrast.
+- [ ] Disable Crafter Theme. Expected: the complete vanilla Crafter texture and original label colors return.
+- [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Crafter-specific stage.
+- [ ] Join Hypixel with Crafters on Hypixel disabled. Expected: exact Crafter screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, grid, disabled sprites, tooltip, power sprite, output, labels and slots remain bounded and aligned.
