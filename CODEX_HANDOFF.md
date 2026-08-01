@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.803 Safe Title Visual Shell.
+Last updated: 2026-08-01 for version 0.9.804 Allowlisted Menu Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.803`.
+- Current artifact version: `0.9.804`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3461,3 +3461,19 @@ The Hub now has separate HUD Editor, Visuals and Config actions. Visuals reuses 
 Real-client inspection at 640 by 480 confirmed the star field behind the unmodified Minecraft logo, splash, full-width navigation controls, icon row, Options, Quit, version and copyright text. The themed controls remain visually distinct without obscuring their labels. The build completed with exactly 11 successful tests and zero failed. The 160-second `DISPLAY=:99` soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The flite narrator warning remains the known benign workstation warning. Release jar SHA-256: `2a7fc8168994e85ad2a56dc431a2b73f3e66a64af17c0c906474c04fcda23720`.
 
 The verified jar is deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-141726-0.9.803/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The private shelf promoted version 0.9.803 into Current with the same SHA-256 and moved version 0.9.802, its checksum and its testing guide into `Archived Releases/constellation-0.9.802`. Anonymous requests to both the shelf root and current jar return 401. The release is queued in the drip repository as Froggy-Lord commit `aa8d3c0379` with message `add safe title visual shell and private release shelf`.
+
+## August 1 version 0.9.804 Allowlisted Menu Visuals
+
+`VisualConfig.java`, `MenuTheme.java`, `MenuBackgroundMixin.java`, `MenuButtonMixin.java` and `MenuSliderMixin.java` extend the shell to ordinary out-of-game menus. The background/button approach remains ported from CryptKit GPL-3.0-only. The slider surface follows CryptKit's GPL implementation but deliberately does not port its whole-method cancellation: Minecraft 26.2's method was bytecode-audited and Constellation redirects only the two sprite calls. Vanilla scrolling-label extraction and private cursor handling still execute, as do unchanged drag, keyboard, sound and narration paths.
+
+The allowlist compares exact runtime classes, never package prefixes or broad superclasses. It includes normal Options, Video, Sound, Controls, Key Binds, Mouse, Chat, Skin, Font, Online and Multiplayer options; Multiplayer browse/direct/edit; World browse/create/edit, flat/buffet/preset and game-rule editors; Resource Packs, Credits, Telemetry and Statistics. `Minecraft.gui.screen()` is the authoritative current-screen accessor in 26.2. `Minecraft.level` must also be null.
+
+Accessibility onboarding/options, Language, every warning/confirmation, loading/progress, connection/wait/disconnect, recovery/data-fix, experimental-feature warning, account/ban, Realms, reporting/social, dialog, third-party and in-world screen remains outside the allowlist. Constellation-owned screens retain their existing bespoke visual system and the HUD editor remains untouched. Stock button and slider surfaces now multiply their colors by vanilla widget alpha so disabled and fading controls retain meaningful state.
+
+Real-client inspection at 640 by 480 covered Options and Video Settings with themed backdrops, ordinary controls and multiple slider positions. Accessibility Settings visibly retained its vanilla dirt/blur background, gray buttons and gray sliders, proving the exact-class exclusion. The title screen remained unchanged from 0.9.803. The private release publisher now detects a same-version retry and replaces Current in place rather than creating a duplicate archived release.
+
+Verification passed: touched-file forbidden-name and emoji audits were empty, shell validation passed, and `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The 160-second `DISPLAY=:99` client soak ended at expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load, transformer or missing-texture signature. The flite narrator warning remains benign. Release jar SHA-256: `65a196b990ff5f1f721f33bd8e91747b80518a4eeec00ed08e9e1182d35144da`.
+
+The verified jar is deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-142626-0.9.804/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.

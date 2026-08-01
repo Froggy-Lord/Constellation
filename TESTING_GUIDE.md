@@ -2608,3 +2608,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Enable Reduced Motion. Expected: the static background remains but shooting-star motion stops immediately.
 - [ ] Open the HUD editor in a world. Expected: it remains the same mostly transparent, chrome-free positioning overlay and is never affected by title theming.
 - [ ] Sign in to `https://home.zadenzeus.dev/pages/constellation/`. Expected: Current contains the matching jar, Testing Guide and SHA-256 file; old builds appear only under Archived Releases. In a private browser, the same URL must require authentication.
+
+## Allowlisted menu visuals
+
+- [ ] From the title screen, open Options. Expected: the star field and Constellation buttons continue behind the unchanged title, FOV slider, icon controls and full vanilla option list.
+- [ ] Drag the FOV slider and use its keyboard controls. Expected: its gold handle moves continuously, the value updates normally and focus/cursor behavior remains vanilla.
+- [ ] Open Video Settings, Music and Sounds, Controls, Key Binds, Mouse Settings, Chat Settings, Skin Customization, Font Options and Online Options. Expected: approved screens share the backdrop, buttons and sliders without losing labels, scrolling, Done or reset controls.
+- [ ] Change Brightness, GUI Scale, Max Framerate and several sound sliders. Expected: values apply through vanilla logic and remain usable at both ends of each track.
+- [ ] Open Singleplayer, Create/Edit World, flat-world/game-rule editors, Multiplayer, Direct Connect and Edit Server. Expected: approved browse/edit screens are themed while all fields, lists, packs and actions remain reachable.
+- [ ] Open Resource Packs, Credits, Telemetry and Statistics. Expected: approved informational screens use the shell without changing their content or links.
+- [ ] Open Language and Accessibility Settings. Expected: both remain completely vanilla, including their background, buttons and sliders.
+- [ ] Trigger a confirmation, failed connection/disconnect, warning or recovery screen if safely available. Expected: it remains vanilla; no Constellation stock-control styling leaks into it.
+- [ ] Open Mod Menu or another mod's configuration screen. Expected: it remains owned by that mod unless it is a Constellation screen with its existing bespoke design.
+- [ ] Disable Menu Backdrops, Menu Buttons and Menu Sliders one at a time from Visuals. Expected: only that surface returns to vanilla and the other two remain independently active.

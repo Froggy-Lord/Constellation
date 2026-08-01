@@ -28,10 +28,12 @@ mkdir -p '$SHARE_ROOT/Current' '$SHARE_ROOT/Archived Releases'
 old=\$(find '$SHARE_ROOT/Current' -maxdepth 1 -type f -name 'constellation-*.jar' -print -quit)
 if [ -n \"\$old\" ]; then
     old_name=\$(basename \"\$old\" .jar)
-    destination='$SHARE_ROOT/Archived Releases'/\"\$old_name\"
-    [ ! -e \"\$destination\" ] || destination=\"\$destination-$stamp\"
-    mkdir -p \"\$destination\"
-    find '$SHARE_ROOT/Current' -mindepth 1 -maxdepth 1 -type f -exec mv -t \"\$destination\" {} +
+    if [ \"\$old_name\" != 'constellation-$version' ]; then
+        destination='$SHARE_ROOT/Archived Releases'/\"\$old_name\"
+        [ ! -e \"\$destination\" ] || destination=\"\$destination-$stamp\"
+        mkdir -p \"\$destination\"
+        find '$SHARE_ROOT/Current' -mindepth 1 -maxdepth 1 -type f -exec mv -t \"\$destination\" {} +
+    fi
 fi
 "
 

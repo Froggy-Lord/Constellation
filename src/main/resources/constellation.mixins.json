@@ -25,6 +25,7 @@
         "MainHeadlessMixin",
         "MenuBackgroundMixin",
         "MenuButtonMixin",
+        "MenuSliderMixin",
         "MinecraftAttackMixin",
         "MouseSensitivityMixin",
         "MiningToolDurabilityMixin",

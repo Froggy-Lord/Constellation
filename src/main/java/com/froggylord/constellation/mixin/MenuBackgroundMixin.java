@@ -16,10 +16,26 @@ public abstract class MenuBackgroundMixin {
     @Inject(method = "extractPanorama", at = @At("HEAD"), cancellable = true)
     private void constellation$titleBackdrop(GuiGraphicsExtractor graphics, float delta, CallbackInfo ci) {
         Screen screen = (Screen) (Object) this;
-        if (!MenuTheme.titleBackdrop(screen)) return;
+        if (!MenuTheme.titleBackdrop(screen) && !MenuTheme.menuBackdrop(screen)) return;
+        if (MenuTheme.menuBackdrop(screen)) {
+            ci.cancel();
+            return;
+        }
         Minecraft minecraft = Minecraft.getInstance();
         SpaceBackground.renderMenu(graphics, minecraft.getWindow().getGuiScaledWidth(),
             minecraft.getWindow().getGuiScaledHeight(), delta, MenuTheme.config().reducedMotion);
+        ci.cancel();
+    }
+
+    // ported from CryptKit (GPL-3.0-only): mixin/ScreenBackgroundMixin.java
+    @Inject(method = "extractMenuBackground(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+        at = @At("HEAD"), cancellable = true)
+    private void constellation$menuBackdrop(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        Screen screen = (Screen) (Object) this;
+        if (!MenuTheme.menuBackdrop(screen)) return;
+        Minecraft minecraft = Minecraft.getInstance();
+        SpaceBackground.renderMenu(graphics, minecraft.getWindow().getGuiScaledWidth(),
+            minecraft.getWindow().getGuiScaledHeight(), 0f, MenuTheme.config().reducedMotion);
         ci.cancel();
     }
 }

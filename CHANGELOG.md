@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.804 (2026-08-01) — Allowlisted Menu Visuals
+
+- extended the optional space backdrop and stock-button treatment to an exact allowlist of ordinary out-of-game menus
+- added independently configurable themed sliders without replacing vanilla labels, dragging, keyboard control, cursor handling or narration
+- preserved vanilla accessibility, language, warning, recovery, loading, account, Realms, reporting, third-party and in-world screens
+- added alpha-aware disabled and fading states to themed stock controls
+- made private release publishing idempotent when the same verified version is retried
+
 ## 0.9.803 (2026-08-01) — Safe Title Visual Shell
 
 - added an independently configurable Constellation title backdrop and stock button treatment
