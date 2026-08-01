@@ -825,3 +825,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Minecraft's 3D book interpolation, page flipping, all three offer backgrounds, level glyphs, generated runes/names, costs and player/lapis checks remain authoritative
 - Enabled, disabled and pointed-hand hover states plus offer tooltips and click targets retain their exact vanilla rendering and dimensions
 - Enchant application, item/lapis Shift-click routing, carried stacks and post-enchant refresh remain vanilla
+
+## Safe anvil visuals
+
+- Exact vanilla `AnvilScreen` treatment with a bounded dark panel, high-contrast labels, framed work stage and machine/player slot wells
+- Original hammer identity plus optional plus/directional-arrow symbols retain the familiar repair flow without restoring the entire gray texture
+- Matching rename field tracks Minecraft's real enabled/disabled input state with a distinct active accent
+- Minecraft remains authoritative for name editing, repair and rename costs, insufficient-XP red text, invalid-operation cross, item validation, tooltips and output collection
+- Theme, slot frames, work stage, symbols, name field, work-stage color, name-field color and Hypixel use are independently configurable
+- Exact runtime-class and default-off Hypixel gates prevent Grindstone, Smithing, custom subclasses or server menus from inheriting the visual

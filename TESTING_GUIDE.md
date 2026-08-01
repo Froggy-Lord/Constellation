@@ -2707,3 +2707,21 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Disable Enchantment Table Theme. Expected: the complete vanilla enchanting texture and original label color return.
 - [ ] Join Hypixel with Enchantment Tables on Hypixel disabled. Expected: the screen stays vanilla. Opt in only for a controlled check; no custom server menu inherits the treatment.
 - [ ] Test several GUI scales and window sizes. Expected: book stage, book model, offers, labels, slots and tooltips remain bounded and aligned.
+
+## Safe anvil visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Anvil. Expected: a bounded dark panel, readable `Repair & Name`/Inventory labels, framed work stage, operation symbols and machine/player slot wells appear.
+- [ ] Open the empty anvil. Expected: the rename field is dark and disabled, the input/output wells are empty, and no cost or error is fabricated.
+- [ ] Put one named or unnamed item in the left input. Expected: its real name fills the edit box, the field gains its active accent and the item tooltip remains unobscured.
+- [ ] Rename the item. Expected: the output updates normally, the exact vanilla cost appears green when affordable, and hovering the output shows the changed name and full item details.
+- [ ] Complete the rename. Expected: Minecraft consumes the cost/item as appropriate, the screen resets cleanly and the field returns to its disabled presentation.
+- [ ] Combine two damaged compatible tools. Expected: both inputs, repaired output and exact vanilla cost remain aligned; taking the result follows normal Anvil behavior.
+- [ ] Put an item only in the right input or use incompatible inputs. Expected: Minecraft's red invalid-operation cross appears above the custom work stage without clipping.
+- [ ] In Survival with zero XP, create a cost-one rename. Expected: the output remains uncollectable and `Enchantment Cost: 1` renders in Minecraft's original red disabled color.
+- [ ] Hover every machine/player slot and carry an item across the screen. Expected: slot hover, item stack, tooltip and carried-stack rendering remain vanilla and visible.
+- [ ] Toggle Anvil Slot Frames, Work Stage, Operation Symbols and Name Field independently. Expected: only that presentation layer changes; the hammer identity stays visible, Operation Symbols controls only plus/arrow, and repair/rename behavior never changes.
+- [ ] Change Anvil Work Stage Color, Anvil Name Field Color and Inventory Label Color. Expected: each changes immediately with readable contrast.
+- [ ] Disable Anvil Theme. Expected: the complete vanilla Anvil texture, field and original label colors return.
+- [ ] Open a Grindstone and Smithing Table. Expected: neither receives any part of the Anvil theme.
+- [ ] Join Hypixel with Anvils on Hypixel disabled. Expected: exact Anvil screens stay vanilla and all chest-backed Anvil/Reforge menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, hammer, rename field, stage, operation symbols, costs, slots and tooltips remain bounded and aligned.

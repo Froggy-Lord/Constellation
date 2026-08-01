@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.810 Safe Enchanting Table Visuals.
+Last updated: 2026-08-01 for version 0.9.811 Safe Anvil Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.810`.
+- Current artifact version: `0.9.811`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3555,3 +3555,15 @@ Real-client testing used the local Creative `Visual Test` world with an exact en
 Adversarial review found no functionality or safety defects. It did catch the first book-stage border crossing the `Enchant` title; the stage now begins below the title and the corrected exact screen was rechecked in `/tmp/enchant-titlefixed810.png`. Exact idle, enabled-offer, hover-tooltip, successful-enchant, and disabled-offer states were also live-tested in the local `Visual Test` creative world. The vanilla animated book, offer sprites, costs, hit boxes, labels, tooltips, and disabled states remained dynamic and readable. Hypixel was not needed for this test.
 
 Release verification passed: 11 tests successful and 0 failed; the retained-client boot ended with the expected timeout status 124, logged `138 rooms across 9 shapes` and `Constellation ready`, and had no mixin, crash-report, or fatal-error markers. The deployed Gather jar matches the build at SHA-256 `2c6d9e93a674cbc817d952921df257aa3285d926fad33fa113a619993355d096`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.809 was moved to `~/Desktop/To-Delete/gather-jars/20260801-195324-0.9.810/`. The owner-only shelf and direct current jar both return 401 anonymously. Drip commit `2f4e044a63504e8986fed4041a8e26ef93e48f25` is authored only by Froggy-Lord with subject `add safe enchanting table visuals and animated book stage`.
+
+## August 1 version 0.9.811 safe anvil visuals
+
+`ContainerTheme.java`, `ItemCombinerScreenThemeMixin.java` and `AnvilScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot/field pattern to the exact vanilla `AnvilScreen`. Minecraft 26.2 renders the base plate once in `ItemCombinerScreen.extractBackground`; the pinned `require = 1` redirect delegates the original call for every non-Anvil combiner, disabled setting and default-off Hypixel state. A second exact Anvil redirect replaces only its one rename-field sprite when that independent layer is enabled.
+
+The custom path draws the shared bounded panel, a purpose-built work stage, active slots, the original hammer identity and optional plus/arrow regions. The themed name field uses the real first-input state for its disabled border or active gold rule. Minecraft's actual `EditBox`, slot listener, rename packets, error sprite, cost calculation/text/color, output validation, tooltips, carried stacks and all input remain unchanged. Exact runtime-class gating means Grindstone, Smithing, subclasses and chest-backed server menus cannot inherit the treatment. Theme, Hypixel use, slots, stage, operation symbols, name field and both dedicated colors are separately persisted.
+
+Real-client testing used the local `Anvil Visual 2` creative world and exact placed Anvil. It covered the empty/disabled field, single Diamond Sword insertion and tooltip, active rename field, valid rename/output tooltip, two damaged-sword repair with cost two, successful collection/reset, right-input-only invalid cross, and Survival at zero XP showing an uncollectable output plus red cost one. Screenshots are `/tmp/anvil-empty-themed810.png`, `/tmp/anvil-input810.png`, `/tmp/anvil-validrename-clear810.png`, `/tmp/anvil-outputtooltip810.png`, `/tmp/anvil-validcombine-clear810.png`, `/tmp/anvil-completed810.png`, `/tmp/anvil-invalid-clear810.png` and `/tmp/anvil-no-xp-clear810.png`. No Hypixel interaction was needed.
+
+The adversarial audit found no high or medium defect. It verified both exact Minecraft 26.2 redirect counts, complete fallbacks, error-sprite ordering, edit-box geometry, costs, output validation, labels, hit boxes, tooltips, config exposure, attribution and forbidden-source cleanliness. Its one actionable low finding was that Operation Symbols also hid the hammer emblem; the emblem is now always retained and that setting controls only plus/arrow as named.
+
+Final release verification belongs below after `tools/release.sh` completes.

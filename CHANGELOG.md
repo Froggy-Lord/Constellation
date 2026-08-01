@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.811 (2026-08-01) — Safe Anvil Visuals
+
+- added an exact-class Constellation anvil panel with configurable work stage, operation symbols, name field and machine/player slot wells
+- preserved the authoritative edit box, enabled/disabled field state, repair/rename costs, invalid-operation cross, item tooltips, output validation and completion behavior
+- structurally excluded Grindstone, Smithing and every other item-combiner screen while retaining a complete original-call fallback
+- added independent anvil theme, slot, work-stage, symbol, name-field, color and default-off Hypixel controls
+
 ## 0.9.810 (2026-08-01) — Safe Enchanting Table Visuals
 
 - added an exact-class Constellation enchanting-table panel with a configurable framed stage for the animated book

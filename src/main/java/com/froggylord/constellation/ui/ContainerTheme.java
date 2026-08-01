@@ -6,6 +6,7 @@ import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -82,6 +83,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.enchantmentTableTheme
             && screen.getClass() == EnchantmentScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.enchantmentTablesOnHypixel);
+    }
+
+    public static boolean anvil(AnvilScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.anvilTheme
+            && screen.getClass() == AnvilScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.anvilsOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -165,6 +173,41 @@ public final class ContainerTheme {
         if (config.enchantmentTableSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawAnvil(GuiGraphicsExtractor graphics, AnvilScreen screen,
+                                 RenderPipeline pipeline, Identifier texture,
+                                 int x, int y, int width, int height,
+                                 int textureWidth, int textureHeight) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.anvilWorkStage) {
+            graphics.fill(x + 18, y + 41, x + 158, y + 72, config.anvilWorkStageColor);
+            frame(graphics, x + 18, y + 41, 140, 31,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        graphics.blit(pipeline, texture, x + 18, y + 6, 18f, 6f,
+            28, 21, textureWidth, textureHeight);
+        if (config.anvilOperationSymbols) {
+            graphics.blit(pipeline, texture, x + 52, y + 49, 52f, 49f,
+                12, 12, textureWidth, textureHeight);
+            graphics.blit(pipeline, texture, x + 99, y + 45, 99f, 45f,
+                28, 21, textureWidth, textureHeight);
+        }
+        if (config.anvilSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
+    // field pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawAnvilNameField(GuiGraphicsExtractor graphics, AnvilScreen screen,
+                                          int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        graphics.fill(x, y, x + width, y + height, config.anvilNameFieldColor);
+        int top = screen.getMenu().getSlot(0).hasItem()
+            ? config.inventoryAccentColor : config.inventoryBorderColor;
+        frame(graphics, x, y, width, height, top, config.inventoryBorderColor);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -173,6 +216,7 @@ public final class ContainerTheme {
             || screen instanceof AbstractFurnaceScreen<?> furnace && furnace(furnace)
             || screen instanceof BrewingStandScreen brewing && brewingStand(brewing)
             || screen instanceof EnchantmentScreen enchantment && enchantmentTable(enchantment)
+            || screen instanceof AnvilScreen anvil && anvil(anvil)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }

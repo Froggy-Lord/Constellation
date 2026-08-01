@@ -89,6 +89,8 @@ brewing stands have their own exact-class apparatus with the original fuel bar, 
 
 enchanting tables place minecraft's animated book on a framed constellation stage while leaving every rune offer, level cost, disabled state, hover tooltip and enchant click under vanilla control.
 
+anvils use a purpose-built repair stage and matching rename field while minecraft keeps costs, validation, tooltips, text editing and output collection authoritative. smithing, grindstone and server menus remain outside the exact-class treatment.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.
