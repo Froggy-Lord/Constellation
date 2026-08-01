@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 // ported from Athen (BSD-3-Clause): config/ui/SearchBar.kt, elements/TextInputElement.kt, elements/SliderElement.kt
 public final class AdvancedConfigScreen extends Screen {
@@ -35,9 +36,12 @@ public final class AdvancedConfigScreen extends Screen {
     private EditBox editor;
     private Entry editing;
     private String error = "";
+    private String status = "";
     private int scroll;
     private int maxScroll;
     private Filter filter = Filter.ALL;
+    private Entry selected;
+    private Undo undo;
 
     public AdvancedConfigScreen(Screen parent, String constellationId) {
         super(Component.literal("All settings"));
@@ -52,7 +56,12 @@ public final class AdvancedConfigScreen extends Screen {
         search = new EditBox(font, 12, SEARCH_Y, Math.max(80, width - 116), 18, Component.literal("Search settings"));
         search.setHint(Component.literal("search name, type or value"));
         search.setMaxLength(80);
-        search.setResponder(value -> scroll = 0);
+        // ported from Athen (BSD-3-Clause): config/ui/SearchBar.kt and elements/base/IInput.kt
+        // ported from Stella (LGPL-3.0): api/config/ui/ConfigUI.kt and elements/TextInputUI.kt
+        search.setResponder(value -> {
+            scroll = 0;
+            selected = visible().stream().findFirst().orElse(null);
+        });
         addRenderableWidget(search);
 
         editor = new EditBox(font, width / 2 - 138, height / 2 + 2, 276, 18, Component.literal("Value"));
@@ -84,22 +93,36 @@ public final class AdvancedConfigScreen extends Screen {
         graphics.text(font, "left click edit  right click reset", width - font.width("left click edit  right click reset") - 8,
             9, ConstellationTheme.TEXT_MUTED, false);
 
-        ConstellationTheme.search(graphics, 8, SEARCH_Y - 2, Math.max(80, width - 108), 22, search.isFocused());
-        button(graphics, width - 98, SEARCH_Y, 86, filter.label, mouseX, mouseY);
+        ConstellationTheme.search(graphics, 8, SEARCH_Y - 2, Math.max(80, width - 114), 22, search.isFocused());
+        button(graphics, width - 104, SEARCH_Y, 92, "Filter: " + filter.label, mouseX, mouseY);
         List<Entry> visible = visible();
-        int view = Math.max(1, height - LIST_Y - 13);
+        int view = Math.max(1, height - LIST_Y - 29);
         maxScroll = Math.max(0, visible.size() * ROW_H - view);
         scroll = Math.clamp(scroll, 0, maxScroll);
-        graphics.enableScissor(8, LIST_Y, width - 8, height - 12);
+        graphics.enableScissor(8, LIST_Y, width - 8, height - 28);
         for (int i = 0; i < visible.size(); i++) {
             int y = LIST_Y + i * ROW_H - scroll;
-            if (y + ROW_H < LIST_Y || y >= height - 12) continue;
+            if (y + ROW_H < LIST_Y || y >= height - 28) continue;
             drawRow(graphics, visible.get(i), 10, y, width - 20, mouseX, mouseY);
         }
         graphics.disableScissor();
 
+        if (visible.isEmpty()) {
+            String empty = "No settings match this search and filter";
+            int x = (width - font.width(empty)) / 2;
+            int y = LIST_Y + Math.max(18, view / 2 - font.lineHeight / 2);
+            ConstellationIcons.drawAction(graphics, "search", x - 20, y - 3, 16);
+            graphics.text(font, empty, x, y, ConstellationTheme.TEXT_MUTED, false);
+        }
+
         String count = visible.size() + " of " + entries.size() + " settings";
-        graphics.text(font, count, 10, height - 10, ConstellationTheme.TEXT_MUTED, false);
+        graphics.text(font, count, 10, height - 17, ConstellationTheme.TEXT_MUTED, false);
+        if (!status.isBlank()) {
+            String shown = fit(status, Math.max(40, width - 210));
+            graphics.text(font, shown, (width - font.width(shown)) / 2, height - 17,
+                ConstellationTheme.ACCENT_BRIGHT, false);
+        }
+        if (undo != null) button(graphics, width - 76, height - 22, 64, "Undo", mouseX, mouseY);
         if (maxScroll > 0) {
             int barH = Math.max(18, view * view / (view + maxScroll));
             int barY = LIST_Y + (view - barH) * scroll / maxScroll;
@@ -112,58 +135,85 @@ public final class AdvancedConfigScreen extends Screen {
 
     private void drawRow(GuiGraphicsExtractor graphics, Entry entry, int x, int y, int rowWidth, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, rowWidth, ROW_H - 2);
+        boolean active = entry.equals(selected);
         ConstellationTheme.surface(graphics, x, y, rowWidth, ROW_H - 2,
-            hover ? ConstellationTheme.SURFACE_HOVER : 0xDD171727, ConstellationTheme.BORDER);
+            hover ? ConstellationTheme.SURFACE_HOVER : 0xDD171727,
+            active ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER);
         graphics.fill(x, y, x + 2, y + ROW_H - 2, color(entry.kind));
         graphics.text(font, fit(label(entry.field.getName()), rowWidth / 2 - 14), x + 8, y + 6,
             ConstellationTheme.TEXT, false);
         String value = value(entry);
-        int valueWidth = Math.max(40, rowWidth / 2 - 18);
-        int valueX = x + rowWidth - font.width(fit(value, valueWidth)) - 8;
+        boolean changed = modified(entry);
+        int resetWidth = changed ? 20 : 0;
+        int valueWidth = Math.max(40, rowWidth / 2 - 18 - resetWidth);
+        String fittedValue = fit(value, valueWidth);
+        int valueX = x + rowWidth - resetWidth - font.width(fittedValue) - 8;
         if (entry.kind == Kind.COLOR) {
             int color = colorValue(entry);
             graphics.fill(x + rowWidth / 2, y + 5, x + rowWidth / 2 + 10, y + 15, color);
             graphics.fill(x + rowWidth / 2, y + 5, x + rowWidth / 2 + 10, y + 6, 0xFFFFFFFF);
         }
-        graphics.text(font, fit(value, valueWidth), valueX, y + 6,
+        graphics.text(font, fittedValue, valueX, y + 6,
             entry.kind == Kind.BOOLEAN && bool(entry) ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_MUTED, false);
+        if (changed) ConstellationIcons.drawAction(graphics, "reset", x + rowWidth - 19, y + 2, 16);
     }
 
     private void drawEditor(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         graphics.fill(0, 0, width, height, 0x99000000);
-        int x = width / 2 - 150, y = height / 2 - 48;
-        ConstellationTheme.surface(graphics, x, y, 300, 96, 0xFF171727, ConstellationTheme.ACCENT);
+        int x = width / 2 - 150, y = height / 2 - 55;
+        ConstellationTheme.surface(graphics, x, y, 300, 110, 0xFF171727, ConstellationTheme.ACCENT);
         graphics.text(font, label(editing.field.getName()), x + 12, y + 10, ConstellationTheme.ACCENT_BRIGHT, false);
         graphics.text(font, editing.kind.label, x + 12, y + 24, ConstellationTheme.TEXT_MUTED, false);
-        button(graphics, x + 12, y + 67, 132, "Save", mouseX, mouseY);
-        button(graphics, x + 156, y + 67, 132, "Cancel", mouseX, mouseY);
-        if (!error.isBlank()) graphics.text(font, fit(error, 276), x + 12, y + 55, 0xFFFF7777, false);
+        String defaultText = "Default: " + defaultValue(editing);
+        graphics.text(font, fit(defaultText, 250), x + 12, y + 38, ConstellationTheme.TEXT_FAINT, false);
+        if (editing.kind == Kind.COLOR) {
+            try {
+                int preview = (int) parseColor(editor.getValue().trim());
+                graphics.fill(x + 270, y + 34, x + 286, y + 50, preview);
+                graphics.fill(x + 270, y + 34, x + 286, y + 35, 0xFFFFFFFF);
+            } catch (NumberFormatException ignored) {}
+        }
+        button(graphics, x + 12, y + 83, 132, "Save", mouseX, mouseY);
+        button(graphics, x + 156, y + 83, 132, "Cancel", mouseX, mouseY);
+        if (!error.isBlank()) graphics.text(font, fit(error, 276), x + 12, y + 70, 0xFFFF7777, false);
     }
 
     @Override public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
         int mouseX = (int) event.x(), mouseY = (int) event.y();
         if (editing != null) {
-            int x = width / 2 - 150, y = height / 2 - 48;
-            if (inside(mouseX, mouseY, x + 12, y + 67, 132, 19)) return commit();
-            if (inside(mouseX, mouseY, x + 156, y + 67, 132, 19)) { closeEditor(); return true; }
+            int x = width / 2 - 150, y = height / 2 - 55;
+            if (inside(mouseX, mouseY, x + 12, y + 83, 132, 19)) return commit();
+            if (inside(mouseX, mouseY, x + 156, y + 83, 132, 19)) { closeEditor(); return true; }
             return super.mouseClicked(event, doubled);
         }
-        if (inside(mouseX, mouseY, width - 98, SEARCH_Y, 86, 18)) {
+        if (undo != null && inside(mouseX, mouseY, width - 76, height - 22, 64, 18)) return undo();
+        if (inside(mouseX, mouseY, width - 104, SEARCH_Y, 92, 18)) {
+            unfocusSearch();
             filter = filter.next();
             scroll = 0;
+            selected = visible().stream().findFirst().orElse(null);
             return true;
         }
         List<Entry> visible = visible();
         for (int i = 0; i < visible.size(); i++) {
             int y = LIST_Y + i * ROW_H - scroll;
-            if (!inside(mouseX, mouseY, 10, y, width - 20, ROW_H - 2) || y < LIST_Y) continue;
+            if (!inside(mouseX, mouseY, 10, y, width - 20, ROW_H - 2)
+                || y < LIST_Y || y + ROW_H > height - 28) continue;
             Entry entry = visible.get(i);
+            unfocusSearch();
+            selected = entry;
+            if (modified(entry) && inside(mouseX, mouseY, width - 39, y, 20, ROW_H - 2)) return reset(entry);
             if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) return reset(entry);
             if (entry.kind == Kind.BOOLEAN) return toggle(entry);
             openEditor(entry);
             return true;
         }
         return super.mouseClicked(event, doubled);
+    }
+
+    private void unfocusSearch() {
+        search.setFocused(false);
+        if (getFocused() == search) setFocused(null);
     }
 
     @Override public boolean mouseScrolled(double mouseX, double mouseY, double horizontal, double vertical) {
@@ -176,11 +226,52 @@ public final class AdvancedConfigScreen extends Screen {
         if (editing != null) {
             if (event.key() == GLFW.GLFW_KEY_ENTER || event.key() == GLFW.GLFW_KEY_KP_ENTER) return commit();
             if (event.key() == GLFW.GLFW_KEY_ESCAPE) { closeEditor(); return true; }
-        } else if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
-            onClose();
-            return true;
+        } else {
+            if (event.hasControlDown() && event.key() == GLFW.GLFW_KEY_F) {
+                search.setFocused(true);
+                setFocused(search);
+                return true;
+            }
+            if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
+                if (!search.getValue().isBlank()) {
+                    search.setValue("");
+                    search.setFocused(false);
+                    setFocused(null);
+                } else onClose();
+                return true;
+            }
+            if (search.isFocused()) return super.keyPressed(event);
+            if (event.hasControlDown() && event.key() == GLFW.GLFW_KEY_Z && undo != null) return undo();
+            if (event.key() == GLFW.GLFW_KEY_UP || event.key() == GLFW.GLFW_KEY_DOWN) {
+                moveSelection(event.key() == GLFW.GLFW_KEY_DOWN ? 1 : -1);
+                return true;
+            }
+            if ((event.key() == GLFW.GLFW_KEY_ENTER || event.key() == GLFW.GLFW_KEY_KP_ENTER) && selected != null) {
+                return selected.kind == Kind.BOOLEAN ? toggle(selected) : openEditorAndHandle(selected);
+            }
+            if (event.key() == GLFW.GLFW_KEY_R && selected != null) return reset(selected);
         }
         return super.keyPressed(event);
+    }
+
+    private boolean openEditorAndHandle(Entry entry) {
+        openEditor(entry);
+        return true;
+    }
+
+    private void moveSelection(int direction) {
+        List<Entry> visible = visible();
+        if (visible.isEmpty()) {
+            selected = null;
+            return;
+        }
+        int index = selected == null ? -1 : visible.indexOf(selected);
+        index = Math.clamp(index + direction, 0, visible.size() - 1);
+        selected = visible.get(index);
+        int top = index * ROW_H;
+        int view = Math.max(1, height - LIST_Y - 29);
+        if (top < scroll) scroll = top;
+        else if (top + ROW_H > scroll + view) scroll = top + ROW_H - view;
     }
 
     private void openEditor(Entry entry) {
@@ -189,13 +280,18 @@ public final class AdvancedConfigScreen extends Screen {
         search.visible = false;
         editor.visible = true;
         editor.setValue(raw(entry));
+        editor.setHighlightPos(0);
+        editor.setCursorPosition(editor.getValue().length());
         editor.setFocused(true);
         setFocused(editor);
     }
 
     private boolean commit() {
         try {
+            Object previous = editing.field.get(config);
             set(editing.field, editor.getValue());
+            undo = new Undo(editing.field, previous, label(editing.field.getName()));
+            status = "Saved " + label(editing.field.getName());
             ConstellationClient.saveConfig();
             closeEditor();
         } catch (IllegalArgumentException exception) {
@@ -217,7 +313,10 @@ public final class AdvancedConfigScreen extends Screen {
 
     private boolean toggle(Entry entry) {
         try {
+            Object previous = entry.field.get(config);
             entry.field.setBoolean(config, !entry.field.getBoolean(config));
+            undo = new Undo(entry.field, previous, label(entry.field.getName()));
+            status = "Changed " + label(entry.field.getName());
             ConstellationClient.saveConfig();
         } catch (ReflectiveOperationException ignored) {}
         return true;
@@ -226,8 +325,26 @@ public final class AdvancedConfigScreen extends Screen {
     private boolean reset(Entry entry) {
         if (defaults == null) return true;
         try {
+            if (!modified(entry)) {
+                status = label(entry.field.getName()) + " is already at its default";
+                return true;
+            }
+            Object previous = entry.field.get(config);
             entry.field.set(config, entry.field.get(defaults));
+            undo = new Undo(entry.field, previous, label(entry.field.getName()));
+            status = "Reset " + label(entry.field.getName());
             ConstellationClient.saveConfig();
+        } catch (ReflectiveOperationException ignored) {}
+        return true;
+    }
+
+    private boolean undo() {
+        if (undo == null) return true;
+        try {
+            undo.field.set(config, undo.value);
+            status = "Undid change to " + undo.label;
+            ConstellationClient.saveConfig();
+            undo = null;
         } catch (ReflectiveOperationException ignored) {}
         return true;
     }
@@ -266,6 +383,28 @@ public final class AdvancedConfigScreen extends Screen {
     private int colorValue(Entry entry) {
         try { return ((Number) entry.field.get(config)).intValue(); }
         catch (ReflectiveOperationException | ClassCastException ignored) { return 0xFF000000; }
+    }
+
+    private boolean modified(Entry entry) {
+        if (defaults == null) return false;
+        try {
+            return !Objects.deepEquals(entry.field.get(config), entry.field.get(defaults));
+        } catch (ReflectiveOperationException ignored) {
+            return false;
+        }
+    }
+
+    private String defaultValue(Entry entry) {
+        if (defaults == null) return "(unavailable)";
+        try {
+            Object value = entry.field.get(defaults);
+            if (entry.kind == Kind.COLOR && value instanceof Number number)
+                return String.format(Locale.ROOT, "#%08X", number.longValue() & 0xFFFFFFFFL);
+            if (entry.kind == Kind.STRING && String.valueOf(value).isBlank()) return "(empty)";
+            return String.valueOf(value);
+        } catch (ReflectiveOperationException ignored) {
+            return "(unavailable)";
+        }
     }
 
     private void set(Field field, String text) throws ReflectiveOperationException {
@@ -329,9 +468,8 @@ public final class AdvancedConfigScreen extends Screen {
 
     private void button(GuiGraphicsExtractor graphics, int x, int y, int buttonWidth, String text, int mouseX, int mouseY) {
         boolean hover = inside(mouseX, mouseY, x, y, buttonWidth, 18);
-        ConstellationTheme.button(graphics, x, y, buttonWidth, 18, hover, false);
-        graphics.text(font, fit(text, buttonWidth - 8), x + 4, y + 5,
-            hover ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
+        ConstellationUi.button(graphics, font, x, y, buttonWidth, 18,
+            fit(text, buttonWidth - 8), hover, false);
     }
 
     private String fit(String value, int maxWidth) {
@@ -353,6 +491,8 @@ public final class AdvancedConfigScreen extends Screen {
     }
 
     private record Entry(Field field, Kind kind) {}
+
+    private record Undo(Field field, Object value, String label) {}
 
     private enum Kind {
         BOOLEAN("Toggle"), NUMBER("Number"), STRING("Text"), COLOR("ARGB color");

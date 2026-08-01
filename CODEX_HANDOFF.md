@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-07-31 for version 0.9.801 Semantic Editor Actions.
+Last updated: 2026-08-01 for version 0.9.802 Complete Typed Settings UX.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.801`.
+- Current artifact version: `0.9.802`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3424,6 +3424,24 @@ Real-client inspection followed Mod Menu configure into the corrected hub, searc
 
 Verification passed on 2026-07-31: the atlas is 256-by-16, eight-bit sRGB with alpha; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error or texture-load failure signature. Release jar SHA-256: `8c4f105d06a3261cddde0af5b64f9d1696615dfc94d0df7173053b6da5d9e49e`.
 
+The verified jar was deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260731-133713-0.9.801/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. Drip release `86104019be` was queued as Froggy-Lord with message `add semantic editor actions and hub config entry`.
+
+## August 1 version 0.9.802 Complete Typed Settings UX
+
+`AdvancedConfigScreen.java` completes the interaction layer for the reflection-backed browser that exposes every supported Boolean, integer, long, float, double, string and recognized ARGB field. Focus and input behavior continues the existing Athen BSD-3-Clause `config/ui/SearchBar.kt`, `elements/base/IInput.kt`, `TextInputElement.kt` and `SliderElement.kt` ports, cross-checked with Stella LGPL-3.0 `api/config/ui/ConfigUI.kt`, `TextInputUI.kt`, `SliderUI.kt` and `StepSliderUI.kt`. Feature-specific numeric ranges are deliberately not invented where reflection provides no authoritative bounds; finite/type/color validation remains exact.
+
+Rows now compare their current value with a freshly constructed config default, display a semantic reset mark only when changed and accept either that mark or the established right-click reset. Boolean toggles, valid typed commits and resets capture the exact previous primitive/string value for one-step Undo through the footer or Ctrl+Z. Status text identifies the affected setting. Clicking a row or filter now releases search focus, fixing the discovered case where Ctrl+Z and list navigation were swallowed by a stale focused search field.
+
+Ctrl+F focuses search; Escape clears a query before closing; Up/Down maintain a visible selected row; Enter toggles a selected Boolean or opens its editor; R resets only while search is unfocused. Search still covers internal/display name, type and current value. Filter changes update selection, impossible combinations show a deliberate empty state and the list hit test now shares its clipped bottom boundary, fixing previously clickable invisible rows.
+
+The typed modal selects the complete current value, shows its type and constructed default, provides width-safe semantic Save/Cancel actions and renders a live swatch for valid six- or eight-digit ARGB input. Invalid values remain in the modal with the existing concise validation error. Real-client inspection followed Mod Menu through Hub and Orion into All settings, searched `color`, inspected the complete color modal, exercised invalid input, changed a Boolean, observed changed/status feedback and restored it to the authoritative default. The dev config was left with `abilityReadyDing=true`; Gather was not touched during visual inspection.
+
+Verification passed on 2026-08-01: the visual test restored the dev `abilityReadyDing` value to `true`; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, screen-render or texture-load failure signature. Release jar SHA-256: `99748dbc9e5e69e71d76b68d24f2874b4f60e077472097fb0c6cc5190dd586a3`.
+
 ## Required dedicated visual-design pass
 
 Zaden explicitly rejected the current generated-looking UI/UX and requested proper icon packs. Version 0.9.789 completed the first icon foundation, but the broader screen and interaction inventory remains. Continue it as deliberate visual-system releases: refine active/disabled icon treatment where it materially helps, replace placeholder-feeling controls and spacing, and carry the established icon language into suitable navigation without decorating dense gameplay surfaces. Follow `.forge/visual-direction.md`, use `ConstellationTheme`, and visually inspect at native Minecraft GUI scales. Preserve the HUD editor's separate binding requirements: game view remains visible beneath a mostly transparent overlay, show only currently visible or last-five-seconds HUD elements, scroll over any element resizes it, and add no editor cards, borders or decorative chrome. Do not mix a large visual pass into gameplay releases.
+
+Zaden identified the local `/home/zadenz/projects/minecraft/cryptkit` project as the scope reference for how far the overhaul should eventually reach, while explicitly calling its UI/UX bad and requiring Constellation to be substantially better. Its visual surface inventory includes the title/menu flow, out-of-game screen backgrounds, vanilla buttons and sliders, generic containers, player inventory, quick-access inventory controls, custom scoreboard, HUD iconography, mod-owned hubs/editors, a bundled pixel font and time-based transitions. Treat that as coverage inspiration only, not a design or code source.
+
+Carry this forward as separate reviewed releases. Global theming must be independently configurable for title, out-of-game screens, stock controls, player inventory and generic containers. Preserve every vanilla accessibility, language, Realms, account, warning and recovery route; never repeat CryptKit's invisible-button swallowing. Container work needs title/class compatibility allowlists and exclusions so Hypixel puzzle, terminal, sign, recipe, merchant and third-party screens remain readable. Preserve player models, recipe books, slots, tooltips and item rendering. Reuse Constellation's existing inventory-button editor instead of adding a second quick-button system. Keep the Minecraft font as the accessibility-safe default; any alternative font requires an explicit toggle and license/legibility review. Animations must remain time-based, short, reduced-motion aware and incapable of delaying input.

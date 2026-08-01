@@ -547,6 +547,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Search module names, descriptions and option labels with category result counts, Ctrl+F focus and Escape-to-clear
 - Hand-authored constellation and sixteen-glyph semantic action icon families with retained SVG design masters
 - Width-aware text-plus-icon treatment for suitable Save, Reset, Delete, Sort, Add, Edit, Export, Import and navigation actions
+- Complete typed settings browser with type/value filtering, changed/default markers, direct resets, one-step Undo, keyboard selection and contextual validated editors
 - Searchable/sortable customizable party-message editor
 - Per-message variables and variant messages
 - Persistent HUD positions and scales
@@ -561,6 +562,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Remaining Garden progression depth
 - Additional non-dungeon gaps from the active 26.1.2 instance
 - Continue focused visual inspections and spacing/accessibility refinement without decorating dense gameplay surfaces; preserve the chrome-free, translucent HUD editor
+- Extend the visual system across the title/menu flow, optional stock controls and compatibility-scoped inventory/container surfaces, using CryptKit only as a coverage reference and substantially improving its accessibility and interaction design
 
 ## Rift-wide Progression
 

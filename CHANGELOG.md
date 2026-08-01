@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.802 (2026-08-01) — Complete Typed Settings UX
+
+- added visible changed-from-default markers and direct per-row reset actions
+- added reversible one-step edits through Undo and Ctrl+Z with clear status feedback
+- added Ctrl+F, Escape-to-clear, arrow selection, Enter editing and selected-row reset controls
+- added search/filter empty states, modal default context and live ARGB color previews
+- prevented clipped settings rows from accepting invisible clicks and fixed search focus after row actions
+
 ## 0.9.801 (2026-07-31) — Semantic Editor Actions
 
 - expanded the hand-authored semantic icon family from twelve to sixteen glyphs

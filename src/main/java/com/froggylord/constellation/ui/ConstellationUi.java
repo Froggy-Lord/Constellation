@@ -54,6 +54,7 @@ public final class ConstellationUi {
         if (value.startsWith("import") || value.startsWith("load")) return "import";
         if (value.startsWith("back")) return "back";
         if (value.startsWith("close") || value.startsWith("cancel")) return "close";
+        if (value.startsWith("filter")) return "filter";
         if (value.startsWith("settings") || value.startsWith("config")) return "settings";
         if (value.startsWith("info") || value.startsWith("stats")) return "info";
         return null;

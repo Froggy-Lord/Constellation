@@ -2581,3 +2581,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Hover and select icon-bearing controls. Expected: existing hover and active surfaces remain legible behind the gold icon and text.
 - [ ] Resize to a narrow GUI scale. Expected: buttons automatically omit icons before labels would crowd or overlap.
 - [ ] Open the HUD editor. Expected: it still contains only the translucent overlay and HUD elements, with no semantic action chrome.
+
+## Complete typed settings UX
+
+- [ ] Open a module and choose All settings. Expected: every supported Boolean, number, text and ARGB value appears with a type stripe and current value.
+- [ ] Change a Boolean. Expected: the row gains a reset mark, a concise changed status appears and Undo becomes available.
+- [ ] Click Undo or press Ctrl+Z after leaving the search field. Expected: the exact prior value is restored once and persisted.
+- [ ] Click a changed row's reset mark or right-click the row. Expected: it returns to its constructed default and remains reversible through Undo.
+- [ ] Press Ctrl+F and search by internal/display name, type or current value. Expected: matching rows remain and the selection follows the first result.
+- [ ] Combine an impossible query with each type filter. Expected: a centered empty state appears and no clipped or hidden row accepts a click.
+- [ ] Press Escape with a nonempty query. Expected: the query clears without closing. Press Escape again to return.
+- [ ] Unfocus search, then use Up/Down and Enter. Expected: selection stays visible; Enter toggles Booleans or opens the typed editor for other values.
+- [ ] Press R on a selected row. Expected: it resets to default with Undo available. Typing `r` while search is focused must type normally and never reset a setting.
+- [ ] Open a number, text and color value. Expected: the modal selects the current value, states its type/default and validates before saving.
+- [ ] Edit a color with valid `#RRGGBB`, `#AARRGGBB` and invalid input. Expected: valid input shows a live swatch; invalid input stays open with a concise error.
+- [ ] Scroll to the final rows and click immediately above/below the clipped viewport. Expected: only fully visible rows respond.
