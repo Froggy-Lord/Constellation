@@ -71,6 +71,12 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean loomPatternGridFrame = true;
     public boolean loomScrollTrackFrame = true;
     public boolean loomPreviewStage = true;
+    public boolean cartographyTableTheme = true;
+    public boolean cartographyTablesOnHypixel = false;
+    public boolean cartographyTableSlotFrames = true;
+    public boolean cartographyTableInputStage = true;
+    public boolean cartographyTableOperationArrow = true;
+    public boolean cartographyTablePreviewStage = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;
@@ -93,6 +99,8 @@ public final class VisualConfig extends BaseConfigGroup {
     public int loomInputStageColor = 0xE6121229;
     public int loomPatternGridColor = 0xE6080814;
     public int loomPreviewStageColor = 0xE6080814;
+    public int cartographyTableInputStageColor = 0xE6121229;
+    public int cartographyTablePreviewStageColor = 0xE6080814;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

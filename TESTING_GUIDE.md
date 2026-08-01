@@ -2799,3 +2799,23 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Loom-specific stage.
 - [ ] Join Hypixel with Looms on Hypixel disabled. Expected: exact Loom screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, stages, guidance, browser, thumb, preview, error, slots and tooltips remain bounded and aligned.
+
+## Safe Cartography Table visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Cartography Table. Expected: a bounded dark panel, readable labels, framed two-input column, palette arrow, map-preview stage and machine/player slot wells appear.
+- [ ] Open it empty. Expected: both inputs and output are empty while Minecraft's ordinary parchment preview remains inside the framed map stage.
+- [ ] Insert a valid Filled Map and Paper. Expected: the scaled-map two-layer frame appears, the live map renders at its reduced scale and a valid output appears.
+- [ ] Hover and collect the scaled result. Expected: its tooltip is unobscured, Minecraft consumes the inputs, schedules the scale increase and transfers the result normally.
+- [ ] Insert a Filled Map and Empty Map. Expected: the duplicate two-map frame and two-count result appear with both live map copies aligned.
+- [ ] Collect the duplicate result. Expected: Minecraft consumes both inputs and transfers two maps without custom automation.
+- [ ] Insert an unlocked Filled Map and Glass Pane. Expected: the ordinary map frame, live map, lower-right lock badge and locked result appear.
+- [ ] Hover and collect the locked result. Expected: the tooltip remains readable and the resulting map becomes authoritatively locked.
+- [ ] Reinsert the locked map with Paper or Glass Pane. Expected: Minecraft's red validation X replaces the custom arrow and no result appears.
+- [ ] Try scaling a maximum-scale map. Expected: the same original validation X appears and no invalid output is fabricated.
+- [ ] Shift-click Filled Maps, Paper, Empty Maps, Glass Panes and unrelated items. Expected: exact input predicates and normal routing remain authoritative.
+- [ ] Toggle Cartography Table Slot Frames, Input Stage, Operation Arrow and Preview Stage independently. Expected: only decoration changes; functional operation/error/map sprites remain.
+- [ ] Change Cartography Table Input Stage Color, Preview Stage Color and Inventory Label Color. Expected: each updates immediately with readable contrast.
+- [ ] Disable Cartography Table Theme. Expected: the complete vanilla Cartography texture and original label colors return.
+- [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Cartography-specific stage.
+- [ ] Join Hypixel with Cartography Tables on Hypixel disabled. Expected: exact Cartography screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, arrow/error, map frames/pixels, lock badge, labels, slots and tooltips remain bounded and aligned.

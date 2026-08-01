@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
+import net.minecraft.client.gui.screens.inventory.CartographyTableScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
@@ -122,6 +123,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.loomTheme
             && screen.getClass() == LoomScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.loomsOnHypixel);
+    }
+
+    public static boolean cartographyTable(CartographyTableScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.cartographyTableTheme
+            && screen.getClass() == CartographyTableScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.cartographyTablesOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -344,6 +352,26 @@ public final class ContainerTheme {
         if (config.loomSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawCartographyTable(GuiGraphicsExtractor graphics, CartographyTableScreen screen,
+                                            int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.cartographyTableInputStage) {
+            graphics.fill(x + 7, y + 14, x + 55, y + 77, config.cartographyTableInputStageColor);
+            frame(graphics, x + 7, y + 14, 48, 63,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.cartographyTablePreviewStage) {
+            graphics.fill(x + 65, y + 11, x + 135, y + 81, config.cartographyTablePreviewStageColor);
+            frame(graphics, x + 65, y + 11, 70, 70,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.cartographyTableOperationArrow) cartographyArrow(graphics, x, y, config);
+        if (config.cartographyTableSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -357,6 +385,7 @@ public final class ContainerTheme {
             || screen instanceof SmithingScreen smithing && smithingTable(smithing)
             || screen instanceof StonecutterScreen stonecutter && stonecutter(stonecutter)
             || screen instanceof LoomScreen loom && loom(loom)
+            || screen instanceof CartographyTableScreen cartography && cartographyTable(cartography)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
@@ -413,6 +442,19 @@ public final class ContainerTheme {
         graphics.fill(x + 143, y + 6, x + 151, y + 18, blade);
         graphics.fill(x + 141, y + 10, x + 153, y + 14, blade);
         graphics.fill(x + 145, y + 9, x + 149, y + 15, config.inventoryAccentColor);
+    }
+
+    private static void cartographyArrow(GuiGraphicsExtractor graphics, int x, int y,
+                                         VisualConfig config) {
+        int edge = config.inventoryBorderColor;
+        int arrow = config.inventoryAccentColor;
+        graphics.fill(x + 35, y + 38, x + 54, y + 46, edge);
+        graphics.fill(x + 38, y + 40, x + 55, y + 44, arrow);
+        graphics.fill(x + 52, y + 34, x + 57, y + 50, edge);
+        graphics.fill(x + 55, y + 37, x + 60, y + 47, edge);
+        graphics.fill(x + 58, y + 40, x + 63, y + 44, edge);
+        graphics.fill(x + 53, y + 37, x + 56, y + 47, arrow);
+        graphics.fill(x + 56, y + 40, x + 60, y + 44, arrow);
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,

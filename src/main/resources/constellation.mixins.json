@@ -9,6 +9,7 @@
         "BasicContainerThemeMixin",
         "BrewingStandScreenThemeMixin",
         "CameraInstantSneakMixin",
+        "CartographyTableScreenThemeMixin",
         "ContainerLabelThemeMixin",
         "ContainerScreenAccessor",
         "CraftingScreenThemeMixin",

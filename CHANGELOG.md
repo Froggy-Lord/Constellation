@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.816 (2026-08-01) — Safe Cartography Table Visuals
+
+- added an exact-class Constellation Cartography Table panel with configurable input, operation and live-map preview surfaces
+- preserved scale, duplicate and lock layouts, live map pixels, result items, lock badge, validation error, tooltips and collection
+- replaced the first bright vanilla arrow crop after live review with a palette-built operation arrow that remains beneath Minecraft's error state
+- added independent Cartography theme, slot, stage, arrow, color and default-off Hypixel controls
+
 ## 0.9.815 (2026-08-01) — Safe Loom Visuals
 
 - added an exact-class Constellation Loom panel with configurable input, pattern-grid, scroll-track and live-preview stages

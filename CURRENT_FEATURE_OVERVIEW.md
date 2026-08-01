@@ -872,3 +872,13 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Pattern selection, result construction, consumption, sound, slots, Shift-click routing, tooltips and output collection remain authoritative
 - Theme, slot frames, input stage, pattern-grid frame, scroll-track frame, preview stage, three stage colors and Hypixel use are independently configurable
 - Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual
+
+## Safe Cartography Table visuals
+
+- Exact vanilla `CartographyTableScreen` treatment with bounded dark panel, readable labels, framed input column, palette operation arrow and dedicated live-map stage
+- Minecraft's scale, duplicate, ordinary-map and locked-map frames remain dynamic for Paper, Empty Map and Glass Pane operations
+- The real map renderer retains its live pixels and markers at Minecraft's exact operation-specific scales
+- Locked-map and maximum-scale validation errors render after and replace the custom arrow; invalid combinations never fabricate an output
+- Result contents, counts, map scaling/duplication/locking, sounds, slots, Shift-click routing, tooltips and collection remain authoritative
+- Theme, slot frames, input stage, operation arrow, preview stage, both stage colors and Hypixel use are independently configurable
+- Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual

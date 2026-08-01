@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.815 Safe Loom Visuals.
+Last updated: 2026-08-01 for version 0.9.816 Safe Cartography Table Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.815`.
+- Current artifact version: `0.9.816`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3615,3 +3615,13 @@ Real-client testing used the local `Anvil Visual 2` creative world with an exact
 The adversarial audit found no high or medium defect. It proved the exact redirect/fallback, render order, geometry, labels, gates, pattern/scroll hit boxes, cursor, tooltips, selection packet, preview, result construction, collection, special pattern behavior, config ownership, registration, drip allowlist, credit and forbidden-source cleanliness. Its two low findings were a missing live six-pattern error capture and subdued empty guidance against the original near-black input stage. The input stage default is now a lighter Constellation surface, and the restarted client plus six normal crafting passes closed the max-pattern visual gap in `/tmp/loom-maxpatterns2-815.png` and `/tmp/loom-max-tooltip815.png`.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `07852c79e0ec7007f77dc1a1f7ff20bca9b8fc0b5b28bcf7f5150dc2b6288187`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.814 was moved to `~/Desktop/To-Delete/gather-jars/20260801-211054-0.9.815/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `b0c9cf1d0746504e27cdd9e2c07017dc5c3ed69b` is authored only by Froggy-Lord with subject `add safe loom visuals and preserved banner workflow`.
+
+## August 1 version 0.9.816 safe Cartography Table visuals
+
+`ContainerTheme.java` and `CartographyTableScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `CartographyTableScreen`. Minecraft 26.2 has exactly one base-texture `blit` in `extractBackground`; the pinned `require = 1` redirect draws the treatment only for the exact runtime class and replays every original argument when disabled, on Hypixel by default, or for any fallback path.
+
+The accepted path draws the shared bounded panel and active wells plus independently configurable input and map-preview stages and a palette-built operation arrow. Minecraft's later invalid-operation X, scaled/duplicated/ordinary/locked map frames, live `MapRenderer` pixels and markers, lock badge and result items remain unchanged. Map scale scheduling, duplication count, locking, validation, sounds, input consumption, slots, Shift-click routing, carried stacks, tooltips and output collection stay authoritative. Theme, Hypixel use, slots, input stage, operation arrow, preview stage and both stage colors are independently persisted.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Cartography Table. It covered the empty parchment state; Filled Map plus Paper scale frame/live preview/result/tooltip/collection; Filled Map plus Empty Map duplicate frame and count-two result; Filled Map plus Glass Pane ordinary live preview, lock badge, result and collection; and reinserting the locked map with Paper, where Minecraft's red X replaced the custom arrow and no result appeared. Screenshots are `/tmp/cartography-empty-titlefixed816.png`, `/tmp/cartography-scale-titlefixed816.png`, `/tmp/cartography-scale-mapid816.png`, `/tmp/cartography-scale-tooltip2-816.png`, `/tmp/cartography-scale-collected2-816.png`, `/tmp/cartography-duplicate816.png`, `/tmp/cartography-lock816.png`, `/tmp/cartography-lock-tooltip816.png`, `/tmp/cartography-lock-collected816.png` and `/tmp/cartography-invalid-locked816.png`. The first empty capture exposed an opaque gray vanilla arrow crop, and the first palette-arrow capture exposed the input-stage accent crossing the title. The restarted title-fixed captures prove the palette arrow and the lowered input stage in both empty and active operation states. No Hypixel interaction was needed.
+
+The adversarial audit confirmed exact one-call background interception, complete fallback arguments, untouched slots/routing/map renderer/scale/duplicate/lock/error logic, exact-class and Hypixel gates, config ownership, registration, allowlisting and attribution. Its blocking title-strike finding was fixed by moving the input-stage top from y=7 to y=14 and reducing its height to 63; the restarted screenshots above confirm the fix. The remaining low-severity observation is Minecraft's intentionally preserved opaque invalid-operation sprite, which stays vanilla-owned so invalid-state behavior cannot drift.
