@@ -440,6 +440,10 @@ Verified builds and this guide are mirrored to the private Constellation release
 - Bazaar order ladder information plus filled, partial, expired, expiring, outbid and matched state markers
 - Transition-based Bazaar buy-order/sell-offer undercut alerts with configurable chat, title, sound, recovery and templates
 - Storage, backpack and container previews
+- Unified read-only Ender Chest/backpack browser opened with `/storagepreview` or the Storage Browse button
+- Cross-page item-name, SkyBlock-ID and lore search with compact matching stacks, highlights, native tooltips and retained search/scroll
+- Per-profile custom page names and order, configurable columns/card rows/empty pages/decorations/dimming, and deliberate server-owned page opening
+- Immutable profile-ID isolation, initial-container-content gating and explicit server-container closure prevent cache crossover, false empty snapshots and invisible menus
 - Container total-value calculation
 - Inventory search and configurable inventory buttons
 - Exact multi-page Accessory Bag collection saved independently per SkyBlock profile

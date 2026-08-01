@@ -3,6 +3,7 @@ package com.froggylord.constellation.mixin;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.network.PlayerPositionUpdate;
 import com.froggylord.constellation.network.BlockStateUpdate;
+import com.froggylord.constellation.data.ContainerContentTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundLoginPacket;
@@ -14,6 +15,8 @@ import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +33,18 @@ public class ClientPacketListenerMixin {
         if (Minecraft.getInstance().isSameThread()) {
             ConstellationClient.instance().packets().fire(packet);
         }
+    }
+
+    // ported from Enhanced Storage (GPL-3.0): mixin/ClientPacketListenerMixin.java
+    @Inject(method = "handleOpenScreen", at = @At("TAIL"))
+    private void constellation$resetContainerContent(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
+        ContainerContentTracker.reset();
+    }
+
+    // ported from Enhanced Storage (GPL-3.0): mixin/ClientPacketListenerMixin.java
+    @Inject(method = "handleContainerContent", at = @At("TAIL"))
+    private void constellation$markContainerContent(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
+        ContainerContentTracker.markReceived(packet.containerId());
     }
 
     // ported from Skyblocker (LGPL-3.0-or-later):

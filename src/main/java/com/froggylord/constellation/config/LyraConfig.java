@@ -124,6 +124,27 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean backpackPreviewSlotText = true;
     public int backpackPreviewScalePercent = 100;
     public int backpackPreviewBackground = 0xF0101018;
+    // ported from Enhanced Storage (GPL-3.0): config/EnhancedStorageConfig.java
+    public boolean storageBrowser = true;
+    public boolean storageBrowserButton = true;
+    public boolean storageBrowserShowEmptyPages = true;
+    public boolean storageBrowserShowTooltips = true;
+    public boolean storageBrowserShowDecorations = true;
+    public boolean storageBrowserDimUnmatched = true;
+    public boolean storageBrowserRetainSearch = true;
+    public boolean storageBrowserRetainScroll = true;
+    public boolean storageBrowserLocalWorlds = false;
+    public int storageBrowserCardsPerRow = 3;
+    public int storageBrowserRowsPerCard = 3;
+    public int storageBrowserScrollSpeed = 22;
+    public int storageBrowserBackground = 0xF0101018;
+    public int storageBrowserCardBackground = 0xE0181626;
+    public int storageBrowserActiveColor = 0xFFB889FF;
+    public int storageBrowserMatchColor = 0xA055FF88;
+    public java.util.Map<String, String> storageBrowserNames = new java.util.LinkedHashMap<>();
+    public java.util.List<String> storageBrowserOrder = new java.util.ArrayList<>();
+    public java.util.Map<String, java.util.Map<String, String>> storageBrowserNamesByProfile = new java.util.LinkedHashMap<>();
+    public java.util.Map<String, java.util.List<String>> storageBrowserOrderByProfile = new java.util.LinkedHashMap<>();
     public boolean containerValue = true;
     public boolean containerValueButton = true;
     public boolean containerValueAutomatic = false;

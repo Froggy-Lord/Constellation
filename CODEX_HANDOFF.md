@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.819 SkyBlock Item Creation Time.
+Last updated: 2026-08-01 for version 0.9.820 Unified SkyBlock Storage Browser.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.819`.
+- Current artifact version: `0.9.820`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3668,3 +3668,15 @@ Local real-client testing used a chest-backed clock with exact `ExtraAttributes`
 Two adversarial passes checked the parser, Toronto DST, display zones, duration arithmetic, future/overflow handling, local gating, duplicate insertion, tooltip independence, normalization, commands and settings discoverability. The first pass found age incorrectly subordinate to general metadata, inconsistent zero/negative numeric strings, a runtime precision bypass and a redundant legacy gate. All were fixed; re-audit found no remaining release blocker.
 
 Release verification passed with exactly 11 successful tests and zero failed. The full headless client reached expected timeout 124, logged one `138 rooms across 9 shapes` line and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `1bd2f9ecaf311c3587132abe63dd16fd3a99c69ec80e3f8d09fb47675d9d14c8`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; the previous Gather jar was moved under `~/Desktop/To-Delete/gather-jars/20260801-223103-0.9.819/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `4191f957ba` is authored only by Froggy-Lord with subject `add robust SkyBlock item creation time and live age`.
+
+## August 1 version 0.9.820 Unified SkyBlock Storage Browser
+
+`LyraStorageBrowserScreen.java`, `LyraStorageValue.java` and `ContainerContentTracker.java` port Enhanced Storage GPL `screen/StorageContainerScreen.java`, `gui/StorageOverlayLayout.java`, `gui/component/PageCardComponent.java`, `storage/StorageCache.java`, `StorageKey.java`, `StorageProfile.java`, `StorageCaptureHandler.java`, `ContainerContentTracker.java`, `StorageNames.java` and `StorageOrder.java`. This uses Constellation's existing Skyblocker-derived 27-page cache rather than importing Enhanced Storage's UILib dependency or replacing the authoritative server container.
+
+`/storagepreview` and the exact Storage-menu Browse button open a read-only card browser. Cached Ender Chest and Backpack pages show real stacks, counts, decorations and native tooltips. Search covers display names, internal SkyBlock IDs and lore across all cached content, then compacts matching stacks into the visible card rows. Empty-page display, nonmatch dimming, tooltip/decorations, retained search/scroll, columns, card rows, scroll speed and colors are persisted. Right-click/Edit changes a cosmetic name, arrow controls change browser order, and clicking a card deliberately sends only the corresponding `ec N` or `backpack N` command on Hypixel. No item is clicked, moved or fabricated.
+
+The adversarial audits found and resolved server-menu, early-air-snapshot, profile-crossover, global-name/order, hidden-search-result, nine-slot-width, resize-modal, clipped-tooltip and click-through risks. Browser entry explicitly calls vanilla `LocalPlayer.closeContainer()` before replacing a container screen. The Enhanced Storage content tracker ignores removal until `ClientboundContainerSetContentPacket` arrives. Both visible and canceled Profile ID chat lines establish Hypixel's immutable 36-character profile ID; transient tab gaps cannot clear it, and cache, cosmetic names and order use that account/profile key. Local-world access remains an explicit test-only option.
+
+Real-client testing used `Anvil Visual 2` with exact titled chests and server-provided container contents. It covered cache capture, the native three-item grid, item-name search compacting to one highlighted match, retained browser state and the modal rename workflow. Screenshots are `/tmp/storage-browser820.png`, `/tmp/storage-browser-search820.png` and `/tmp/storage-browser-rename820.png`. No Hypixel movement or interaction was needed.
+
+Release verification and deployment details are appended after the final release script completes.

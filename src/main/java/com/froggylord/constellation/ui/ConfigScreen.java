@@ -658,12 +658,15 @@ public class ConfigScreen extends Screen {
             }
 
             case "lyra" -> {
-                cats = new String[]{"Tooltips", "Features"};
+                cats = new String[]{"Tooltips", "Storage", "Features"};
                 LyraConfig c = cfg.lyra;
                 Set<String> ageFields = Set.of("tooltipCreationTimestamp", "tooltipItemAge",
                     "tooltipCreationTimestampOnShift", "tooltipItemAgeOnShift", "tooltipCreationIncludeTime",
                     "tooltipCreationIncludeZone", "tooltipAgeCompact", "tooltipAgeShowSeconds",
                     "tooltipCreationLocalWorlds");
+                Set<String> storageFields = Set.of("storageBrowser", "storageBrowserButton", "storageBrowserShowEmptyPages",
+                    "storageBrowserShowTooltips", "storageBrowserShowDecorations", "storageBrowserDimUnmatched",
+                    "storageBrowserRetainSearch", "storageBrowserRetainScroll", "storageBrowserLocalWorlds");
                 modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
                     () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
                     .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
@@ -675,9 +678,21 @@ public class ConfigScreen extends Screen {
                     .b("Show seconds", () -> c.tooltipAgeShowSeconds, v -> { c.tooltipAgeShowSeconds = v; ConstellationClient.saveConfig(); })
                     .b("Local-world visual testing", () -> c.tooltipCreationLocalWorlds, v -> { c.tooltipCreationLocalWorlds = v; ConstellationClient.saveConfig(); })
                     .sub("Format, time zone and precision: /itemtooltips", true));
+                modules.add(new Module("storageBrowser", "Unified SkyBlock storage browser", "Storage",
+                    () -> c.storageBrowser, v -> { c.storageBrowser = v; ConstellationClient.saveConfig(); })
+                    .b("Browse button in Storage", () -> c.storageBrowserButton, v -> { c.storageBrowserButton = v; ConstellationClient.saveConfig(); })
+                    .b("Show empty cached pages", () -> c.storageBrowserShowEmptyPages, v -> { c.storageBrowserShowEmptyPages = v; ConstellationClient.saveConfig(); })
+                    .b("Native item tooltips", () -> c.storageBrowserShowTooltips, v -> { c.storageBrowserShowTooltips = v; ConstellationClient.saveConfig(); })
+                    .b("Stack decorations", () -> c.storageBrowserShowDecorations, v -> { c.storageBrowserShowDecorations = v; ConstellationClient.saveConfig(); })
+                    .b("Dim unmatched items", () -> c.storageBrowserDimUnmatched, v -> { c.storageBrowserDimUnmatched = v; ConstellationClient.saveConfig(); })
+                    .b("Retain search", () -> c.storageBrowserRetainSearch, v -> { c.storageBrowserRetainSearch = v; ConstellationClient.saveConfig(); })
+                    .b("Retain scroll", () -> c.storageBrowserRetainScroll, v -> { c.storageBrowserRetainScroll = v; ConstellationClient.saveConfig(); })
+                    .b("Local-world visual testing", () -> c.storageBrowserLocalWorlds, v -> { c.storageBrowserLocalWorlds = v; ConstellationClient.saveConfig(); })
+                    .sub("Open: /storagepreview", true)
+                    .sub("Columns, card rows and scroll speed: /storagepreview", true));
                 for (var field : LyraConfig.class.getFields()) {
                     String n = field.getName();
-                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || field.getType() != boolean.class) continue;
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || field.getType() != boolean.class) continue;
                     modules.add(new Module(n, autoLabel(n), "Features",
                         () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                         v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));

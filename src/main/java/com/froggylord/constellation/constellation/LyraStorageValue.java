@@ -4,6 +4,7 @@ import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.LyraConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.data.ContainerContentTracker;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,6 +14,8 @@ import com.mojang.serialization.DataResult;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -53,6 +56,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.froggylord.constellation.ui.LyraStorageBrowserScreen;
 
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/item/tooltip/BackpackPreview.java
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/ChestValue.java
@@ -65,11 +69,13 @@ public final class LyraStorageValue {
     private static final Set<String> EXCLUDED_TITLES = Set.of("SkyBlock Menu", "Storage");
     private static final Pattern EXCLUDED_MENUS = Pattern.compile("(?i)(auction|bazaar|shop|trade|confirm|terminal|click in order|select all|starts with|change all to same|navigate the maze|experimentation|chronomatron|ultrasequencer|superpairs|museum|sack|stash|minion|croesus)");
     private static final Pattern STORAGE_MENU = Pattern.compile("(?i)(chest|large chest|personal vault|chest storage|ender chest.*\\(\\d+/\\d+\\)|backpack.*\\(slot #\\d+\\))");
+    private static final Pattern PROFILE_ID = Pattern.compile("(?i)profile id:\\s*([0-9a-f-]{36})");
     private static final Set<String> REWARD_CHESTS = Set.of("Wood", "Wood Chest", "Gold", "Gold Chest", "Diamond", "Diamond Chest", "Emerald", "Emerald Chest", "Obsidian", "Obsidian Chest", "Bedrock", "Bedrock Chest", "Free Chest", "Free Chest Chest", "Paid Chest", "Paid Chest Chest");
     private static final NumberFormat LONG_NUMBER = NumberFormat.getIntegerInstance(Locale.US);
 
     private static LyraConfig cfg;
     private static String loadedProfile = "";
+    private static String confirmedProfileId = "";
     private static AbstractContainerScreen<?> openScreen;
     private static boolean manualValue;
     private static long lastValueAt;
@@ -96,10 +102,20 @@ public final class LyraStorageValue {
             ScreenMouseEvents.allowMouseClick(container).register((ignored, event) -> !click(container, event));
             ScreenEvents.remove(container).register(ignored -> close(container));
         });
+        // ported from Enhanced Storage (GPL-3.0): storage/StorageCaptureHandler.java and storage/StorageProfile.java
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> { if (!overlay) profileMessage(message); });
+        ClientReceiveMessageEvents.GAME_CANCELED.register((message, overlay) -> { if (!overlay) profileMessage(message); });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> client.execute(() -> { confirmedProfileId = ""; clearLoadedProfile(); ContainerContentTracker.reset(); }));
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> { confirmedProfileId = ""; clearLoadedProfile(); ContainerContentTracker.reset(); });
     }
 
     private static boolean active() {
         return cfg != null && cfg.enabled && ConstellationClient.loc().onHypixel();
+    }
+
+    private static boolean storageActive() {
+        return active() || cfg != null && cfg.enabled && cfg.storageBrowserLocalWorlds
+            && Minecraft.getInstance().hasSingleplayerServer();
     }
 
     private static void close(AbstractContainerScreen<?> screen) {
@@ -114,7 +130,8 @@ public final class LyraStorageValue {
     private static void capture(AbstractContainerScreen<?> screen) {
         // ported from Skyblocker (LGPL-3.0-or-later): skyblock/item/tooltip/BackpackPreview.java updateStorage
         refreshProfile();
-        if (!active() || !cfg.backpackPreview || loadedProfile.isBlank()) return;
+        if (!storageActive() || (!cfg.backpackPreview && !cfg.storageBrowser) || loadedProfile.isBlank()
+            || !ContainerContentTracker.hasReceived(screen.getMenu().containerId)) return;
         int index = storageIndex(screen.getTitle().getString());
         if (index < 0 || screen.getMenu().slots.isEmpty()) return;
         var container = screen.getMenu().slots.getFirst().container;
@@ -133,9 +150,19 @@ public final class LyraStorageValue {
     }
 
     private static void draw(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        if (!active() || screen != openScreen) return;
+        if (screen != openScreen) return;
         refreshProfile();
+        if (storageActive() && cfg.storageBrowser && cfg.storageBrowserButton && screen.getTitle().getString().equals("Storage"))
+            drawBrowserButton(screen, graphics, mouseX, mouseY);
+        if (!active()) return;
         if (valueAllowed(screen)) drawValue(screen, graphics, mouseX, mouseY);
+    }
+
+    private static void drawBrowserButton(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        Rect button = browserButton(screen);
+        graphics.fill(button.x, button.y, button.x + button.w, button.y + button.h,
+            button.contains(mouseX, mouseY) ? 0xE070527F : 0xD0302538);
+        graphics.text(Minecraft.getInstance().font, "Browse", button.x + 5, button.y + 4, 0xFFFFFFFF, false);
     }
 
     public static boolean renderPreviewTooltip(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
@@ -219,6 +246,14 @@ public final class LyraStorageValue {
     }
 
     private static boolean click(AbstractContainerScreen<?> screen, MouseButtonEvent event) {
+        if (storageActive() && cfg.storageBrowser && cfg.storageBrowserButton && screen.getTitle().getString().equals("Storage")
+            && event.button() == 0 && browserButton(screen).contains((int) event.x(), (int) event.y())) {
+            capture(screen);
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player != null) mc.player.closeContainer();
+            mc.setScreenAndShow(new LyraStorageBrowserScreen(null));
+            return true;
+        }
         if (!valueAllowed(screen) || !cfg.containerValueButton || cfg.containerValueAutomatic || event.button() != 0) return false;
         if (!valueButton(screen).contains((int) event.x(), (int) event.y())) return false;
         manualValue = !manualValue;
@@ -230,6 +265,11 @@ public final class LyraStorageValue {
     private static Rect valueButton(AbstractContainerScreen<?> screen) {
         ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
         return new Rect(accessor.constellation$left() + accessor.constellation$imageWidth() - 16, accessor.constellation$top() + 4, 12, 12);
+    }
+
+    private static Rect browserButton(AbstractContainerScreen<?> screen) {
+        ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
+        return new Rect(accessor.constellation$left() + accessor.constellation$imageWidth() + 5, accessor.constellation$top(), 48, 18);
     }
 
     private static void recompute(AbstractContainerScreen<?> screen) {
@@ -324,12 +364,9 @@ public final class LyraStorageValue {
     }
 
     private static void refreshProfile() {
-        if (!active()) return;
+        if (!storageActive()) return;
         String profile = currentProfileKey();
-        if (profile.isBlank()) {
-            if (!loadedProfile.isBlank()) clearLoadedProfile();
-            return;
-        }
+        if (profile.isBlank()) return;
         if (profile.equals(loadedProfile)) return;
         loadedProfile = profile;
         for (int i = 0; i < STORAGES.length; i++) STORAGES[i] = null;
@@ -344,19 +381,76 @@ public final class LyraStorageValue {
     static String currentProfileKey() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null || mc.getConnection() == null) return "";
-        for (PlayerInfo info : mc.getConnection().getOnlinePlayers()) {
-            Component display = info.getTabListDisplayName();
-            if (display == null) continue;
-            String line = ChatFormatting.stripFormatting(display.getString());
-            if (line != null && line.startsWith("Profile: ")) {
-                String profile = safe(line.substring("Profile: ".length()));
-                if (!profile.isBlank()) return mc.getUser().getProfileId() + "/" + profile;
-            }
-        }
-        return "";
+        if (!ConstellationClient.loc().onHypixel() && cfg != null && cfg.storageBrowserLocalWorlds && mc.hasSingleplayerServer())
+            return mc.getUser().getProfileId() + "/local-test";
+        return confirmedProfileId.isBlank() ? "" : mc.getUser().getProfileId() + "/" + confirmedProfileId;
+    }
+
+    private static void profileMessage(Component message) {
+        String text = ChatFormatting.stripFormatting(message.getString());
+        if (text == null) return;
+        Matcher matcher = PROFILE_ID.matcher(text);
+        if (!matcher.find()) return;
+        String profile = matcher.group(1).toLowerCase(Locale.ROOT);
+        if (profile.equals(confirmedProfileId)) return;
+        confirmedProfileId = profile;
+        refreshProfile();
     }
 
     public record CachedItemCount(int amount, int loadedStorages, boolean complete) {}
+
+    // ported from Enhanced Storage (GPL-3.0): storage/StorageCache.java and storage/StorageKey.java
+    public static List<StoragePage> storagePages() {
+        refreshProfile();
+        if (!storageActive() || loadedProfile.isBlank()) return List.of();
+        normalizeBrowser();
+        List<StoragePage> pages = new ArrayList<>();
+        for (int i = 0; i < STORAGES.length; i++) {
+            Storage storage = STORAGES[i];
+            if (storage == null) continue;
+            String id = storageId(i);
+            String fallback = i < 9 ? "Ender Chest " + (i + 1) : "Backpack #" + (i - 8);
+            String name = profileNames().getOrDefault(id, fallback);
+            pages.add(new StoragePage(id, i, name, List.copyOf(storage.items)));
+        }
+        Map<String, Integer> order = new HashMap<>();
+        List<String> savedOrder = profileOrder();
+        for (int i = 0; i < savedOrder.size(); i++) order.putIfAbsent(savedOrder.get(i), i);
+        pages.sort(Comparator.comparingInt((StoragePage page) -> order.getOrDefault(page.id, Integer.MAX_VALUE))
+            .thenComparingInt(StoragePage::index));
+        return List.copyOf(pages);
+    }
+
+    public static void renameStorage(String id, String name) {
+        normalizeBrowser();
+        if (name == null || name.isBlank()) profileNames().remove(id);
+        else {
+            String clean = name.strip();
+            profileNames().put(id, clean.substring(0, Math.min(32, clean.length())));
+        }
+        ConstellationClient.saveConfig();
+    }
+
+    public static void moveStorage(String id, int direction) {
+        normalizeBrowser();
+        List<String> order = new ArrayList<>();
+        for (StoragePage page : storagePages()) order.add(page.id);
+        int at = order.indexOf(id), target = Math.clamp(at + Integer.signum(direction), 0, Math.max(0, order.size() - 1));
+        if (at < 0 || at == target) return;
+        java.util.Collections.swap(order, at, target);
+        cfg.storageBrowserOrderByProfile.put(loadedProfile, order);
+        ConstellationClient.saveConfig();
+    }
+
+    public static boolean openStoragePage(StoragePage page) {
+        Minecraft mc = Minecraft.getInstance();
+        if (!ConstellationClient.loc().onHypixel() || mc.player == null) return false;
+        String command = page.index < 9 ? "ec " + (page.index + 1) : "backpack " + (page.index - 8);
+        mc.player.connection.sendCommand(command);
+        return true;
+    }
+
+    private static String storageId(int index) { return index < 9 ? "ender_" + (index + 1) : "backpack_" + (index - 8); }
 
     public static CachedItemCount cachedItemCount(String itemId) {
         int amount = 0, loaded = 0;
@@ -453,12 +547,22 @@ public final class LyraStorageValue {
 
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("storagepreview")
-            .executes(context -> storageStatus())
+            .executes(context -> openBrowser())
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status").executes(context -> storageStatus()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("browse").executes(context -> openBrowser()))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("clear").executes(context -> clearStorage()))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("scale")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("percent", IntegerArgumentType.integer(50, 200))
                     .executes(context -> scale(IntegerArgumentType.getInteger(context, "percent")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("cards")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("columns", IntegerArgumentType.integer(1, 6))
+                    .executes(context -> browserCards(IntegerArgumentType.getInteger(context, "columns")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("rows")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("rows", IntegerArgumentType.integer(1, 6))
+                    .executes(context -> browserRows(IntegerArgumentType.getInteger(context, "rows")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("speed")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("pixels", IntegerArgumentType.integer(4, 72))
+                    .executes(context -> browserSpeed(IntegerArgumentType.getInteger(context, "pixels")))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("option")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("name", StringArgumentType.word())
                     .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("state", StringArgumentType.word())
@@ -479,10 +583,27 @@ public final class LyraStorageValue {
                         .executes(context -> valueOption(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "state")))))));
     }
 
-    private static int storageStatus() { local("§eStorage preview " + on(cfg.backpackPreview) + ", no-shift " + on(cfg.backpackPreviewWithoutShift) + ", persistence " + on(cfg.backpackPreviewPersist) + ", cached §f" + cached() + "/27§e, scale §f" + cfg.backpackPreviewScalePercent + "%§e."); return 1; }
+    private static int storageStatus() { local("§eStorage browser " + on(cfg.storageBrowser) + ", preview " + on(cfg.backpackPreview) + ", persistence " + on(cfg.backpackPreviewPersist) + ", cached §f" + cached() + "/27§e, cards §f" + cfg.storageBrowserCardsPerRow + "x" + cfg.storageBrowserRowsPerCard + "§e."); return 1; }
+    private static int openBrowser() {
+        if (!storageActive() || !cfg.storageBrowser) { local("§cStorage browser is disabled or unavailable here."); return 0; }
+        Minecraft mc = Minecraft.getInstance();
+        mc.execute(() -> {
+            var current = mc.gui.screen();
+            if (current instanceof AbstractContainerScreen<?> && mc.player != null) {
+                capture((AbstractContainerScreen<?>) current);
+                mc.player.closeContainer();
+                current = null;
+            }
+            mc.setScreenAndShow(new LyraStorageBrowserScreen(current));
+        });
+        return 1;
+    }
     private static int valueStatus() { local("§eContainer value " + on(cfg.containerValue) + ", automatic " + on(cfg.containerValueAutomatic) + ", breakdown " + on(cfg.containerValueShowBreakdown) + ", max §f" + cfg.containerValueMaxItems + "§e, hide below §f" + cfg.containerValueHideBelow + "§e."); return 1; }
     private static int clearStorage() { for (int i = 0; i < STORAGES.length; i++) STORAGES[i] = null; if (!loadedProfile.isBlank()) save(); local("§aStorage preview cache cleared for this profile."); return 1; }
     private static int scale(int percent) { cfg.backpackPreviewScalePercent = percent; saveConfig(); local("§aStorage preview scale updated."); return 1; }
+    private static int browserCards(int columns) { cfg.storageBrowserCardsPerRow = columns; saveConfig(); local("§aStorage-browser column count updated."); return 1; }
+    private static int browserRows(int rows) { cfg.storageBrowserRowsPerCard = rows; saveConfig(); local("§aStorage-browser card rows updated."); return 1; }
+    private static int browserSpeed(int pixels) { cfg.storageBrowserScrollSpeed = pixels; saveConfig(); local("§aStorage-browser scroll speed updated."); return 1; }
     private static int setMax(int items) { cfg.containerValueMaxItems = items; saveConfig(); local("§aContainer-value item limit updated."); return 1; }
     private static int hideBelow(int coins) { cfg.containerValueHideBelow = coins; saveConfig(); local("§aContainer-value threshold updated."); return 1; }
     private static int toggleValue() { if (!(Minecraft.getInstance().gui.screen() instanceof AbstractContainerScreen<?> screen) || !valueAllowed(screen)) { local("§cOpen a supported container first."); return 0; } manualValue = !manualValue; if (manualValue) recompute(screen); local("§eContainer value " + on(manualValue) + "."); return 1; }
@@ -491,12 +612,21 @@ public final class LyraStorageValue {
         Boolean enabled = parseState(state); if (enabled == null) return badState();
         switch (name.toLowerCase(Locale.ROOT)) {
             case "enabled", "preview" -> cfg.backpackPreview = enabled;
+            case "browser" -> cfg.storageBrowser = enabled;
+            case "browserbutton", "browsebutton" -> cfg.storageBrowserButton = enabled;
+            case "empty", "emptypages" -> cfg.storageBrowserShowEmptyPages = enabled;
+            case "tooltips" -> cfg.storageBrowserShowTooltips = enabled;
+            case "decorations" -> cfg.storageBrowserShowDecorations = enabled;
+            case "dim", "dimunmatched" -> cfg.storageBrowserDimUnmatched = enabled;
+            case "retainsearch" -> cfg.storageBrowserRetainSearch = enabled;
+            case "retainscroll" -> cfg.storageBrowserRetainScroll = enabled;
+            case "local", "localworlds" -> cfg.storageBrowserLocalWorlds = enabled;
             case "noshift", "withoutshift" -> cfg.backpackPreviewWithoutShift = enabled;
             case "persist", "persistence" -> cfg.backpackPreviewPersist = enabled;
             case "value" -> cfg.backpackPreviewShowValue = enabled;
             case "count" -> cfg.backpackPreviewShowCount = enabled;
             case "slottext" -> cfg.backpackPreviewSlotText = enabled;
-            default -> { local("§cOption must be enabled, noshift, persist, value, count, or slottext."); return 0; }
+            default -> { local("§cUnknown option. Try browser, browserbutton, empty, tooltips, decorations, dim, retainsearch, retainscroll, local, preview, noshift, persist, value, count, or slottext."); return 0; }
         }
         saveConfig(); local("§aStorage-preview option updated."); return 1;
     }
@@ -522,7 +652,10 @@ public final class LyraStorageValue {
     }
 
     private static void saveConfig() { normalize(); ConstellationClient.saveConfig(); }
-    private static void normalize() { cfg.backpackPreviewScalePercent = Math.clamp(cfg.backpackPreviewScalePercent, 50, 200); cfg.containerValueMaxItems = Math.clamp(cfg.containerValueMaxItems, 0, 54); cfg.containerValueHideBelow = Math.max(0, cfg.containerValueHideBelow); }
+    private static void normalize() { cfg.backpackPreviewScalePercent = Math.clamp(cfg.backpackPreviewScalePercent, 50, 200); cfg.containerValueMaxItems = Math.clamp(cfg.containerValueMaxItems, 0, 54); cfg.containerValueHideBelow = Math.max(0, cfg.containerValueHideBelow); normalizeBrowser(); }
+    private static void normalizeBrowser() { if (cfg.storageBrowserNames == null) cfg.storageBrowserNames = new java.util.LinkedHashMap<>(); if (cfg.storageBrowserOrder == null) cfg.storageBrowserOrder = new ArrayList<>(); if (cfg.storageBrowserNamesByProfile == null) cfg.storageBrowserNamesByProfile = new java.util.LinkedHashMap<>(); if (cfg.storageBrowserOrderByProfile == null) cfg.storageBrowserOrderByProfile = new java.util.LinkedHashMap<>(); cfg.storageBrowserCardsPerRow = Math.clamp(cfg.storageBrowserCardsPerRow, 1, 6); cfg.storageBrowserRowsPerCard = Math.clamp(cfg.storageBrowserRowsPerCard, 1, 6); cfg.storageBrowserScrollSpeed = Math.clamp(cfg.storageBrowserScrollSpeed, 4, 72); }
+    private static Map<String, String> profileNames() { normalizeBrowser(); return cfg.storageBrowserNamesByProfile.computeIfAbsent(loadedProfile, ignored -> new java.util.LinkedHashMap<>()); }
+    private static List<String> profileOrder() { normalizeBrowser(); return cfg.storageBrowserOrderByProfile.computeIfAbsent(loadedProfile, ignored -> new ArrayList<>()); }
     private static int cached() { int count = 0; for (Storage storage : STORAGES) if (storage != null) count++; return count; }
     private static int badState() { local("§cState must be on or off."); return 0; }
     private static Boolean parseState(String state) { return switch (state.toLowerCase(Locale.ROOT)) { case "on", "true", "yes", "1" -> true; case "off", "false", "no", "0" -> false; default -> null; }; }
@@ -535,6 +668,7 @@ public final class LyraStorageValue {
     private static String trim(Font font, String text, int width) { if (font.width(text) <= width) return text; return font.plainSubstrByWidth(text, Math.max(0, width - font.width("..."))) + "..."; }
 
     private record Storage(String name, List<ItemStack> items) {}
+    public record StoragePage(String id, int index, String name, List<ItemStack> items) {}
     private record Rect(int x, int y, int w, int h) { boolean contains(int mouseX, int mouseY) { return mouseX >= x && mouseX < x + w && mouseY >= y && mouseY < y + h; } }
     private record ValueEntry(ItemStack icon, String name, int quantity, long amount, List<Slot> slots) {}
     private record ValueResult(long total, boolean incomplete, List<ValueEntry> entries) { private static final ValueResult EMPTY = new ValueResult(0, false, List.of()); }

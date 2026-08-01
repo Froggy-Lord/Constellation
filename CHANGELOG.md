@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.820 (2026-08-01) — Unified SkyBlock Storage Browser
+
+- ported Enhanced Storage's unified cached-page browsing, cross-page search, page naming, custom ordering and retained browser state
+- added real stack grids, decorations, native tooltips, match highlighting, empty-page controls and deliberate Ender Chest/backpack navigation
+- isolated cached items, names and ordering by immutable SkyBlock profile ID and ignored storage snapshots until the server's initial container contents arrive
+- explicitly close the authoritative server container before opening the read-only browser, preventing invisible-menu desynchronization
+- added a cohesive Lyra Storage settings card plus column, row, scroll-speed and browser option commands under `/storagepreview`
+
 ## 0.9.819 (2026-08-01) — SkyBlock Item Creation Time
 
 - ported Devonian's robust SkyBlock item timestamp parser, including numeric, numeric-string, ISO and both legacy Toronto formats

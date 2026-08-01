@@ -2,6 +2,21 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## Unified SkyBlock storage browser
+
+Enable Lyra, Storage Browser and Backpack Preview. Open Lyra directly with `/cn config lyra`, choose Storage for the browser switches, and use `/storagepreview cards 1-6`, `/storagepreview rows 1-6` or `/storagepreview speed 4-72` for layout density.
+
+- [ ] Open several Ender Chest and Backpack pages once, including one genuinely empty page, then run `/storagepreview`. Expected: every received page appears with its real stacks; unknown pages are not invented.
+- [ ] Close a storage page immediately while it is loading, then reopen the browser. Expected: a previously valid cached page is not replaced by a false all-air snapshot.
+- [ ] Search by item name, lore phrase and internal SkyBlock item ID. Expected: matching pages remain, matching stacks compact into the visible grid and the result count is accurate.
+- [ ] Hover a cached stack. Expected: its normal Minecraft tooltip and stack decorations appear; disabling either option changes only that presentation.
+- [ ] Right-click a card or press its Edit control, rename it, and press Enter. Expected: the new name persists for this SkyBlock profile; a blank name restores the default.
+- [ ] Use the earlier/later controls, close and reopen the browser. Expected: custom page order persists only for the active immutable profile ID.
+- [ ] Click a card on Hypixel. Expected: Constellation deliberately runs the matching Ender Chest or Backpack page command; it never clicks or moves an item itself.
+- [ ] Open the browser from the Storage Browse button and close it. Expected: the server container closes normally and the next inventory/container opens without ghost slots or desynchronization.
+- [ ] Change SkyBlock profiles and wait for Hypixel's Profile ID line. Expected: items, custom names and order switch to that profile without showing the previous profile's cache.
+- [ ] Toggle empty pages, tooltips, decorations, dimming, retained search and retained scroll separately. Expected: each control affects only its named behavior and survives restart.
+
 ## SkyBlock item creation time
 
 Enable Lyra, Item Info, Creation Timestamp and Item Age. Open Lyra directly with `/cn config lyra`; format, zone and precision controls are also available under All settings or `/itemtooltips`.
