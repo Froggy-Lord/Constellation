@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.802 Complete Typed Settings UX.
+Last updated: 2026-08-01 for version 0.9.803 Safe Title Visual Shell.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.802`.
+- Current artifact version: `0.9.803`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3438,6 +3438,8 @@ The typed modal selects the complete current value, shows its type and construct
 
 Verification passed on 2026-08-01: the visual test restored the dev `abilityReadyDing` value to `true`; touched-file forbidden-name, emoji and whitespace audits were empty; and `./gradlew build -q` completed with 11 tests successful and 0 failed. The 160-second `DISPLAY=:99` client soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, screen-render or texture-load failure signature. Release jar SHA-256: `99748dbc9e5e69e71d76b68d24f2874b4f60e077472097fb0c6cc5190dd586a3`.
 
+The verified jar was deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-140539-0.9.802/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. Drip release `9f8001577d` was queued as Froggy-Lord with message `complete typed settings interaction and undo`.
+
 ## Required dedicated visual-design pass
 
 Zaden explicitly rejected the current generated-looking UI/UX and requested proper icon packs. Version 0.9.789 completed the first icon foundation, but the broader screen and interaction inventory remains. Continue it as deliberate visual-system releases: refine active/disabled icon treatment where it materially helps, replace placeholder-feeling controls and spacing, and carry the established icon language into suitable navigation without decorating dense gameplay surfaces. Follow `.forge/visual-direction.md`, use `ConstellationTheme`, and visually inspect at native Minecraft GUI scales. Preserve the HUD editor's separate binding requirements: game view remains visible beneath a mostly transparent overlay, show only currently visible or last-five-seconds HUD elements, scroll over any element resizes it, and add no editor cards, borders or decorative chrome. Do not mix a large visual pass into gameplay releases.
@@ -3445,3 +3447,17 @@ Zaden explicitly rejected the current generated-looking UI/UX and requested prop
 Zaden identified the local `/home/zadenz/projects/minecraft/cryptkit` project as the scope reference for how far the overhaul should eventually reach, while explicitly calling its UI/UX bad and requiring Constellation to be substantially better. Its visual surface inventory includes the title/menu flow, out-of-game screen backgrounds, vanilla buttons and sliders, generic containers, player inventory, quick-access inventory controls, custom scoreboard, HUD iconography, mod-owned hubs/editors, a bundled pixel font and time-based transitions. Treat that as coverage inspiration only, not a design or code source.
 
 Carry this forward as separate reviewed releases. Global theming must be independently configurable for title, out-of-game screens, stock controls, player inventory and generic containers. Preserve every vanilla accessibility, language, Realms, account, warning and recovery route; never repeat CryptKit's invisible-button swallowing. Container work needs title/class compatibility allowlists and exclusions so Hypixel puzzle, terminal, sign, recipe, merchant and third-party screens remain readable. Preserve player models, recipe books, slots, tooltips and item rendering. Reuse Constellation's existing inventory-button editor instead of adding a second quick-button system. Keep the Minecraft font as the accessibility-safe default; any alternative font requires an explicit toggle and license/legibility review. Animations must remain time-based, short, reduced-motion aware and incapable of delaying input.
+
+## August 1 version 0.9.803 Safe Title Visual Shell
+
+`VisualConfig.java`, `MenuTheme.java`, `MenuBackgroundMixin.java`, `MenuButtonMixin.java` and `TitleThemeStateMixin.java` implement the first deliberately narrow CryptKit-scope visual release. CryptKit is GPL-3.0-only and its safe background/button hook patterns are credited in the relevant mixins. The broader copy-OK reference audit found no reusable global menu-theme implementation. Do not port CryptKit's title replacement: it cancels vanilla rendering and input, removes important routes and is explicitly below the required design and accessibility standard.
+
+The replacement hooks only `Screen.extractPanorama` while the active receiver is `TitleScreen`, so the surrounding vanilla render path continues to draw the Minecraft logo, splash, version, Realms notifications and all widgets. The stock-button hook changes only `AbstractButton.extractDefaultSprite`; vanilla labels, scrolling text, focus, narration, hit boxes and click handlers remain untouched. The title render-state mixin provides a tightly scoped flag because Minecraft 26.2 no longer exposes the active screen publicly. No in-world, loading, warning, recovery, options, third-party or Constellation-owned screen is themed in this release.
+
+The Hub now has separate HUD Editor, Visuals and Config actions. Visuals reuses `AdvancedConfigScreen` rather than adding another editor. The persisted Visual group has a master Enabled control plus independent Title Backdrop, Title Buttons and Reduced Motion settings. Migration version 3 repairs a missing or explicitly null Visual group. The HUD editor is unchanged.
+
+`tools/publish-private-release.sh` maintains the owner-only release shelf at `https://home.zadenzeus.dev/pages/constellation/`. It stages as the normal user, promotes through the existing `share-server` container, moves the previous Current files into a versioned Archived Releases folder, installs the exact jar, testing guide and checksum, writes owner-only Pages metadata atomically, rejects an anonymous response other than 401 and compares the served volume copy with the built jar. The drip enqueue helper now invokes this publisher after its clean queue build and before committing, so future verified releases publish automatically. Never print or embed the share-server key; this workflow does not need it.
+
+Real-client inspection at 640 by 480 confirmed the star field behind the unmodified Minecraft logo, splash, full-width navigation controls, icon row, Options, Quit, version and copyright text. The themed controls remain visually distinct without obscuring their labels. The build completed with exactly 11 successful tests and zero failed. The 160-second `DISPLAY=:99` soak ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load or transformer-error signature. The flite narrator warning remains the known benign workstation warning. Release jar SHA-256: `2a7fc8168994e85ad2a56dc431a2b73f3e66a64af17c0c906474c04fcda23720`.
+
+The verified jar is deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-141726-0.9.803/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.

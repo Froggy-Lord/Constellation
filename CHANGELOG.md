@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.803 (2026-08-01) — Safe Title Visual Shell
+
+- added an independently configurable Constellation title backdrop and stock button treatment
+- preserved every vanilla title control, logo, splash, version line, Realms notification, narration and input route
+- added reduced-motion support and a dedicated Visual settings entry in the main hub
+- added an automated owner-only release shelf with Current and Archived Releases folders
+- made every future drip-enqueued release publish its verified jar and current testing guide automatically
+
 ## 0.9.802 (2026-08-01) — Complete Typed Settings UX
 
 - added visible changed-from-default markers and direct per-row reset actions

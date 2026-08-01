@@ -5,7 +5,7 @@ import com.froggylord.constellation.hud.HudPosition;
 
 public class ConstellationConfig {
 
-    public static final int CURRENT_VERSION = 2;
+    public static final int CURRENT_VERSION = 3;
 
     public int cfgVersion = CURRENT_VERSION;
 
@@ -16,6 +16,7 @@ public class ConstellationConfig {
     public boolean verifyMode = false;
     public java.util.Map<String, Float> hudScales = new java.util.HashMap<>();
     public java.util.Map<String, HudPosition> hudPositions = new java.util.HashMap<>();
+    @SerializedName("visual") public VisualConfig visual = new VisualConfig();
 
     
     @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
@@ -35,6 +36,7 @@ public class ConstellationConfig {
     @SerializedName("artemis")    public ArtemisConfig artemis = new ArtemisConfig();
 
     public void migrate() {
+        if (visual == null) visual = new VisualConfig();
         if (cfgVersion < CURRENT_VERSION) {
             migrateFrom(cfgVersion);
             cfgVersion = CURRENT_VERSION;
@@ -66,6 +68,7 @@ public class ConstellationConfig {
             case "pegasus"    -> pegasus;
             case "auriga"     -> auriga;
             case "artemis"    -> artemis;
+            case "visual"     -> visual;
             default -> null;
         };
     }

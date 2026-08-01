@@ -86,8 +86,9 @@ public final class AdvancedConfigScreen extends Screen {
         graphics.fill(0, 0, width, height, 0xD9080814);
         graphics.fill(0, 0, width, HEADER, 0xF20E0E1A);
         graphics.fill(0, HEADER - 1, width, HEADER, ConstellationTheme.ACCENT);
-        ConstellationIcons.draw(graphics, constellationId, 7, 3, 21);
-        String name = ConstellationClient.featureManager().get(constellationId)
+        if (constellationId.equals("visual")) ConstellationIcons.drawAction(graphics, "settings", 9, 5, 17);
+        else ConstellationIcons.draw(graphics, constellationId, 7, 3, 21);
+        String name = constellationId.equals("visual") ? "Visual" : ConstellationClient.featureManager().get(constellationId)
             .map(com.froggylord.constellation.core.BaseConstellation::displayName).orElse(constellationId);
         graphics.text(font, name + " settings", 33, 9, ConstellationTheme.ACCENT_BRIGHT, false);
         graphics.text(font, "left click edit  right click reset", width - font.width("left click edit  right click reset") - 8,

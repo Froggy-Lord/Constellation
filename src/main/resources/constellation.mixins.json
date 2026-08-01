@@ -23,6 +23,8 @@
         "PreventWeaponPlaceMixin",
         "MapDataAccessor",
         "MainHeadlessMixin",
+        "MenuBackgroundMixin",
+        "MenuButtonMixin",
         "MinecraftAttackMixin",
         "MouseSensitivityMixin",
         "MiningToolDurabilityMixin",
@@ -34,6 +36,7 @@
         "ScoreboardSidebarMixin",
         "SignEditScreenMixin",
         "TerminalClickBlockMixin",
+        "TitleThemeStateMixin",
         "WarpShortenerMixin"
     ],
     "injectors": {

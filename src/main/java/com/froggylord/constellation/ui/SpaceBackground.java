@@ -31,6 +31,12 @@ public final class SpaceBackground {
         shootStars(g, w, h);
     }
 
+    public static void renderMenu(GuiGraphicsExtractor g, int w, int h, float delta, boolean reducedMotion) {
+        g.blit(RenderPipelines.GUI_TEXTURED, BG, 0, 0, 0, 0, w, h, 2048, 2048);
+        g.fill(0, 0, w, h, 0xB5080814);
+        if (!reducedMotion) shootStars(g, w, h);
+    }
+
     private static void shootStars(GuiGraphicsExtractor g, int w, int h) {
         long now = System.currentTimeMillis();
         if (now > nextShootingStar) {

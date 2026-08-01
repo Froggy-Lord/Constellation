@@ -2596,3 +2596,15 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open a number, text and color value. Expected: the modal selects the current value, states its type/default and validates before saving.
 - [ ] Edit a color with valid `#RRGGBB`, `#AARRGGBB` and invalid input. Expected: valid input shows a live swatch; invalid input stays open with a concise error.
 - [ ] Scroll to the final rows and click immediately above/below the clipped viewport. Expected: only fully visible rows respond.
+
+## Safe title visual shell
+
+- [ ] Return to Minecraft's title screen. Expected: the Constellation star field replaces only the panorama; the Minecraft logo, splash, version text, Realms notification and every vanilla button remain present.
+- [ ] Test Singleplayer, Multiplayer, Realms/Friends, Options, Language, Accessibility, account and Quit controls. Expected: every control opens the same vanilla destination and retains keyboard focus, narration and click behavior.
+- [ ] Open Constellation with Right Shift and choose Visuals. Expected: the existing typed settings screen shows Enabled, Title Backdrop, Title Buttons and Reduced Motion.
+- [ ] Disable Title Backdrop. Expected: the vanilla title panorama returns while themed title buttons remain enabled.
+- [ ] Disable Title Buttons. Expected: vanilla title buttons return while the configured backdrop remains enabled.
+- [ ] Disable Enabled. Expected: all title theming returns to vanilla without changing either child option.
+- [ ] Enable Reduced Motion. Expected: the static background remains but shooting-star motion stops immediately.
+- [ ] Open the HUD editor in a world. Expected: it remains the same mostly transparent, chrome-free positioning overlay and is never affected by title theming.
+- [ ] Sign in to `https://home.zadenzeus.dev/pages/constellation/`. Expected: Current contains the matching jar, Testing Guide and SHA-256 file; old builds appear only under Archived Releases. In a private browser, the same URL must require authentication.

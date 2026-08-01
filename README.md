@@ -10,6 +10,8 @@ this is just one jar. one config file. one hud editor. everythings in the same p
 
 the main hub uses a hand-drawn star-map icon family for all 15 constellations, a matching mod mark, a sixteen-glyph semantic action strip, original low-contrast space artwork, searchable module navigation, clear direct toggles and consistent clipped-corner controls. each module screen can search names, descriptions and option labels, while the complete typed browser adds changed/default state, reversible edits, keyboard control and validated value editing.
 
+the optional title shell uses the same artwork and control language without replacing minecraft's logo, navigation, realms status, narration or input. backdrop, buttons and reduced motion are controlled independently from the hub's visuals screen.
+
 each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
 
 ## what it does
@@ -59,7 +61,7 @@ everything's toggleable. hit right shift for the hub screen, or `/cn config` for
 
 hud elements are draggable — open `/cn hud` and move stuff where you want it. positions are saved per-element.
 
-For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. For a staged in-game checklist, see `TESTING_GUIDE.md`.
+For a readable inventory of the current mod, see `CURRENT_FEATURE_OVERVIEW.md`. For a staged in-game checklist, see `TESTING_GUIDE.md`. verified test jars and the current guide are mirrored to the owner-only constellation shelf on the share server, with current and archived releases kept separately.
 
 the profile viewer calculates exact skill levels and progress from hypixel's published curves, including hunting, the current foraging cap and profile-specific farming/taming caps.
 garden crop records use the maintained licensed 46-level milestone tables and exact nine-upgrade copper costs, with validated offline caching.

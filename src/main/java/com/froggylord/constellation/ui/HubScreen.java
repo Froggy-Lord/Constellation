@@ -27,7 +27,7 @@ public class HubScreen extends Screen {
     private int scrollGrabY = 0;
     private float scrollGrabOff = 0;
     private float scrollVelocity = 0;
-    private long hudFlashAt = 0, cfgFlashAt = 0; // brief flash on button click
+    private long hudFlashAt = 0, visualFlashAt = 0, cfgFlashAt = 0; // brief flash on button click
 
     private static final java.util.Map<String, Float> toggleAnim = new java.util.HashMap<>();
     private static final java.util.Map<String, Float> cardHover = new java.util.HashMap<>();
@@ -149,11 +149,14 @@ public class HubScreen extends Screen {
             g.fill(sbX, thumbY, sbX + 4, thumbY + thumbH, ConstellationTheme.ACCENT);
         }
 
-        int btnW = 140, btnH = 24, btnGap = 10;
-        int hudX = w / 2 - btnW - btnGap / 2, cfgX = w / 2 + btnGap / 2;
+        int btnGap = 8, btnH = 24;
+        int btnW = Math.max(76, Math.min(132, (w - 36 - btnGap * 2) / 3));
+        int footerW = btnW * 3 + btnGap * 2;
+        int hudX = (w - footerW) / 2, visualX = hudX + btnW + btnGap, cfgX = visualX + btnW + btnGap;
         int btnY = h - btnH - 10;
 
         boolean hoverHud = mx >= hudX && mx <= hudX + btnW && my >= btnY && my <= btnY + btnH;
+        boolean hoverVisual = mx >= visualX && mx <= visualX + btnW && my >= btnY && my <= btnY + btnH;
         boolean hoverCfg = mx >= cfgX && mx <= cfgX + btnW && my >= btnY && my <= btnY + btnH;
 
         ConstellationTheme.button(g, hudX, btnY, btnW, btnH, hoverHud, false);
@@ -165,6 +168,15 @@ public class HubScreen extends Screen {
         ConstellationIcons.drawAction(g, "hud", hudX + (btnW - hudContent) / 2, btnY + 4, 16);
         g.text(font, hudLabel, hudX + (btnW - hudContent) / 2 + 21, btnY + 7,
             hoverHud ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
+
+        ConstellationTheme.button(g, visualX, btnY, btnW, btnH, hoverVisual, false);
+        long visualAge = System.currentTimeMillis() - visualFlashAt;
+        if (visualAge < 200) g.fill(visualX, btnY, visualX + btnW, btnY + btnH, ((int)((1f-visualAge/200f)*40) << 24) | 0xFFCC33);
+        String visualLabel = "Visuals";
+        int visualContent = 16 + 5 + font.width(visualLabel);
+        ConstellationIcons.drawAction(g, "settings", visualX + (btnW - visualContent) / 2, btnY + 4, 16);
+        g.text(font, visualLabel, visualX + (btnW - visualContent) / 2 + 21, btnY + 7,
+            hoverVisual ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
 
         ConstellationTheme.button(g, cfgX, btnY, btnW, btnH, hoverCfg, false);
         long cfgAge = System.currentTimeMillis() - cfgFlashAt;
@@ -195,8 +207,11 @@ public class HubScreen extends Screen {
         int mx = (int) event.x(), my = (int) event.y();
         Minecraft mc = Minecraft.getInstance();
         int w = mc.getWindow().getGuiScaledWidth(), h = mc.getWindow().getGuiScaledHeight();
-        int btnW = 140, btnH = 24, btnGap = 10;
-        int hudX = w / 2 - btnW - btnGap / 2, cfgX = w / 2 + btnGap / 2, btnY = h - btnH - 10;
+        int btnGap = 8, btnH = 24;
+        int btnW = Math.max(76, Math.min(132, (w - 36 - btnGap * 2) / 3));
+        int footerW = btnW * 3 + btnGap * 2;
+        int hudX = (w - footerW) / 2, visualX = hudX + btnW + btnGap, cfgX = visualX + btnW + btnGap;
+        int btnY = h - btnH - 10;
 
         if (mx >= cfgX && mx <= cfgX + btnW && my >= btnY && my <= btnY + btnH) {
             cfgFlashAt = System.currentTimeMillis();
@@ -208,6 +223,11 @@ public class HubScreen extends Screen {
         if (mx >= hudX && mx <= hudX + btnW && my >= btnY && my <= btnY + btnH) {
             hudFlashAt = System.currentTimeMillis();
             mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(this)));
+            return true;
+        }
+        if (mx >= visualX && mx <= visualX + btnW && my >= btnY && my <= btnY + btnH) {
+            visualFlashAt = System.currentTimeMillis();
+            mc.execute(() -> mc.setScreenAndShow(new AdvancedConfigScreen(this, "visual")));
             return true;
         }
 

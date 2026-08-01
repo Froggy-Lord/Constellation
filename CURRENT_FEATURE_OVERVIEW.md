@@ -11,9 +11,12 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Search modules directly in the Hub, filter by enabled state, click a card for settings or its switch for an immediate module toggle.
 - The Hub and configuration surfaces share original correctly sampled space artwork, clipped-corner geometry, coherent focus states and time-based motion.
 - Select `All settings` in any module config to search and edit its toggles, numbers, text and ARGB colors; right-clicking a row restores its built-in default.
+- Open `Visuals` from the Hub to control the optional title backdrop, title-button treatment and reduced motion independently. Vanilla title controls and navigation remain intact.
 - HUD elements only appear in the editor when they are currently useful or were visible during the last five seconds. Hover an element and scroll to resize it; drag it to move it.
 - Most individual features have their own toggle and detailed settings inside their constellation.
 - Puzzle, combat, movement, and aiming helpers are advisory overlays. They do not click or aim for you.
+
+Verified builds and this guide are mirrored to the private Constellation release shelf at `https://home.zadenzeus.dev/pages/constellation/`. `Current` contains the newest release; superseded builds move under `Archived Releases`.
 
 ## Lyra: Profile Viewer
 
