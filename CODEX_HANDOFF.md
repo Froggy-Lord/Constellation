@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.814 Safe Stonecutter Visuals.
+Last updated: 2026-08-01 for version 0.9.815 Safe Loom Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.814`.
+- Current artifact version: `0.9.815`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3603,3 +3603,15 @@ Real-client testing used the local `Anvil Visual 2` creative world with an exact
 The adversarial audit proved the exact redirect count and original-argument fallback, render ordering, labels, gates, recipe/scroll hit boxes, cursor, tooltips, selection, result construction, Shift-click crafting, collection, reset, registration, credit and forbidden-source cleanliness. It found the new mixin missing from the drip allowlist, the saw color coupled to Brewing Stand settings, a rake-like first mark and potentially misleading grid/track control names. The script now allowlists the mixin, Stonecutter owns a dedicated saw color, the mark is a circular toothed blade, and the settings are honestly named Recipe Grid Frame and Scroll Track Frame.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `ff1fa777a859395a9b545752c91926a7d4303429e04344d26893d47cbf8e091b`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.813 was moved to `~/Desktop/To-Delete/gather-jars/20260801-205255-0.9.814/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `4243dabb093a1ea639f80196d807ec47e0db7d32` is authored only by Froggy-Lord with subject `add safe stonecutter visuals and preserved recipe controls`.
+
+## August 1 version 0.9.815 safe Loom visuals
+
+`ContainerTheme.java` and `LoomScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `LoomScreen`. Minecraft 26.2 has exactly one base-texture `blit` in `extractBackground`; the pinned `require = 1` redirect draws the treatment only for the exact runtime class and replays every original argument when disabled, on Hypixel by default, or for any fallback path.
+
+The accepted path draws the shared bounded panel and active wells plus independently configurable input, pattern-grid, scrollbar and live-preview surfaces. Minecraft's later banner/dye/pattern guidance sprites, active/disabled thumb, 4×4 ordinary/selected/highlighted pattern sprites, banner-pattern thumbnails, translated hover tooltips, cursor requests, layered banner preview and max-six-pattern error all remain unchanged. Selection, result construction, dye/pattern consumption, sound, slots, Shift-click routing, carried stacks and output collection stay authoritative. Theme, Hypixel use, slots, input stage, pattern-grid frame, scroll-track frame, preview stage and all three surface colors are independently persisted.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Loom. It covered the empty guided-slot state, ordinary White Banner plus Red Dye population, sixteen visible patterns, translated pattern hover, selection, live red/white preview, output tooltip, wheel scrolling to later rows, collection/reset, the Flower Charge pattern item narrowing to its one valid design with matching preview/result, and a banner built through six normal operations producing the max-pattern marker with no seventh output. Screenshots are `/tmp/loom-emptyfinal815.png`, `/tmp/loom-patterns815.png`, `/tmp/loom-pattern-hover815.png`, `/tmp/loom-selected-preview815.png`, `/tmp/loom-output-tooltip815.png`, `/tmp/loom-scrolled815.png`, `/tmp/loom-collected815.png`, `/tmp/loom-special-pattern815.png`, `/tmp/loom-maxpatterns2-815.png` and `/tmp/loom-max-tooltip815.png`. No Hypixel interaction was needed.
+
+The adversarial audit found no high or medium defect. It proved the exact redirect/fallback, render order, geometry, labels, gates, pattern/scroll hit boxes, cursor, tooltips, selection packet, preview, result construction, collection, special pattern behavior, config ownership, registration, drip allowlist, credit and forbidden-source cleanliness. Its two low findings were a missing live six-pattern error capture and subdued empty guidance against the original near-black input stage. The input stage default is now a lighter Constellation surface, and the restarted client plus six normal crafting passes closed the max-pattern visual gap in `/tmp/loom-maxpatterns2-815.png` and `/tmp/loom-max-tooltip815.png`.
+
+Final release verification belongs below after `tools/release.sh` completes.

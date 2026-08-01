@@ -25,6 +25,7 @@
         "HotbarScrollLockMixin",
         "InventoryAccessor",
         "LerpingBossEventAccessor",
+        "LoomScreenThemeMixin",
         "ItemProtectionDropMixin",
         "ItemProtectionScreenMixin",
         "ItemEntityRenderStateMixin",

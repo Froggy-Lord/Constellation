@@ -2779,3 +2779,23 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Stonecutter-specific surface or mark.
 - [ ] Join Hypixel with Stonecutters on Hypixel disabled. Expected: exact Stonecutter screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, saw, stages, recipe buttons, scroll thumb, labels, slots and tooltips remain bounded and aligned.
+
+## Safe Loom visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Loom. Expected: a bounded dark panel, readable labels, framed three-input stage, empty pattern surface, disabled scroll thumb, preview stage and machine/player slot wells appear.
+- [ ] Leave every input empty. Expected: Minecraft's banner, dye and pattern guidance icons remain visible in their exact wells and no pattern/result is fabricated.
+- [ ] Shift-click a banner and dye into the Loom. Expected: the ordinary pattern browser fills with sixteen visible designs and the scrollbar becomes active when later rows exist.
+- [ ] Hover several patterns. Expected: the original highlighted state, pointing-hand cursor and translated pattern/color tooltip appear without hit-box drift.
+- [ ] Select a pattern. Expected: the selected state remains distinct, the exact patterned result appears and the large preview shows the same base/pattern colors.
+- [ ] Hover the result. Expected: its tooltip lists the exact banner base and added pattern while the preview and grid remain unobscured.
+- [ ] Mouse-wheel through the pattern browser and drag its thumb. Expected: later designs replace the visible 4×4 rows and the thumb remains inside its framed track.
+- [ ] Add a valid banner-pattern item. Expected: the pattern well accepts it, the browser narrows to the licensed design and the preview/result update normally.
+- [ ] Collect the output. Expected: Minecraft consumes one banner and one dye, retains or moves remaining inputs normally, plays the Loom sound, transfers the result and resets the browser when no banner remains.
+- [ ] Put a banner already containing six patterns into the input. Expected: Minecraft's original max-pattern error appears above the result well and no seventh result is fabricated.
+- [ ] Shift-click valid and unrelated inventory items. Expected: the exact banner/dye/pattern predicates and normal routing remain authoritative.
+- [ ] Toggle Loom Slot Frames, Input Stage, Pattern Grid Frame, Scroll Track Frame and Preview Stage independently. Expected: only decoration changes; functional guidance, pattern, thumb, preview and error sprites always remain.
+- [ ] Change Loom Input Stage Color, Pattern Grid Color, Preview Stage Color and Inventory Label Color. Expected: each updates immediately with readable contrast.
+- [ ] Disable Loom Theme. Expected: the complete vanilla Loom texture and original label colors return.
+- [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Loom-specific stage.
+- [ ] Join Hypixel with Looms on Hypixel disabled. Expected: exact Loom screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, stages, guidance, browser, thumb, preview, error, slots and tooltips remain bounded and aligned.

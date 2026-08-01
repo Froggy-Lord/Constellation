@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.815 (2026-08-01) — Safe Loom Visuals
+
+- added an exact-class Constellation Loom panel with configurable input, pattern-grid, scroll-track and live-preview stages
+- preserved guided empty-slot sprites, every ordinary and pattern-item design, translated hover tooltips, selected/highlighted states, active scrolling and the layered banner preview
+- retained max-pattern validation, authoritative output construction, pattern/dye consumption, sound, slots and Shift-click routing
+- added independent Loom theme, slot, stage, frame, color and default-off Hypixel controls
+
 ## 0.9.814 (2026-08-01) — Safe Stonecutter Visuals
 
 - added an exact-class Constellation Stonecutter panel with configurable work stage, recipe grid, scroll track, saw identity and machine/player slot wells

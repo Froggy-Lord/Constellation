@@ -862,3 +862,13 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Visible recipes, selection, result construction, sound, input consumption, slots, Shift-click routing and output collection remain authoritative
 - Theme, slot frames, work stage, recipe-grid frame, scroll-track frame, saw identity, both surface colors, saw color and Hypixel use are independently configurable; Minecraft's functional recipe and thumb sprites always remain
 - Exact runtime-class and default-off Hypixel gates prevent custom subclasses and chest-backed server menus from inheriting the visual
+
+## Safe Loom visuals
+
+- Exact vanilla `LoomScreen` treatment with bounded dark panel, readable labels and separate input, pattern-browser and live-preview surfaces
+- Minecraft's banner, dye and pattern guidance sprites remain dynamic in their exact slots
+- All ordinary and pattern-item designs retain their original 4×4 browser, selected/highlighted/ordinary states, translated color-aware tooltips, pointing-hand cursor and active wheel/drag scrollbar
+- The real layered banner preview remains dynamic, including its base color and every accumulated pattern; the max-pattern error remains above the result slot
+- Pattern selection, result construction, consumption, sound, slots, Shift-click routing, tooltips and output collection remain authoritative
+- Theme, slot frames, input stage, pattern-grid frame, scroll-track frame, preview stage, three stage colors and Hypixel use are independently configurable
+- Exact runtime-class and default-off Hypixel gates prevent subclasses and chest-backed server menus from inheriting the visual

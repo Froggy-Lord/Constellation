@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.GrindstoneScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.inventory.LoomScreen;
 import net.minecraft.client.gui.screens.inventory.SmokerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
@@ -114,6 +115,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.stonecutterTheme
             && screen.getClass() == StonecutterScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.stonecuttersOnHypixel);
+    }
+
+    public static boolean loom(LoomScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.loomTheme
+            && screen.getClass() == LoomScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.loomsOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -307,6 +315,35 @@ public final class ContainerTheme {
         if (config.stonecutterSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawLoom(GuiGraphicsExtractor graphics, LoomScreen screen,
+                                int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.loomInputStage) {
+            graphics.fill(x + 7, y + 18, x + 56, y + 70, config.loomInputStageColor);
+            frame(graphics, x + 7, y + 18, 49, 52,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.loomPatternGridFrame) {
+            graphics.fill(x + 58, y + 11, x + 118, y + 70, config.loomPatternGridColor);
+            frame(graphics, x + 58, y + 11, 60, 59,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.loomScrollTrackFrame) {
+            graphics.fill(x + 118, y + 12, x + 132, y + 70, config.inventorySlotColor);
+            frame(graphics, x + 118, y + 12, 14, 58,
+                config.inventoryBorderColor, config.inventoryBorderColor);
+        }
+        if (config.loomPreviewStage) {
+            graphics.fill(x + 136, y + 5, x + 167, y + 53, config.loomPreviewStageColor);
+            frame(graphics, x + 136, y + 5, 31, 48,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.loomSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -319,6 +356,7 @@ public final class ContainerTheme {
             || screen instanceof GrindstoneScreen grindstone && grindstone(grindstone)
             || screen instanceof SmithingScreen smithing && smithingTable(smithing)
             || screen instanceof StonecutterScreen stonecutter && stonecutter(stonecutter)
+            || screen instanceof LoomScreen loom && loom(loom)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
