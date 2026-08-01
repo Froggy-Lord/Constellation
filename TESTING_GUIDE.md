@@ -2629,7 +2629,7 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Check armor, offhand, crafting, hotbar and active-effect areas. Expected: the player model and every item render normally, effect presentation remains intact and no slot well is drawn outside the inventory.
 - [ ] Hover items, pick one up, split a stack, shift-click and use keyboard slot controls. Expected: tooltips, carried stacks, highlighting and all vanilla input remain unchanged.
 - [ ] Open Visuals and disable Player Inventory Theme, Player Inventory Model Frame and Player Inventory Slot Frames independently. Expected: each option affects only its named visual layer and disabling the main inventory theme restores the complete vanilla texture.
-- [ ] Open an ordinary chest off Hypixel. Expected: only the exact vanilla chest screen receives the optional panel and slot treatment; furnaces, crafting, creative inventory and third-party screens remain unchanged.
+- [ ] Open an ordinary chest off Hypixel. Expected: only the exact vanilla chest screen receives the basic-container treatment; crafting and furnace-family screens use only their own independent exact-class controls, while creative inventory and third-party screens remain unchanged.
 - [ ] Join Hypixel with Basic Containers on Hypixel disabled. Expected: every server chest menu remains vanilla.
 - [ ] Opt into Hypixel basic containers and open auction, Bazaar, trade, salvage, Museum and a known puzzle menu. Expected: each protected menu remains vanilla despite the broad opt-in.
 - [ ] Opt into dungeon basic containers and open Spirit Leap plus each terminal family. Expected: protected interaction screens remain vanilla and their solvers/input continue working.
@@ -2661,3 +2661,18 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Join Hypixel with Crafting Tables on Hypixel disabled. Expected: crafting-table screens remain vanilla. Opt in only for a controlled check; expected: the same exact vanilla screen is styled, while server chest menus and subclasses remain untouched.
 - [ ] Test narrow and wide windows plus several GUI scales. Expected: the panel remains bounded to the vanilla image dimensions and never clips the recipe book, title, inventory label or slots.
 - [ ] Disable Artemis before startup, then use recipe-book and shift-click interactions. Expected: Starlyn and Moonglade callbacks fail open with no null-config exception.
+
+## Safe furnace-family visuals
+
+- [ ] In a local creative world, place and open a Furnace, Blast Furnace and Smoker. Expected: all three exact vanilla screens receive the bounded dark panel, gold top rule and aligned machine/player slot wells.
+- [ ] Open and close each machine's recipe book. Expected: each panel shifts to both vanilla positions, its subtype-specific recipe tabs and filters stay vanilla and every slot remains aligned.
+- [ ] Check an idle machine. Expected: the original empty flame and progress artwork remains visible instead of disappearing into the panel.
+- [ ] Put valid input and fuel into each machine. Expected: its subtype-specific flame and progress sprites animate above the custom panel, reach completion and leave the correct output available.
+- [ ] Collect output normally and with Shift-click, move partial stacks and use recipe-book filling. Expected: every action remains vanilla with no lost item, blocked click or client exception.
+- [ ] Hover input, fuel, output, recipes and player inventory. Expected: every tooltip remains vanilla and the custom panel never covers an item or hover highlight.
+- [ ] Disable Furnace Slot Frames and Furnace Indicator Backplates independently. Expected: slot wells or the static empty indicators disappear separately; live progress remains functional and visually communicates active machine state.
+- [ ] Change Inventory Label Color. Expected: Furnace and Inventory labels update with strong contrast, and disabling the theme restores Minecraft's original label color.
+- [ ] Disable Furnace Theme. Expected: complete vanilla furnace, blast-furnace and smoker textures return immediately.
+- [ ] Join Hypixel with Furnaces on Hypixel disabled. Expected: every furnace-family screen stays vanilla. Opt in only for a controlled check; unrelated server menus must remain untouched.
+- [ ] Open another specialized or third-party furnace subclass if installed. Expected: it remains owned by that mod because only the three exact vanilla runtime classes are accepted.
+- [ ] Test narrow and wide windows plus multiple GUI scales. Expected: panel, labels, indicators, recipe panel and every slot remain bounded and aligned.

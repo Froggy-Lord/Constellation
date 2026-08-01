@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.808 (2026-08-01) — Safe Furnace-family Visuals
+
+- added exact-class Constellation panels for the vanilla furnace, blast furnace and smoker
+- preserved the original unlit indicator artwork plus Minecraft's independently animated flame and progress sprites
+- kept recipe-book layouts, recipes, labels, slots, output collection, tooltips, narration and machine behavior authoritative
+- added independent furnace-family theme, slot, indicator-backplate and default-off Hypixel controls
+- added a configurable readable label color across every enabled Constellation inventory treatment
+
 ## 0.9.807 (2026-08-01) — Safe Crafting Table Visuals
 
 - added an exact-class Constellation crafting-table panel with independently configurable slot frames and vanilla arrow restoration

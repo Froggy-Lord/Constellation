@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.807 Safe Crafting Table Visuals.
+Last updated: 2026-08-01 for version 0.9.808 Safe Furnace-family Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.807`.
+- Current artifact version: `0.9.808`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3512,4 +3512,18 @@ The release was exercised through a real local Survival flow rather than a scree
 
 That live interaction found two disabled-module lifecycle faults outside the new renderer. `ArtemisStarlyn.appendTooltip` and `ArtemisMoongladeBeacon.shouldMiddleClick` could be reached by global inventory mixins even when Artemis had never initialized its config. Both now fail open on null/disabled config before reading feature fields. An adversarial trace of every unconditional callback in `ItemProtectionScreenMixin` and `TerminalClickBlockMixin` found no remaining vanilla inventory entry point with the same ordering fault.
 
-Final build, retained-client boot, Gather checksum, private shelf and drip-commit results belong below after `tools/release.sh` completes. Do not consider this release delivered until all of those checks pass.
+Verification passed with exactly 11 successful tests and zero failed. The automated 160-second Xvfb client run ended at expected timeout 124; the retained client log loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report or fatal-error marker. Build and Gather jars share SHA-256 `d4b1cba0b8f30738ee25dccd4cbd01013e7628b8afd1d0c932ee8350f5de1887`; Gather's config remained unchanged at `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. The former 0.9.806 jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-190554-0.9.807/`.
+
+The owner-only shelf now has 0.9.807 in Current and the prior releases under Archived Releases. Anonymous requests to both the shelf root and direct current jar return 401. The release is queued as Froggy-Lord drip commit `41bf3a339f9271e122518edb73a1f2335e6393e8` with message `add safe crafting table visuals and inventory lifecycle guards`.
+
+## August 1 version 0.9.808 safe furnace-family visuals
+
+`ContainerTheme.java` and `FurnaceScreenThemeMixin.java` port the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the three exact vanilla runtime classes `FurnaceScreen`, `BlastFurnaceScreen` and `SmokerScreen`. The one audited background-texture blit in Minecraft 26.2 `AbstractFurnaceScreen.extractBackground` is redirected with `require = 1`; unaccepted subclasses delegate the complete original call.
+
+The accepted path draws the bounded shared panel and active slots, then optionally restores the original 14x14 empty-flame and 24x16 empty-progress backplates from that subtype's own texture. Minecraft's separate `blitSprite` calls for live flame and burn progress still execute after the redirect, preserving distinct Furnace, Blast Furnace and Smoker sprites and timing. Theme, slots and static backplates are independent. Hypixel use is a separate default-off opt-in. Recipe panels, subtype filters, item rendering, hover state, carried stacks, narration and all input remain untouched.
+
+The adversarial review caught Minecraft's hard-coded dark `#404040` Furnace and Inventory labels at inadequate contrast over the dark panel. `ContainerLabelThemeMixin.java` now substitutes a configurable light label color only when the exact screen's own Constellation treatment is active, and delegates the original color otherwise. The same correction covers already-themed player inventory, crafting table and allowlisted basic containers without broadening any scope. The review also renamed the static-only indicator option to Indicator Backplates so its behavior does not imply that disabling decoration suppresses functional live progress.
+
+Real-client inspection used a dedicated local Creative world. It covered idle Furnace with the recipe book closed and open, valid fuel/input placement, live flame/progress rendering, completed recipe discovery, and block-entity replacement with exact `minecraft:blast_furnace` and `minecraft:smoker` instances. Useful screenshots for this workstation session are `/tmp/furnace-bookopen808.png`, `/tmp/furnace-active808.png`, `/tmp/furnace-output808.png`, `/tmp/blast-real808.png` and `/tmp/smoker-real808.png`. No Hypixel movement or server interaction was needed.
+
+Final release verification belongs below after `tools/release.sh` completes.

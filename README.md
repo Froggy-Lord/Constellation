@@ -83,6 +83,8 @@ terminal practice mirrors Hypixel’s boards while adding configurable artificia
 
 vanilla crafting tables have an exact-class constellation visual treatment with independent slot and arrow controls. the recipe book stays vanilla, server styling is off by default, and normal crafting clicks remain untouched.
 
+furnaces, blast furnaces and smokers use the same exact-class treatment with their original flame and progress animations preserved. they have independent slot, indicator-backplate and hypixel controls and never broaden the ordinary chest scope.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

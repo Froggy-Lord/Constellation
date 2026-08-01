@@ -799,3 +799,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Recipe book open and closed layouts retain vanilla positioning, recipes, labels, carried items, tooltips, keyboard controls, narration and crafting behavior
 - Creative, player-inventory, specialized, third-party and server menu subclasses are excluded structurally
 - Global inventory callbacks fail open when their owning module was never initialized, including Starlyn tooltips and Moonglade middle-click handling
+
+## Safe furnace-family visuals
+
+- Exact vanilla Furnace, Blast Furnace and Smoker screen treatment with a shared bounded panel and machine/player slot wells
+- Original empty flame and progress artwork remains visible, while Minecraft's subtype-specific live flame and progress sprites continue rendering afterward
+- Independent main-theme, slot-frame and static indicator-backplate toggles plus a separate Hypixel opt-in that defaults off
+- Configurable high-contrast labels shared with the other enabled Constellation inventory treatments
+- Recipe book open and closed positions, filtering, labels, carried stacks, tooltips, output collection, keyboard controls and narration stay vanilla
+- Other `AbstractFurnaceScreen` subclasses and unrelated server containers cannot inherit the treatment accidentally

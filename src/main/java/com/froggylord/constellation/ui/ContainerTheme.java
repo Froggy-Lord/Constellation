@@ -5,9 +5,13 @@ import com.froggylord.constellation.config.VisualConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.inventory.SmokerScreen;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
@@ -56,6 +60,14 @@ public final class ContainerTheme {
             && (!ConstellationClient.loc().onHypixel() || config.craftingTablesOnHypixel);
     }
 
+    public static boolean furnace(AbstractFurnaceScreen<?> screen) {
+        VisualConfig config = config();
+        Class<?> type = screen.getClass();
+        return config != null && config.enabled && config.furnaceTheme
+            && (type == FurnaceScreen.class || type == BlastFurnaceScreen.class || type == SmokerScreen.class)
+            && (!ConstellationClient.loc().onHypixel() || config.furnacesOnHypixel);
+    }
+
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
     public static void drawPlayerInventory(GuiGraphicsExtractor graphics, InventoryScreen screen,
                                            int x, int y, int width, int height) {
@@ -93,6 +105,33 @@ public final class ContainerTheme {
                 22, 15, textureWidth, textureHeight);
         }
         if (config.craftingTableSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
+    // ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawFurnace(GuiGraphicsExtractor graphics, AbstractFurnaceScreen<?> screen,
+                                   RenderPipeline pipeline, Identifier texture,
+                                   int x, int y, int width, int height,
+                                   int textureWidth, int textureHeight) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.furnaceIndicatorBackplates) {
+            graphics.blit(pipeline, texture, x + 56, y + 36, 56f, 36f,
+                14, 14, textureWidth, textureHeight);
+            graphics.blit(pipeline, texture, x + 79, y + 34, 79f, 34f,
+                24, 16, textureWidth, textureHeight);
+        }
+        if (config.furnaceSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
+    public static int labelColor(AbstractContainerScreen<?> screen, int original) {
+        VisualConfig config = config();
+        if (config == null) return original;
+        boolean themed = screen instanceof InventoryScreen inventory && playerInventory(inventory)
+            || screen instanceof CraftingScreen crafting && craftingTable(crafting)
+            || screen instanceof AbstractFurnaceScreen<?> furnace && furnace(furnace)
+            || basicContainer(screen);
+        return themed ? config.inventoryLabelColor : original;
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,
