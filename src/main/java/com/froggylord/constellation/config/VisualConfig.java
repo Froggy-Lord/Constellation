@@ -21,6 +21,10 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean basicContainersOnHypixel = false;
     public boolean basicContainersInDungeons = false;
     public boolean basicContainerSlotFrames = true;
+    public boolean craftingTableTheme = true;
+    public boolean craftingTablesOnHypixel = false;
+    public boolean craftingTableSlotFrames = true;
+    public boolean craftingTableArrow = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;

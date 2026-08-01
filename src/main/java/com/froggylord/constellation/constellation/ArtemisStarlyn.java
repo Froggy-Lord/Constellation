@@ -103,7 +103,7 @@ public final class ArtemisStarlyn {
     }
 
     public static List<Component> appendTooltip(AbstractContainerScreen<?> screen,ItemStack stack,List<Component> current){
-        if(!cfg.starlynCouponTooltips||!shop(screen)||stack==null)return current;
+        if(cfg==null||!cfg.enabled||!cfg.starlynCouponTooltips||!shop(screen)||stack==null)return current;
         Row row=rows.stream().filter(value->value.id.equals(itemId(stack))||value.name.equals(clean(stack.getHoverName().getString()))).findFirst().orElse(null);if(row==null)return current;
         List<Component> out=new ArrayList<>(current);out.add(Component.literal(""));out.add(Component.literal("§eCoupon Profit"));
         out.add(Component.literal("§7Sell value: §6"+coins(row.sell,row.complete)));

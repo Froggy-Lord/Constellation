@@ -791,3 +791,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Configurable scrim color, 0–255 opacity and accent color
 - Vanilla labels, sprite icons, focus, narration, keyboard navigation, tooltips, slider dragging and screen destinations remain authoritative
 - Inventory, container, chat, advancements, social/reporting, accessibility, language, warning, death, disconnect, loading, Realms, account and third-party screens remain outside the allowlist
+
+## Safe crafting-table visuals
+
+- Exact vanilla `CraftingScreen` treatment with a dark space panel, gold accent, bounded 3x3/result/player-inventory slot wells and restored vanilla crafting arrow
+- Independent main-theme, slot-frame and arrow toggles plus a separate Hypixel opt-in that defaults off
+- Recipe book open and closed layouts retain vanilla positioning, recipes, labels, carried items, tooltips, keyboard controls, narration and crafting behavior
+- Creative, player-inventory, specialized, third-party and server menu subclasses are excluded structurally
+- Global inventory callbacks fail open when their owning module was never initialized, including Starlyn tooltips and Moonglade middle-click handling

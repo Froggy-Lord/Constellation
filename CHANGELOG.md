@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.807 (2026-08-01) — Safe Crafting Table Visuals
+
+- added an exact-class Constellation crafting-table panel with independently configurable slot frames and vanilla arrow restoration
+- kept the recipe book, labels, items, tooltips, carried stacks, narration and every vanilla crafting interaction authoritative
+- left crafting-table styling disabled on Hypixel by default behind its own explicit opt-in
+- fixed two disabled-module lifecycle crashes found by live recipe-book and shift-click testing, then adversarially audited every global inventory callback
+
 ## 0.9.806 (2026-08-01) — In-game Menu Visual Shell
 
 - added an exact-class Constellation shell for Pause and the ordinary options screens opened from a world

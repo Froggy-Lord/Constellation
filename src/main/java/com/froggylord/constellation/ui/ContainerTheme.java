@@ -6,7 +6,10 @@ import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
 
 import java.util.Locale;
@@ -46,6 +49,13 @@ public final class ContainerTheme {
         return true;
     }
 
+    public static boolean craftingTable(CraftingScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.craftingTableTheme
+            && screen.getClass() == CraftingScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.craftingTablesOnHypixel);
+    }
+
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
     public static void drawPlayerInventory(GuiGraphicsExtractor graphics, InventoryScreen screen,
                                            int x, int y, int width, int height) {
@@ -68,6 +78,21 @@ public final class ContainerTheme {
         ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
         panel(graphics, 0, 0, accessor.constellation$imageWidth(), accessor.constellation$imageHeight(), config);
         if (config.basicContainerSlotFrames) slots(graphics, screen, 0, 0, config);
+    }
+
+    // ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawCraftingTable(GuiGraphicsExtractor graphics, CraftingScreen screen,
+                                         RenderPipeline pipeline, Identifier texture,
+                                         int x, int y, int width, int height,
+                                         int textureWidth, int textureHeight) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.craftingTableArrow) {
+            graphics.blit(pipeline, texture, x + 90, y + 35, 90f, 35f,
+                22, 15, textureWidth, textureHeight);
+        }
+        if (config.craftingTableSlotFrames) slots(graphics, screen, x, y, config);
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,

@@ -2648,3 +2648,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Disable In Game Menu Blur. Expected: the live world becomes sharp beneath the scrim without changing controls; enabling it restores vanilla menu blur.
 - [ ] Set scrim opacity to 0 and 255, then choose alternate scrim/accent colors. Expected: opacity clamps safely, colors apply immediately and all text remains under vanilla rendering.
 - [ ] Test several GUI scales and both singleplayer and multiplayer Pause menus. Expected: dynamic vanilla additions remain aligned and no fixed Constellation panel clips them.
+
+## Safe crafting-table visuals
+
+- [ ] In a singleplayer world, place and open a vanilla crafting table. Expected: only the exact crafting-table screen receives the dark panel, gold top rule, 3x3 grid wells, result well and player-inventory wells.
+- [ ] Close and open the recipe book. Expected: the crafting panel shifts to both vanilla positions, the recipe panel stays vanilla and every slot remains aligned.
+- [ ] Check the arrow between grid and result in both layouts. Expected: the original vanilla arrow is visible and is never stretched, recolored or covered by the custom panel.
+- [ ] Craft planks in the player inventory, shift-click the output, craft a crafting table through the recipe book, place it and move a stack through its 3x3 grid. Expected: every click succeeds with no client exception or stuck carried item.
+- [ ] Hover recipes, grid items and inventory items. Expected: recipe and item tooltips remain vanilla and no disabled feature crashes while producing them.
+- [ ] Disable Crafting Table Slot Frames and Crafting Table Arrow independently. Expected: each named layer disappears without changing the other layer or any interaction.
+- [ ] Disable Crafting Table Theme. Expected: the complete vanilla crafting-table texture returns immediately.
+- [ ] Join Hypixel with Crafting Tables on Hypixel disabled. Expected: crafting-table screens remain vanilla. Opt in only for a controlled check; expected: the same exact vanilla screen is styled, while server chest menus and subclasses remain untouched.
+- [ ] Test narrow and wide windows plus several GUI scales. Expected: the panel remains bounded to the vanilla image dimensions and never clips the recipe book, title, inventory label or slots.
+- [ ] Disable Artemis before startup, then use recipe-book and shift-click interactions. Expected: Starlyn and Moonglade callbacks fail open with no null-config exception.

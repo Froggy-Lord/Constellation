@@ -81,6 +81,8 @@ speed presets, scoreboard ordering, tunnel routing and dungeon records complete 
 the twenty-page Profile Viewer now uses the same constellation shell, with animated loading, last-good refresh behavior, keyboard navigation and bounded record lists.
 terminal practice mirrors Hypixel’s boards while adding configurable artificial ping, live timing, PBs, accuracy history, direct mode commands and optional automatic replay.
 
+vanilla crafting tables have an exact-class constellation visual treatment with independent slot and arrow controls. the recipe book stays vanilla, server styling is off by default, and normal crafting clicks remain untouched.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

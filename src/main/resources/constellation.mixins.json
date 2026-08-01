@@ -9,6 +9,7 @@
         "BasicContainerThemeMixin",
         "CameraInstantSneakMixin",
         "ContainerScreenAccessor",
+        "CraftingScreenThemeMixin",
         "EffectsInInventoryMixin",
         "EntityRenderDispatcherMixin",
         "GameRendererMixin",

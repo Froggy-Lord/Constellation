@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.806 In-game Menu Visual Shell.
+Last updated: 2026-08-01 for version 0.9.807 Safe Crafting Table Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.806`.
+- Current artifact version: `0.9.807`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3499,3 +3499,17 @@ The owner-only shelf has 0.9.805 in Current and 0.9.802 through 0.9.804 in separ
 The background hook replaces only the vanilla menu texture with a configurable translucent scrim and optional one-pixel accent rule. Vanilla blur remains independently toggleable. All screen renderables, labels, sprite icons, dynamic pause additions, tooltips, focus, narration, keyboard/mouse input and destinations still execute. Backdrop, stock buttons and sliders each have independent toggles; scrim color, 0–255 opacity and accent color are editable through Visuals. Inventory/container, chat, advancements, statistics, social/reporting destinations, accessibility, language, warning, death/disconnect/loading, Realms/account, Constellation-owned and third-party screens are excluded.
 
 Real-client inspection covered Pause, in-world Options and the Language destination. Pause retained every vanilla control over a visibly blurred world; Options retained the FOV slider and full navigation; Language returned to vanilla gray controls and its normal background behavior. `BasicContainerThemeMixin` now explicitly requires its one audited injection target so future mapping drift fails at startup rather than silently removing the layer.
+
+Verification passed with exactly 11 successful tests and zero failed. The automated 160-second Xvfb client run ended at expected timeout 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report or fatal-error marker. Build and Gather jars share SHA-256 `b89f03322aec052d177f96a0ee446bd5ffd291877748c88ce99ecefb911b8cdb`; Gather's config remained unchanged at `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. The former 0.9.805 jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-144906-0.9.806/`.
+
+The private shelf has 0.9.806 in Current and versions 0.9.802 through 0.9.805 in their own archived folders. Anonymous root and direct-jar requests both return 401. The release is queued as Froggy-Lord drip commit `185b4d2676` with message `extend visual shell to in-game menus`.
+
+## August 1 version 0.9.807 safe crafting-table visuals
+
+`ContainerTheme.java` and `CraftingScreenThemeMixin.java` extend the CryptKit GPL `mixin/ContainerThemeMixin.java` visual pattern to the exact vanilla `CraftingScreen` class. The redirect replaces only its one background blit. It draws the shared bounded panel, 3x3/result/player-inventory slot wells and the original crafting arrow texture region; vanilla recipes, labels, slots, carried items, tooltips, narration and input still execute. Main treatment, slot wells and arrow are independently configurable. Hypixel use requires a separate opt-in that defaults off, and subclasses cannot match.
+
+The release was exercised through a real local Survival flow rather than a screen-only smoke check: punch and collect a log, open the player recipe book, fill and shift-click planks, fill and shift-click a crafting table, place the table, open it with its recipe book expanded and collapsed, move an item through the grid, and hover recipes/items. Screenshots were retained under `/tmp` as `plankfill-afterfix807.png`, `tablefill2-807.png`, `crafting-closed807.png`, `crafting-bookclosed807.png` and `crafting-interacted807.png` for the current workstation session.
+
+That live interaction found two disabled-module lifecycle faults outside the new renderer. `ArtemisStarlyn.appendTooltip` and `ArtemisMoongladeBeacon.shouldMiddleClick` could be reached by global inventory mixins even when Artemis had never initialized its config. Both now fail open on null/disabled config before reading feature fields. An adversarial trace of every unconditional callback in `ItemProtectionScreenMixin` and `TerminalClickBlockMixin` found no remaining vanilla inventory entry point with the same ordering fault.
+
+Final build, retained-client boot, Gather checksum, private shelf and drip-commit results belong below after `tools/release.sh` completes. Do not consider this release delivered until all of those checks pass.

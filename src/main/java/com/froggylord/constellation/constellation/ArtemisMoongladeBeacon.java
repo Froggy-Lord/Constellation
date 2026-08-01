@@ -138,7 +138,7 @@ public final class ArtemisMoongladeBeacon {
     }
 
     public static boolean shouldMiddleClick(AbstractContainerScreen<?> screen,int slotId,int button,ContainerInput input){
-        if(!cfg.moongladeBeaconUseMiddleClick||button!=0||input!=ContainerInput.PICKUP||!menu(screen))return false;
+        if(cfg==null||!cfg.enabled||!cfg.moongladeBeacon||!cfg.moongladeBeaconUseMiddleClick||button!=0||input!=ContainerInput.PICKUP||!menu(screen))return false;
         return tuneForControl(slotId)!=null;
     }
 
