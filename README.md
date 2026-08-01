@@ -12,6 +12,8 @@ the main hub uses a hand-drawn star-map icon family for all 15 constellations, a
 
 the optional menu shell uses the same artwork and control language without replacing minecraft's logo, navigation, realms status, narration or input. title backdrop, title buttons, ordinary menu backgrounds, menu buttons, sliders and reduced motion are controlled independently from the hub's visuals screen. accessibility, language, warning, recovery, loading, account, realms and third-party screens remain vanilla.
 
+the player inventory can use a matching panel, model frame and slot treatment without replacing its recipe book, equipment, effects, items or input. ordinary vanilla chests have a separately scoped theme that is off on hypixel by default and always protects puzzle, spirit leap, auction, bazaar, trade, salvage and museum menus.
+
 each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
 
 ## what it does

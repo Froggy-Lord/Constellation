@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.804 Allowlisted Menu Visuals.
+Last updated: 2026-08-01 for version 0.9.805 Safe Inventory Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.804`.
+- Current artifact version: `0.9.805`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3477,3 +3477,13 @@ Real-client inspection at 640 by 480 covered Options and Video Settings with the
 Verification passed: touched-file forbidden-name and emoji audits were empty, shell validation passed, and `./gradlew build -q` completed with exactly 11 successful tests and zero failed. The 160-second `DISPLAY=:99` client soak ended at expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report, fatal-error, initializer, illegal-class-load, transformer or missing-texture signature. The flite narrator warning remains benign. Release jar SHA-256: `65a196b990ff5f1f721f33bd8e91747b80518a4eeec00ed08e9e1182d35144da`.
 
 The verified jar is deployed to Gather. The prior live jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-142626-0.9.804/`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`.
+
+The owner-only shelf promoted version 0.9.804 into Current and moved 0.9.803 into its own archived folder with that release's checksum and testing guide. Both the shelf root and direct current-jar URL return 401 anonymously. Build, Gather and shelf checksums match. The release is queued as Froggy-Lord drip commit `409e2ea809` with message `extend visual shell to allowlisted menus and sliders`.
+
+## August 1 version 0.9.805 safe inventory visuals
+
+`ContainerTheme.java`, `PlayerInventoryThemeMixin.java` and `BasicContainerThemeMixin.java` add a deliberately narrow inventory visual layer ported from CryptKit GPL `mixin/InventoryButtonsMixin.java` and `mixin/ContainerThemeMixin.java`. The player-inventory redirect replaces only its one background texture draw, so the model, effects, recipe book, armor/offhand/crafting slots, carried items, tooltips, narration and all input remain vanilla. A real-client check confirmed both closed and open recipe-book layouts at native GUI scale.
+
+Basic-container styling accepts only the exact vanilla `ContainerScreen` class. It is disabled on Hypixel and in dungeons by default, each scope requires its own opt-in, and puzzle/terminal, Spirit Leap, Auction, Bazaar, trade, salvage and Museum titles remain hard-protected after opt-in. Specialized vanilla containers, creative inventory, third-party screens and `TerminalSimulatorScreen` are structurally excluded. Users can add semicolon-separated title fragments to the denylist. Panel, border, accent, slot, slot-edge and model-frame colors plus each visual layer are independently configurable in Visuals.
+
+`tools/release.sh` is now the single local CI-style release entry point. It builds, requires the exact 11/0 test markers, runs the 160-second retained-client gate, checks room and constellation startup markers plus fatal-log exclusions, archives/deploys Gather with checksum comparison, then invokes the existing drip enqueue helper. The helper rebuilds the isolated drip tree, publishes the owner-only Current/Archived shelf, creates the Froggy-Lord commit and schedules it. Future agents should run `tools/release.sh 'message'` after version/docs/audits instead of manually repeating those release operations.

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.805 (2026-08-01) — Safe Inventory Visuals
+
+- added a configurable Constellation player-inventory panel, model frame and slot treatment while preserving the recipe book, effects, equipment, tooltips and carried items
+- added opt-in styling for exact vanilla basic containers with separate Hypixel and dungeon controls
+- hard-excluded puzzle, Spirit Leap, market, trade, salvage and Museum containers, plus a configurable title denylist
+- added a single release automation command covering tests, the retained-client boot gate, Gather deployment, private publishing and drip enqueueing
+
 ## 0.9.804 (2026-08-01) — Allowlisted Menu Visuals
 
 - extended the optional space backdrop and stock-button treatment to an exact allowlist of ordinary out-of-game menus

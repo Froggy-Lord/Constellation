@@ -2621,3 +2621,16 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Trigger a confirmation, failed connection/disconnect, warning or recovery screen if safely available. Expected: it remains vanilla; no Constellation stock-control styling leaks into it.
 - [ ] Open Mod Menu or another mod's configuration screen. Expected: it remains owned by that mod unless it is a Constellation screen with its existing bespoke design.
 - [ ] Disable Menu Backdrops, Menu Buttons and Menu Sliders one at a time from Visuals. Expected: only that surface returns to vanilla and the other two remain independently active.
+
+## Safe inventory visuals
+
+- [ ] Join a world and open the player inventory. Expected: the dark panel, gold accent, model frame and slot wells align with the vanilla inventory while the world remains visible behind it.
+- [ ] Open and close the recipe book. Expected: the inventory shifts to the vanilla position, the recipe panel remains unchanged and every themed slot stays aligned.
+- [ ] Check armor, offhand, crafting, hotbar and active-effect areas. Expected: the player model and every item render normally, effect presentation remains intact and no slot well is drawn outside the inventory.
+- [ ] Hover items, pick one up, split a stack, shift-click and use keyboard slot controls. Expected: tooltips, carried stacks, highlighting and all vanilla input remain unchanged.
+- [ ] Open Visuals and disable Player Inventory Theme, Player Inventory Model Frame and Player Inventory Slot Frames independently. Expected: each option affects only its named visual layer and disabling the main inventory theme restores the complete vanilla texture.
+- [ ] Open an ordinary chest off Hypixel. Expected: only the exact vanilla chest screen receives the optional panel and slot treatment; furnaces, crafting, creative inventory and third-party screens remain unchanged.
+- [ ] Join Hypixel with Basic Containers on Hypixel disabled. Expected: every server chest menu remains vanilla.
+- [ ] Opt into Hypixel basic containers and open auction, Bazaar, trade, salvage, Museum and a known puzzle menu. Expected: each protected menu remains vanilla despite the broad opt-in.
+- [ ] Opt into dungeon basic containers and open Spirit Leap plus each terminal family. Expected: protected interaction screens remain vanilla and their solvers/input continue working.
+- [ ] Add a lowercase title fragment to Container Title Denylist and open a matching chest. Expected: the matching screen stays vanilla; removing the fragment allows the ordinary chest theme again.
