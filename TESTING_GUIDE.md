@@ -2762,3 +2762,20 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open an Anvil and Grindstone. Expected: neither receives any Smithing-specific stage or preview framing.
 - [ ] Join Hypixel with Smithing Tables on Hypixel disabled. Expected: exact Smithing screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, hammer, stages, cycling hints, arrow/error, armor preview, slots and tooltips remain bounded and aligned.
+
+## Safe Stonecutter visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Stonecutter. Expected: a bounded dark panel, readable labels, upper-right saw mark, work stage, recipe surface, scrollbar track and machine/player slot wells appear.
+- [ ] Open it empty. Expected: the recipe area is empty, the scroll thumb is visibly disabled and no output is fabricated.
+- [ ] Shift-click Stone into the input. Expected: every available recipe appears in Minecraft's original four-column grid and the disabled thumb remains aligned when all recipes fit.
+- [ ] Hover several recipes. Expected: the original highlighted sprite, pointing-hand cursor and exact output tooltip appear above the custom surface.
+- [ ] Select a recipe. Expected: Minecraft's selected sprite remains distinct and the exact result appears in the output well.
+- [ ] Hover and collect the output. Expected: its full tooltip appears, input is consumed normally, the stonecutting sound plays and the visible recipe/result state updates.
+- [ ] Shift-click a full stack of input and then Shift-click the output. Expected: Minecraft repeatedly crafts the selected result, transfers it normally and clears the input/grid when exhausted.
+- [ ] Use an input with more than twelve available recipes. Expected: the thumb becomes active; mouse-wheel and drag scrolling reveal later recipes without leaving the framed track.
+- [ ] Toggle Stonecutter Slot Frames, Work Stage, Recipe Grid Frame, Scroll Track Frame and Saw independently. Expected: only that decorative layer changes; Minecraft's functional recipe and thumb sprites always remain and interaction stays functional.
+- [ ] Change Stonecutter Work Stage Color, Recipe Grid Color, Saw Color and Inventory Label Color. Expected: each updates immediately while items, recipe states and labels retain readable contrast.
+- [ ] Disable Stonecutter Theme. Expected: the complete vanilla texture and original label colors return.
+- [ ] Open another workstation and an ordinary chest. Expected: neither inherits any Stonecutter-specific surface or mark.
+- [ ] Join Hypixel with Stonecutters on Hypixel disabled. Expected: exact Stonecutter screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, saw, stages, recipe buttons, scroll thumb, labels, slots and tooltips remain bounded and aligned.

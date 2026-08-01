@@ -42,6 +42,7 @@
         "PlayerInventoryThemeMixin",
         "QuickCloseDungeonChestMixin",
         "SpiritLeapScreenMixin",
+        "StonecutterScreenThemeMixin",
         "SlayerDeathMixin",
         "ScreenshotMixin",
         "ScoreboardSidebarMixin",

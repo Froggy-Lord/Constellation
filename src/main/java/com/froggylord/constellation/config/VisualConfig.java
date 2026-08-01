@@ -57,6 +57,13 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean smithingTableWorkStage = true;
     public boolean smithingTableArrowBackplate = true;
     public boolean smithingTablePreviewStage = true;
+    public boolean stonecutterTheme = true;
+    public boolean stonecuttersOnHypixel = false;
+    public boolean stonecutterSlotFrames = true;
+    public boolean stonecutterWorkStage = true;
+    public boolean stonecutterRecipeGridFrame = true;
+    public boolean stonecutterScrollTrackFrame = true;
+    public boolean stonecutterSaw = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;
@@ -73,6 +80,9 @@ public final class VisualConfig extends BaseConfigGroup {
     public int grindstoneWorkStageColor = 0xE6080814;
     public int smithingTableWorkStageColor = 0xE6080814;
     public int smithingTablePreviewStageColor = 0xE6080814;
+    public int stonecutterWorkStageColor = 0xE6080814;
+    public int stonecutterRecipeGridColor = 0xE6080814;
+    public int stonecutterSawColor = 0xFF5A5A86;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

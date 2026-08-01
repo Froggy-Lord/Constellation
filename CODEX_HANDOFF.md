@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.813 Safe Smithing Table Visuals.
+Last updated: 2026-08-01 for version 0.9.814 Safe Stonecutter Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.813`.
+- Current artifact version: `0.9.814`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3591,3 +3591,15 @@ Real-client testing used the local `Anvil Visual 2` creative world with an exact
 The adversarial audit found no high functional defect and proved the superclass redirect count/fallback, Anvil separation, exact gates, cycling/error/preview ordering, geometry, labels, hit boxes, config exposure, credit and forbidden-source cleanliness. It rejected the first bent pixel mark as pickaxe-like and noted it lacked configuration ownership. The mark is now a broad straight mallet with its own default-on Hammer control. `/tmp/smithing-malletfinal813.png` is the restarted final proof with the complete `Upgrade Gear` title, cycling template hint and armor stand visible together.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `a4220805c12c73ae8b304b3151c154cf13cfa6c8a8ddfff5da5a8ac4e903e9e2`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.812 was moved to `~/Desktop/To-Delete/gather-jars/20260801-203441-0.9.813/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `9453fa4851172361d468748cf2dfa2ed4ea5dd46` is authored only by Froggy-Lord with subject `add safe smithing table visuals and armor preview stage`.
+
+## August 1 version 0.9.814 safe Stonecutter visuals
+
+`ContainerTheme.java` and `StonecutterScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `StonecutterScreen`. Minecraft 26.2 has exactly one base-texture `blit` in `extractBackground`; the pinned `require = 1` redirect draws the treatment only for the exact runtime class and replays every original argument when disabled, on Hypixel by default, or for any other path.
+
+The accepted path draws the shared bounded panel and active wells plus independently configurable work, recipe-grid and scrollbar frames and a small upper-right circular saw mark. Minecraft's later active/disabled scroll thumb, selected/highlighted/ordinary recipe sprites, recipe item renders, hover tooltips, cursor requests, selection, result construction, stonecutting sound, input consumption, slots, Shift-click routing and output collection remain unchanged. Theme, Hypixel use, slots, work stage, recipe-grid frame, scroll-track frame, saw, both surface colors and saw color are independently persisted. The frame names explicitly communicate that disabling decoration never suppresses Minecraft's functional sprites.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Stonecutter. It covered the empty/disabled-scroll state, Stone and Deepslate recipe population, ordinary and highlighted recipe states, recipe selection, output tooltip, full-stack Shift-click crafting, result transfer and automatic empty reset. Screenshots are `/tmp/stonecutter-recipes814.png`, `/tmp/stonecutter-recipehover814.png`, `/tmp/stonecutter-outputtooltip2-814.png`, `/tmp/stonecutter-collected814.png`, `/tmp/stonecutter-deepslaterecipes814.png` and `/tmp/stonecutter-sawfinal814.png`. The first exact empty capture exposed a title overlap and the adversarial review rejected its moved rake-like revision; `/tmp/stonecutter-sawfinal814.png` is the second restarted proof with the dedicated-color circular saw in unused upper-right space. No Hypixel interaction was needed.
+
+The adversarial audit proved the exact redirect count and original-argument fallback, render ordering, labels, gates, recipe/scroll hit boxes, cursor, tooltips, selection, result construction, Shift-click crafting, collection, reset, registration, credit and forbidden-source cleanliness. It found the new mixin missing from the drip allowlist, the saw color coupled to Brewing Stand settings, a rake-like first mark and potentially misleading grid/track control names. The script now allowlists the mixin, Stonecutter owns a dedicated saw color, the mark is a circular toothed blade, and the settings are honestly named Recipe Grid Frame and Scroll Track Frame.
+
+Final release verification belongs below after `tools/release.sh` completes.

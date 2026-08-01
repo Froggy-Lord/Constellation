@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.814 (2026-08-01) — Safe Stonecutter Visuals
+
+- added an exact-class Constellation Stonecutter panel with configurable work stage, recipe grid, scroll track, saw identity and machine/player slot wells
+- preserved Minecraft's recipe population, selection/highlight sprites, scroll thumb, cursor behavior, item tooltips, output recipes and collection
+- added independent Stonecutter theme, slot, stage, grid, track, saw, color and default-off Hypixel controls
+- replaced the first overlapping rake-like mark with a dedicated-color circular saw in unused title space
+
 ## 0.9.813 (2026-08-01) — Safe Smithing Table Visuals
 
 - added an exact-class Constellation Smithing Table panel with configurable operation and armor-preview stages

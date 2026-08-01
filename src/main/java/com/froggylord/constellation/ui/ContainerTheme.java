@@ -17,6 +17,7 @@ import net.minecraft.client.gui.screens.inventory.GrindstoneScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SmokerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
+import net.minecraft.client.gui.screens.inventory.StonecutterScreen;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
@@ -106,6 +107,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.smithingTableTheme
             && screen.getClass() == SmithingScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.smithingTablesOnHypixel);
+    }
+
+    public static boolean stonecutter(StonecutterScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.stonecutterTheme
+            && screen.getClass() == StonecutterScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.stonecuttersOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -274,6 +282,31 @@ public final class ContainerTheme {
         if (config.smithingTableSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawStonecutter(GuiGraphicsExtractor graphics, StonecutterScreen screen,
+                                       int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.stonecutterWorkStage) {
+            graphics.fill(x + 12, y + 25, x + 166, y + 61, config.stonecutterWorkStageColor);
+            frame(graphics, x + 12, y + 25, 154, 36,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.stonecutterRecipeGridFrame) {
+            graphics.fill(x + 48, y + 12, x + 118, y + 70, config.stonecutterRecipeGridColor);
+            frame(graphics, x + 48, y + 12, 70, 58,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.stonecutterScrollTrackFrame) {
+            graphics.fill(x + 118, y + 14, x + 132, y + 70, config.inventorySlotColor);
+            frame(graphics, x + 118, y + 14, 14, 56,
+                config.inventoryBorderColor, config.inventoryBorderColor);
+        }
+        if (config.stonecutterSaw) stonecutterSaw(graphics, x, y, config);
+        if (config.stonecutterSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -285,6 +318,7 @@ public final class ContainerTheme {
             || screen instanceof AnvilScreen anvil && anvil(anvil)
             || screen instanceof GrindstoneScreen grindstone && grindstone(grindstone)
             || screen instanceof SmithingScreen smithing && smithingTable(smithing)
+            || screen instanceof StonecutterScreen stonecutter && stonecutter(stonecutter)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
@@ -329,6 +363,18 @@ public final class ContainerTheme {
         graphics.fill(x + 15, y + 13, x + 23, y + 17, edge);
         graphics.fill(x + 17, y + 15, x + 21, y + 27, edge);
         graphics.fill(x + 18, y + 16, x + 20, y + 26, config.inventorySlotEdgeColor);
+    }
+
+    private static void stonecutterSaw(GuiGraphicsExtractor graphics, int x, int y,
+                                       VisualConfig config) {
+        int edge = config.inventoryBorderColor;
+        int blade = config.stonecutterSawColor;
+        graphics.fill(x + 145, y + 4, x + 149, y + 20, edge);
+        graphics.fill(x + 139, y + 10, x + 155, y + 14, edge);
+        graphics.fill(x + 141, y + 7, x + 153, y + 17, edge);
+        graphics.fill(x + 143, y + 6, x + 151, y + 18, blade);
+        graphics.fill(x + 141, y + 10, x + 153, y + 14, blade);
+        graphics.fill(x + 145, y + 9, x + 149, y + 15, config.inventoryAccentColor);
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,

@@ -853,3 +853,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Recipes, component copying, template consumption, validation, slots, Shift-click routing, tooltips and output collection remain authoritative
 - Theme, slot frames, hammer, work stage, arrow backplate, preview stage, both stage colors and Hypixel use are independently configurable
 - Exact runtime-class and default-off Hypixel gates prevent Anvil, Grindstone, subclasses or chest-backed server menus from inheriting the visual
+
+## Safe Stonecutter visuals
+
+- Exact vanilla `StonecutterScreen` treatment with bounded dark panel, readable labels, framed input/output work stage and machine/player slot wells
+- Separate recipe-grid and scrollbar-track surfaces keep the selectable result area legible without replacing its content
+- Minecraft's selected, highlighted and ordinary recipe sprites, item renders, tooltips, pointing-hand cursor and live scroll thumb render after the custom base
+- Visible recipes, selection, result construction, sound, input consumption, slots, Shift-click routing and output collection remain authoritative
+- Theme, slot frames, work stage, recipe-grid frame, scroll-track frame, saw identity, both surface colors, saw color and Hypixel use are independently configurable; Minecraft's functional recipe and thumb sprites always remain
+- Exact runtime-class and default-off Hypixel gates prevent custom subclasses and chest-backed server menus from inheriting the visual
