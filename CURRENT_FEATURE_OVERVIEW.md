@@ -834,3 +834,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Minecraft remains authoritative for name editing, repair and rename costs, insufficient-XP red text, invalid-operation cross, item validation, tooltips and output collection
 - Theme, slot frames, work stage, symbols, name field, work-stage color, name-field color and Hypixel use are independently configurable
 - Exact runtime-class and default-off Hypixel gates prevent Grindstone, Smithing, custom subclasses or server menus from inheriting the visual
+
+## Safe Grindstone visuals
+
+- Exact vanilla `GrindstoneScreen` treatment with a bounded dark panel, high-contrast labels, framed work stage and machine/player slot wells
+- Independently optional original wheel/frame apparatus and directional arrow preserve the familiar repair/disenchant flow
+- Minecraft remains authoritative for input validation, compatible repair, curse retention, non-curse enchantment removal, experience, output contents and collection
+- The original conditional red invalid-operation cross renders after the custom background at its exact location
+- Theme, slot frames, work stage, apparatus, arrow backplate, stage color and Hypixel use are independently configurable; the functional invalid cross always remains visible
+- Exact runtime-class and default-off Hypixel gates prevent Anvil, Smithing, subclasses or chest-backed server menus from inheriting the visual

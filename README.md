@@ -91,6 +91,8 @@ enchanting tables place minecraft's animated book on a framed constellation stag
 
 anvils use a purpose-built repair stage and matching rename field while minecraft keeps costs, validation, tooltips, text editing and output collection authoritative. smithing, grindstone and server menus remain outside the exact-class treatment.
 
+grindstones have their own wheel-and-frame stage with minecraft's invalid cross, repair/disenchant result, enchantment removal, experience and output handling left intact.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

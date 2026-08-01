@@ -2725,3 +2725,22 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open a Grindstone and Smithing Table. Expected: neither receives any part of the Anvil theme.
 - [ ] Join Hypixel with Anvils on Hypixel disabled. Expected: exact Anvil screens stay vanilla and all chest-backed Anvil/Reforge menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, hammer, rename field, stage, operation symbols, costs, slots and tooltips remain bounded and aligned.
+
+## Safe Grindstone visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Grindstone. Expected: a bounded dark panel, readable labels, framed wheel apparatus, directional arrow and machine/player slot wells appear.
+- [ ] Open it empty. Expected: both inputs and output are empty, with no fabricated result or error cross.
+- [ ] Put one ordinary unenchanted item into either input. Expected: Minecraft's red invalid-operation cross replaces the arrow and no output appears.
+- [ ] Hover the input. Expected: the complete item tooltip and slot hover remain visible above the custom stage.
+- [ ] Put two damaged compatible tools into the inputs. Expected: the repaired output appears, both input durability bars remain readable and the red cross disappears.
+- [ ] Hover and collect the repaired output. Expected: its tooltip reports the real repaired item, Minecraft consumes both inputs and the screen resets cleanly.
+- [ ] Put an item with an ordinary removable enchantment into either input. Expected: the output appears with the enchantment removed while the input tooltip retains it.
+- [ ] Hover the disenchant output. Expected: the removed non-curse enchantment is absent; curses and other retained components follow Minecraft's own rules.
+- [ ] Collect a disenchanted output outside Creative. Expected: Minecraft awards its normal randomized experience and consumes the input without custom automation.
+- [ ] Shift-click compatible and incompatible inventory items. Expected: vanilla slot validation and routing remain authoritative.
+- [ ] Toggle Grindstone Slot Frames, Work Stage, Apparatus and Arrow Backplate independently. Expected: only that presentation layer changes; the functional red invalid cross remains visible and repair/disenchant behavior is unchanged.
+- [ ] Change Grindstone Work Stage Color and Inventory Label Color. Expected: both update immediately with readable contrast.
+- [ ] Disable Grindstone Theme. Expected: the complete vanilla texture and original label colors return.
+- [ ] Open an Anvil and Smithing Table. Expected: neither receives any Grindstone layer.
+- [ ] Join Hypixel with Grindstones on Hypixel disabled. Expected: the exact screen stays vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, stage, apparatus, arrow/cross, labels, slots and tooltips remain bounded and aligned.

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.811 Safe Anvil Visuals.
+Last updated: 2026-08-01 for version 0.9.812 Safe Grindstone Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.811`.
+- Current artifact version: `0.9.812`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3567,3 +3567,15 @@ Real-client testing used the local `Anvil Visual 2` creative world and exact pla
 The adversarial audit found no high or medium defect. It verified both exact Minecraft 26.2 redirect counts, complete fallbacks, error-sprite ordering, edit-box geometry, costs, output validation, labels, hit boxes, tooltips, config exposure, attribution and forbidden-source cleanliness. Its one actionable low finding was that Operation Symbols also hid the hammer emblem; the emblem is now always retained and that setting controls only plus/arrow as named.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and `Constellation ready. 14 constellations loaded.`, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `31b9341ebb42adff68aa0f8627f41d59c064740d363205a74942c8c58f5ec174`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.810 was moved to `~/Desktop/To-Delete/gather-jars/20260801-201307-0.9.811/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `15321a8b8de5d0c03efbe56e1e7ba8269d4305cb` is authored only by Froggy-Lord with subject `add safe anvil visuals and themed rename field`.
+
+## August 1 version 0.9.812 safe Grindstone visuals
+
+`ContainerTheme.java` and `GrindstoneScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `GrindstoneScreen`. Minecraft 26.2 has one base-texture `blit` in `extractBackground`; the redirect pins it with `require = 1`, delegates every original argument when disabled or default-off on Hypixel, and leaves the later conditional error `blitSprite` untouched.
+
+The accepted path draws the shared bounded panel, active slot wells, a configurable framed work stage and optional original 54x54 wheel/frame plus 28x21 arrow-backplate regions. Minecraft still owns both input predicates, repair/disenchant result construction, component retention, non-curse enchantment removal, experience, conditional red cross, item rendering, hover state, tooltips, carried stacks, Shift-click routing and output collection. Exact runtime-class gating prevents Anvil, Smithing, subclasses and chest-backed server menus from matching. Theme, Hypixel use, slots, stage, apparatus, arrow backplate and stage color are independently persisted; the functional invalid cross is never hidden with decoration.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Grindstone. It covered the empty screen, one ordinary damaged item producing the red invalid cross, two damaged Diamond Swords producing a valid repair, input and output tooltips, result collection and empty reset, then a Sharpness I Diamond Sword whose output tooltip correctly omitted Sharpness. Screenshots are `/tmp/grindstone-empty812.png`, `/tmp/grindstone-one-invalid-clear812.png`, `/tmp/grindstone-validrepair-clear812.png`, `/tmp/grindstone-outputtooltip812.png`, `/tmp/grindstone-completed812.png`, `/tmp/grindstone-enchanted-tooltip2-812.png` and `/tmp/grindstone-disenchant-output812.png`. No Hypixel interaction was needed.
+
+The adversarial audit found no high or medium defect. It verified the exact one-call redirect and fallback, runtime/Hypixel gates, error ordering, geometry, labels, hit boxes, result/tooltips, defaults, credit and forbidden-source cleanliness. Its low config finding correctly noted that the decorative Arrow control could not suppress Minecraft's later functional red cross; it is now honestly named Arrow Backplate and the guide explicitly says the validation cross always remains. The four recent manifest entries were also reindented consistently.
+
+Final release verification belongs below after `tools/release.sh` completes.

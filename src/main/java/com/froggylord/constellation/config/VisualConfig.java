@@ -44,6 +44,12 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean anvilWorkStage = true;
     public boolean anvilOperationSymbols = true;
     public boolean anvilNameField = true;
+    public boolean grindstoneTheme = true;
+    public boolean grindstonesOnHypixel = false;
+    public boolean grindstoneSlotFrames = true;
+    public boolean grindstoneWorkStage = true;
+    public boolean grindstoneApparatus = true;
+    public boolean grindstoneArrowBackplate = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;
@@ -57,6 +63,7 @@ public final class VisualConfig extends BaseConfigGroup {
     public int enchantmentTableBookStageColor = 0xE6080814;
     public int anvilWorkStageColor = 0xE6080814;
     public int anvilNameFieldColor = 0xEE121229;
+    public int grindstoneWorkStageColor = 0xE6080814;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

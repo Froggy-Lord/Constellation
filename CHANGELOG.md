@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.812 (2026-08-01) — Safe Grindstone Visuals
+
+- added an exact-class Constellation Grindstone panel with configurable work stage, apparatus, directional arrow and machine/player slot wells
+- preserved the conditional invalid-operation cross, repair/disenchant result calculation, enchantment removal, experience behavior, tooltips and output collection
+- added independent Grindstone theme, slot, stage, apparatus, arrow-backplate, stage-color and default-off Hypixel controls
+- kept Anvil, Smithing, custom subclasses and chest-backed server menus structurally outside the treatment
+
 ## 0.9.811 (2026-08-01) — Safe Anvil Visuals
 
 - added an exact-class Constellation anvil panel with configurable work stage, operation symbols, name field and machine/player slot wells

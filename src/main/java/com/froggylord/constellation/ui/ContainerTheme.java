@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.GrindstoneScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SmokerScreen;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -90,6 +91,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.anvilTheme
             && screen.getClass() == AnvilScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.anvilsOnHypixel);
+    }
+
+    public static boolean grindstone(GrindstoneScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.grindstoneTheme
+            && screen.getClass() == GrindstoneScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.grindstonesOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -208,6 +216,30 @@ public final class ContainerTheme {
         frame(graphics, x, y, width, height, top, config.inventoryBorderColor);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawGrindstone(GuiGraphicsExtractor graphics, GrindstoneScreen screen,
+                                      RenderPipeline pipeline, Identifier texture,
+                                      int x, int y, int width, int height,
+                                      int textureWidth, int textureHeight) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.grindstoneWorkStage) {
+            graphics.fill(x + 20, y + 14, x + 158, y + 74, config.grindstoneWorkStageColor);
+            frame(graphics, x + 20, y + 14, 138, 60,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.grindstoneApparatus) {
+            graphics.blit(pipeline, texture, x + 29, y + 16, 29f, 16f,
+                54, 54, textureWidth, textureHeight);
+        }
+        if (config.grindstoneArrowBackplate) {
+            graphics.blit(pipeline, texture, x + 92, y + 31, 92f, 31f,
+                28, 21, textureWidth, textureHeight);
+        }
+        if (config.grindstoneSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -217,6 +249,7 @@ public final class ContainerTheme {
             || screen instanceof BrewingStandScreen brewing && brewingStand(brewing)
             || screen instanceof EnchantmentScreen enchantment && enchantmentTable(enchantment)
             || screen instanceof AnvilScreen anvil && anvil(anvil)
+            || screen instanceof GrindstoneScreen grindstone && grindstone(grindstone)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
