@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BooleanSupplier;
 
 public class ChatPipeline {
 
@@ -27,9 +28,14 @@ public class ChatPipeline {
     private final List<AllowEntry> allowListeners = new CopyOnWriteArrayList<>();
     private final List<GameEntry> gameListeners = new CopyOnWriteArrayList<>();
     private final List<ModifyEntry> modifyListeners = new CopyOnWriteArrayList<>();
+    private final BooleanSupplier active;
+
+    public ChatPipeline() { this(() -> true); }
+    public ChatPipeline(BooleanSupplier active) { this.active = active; }
 
     public void init() {
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (!active.getAsBoolean()) return true;
             for (AllowEntry e : allowListeners) {
                 if (!e.filter.allow(message)) return false;
             }
@@ -37,12 +43,14 @@ public class ChatPipeline {
         });
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (!active.getAsBoolean()) return;
             for (GameEntry e : gameListeners) {
                 try { e.handler.handle(message); } catch (Exception ex) {}
             }
         });
 
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
+            if (!active.getAsBoolean()) return message;
             Component modified = message;
             for (ModifyEntry e : modifyListeners) {
                 try { modified = e.handler.modify(modified); } catch (Exception ex) {}
