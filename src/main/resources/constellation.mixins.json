@@ -28,6 +28,7 @@
         "InventoryAccessor",
         "LerpingBossEventAccessor",
         "LoomScreenThemeMixin",
+        "LocalPlayerTextEditMixin",
         "ItemProtectionDropMixin",
         "ItemProtectionScreenMixin",
         "ItemEntityRenderStateMixin",

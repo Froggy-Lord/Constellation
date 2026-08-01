@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class BazaarApi {
@@ -59,4 +60,5 @@ public final class BazaarApi {
     }
 
     public static double[] get(String id) { return prices.get(id); }
+    public static Set<String> productIds() { return Set.copyOf(prices.keySet()); }
 }

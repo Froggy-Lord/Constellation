@@ -42,6 +42,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraCurrencyTracker.init(cfg, this);
         LyraSlotText.init(cfg);
         LyraInventorySearch.init(cfg);
+        LyraMarketSearch.init(cfg);
         LyraInventoryButtons.init(cfg);
         LyraStorageValue.init(cfg);
         LyraBazaarHelper.init(cfg);
@@ -87,6 +88,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraCurrencyTracker.registerCommands(dispatcher);
         LyraSlotText.registerCommands(dispatcher);
         LyraInventorySearch.registerCommands(dispatcher);
+        LyraMarketSearch.registerCommands(dispatcher);
         LyraInventoryButtons.registerCommands(dispatcher);
         LyraStorageValue.registerCommands(dispatcher);
         LyraBazaarHelper.registerCommands(dispatcher);

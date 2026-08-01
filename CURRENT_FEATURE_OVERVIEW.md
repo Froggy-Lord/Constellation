@@ -898,6 +898,17 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Interface, local-world test support, slot frames, grid stage, output stage, quick crafts, More Crafts, filler hiding, Mirrorverse layout and all three surface colors are independently configurable
 - Local support requires the same Craft Item title and at least four chest rows; unrelated chest titles and menu types retain their existing screen
 
+## Bazaar, Auction House and Museum search overlay
+
+- Replaces only Hypixel's exact `Enter query` sign workflow inside Bazaar, Auction House and Museum containers; unrelated signs remain untouched
+- Uses positive-volume live Bazaar membership, the live three-day Auction index and NEU Museum donation data instead of suggesting every SkyBlock item everywhere
+- Includes all current Bazaar products, exact Roman-level enchantments, exact MIT-derived shard names, current level-100/200 pet IDs and formatted Museum Armor/Equipment sets
+- Offers ranked suggestions, separate removable market histories, retained sign text, learned real item icons, mouse-wheel scrolling and keyboard selection
+- Auction pet-level and dungeon-star filters apply only to exact eligible item names; master stars use Hypixel's correct circled suffixes
+- Search commands `/ahs [item]` and `/bzs [item]` open the same interface without automating a click or purchase
+- Sign submission owns one transaction, safely restores the original text when interrupted, preserves two complete 15-character lines and visibly rejects an overlong decorated query
+- Bazaar, Auction, Museum, commands, previous text, suggestions, history, icons, pet filters, star filters, local testing, counts, level, default stars and all three colors are configurable
+
 ## Safe Cartography Table visuals
 
 - Exact vanilla `CartographyTableScreen` treatment with bounded dark panel, readable labels, framed input column, palette operation arrow and dedicated live-map stage

@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.821 (2026-08-01) — SkyBlock Market Search Overlay
+
+- ported Skyblocker's Bazaar, Auction House and Museum search overlay with exact sign interception and direct `/ahs` and `/bzs` entry
+- added market-specific live suggestions, retained searches, removable history, observed item icons and full keyboard/mouse scrolling
+- added exact eligible-pet and dungeon-star filters, current Auction pet-ID handling, positive-volume Bazaar filtering and correctly formatted Museum sets
+- bundled the MIT NEU-derived shard-name index so every current Bazaar shard uses its real searchable display name
+- made sign edits transaction-safe across replacement/disconnect, preserved both 15-character lines without truncation and blocked overlong decorated queries visibly
+- added independent market, command, history, suggestion, icon, pet, star, local-test, limit and palette settings
+
 ## 0.9.820 (2026-08-01) — Unified SkyBlock Storage Browser
 
 - ported Enhanced Storage's unified cached-page browsing, cross-page search, page naming, custom ordering and retained browser state

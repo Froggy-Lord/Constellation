@@ -658,7 +658,7 @@ public class ConfigScreen extends Screen {
             }
 
             case "lyra" -> {
-                cats = new String[]{"Tooltips", "Storage", "Features"};
+                cats = new String[]{"Tooltips", "Storage", "Search", "Features"};
                 LyraConfig c = cfg.lyra;
                 Set<String> ageFields = Set.of("tooltipCreationTimestamp", "tooltipItemAge",
                     "tooltipCreationTimestampOnShift", "tooltipItemAgeOnShift", "tooltipCreationIncludeTime",
@@ -667,6 +667,10 @@ public class ConfigScreen extends Screen {
                 Set<String> storageFields = Set.of("storageBrowser", "storageBrowserButton", "storageBrowserShowEmptyPages",
                     "storageBrowserShowTooltips", "storageBrowserShowDecorations", "storageBrowserDimUnmatched",
                     "storageBrowserRetainSearch", "storageBrowserRetainScroll", "storageBrowserLocalWorlds");
+                Set<String> marketSearchFields = Set.of("marketSearchOverlay", "marketSearchBazaar", "marketSearchAuction",
+                    "marketSearchMuseum", "marketSearchCommands", "marketSearchKeepPrevious", "marketSearchSuggestions",
+                    "marketSearchHistory", "marketSearchItemIcons", "marketSearchMaxPet", "marketSearchDungeonStars",
+                    "marketSearchLocalWorlds");
                 modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
                     () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
                     .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
@@ -690,9 +694,25 @@ public class ConfigScreen extends Screen {
                     .b("Local-world visual testing", () -> c.storageBrowserLocalWorlds, v -> { c.storageBrowserLocalWorlds = v; ConstellationClient.saveConfig(); })
                     .sub("Open: /storagepreview", true)
                     .sub("Columns, card rows and scroll speed: /storagepreview", true));
+                modules.add(new Module("marketSearchOverlay", "Bazaar, Auction and Museum search overlay", "Search",
+                    () -> c.marketSearchOverlay, v -> { c.marketSearchOverlay = v; ConstellationClient.saveConfig(); })
+                    .b("Bazaar searches", () -> c.marketSearchBazaar, v -> { c.marketSearchBazaar = v; ConstellationClient.saveConfig(); })
+                    .b("Auction searches", () -> c.marketSearchAuction, v -> { c.marketSearchAuction = v; ConstellationClient.saveConfig(); })
+                    .b("Museum searches", () -> c.marketSearchMuseum, v -> { c.marketSearchMuseum = v; ConstellationClient.saveConfig(); })
+                    .b("Direct search commands", () -> c.marketSearchCommands, v -> { c.marketSearchCommands = v; ConstellationClient.saveConfig(); })
+                    .b("Keep previous sign text", () -> c.marketSearchKeepPrevious, v -> { c.marketSearchKeepPrevious = v; ConstellationClient.saveConfig(); })
+                    .b("Item suggestions", () -> c.marketSearchSuggestions, v -> { c.marketSearchSuggestions = v; ConstellationClient.saveConfig(); })
+                    .b("Search history", () -> c.marketSearchHistory, v -> { c.marketSearchHistory = v; ConstellationClient.saveConfig(); })
+                    .b("Observed item icons", () -> c.marketSearchItemIcons, v -> { c.marketSearchItemIcons = v; ConstellationClient.saveConfig(); })
+                    .b("Maximum-level pet filter", () -> c.marketSearchMaxPet, v -> { c.marketSearchMaxPet = v; ConstellationClient.saveConfig(); })
+                    .b("Dungeon-star filter", () -> c.marketSearchDungeonStars, v -> { c.marketSearchDungeonStars = v; ConstellationClient.saveConfig(); })
+                    .b("Local-world visual testing", () -> c.marketSearchLocalWorlds, v -> { c.marketSearchLocalWorlds = v; ConstellationClient.saveConfig(); })
+                    .sub("Open directly with /ahs or /bzs", true)
+                    .sub("Suggestion, history and filter depth: /marketsearch", true)
+                    .sub("Numeric limits and colors: All settings", true));
                 for (var field : LyraConfig.class.getFields()) {
                     String n = field.getName();
-                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || field.getType() != boolean.class) continue;
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || field.getType() != boolean.class) continue;
                     modules.add(new Module(n, autoLabel(n), "Features",
                         () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                         v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));

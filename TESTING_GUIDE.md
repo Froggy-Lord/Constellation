@@ -2889,3 +2889,25 @@ Open Hypixel's `/craft` screen with Visuals and SkyBlock Crafting Table enabled.
 - [ ] Disable SkyBlock Crafting Table and reopen `/craft`. Expected: Hypixel's complete original chest screen returns.
 - [ ] Open Storage, Bazaar, Auction, trade, Museum, dungeon puzzle and ordinary chest screens. Expected: none are converted by this feature.
 - [ ] Test a narrow and wide window. Expected: title, inventory label, grid, result, quick crafts, More Crafts, tooltips and carried stacks remain bounded.
+
+## Bazaar, Auction House and Museum search overlay
+
+Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search. Leave `Local-world visual testing` off for the authoritative Hypixel checks.
+
+- [ ] Open Bazaar and choose Search. Expected: the sign is replaced by `Bazaar Search`, while ordinary signs and unrelated containers retain their normal editor.
+- [ ] Type `diamond`. Expected: only positive-volume Bazaar products appear, including Diamond, Enchanted Diamond and Enchanted Diamond Block; Auction-only items do not appear.
+- [ ] Search part of an enchantment name. Expected: each valid Bazaar level appears separately with its Roman numeral.
+- [ ] Search `Cretan`. Expected: `Cretan Bull Shard` appears by its real display name rather than an internal attribute ID.
+- [ ] Open Auction House Search and type `hyper`. Expected: Hyperion appears from the current traded-item index.
+- [ ] Search an ordinary level-100 pet and Golden Dragon. Expected: the pet filter applies only to an exact pet name and respects the configured 100/200 maximum.
+- [ ] Search an exact dungeon item and cycle stars from zero through ten in both directions. Expected: normal stars appear through five and the correct circled master-star suffix appears from six through ten.
+- [ ] Type an unrelated Auction item while pet/stars are selected. Expected: neither filter changes a non-pet/non-starable query.
+- [ ] Open Museum Search and search `adaptive`, `necron` and `storm`. Expected: only Adaptive Armor, Necron Armor and Storm Armor appear; internal aliases such as Power Wither do not.
+- [ ] Submit a search with Enter and repeat with Go. Expected: exactly one user-confirmed sign update is sent and Hypixel opens its normal results.
+- [ ] Make a decorated sign query longer than 30 characters. Expected: the footer explains the exact character excess and neither Enter nor Go submits truncated text.
+- [ ] Close with Escape, force another server screen to replace the overlay and disconnect once while it is open. Expected: each path completes or restores the intercepted sign exactly once without stranding the menu.
+- [ ] Use `/ahs hyperion` and `/bzs diamond`. Expected: each opens the corresponding overlay with the initial text and sends no command until Enter/Go is pressed.
+- [ ] Use Up/Down, wheel scrolling, item hover and history delete. Expected: selection stays inside the visible list, native tooltips appear only for visible learned icons and deletion affects only that market's history.
+- [ ] Disable Bazaar, Auction, Museum and Direct Search Commands independently. Expected: only the disabled entry path returns to Hypixel's normal sign or reports unavailable.
+- [ ] Change suggestion/history counts, pet level, default stars and panel/row/selected colors through All settings. Expected: values clamp safely and apply after reopening without editing JSON.
+- [ ] Enable Local-world visual testing only in a throwaway world and use `/ahs`/`/bzs`. Expected: the presentation can be reviewed without enabling any Hypixel action; turn the option off afterward.
