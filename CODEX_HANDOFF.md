@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.809 Safe Brewing Stand Visuals.
+Last updated: 2026-08-01 for version 0.9.810 Safe Enchanting Table Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.809`.
+- Current artifact version: `0.9.810`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3537,5 +3537,19 @@ The owner-only shelf now has 0.9.808 in Current and prior releases under Archive
 The accepted path uses Constellation's shared panel, high-contrast labels and active-slot wells, then draws a compact connected brewing apparatus instead of copying the vanilla gray rectangle back into the dark surface. The fuel well feeds the fuel gauge/bubble column, while the ingredient stem branches to all three bottles. Apparatus, static progress backplates and the higher-contrast apparatus color are independently configurable. Minecraft's later fuel-length, 400-tick brew-progress and seven-step bubble `blitSprite` calls remain authoritative and render above the custom background. Empty-slot sprites, item rendering, hover state, carried stacks, Blaze Powder/ingredient/bottle validation, Shift-click routing and completion logic are unchanged.
 
 Real-client testing used the local Creative `Visual Test` world. It placed an exact brewing-stand block, checked the idle layout, loaded Blaze Powder and all three Water Bottles through normal inventory clicks, Shift-clicked Nether Wart into the ingredient slot, observed fuel plus the live bubble/progress sequence, waited through completion and Shift-clicked all three results back out. Screenshots for this workstation session are `/tmp/brewing-idle2-809.png`, `/tmp/brewing-active2-809.png`, `/tmp/brewing-progress809.png`, `/tmp/brewing-complete809.png` and `/tmp/brewing-collected809.png`. The adversarial visual review then required a brighter dedicated structure color and the missing fuel-side connection; both are fixed before release. No Hypixel movement or interaction was needed.
+
+The adversarial review confirmed exact redirect count, fallback, runtime-class scope, slot bounds, dynamic sprite ordering, input/tooltips and label scope. Its visual findings were the disconnected fuel side and insufficient structural contrast at ordinary scale. The dedicated `brewingStandApparatusColor` and fuel-well-to-gauge path fixed both, and `/tmp/brewing-connected809.png` confirms the corrected idle composition in a restarted client.
+
+Verification passed with exactly 11 successful tests and zero failed. The automated 160-second Xvfb client run ended at expected timeout 124; the retained client log loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report or fatal-error marker. Build and Gather jars share SHA-256 `548c136d5afb5764ad1eb74a928740671caeb523f0ebd001e504dad19a2fa610`; Gather's config remained unchanged at `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. The former 0.9.808 jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-194203-0.9.809/`.
+
+The owner-only shelf now has 0.9.809 in Current and prior releases under Archived Releases. Anonymous requests to both the shelf root and direct current jar return 401. The release is queued as Froggy-Lord drip commit `7f02c01c872ea7a1cb89fb35a25af07553b74f7a` with message `add safe brewing stand visuals and connected apparatus`.
+
+## August 1 version 0.9.810 safe enchanting-table visuals
+
+`ContainerTheme.java` and `EnchantmentScreenThemeMixin.java` port the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `EnchantmentScreen` runtime class. Minecraft 26.2 has one base-texture `blit` in `extractBackground`; the redirect pins that call with `require = 1`, delegates it intact when disabled or default-off on Hypixel and leaves all later book/offer rendering untouched.
+
+The accepted path draws the bounded shared panel and item/lapis wells plus an optional independently colored 49x61 book-and-slot stage whose top edge begins below the title. Minecraft then renders its interpolated 3D book model, initializes the enchantment-name seed and draws every disabled, ordinary or highlighted 108x19 offer sprite, enabled/disabled level glyph, generated rune name, cost and pointing-hand cursor exactly as before. `mouseClicked` retains the original three 108x19 hit boxes and server inventory-button action. Labels use the already scoped configurable high-contrast color only while the exact theme is active.
+
+Real-client testing used the local Creative `Visual Test` world with an exact enchanting table and bookshelf. It covered the empty/closed book, a fresh Diamond Sword opening the animated book, all three enabled offers, hover highlight and Sharpness tooltip, successful offer selection and advancement, post-enchant empty reset, then Survival with no valid lapis/XP showing all three disabled rows. Screenshots for this session are `/tmp/enchant-idle810.png`, `/tmp/enchant-offers810.png`, `/tmp/enchant-hover810.png`, `/tmp/enchant-selected810.png` and `/tmp/enchant-disabled810.png`. The adversarial review found the initial stage top rule crossing the title; the stage now starts below the title and is rechecked in a restarted client before release. No Hypixel movement or interaction was needed.
 
 Final adversarial findings and release verification belong below after review and `tools/release.sh` complete.

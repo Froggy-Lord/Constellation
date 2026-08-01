@@ -14,6 +14,7 @@
         "CraftingScreenThemeMixin",
         "FurnaceScreenThemeMixin",
         "EffectsInInventoryMixin",
+        "EnchantmentScreenThemeMixin",
         "EntityRenderDispatcherMixin",
         "GameRendererMixin",
         "HideStuckArrowsMixin",

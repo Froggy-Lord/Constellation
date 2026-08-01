@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.810 (2026-08-01) — Safe Enchanting Table Visuals
+
+- added an exact-class Constellation enchanting-table panel with a configurable framed stage for the animated book
+- preserved all three vanilla offer sprites, runes, generated names, level costs, enabled/disabled colors, hover highlights and cursor behavior
+- retained item/lapis slots, readable labels, tooltips, carried stacks, Shift-click routing and authoritative enchant application
+- added independent enchanting theme, slot-frame, book-stage, stage-color and default-off Hypixel controls
+
 ## 0.9.809 (2026-08-01) — Safe Brewing Stand Visuals
 
 - added an exact-class Constellation brewing-stand panel with a purpose-built apparatus and bounded machine/player slots

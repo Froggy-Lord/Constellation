@@ -34,6 +34,10 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean brewingStandSlotFrames = true;
     public boolean brewingStandApparatus = true;
     public boolean brewingStandProgressBackplates = true;
+    public boolean enchantmentTableTheme = true;
+    public boolean enchantmentTablesOnHypixel = false;
+    public boolean enchantmentTableSlotFrames = true;
+    public boolean enchantmentTableBookStage = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;
@@ -44,6 +48,7 @@ public final class VisualConfig extends BaseConfigGroup {
     public int inventoryModelColor = 0xE6080814;
     public int inventoryLabelColor = 0xFFE8E6F8;
     public int brewingStandApparatusColor = 0xFF5A5A86;
+    public int enchantmentTableBookStageColor = 0xE6080814;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

@@ -87,6 +87,8 @@ furnaces, blast furnaces and smokers use the same exact-class treatment with the
 
 brewing stands have their own exact-class apparatus with the original fuel bar, brew timer and bubble animation layered above it. every bottle, ingredient and output action stays vanilla, and hypixel styling remains a separate opt-in.
 
+enchanting tables place minecraft's animated book on a framed constellation stage while leaving every rune offer, level cost, disabled state, hover tooltip and enchant click under vanilla control.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

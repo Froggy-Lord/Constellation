@@ -2691,3 +2691,19 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Change Inventory Label Color, then disable Brewing Stand Theme. Expected: themed labels update with strong contrast, while disabling the theme restores the complete vanilla texture and original label color.
 - [ ] Join Hypixel with Brewing Stands on Hypixel disabled. Expected: the screen stays vanilla. Opt in only for a controlled check; no chest, trade, market or custom server screen changes.
 - [ ] Test multiple GUI scales and window sizes. Expected: apparatus, static/dynamic indicators, labels, items and every slot remain bounded and aligned.
+
+## Safe enchanting-table visuals
+
+- [ ] In a local creative world, place and open a vanilla Enchanting Table. Expected: the exact screen receives a bounded dark panel, readable labels, item/lapis wells and a framed book stage.
+- [ ] Open the empty table and wait. Expected: Minecraft's 3D book remains centered inside the stage and continues its idle animation without clipping the title or slots.
+- [ ] Insert an enchantable item. Expected: the book opens and flips pages while all three vanilla offer rows, runes, generated names and costs appear at their original positions.
+- [ ] Hover each enabled offer. Expected: its vanilla highlighted sprite, readable cost, pointing-hand cursor and enchantment tooltip appear without custom hit-box drift.
+- [ ] Click an affordable offer. Expected: Minecraft applies the enchantment, consumes the correct resources outside creative mode, refreshes the menu and closes/reopens the book naturally.
+- [ ] In survival with insufficient XP or no valid Lapis Lazuli, insert a fresh enchantable item. Expected: the original disabled offer sprites, dim runes/names and unavailable costs render distinctly.
+- [ ] Shift-click a sword, book and actual Lapis Lazuli into and out of the table. Expected: Minecraft's normal slot validation/routing remains authoritative; storage blocks do not masquerade as lapis items.
+- [ ] Hover both machine slots and every inventory item. Expected: item details, enchantment lore, hover highlights and carried stacks remain unobscured.
+- [ ] Disable Enchantment Table Slot Frames and Book Stage independently. Expected: only the selected presentation layer disappears; the animated book, offers and enchant logic continue working.
+- [ ] Change Enchantment Table Book Stage Color and Inventory Label Color. Expected: both update immediately while preserving sufficient book/label contrast.
+- [ ] Disable Enchantment Table Theme. Expected: the complete vanilla enchanting texture and original label color return.
+- [ ] Join Hypixel with Enchantment Tables on Hypixel disabled. Expected: the screen stays vanilla. Opt in only for a controlled check; no custom server menu inherits the treatment.
+- [ ] Test several GUI scales and window sizes. Expected: book stage, book model, offers, labels, slots and tooltips remain bounded and aligned.

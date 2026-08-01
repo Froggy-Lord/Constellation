@@ -817,3 +817,11 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Minecraft's fuel-length, brew-progress and seven-step bubble sprites retain their original calculations and render after the custom background
 - All three bottle slots, ingredient and Blaze Powder slots, empty-slot icons, hover state, carried stacks, Shift-click routing and potion output remain vanilla
 - Non-vanilla subclasses and unrelated server containers cannot inherit the treatment accidentally
+
+## Safe enchanting-table visuals
+
+- Exact vanilla `EnchantmentScreen` treatment with bounded panel, readable labels, item/lapis wells and a framed animated-book stage
+- Independent theme, slot-frame, book-stage, stage-color and Hypixel controls
+- Minecraft's 3D book interpolation, page flipping, all three offer backgrounds, level glyphs, generated runes/names, costs and player/lapis checks remain authoritative
+- Enabled, disabled and pointed-hand hover states plus offer tooltips and click targets retain their exact vanilla rendering and dimensions
+- Enchant application, item/lapis Shift-click routing, carried stacks and post-enchant refresh remain vanilla

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.BlastFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CraftingScreen;
+import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SmokerScreen;
@@ -74,6 +75,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.brewingStandTheme
             && screen.getClass() == BrewingStandScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.brewingStandsOnHypixel);
+    }
+
+    public static boolean enchantmentTable(EnchantmentScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.enchantmentTableTheme
+            && screen.getClass() == EnchantmentScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.enchantmentTablesOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -143,6 +151,20 @@ public final class ContainerTheme {
         if (config.brewingStandSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawEnchantmentTable(GuiGraphicsExtractor graphics, EnchantmentScreen screen,
+                                            int x, int y, int width, int height) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.enchantmentTableBookStage) {
+            graphics.fill(x + 8, y + 16, x + 57, y + 77, config.enchantmentTableBookStageColor);
+            frame(graphics, x + 8, y + 16, 49, 61,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.enchantmentTableSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -150,6 +172,7 @@ public final class ContainerTheme {
             || screen instanceof CraftingScreen crafting && craftingTable(crafting)
             || screen instanceof AbstractFurnaceScreen<?> furnace && furnace(furnace)
             || screen instanceof BrewingStandScreen brewing && brewingStand(brewing)
+            || screen instanceof EnchantmentScreen enchantment && enchantmentTable(enchantment)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
