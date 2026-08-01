@@ -2,6 +2,20 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## SkyBlock item creation time
+
+Enable Lyra, Item Info, Creation Timestamp and Item Age. Open Lyra directly with `/cn config lyra`; format, zone and precision controls are also available under All settings or `/itemtooltips`.
+
+- [ ] Hover several real SkyBlock items with modern numeric timestamps. Expected: Created shows the configured date/time and Item age advances from the same instant.
+- [ ] Compare an older item that stores a text timestamp. Expected: both old 12-hour and rare 24-hour SkyBlock formats convert from Toronto time without showing the raw NBT string.
+- [ ] Turn general Item Info off while leaving creation timing on. Expected: creation timing remains visible independently.
+- [ ] Set Creation time requires Shift and Item age requires Shift separately. Expected: each line obeys only its own Shift policy and updates without reopening the inventory.
+- [ ] Try American, European and ISO formats, then a valid custom Java date pattern. Expected: only presentation changes; the underlying instant and age do not.
+- [ ] Switch Local, SkyBlock and UTC zones and toggle Include time zone. Expected: the displayed wall time changes to the selected zone while Item age remains identical.
+- [ ] Change age precision from one to four, Compact age and Show seconds. Expected: the number and style of non-zero units follow those controls; items under one minute do not claim a full minute.
+- [ ] Hover an item without a timestamp or with malformed timestamp data. Expected: no Created or Item age line appears, and the tooltip remains usable.
+- [ ] Disable both creation controls. Expected: the original tooltip is unchanged.
+
 ## Custom SkyBlock Scoreboard
 
 Enable Apollo and Custom Scoreboard, then join Hypixel SkyBlock. Open `/customscoreboard`.

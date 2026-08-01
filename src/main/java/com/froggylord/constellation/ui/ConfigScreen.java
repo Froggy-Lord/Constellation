@@ -657,6 +657,32 @@ public class ConfigScreen extends Screen {
                     .sub("All alert, HUD, item, timing and template options: /spiritmask", true));
             }
 
+            case "lyra" -> {
+                cats = new String[]{"Tooltips", "Features"};
+                LyraConfig c = cfg.lyra;
+                Set<String> ageFields = Set.of("tooltipCreationTimestamp", "tooltipItemAge",
+                    "tooltipCreationTimestampOnShift", "tooltipItemAgeOnShift", "tooltipCreationIncludeTime",
+                    "tooltipCreationIncludeZone", "tooltipAgeCompact", "tooltipAgeShowSeconds",
+                    "tooltipCreationLocalWorlds");
+                modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
+                    () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
+                    .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
+                    .b("Creation time requires Shift", () -> c.tooltipCreationTimestampOnShift, v -> { c.tooltipCreationTimestampOnShift = v; ConstellationClient.saveConfig(); })
+                    .b("Item age requires Shift", () -> c.tooltipItemAgeOnShift, v -> { c.tooltipItemAgeOnShift = v; ConstellationClient.saveConfig(); })
+                    .b("Include time", () -> c.tooltipCreationIncludeTime, v -> { c.tooltipCreationIncludeTime = v; ConstellationClient.saveConfig(); })
+                    .b("Include time zone", () -> c.tooltipCreationIncludeZone, v -> { c.tooltipCreationIncludeZone = v; ConstellationClient.saveConfig(); })
+                    .b("Compact age", () -> c.tooltipAgeCompact, v -> { c.tooltipAgeCompact = v; ConstellationClient.saveConfig(); })
+                    .b("Show seconds", () -> c.tooltipAgeShowSeconds, v -> { c.tooltipAgeShowSeconds = v; ConstellationClient.saveConfig(); })
+                    .b("Local-world visual testing", () -> c.tooltipCreationLocalWorlds, v -> { c.tooltipCreationLocalWorlds = v; ConstellationClient.saveConfig(); })
+                    .sub("Format, time zone and precision: /itemtooltips", true));
+                for (var field : LyraConfig.class.getFields()) {
+                    String n = field.getName();
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || field.getType() != boolean.class) continue;
+                    modules.add(new Module(n, autoLabel(n), "Features",
+                        () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
+                        v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));
+                }
+            }
             // builds modules from every bool...
             default -> {
                 BaseConfigGroup c = cfg.getSubConfig(constellationId);

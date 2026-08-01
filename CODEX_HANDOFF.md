@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.818 SkyBlock Craft Item Interface.
+Last updated: 2026-08-01 for version 0.9.819 SkyBlock Item Creation Time.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.818`.
+- Current artifact version: `0.9.819`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3656,3 +3656,15 @@ Skyblocker's separate item-repository-backed recipe browser is not bundled into 
 Two adversarial passes verified slot identity, server routing, opt-out behavior, filler interaction and local-container lifecycle. The first pass found normal mapping on Mirrorverse opt-out, surface-only Quick Crafts suppression, hoverable invisible fillers and an unbalanced temporary chest handler; all were fixed. The re-audit confirmed those fixes and found one remaining early-return opener leak for short chests, which was balanced before final build. No other concrete code blocker remains.
 
 Release verification passed with exactly 11 successful tests and zero failed. The full headless client reached expected timeout 124, logged one `138 rooms across 9 shapes` line and the Constellation startup marker, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `4408e12c00d90879a87e085f98d7dbc36d1a521d30713d760109358bb44fb0e3`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; the previous Gather jar was moved under `~/Desktop/To-Delete/gather-jars/20260801-220326-0.9.818/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `cf831b725b` is authored only by Froggy-Lord with subject `add SkyBlock Craft Item interface and preserved server routing`.
+
+## August 1 version 0.9.819 SkyBlock item creation time
+
+`LyraTooltips.java` and `LyraConfig.java` port Devonian GPL `features/misc/tooltip/ItemAge.kt` into Constellation's existing SkyBlock tooltip callback. Numeric NBT, numeric strings, ISO instants and both legacy SkyBlock text formats now converge on a timezone-aware creation instant. Legacy text is interpreted in `America/Toronto`, including DST, before conversion to Local, SkyBlock or UTC display time. Non-positive, malformed, overflowed and more-than-one-year-future values fail closed; modest future clock skew is rendered honestly as `in ...`.
+
+Creation time and live age are independent of general Item Info and each supports Off, Always or Shift presentation through separate booleans. American, European, ISO and validated custom dates; optional time and zone; compact/full age; seconds; and one-to-four non-zero units are persisted. Runtime formatting clamps precision even before a later config save. The old coarse Obtained date gate was removed rather than leaving a hidden third master switch. `/itemtooltips` exposes every non-boolean value and status, while Lyra's main screen groups the visible controls in one Item Age card. `/cn config <constellation>` now opens any known group directly and rejects unknown IDs.
+
+Local real-client testing used a chest-backed clock with exact `ExtraAttributes` data. `/tmp/itemage-numeric819.png` proves numeric timestamp parsing, Local/AEST display and a live three-unit age. `/tmp/itemage-legacy819.png` proves Devonian's legacy `7/4/20 3:15 PM` Toronto parser converts to the same instant and display without leaking raw NBT. `/tmp/itemage-config819.png` and `/tmp/itemage-config-options819.png` prove direct Lyra routing, the dedicated Tooltips category, grouped master card, eight subordinate switches and readable options overlay. The same real tooltip pipeline, themed chest screen and pointer hover were used; no Hypixel movement or interaction was needed.
+
+Two adversarial passes checked the parser, Toronto DST, display zones, duration arithmetic, future/overflow handling, local gating, duplicate insertion, tooltip independence, normalization, commands and settings discoverability. The first pass found age incorrectly subordinate to general metadata, inconsistent zero/negative numeric strings, a runtime precision bypass and a redundant legacy gate. All were fixed; re-audit found no remaining release blocker.
+
+Final release verification belongs below after `tools/release.sh` completes.

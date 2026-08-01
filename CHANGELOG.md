@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.819 (2026-08-01) — SkyBlock Item Creation Time
+
+- ported Devonian's robust SkyBlock item timestamp parser, including numeric, numeric-string, ISO and both legacy Toronto formats
+- added independent creation-time and live item-age lines with Always/Shift modes, four date formats, three time zones, optional zone/time/seconds, compact output and bounded precision
+- reject malformed, non-positive and implausibly future timestamps instead of showing fabricated dates, while preserving modest clock-skew wording
+- added a cohesive Lyra Item Age settings card, local-world visual-test gate and direct `/constellation config <group>` navigation
+
 ## 0.9.818 (2026-08-01) — SkyBlock Craft Item Interface
 
 - ported Skyblocker's server-slot-preserving Craft Item layout for Hypixel's normal and Mirrorverse crafting menus

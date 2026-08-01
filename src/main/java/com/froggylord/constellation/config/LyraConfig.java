@@ -92,7 +92,20 @@ public class LyraConfig extends BaseConfigGroup {
     public boolean tooltipPriceLoading = true;
     public boolean tooltipStackBreakdown = true;
     public boolean tooltipItemInfo = true;
-    public boolean tooltipObtainedDate = true;
+    // ported from Devonian (GPL-3.0): features/misc/tooltip/ItemAge.kt
+    public boolean tooltipCreationTimestamp = true;
+    public boolean tooltipItemAge = true;
+    public boolean tooltipCreationTimestampOnShift = false;
+    public boolean tooltipItemAgeOnShift = true;
+    public boolean tooltipCreationIncludeTime = true;
+    public boolean tooltipCreationIncludeZone = false;
+    public boolean tooltipAgeCompact = false;
+    public boolean tooltipAgeShowSeconds = false;
+    public boolean tooltipCreationLocalWorlds = false;
+    public String tooltipCreationDateFormat = "AMERICAN";
+    public String tooltipCreationTimeZone = "LOCAL";
+    public String tooltipCreationCustomPattern = "MMM d, yyyy h:mm a";
+    public int tooltipAgePrecision = 2;
     public int tooltipPriceDecimals = 1;
 
     

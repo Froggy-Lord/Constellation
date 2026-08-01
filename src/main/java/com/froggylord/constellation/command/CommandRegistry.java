@@ -62,7 +62,10 @@ public final class CommandRegistry {
                     .executes(ctx -> verify(StringArgumentType.getString(ctx, "onoff")))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("hud")
                 .executes(ctx -> { Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new HudEditScreen(null))); return 1; }))
-            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("config").executes(ctx -> openConfig(features)))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("config").executes(ctx -> openConfig(features))
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("group", StringArgumentType.word())
+                    .suggests((ctx, builder) -> net.minecraft.commands.SharedSuggestionProvider.suggest(features.getAllIds(), builder))
+                    .executes(ctx -> openConfig(features, StringArgumentType.getString(ctx, "group")))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("profile")
                 .executes(ctx -> openProfile(null))
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", StringArgumentType.word())
@@ -170,6 +173,15 @@ public final class CommandRegistry {
     private static int openConfig(FeatureManager features) {
         String first = features.getLoadedIds().stream().findFirst().orElse("apollo");
         Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new ConfigScreen(first, null)));
+        return 1;
+    }
+
+    private static int openConfig(FeatureManager features, String group) {
+        if (!features.getAllIds().contains(group)) {
+            message("§cUnknown constellation: " + group);
+            return 0;
+        }
+        Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new ConfigScreen(group, null)));
         return 1;
     }
 

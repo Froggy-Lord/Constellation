@@ -433,6 +433,8 @@ Verified builds and this guide are mirrored to the private Constellation release
 - Purse and currency tracking
 - Bazaar and Auction House pricing
 - Item-price and value tooltips
+- SkyBlock item creation time and live age from numeric, ISO and legacy timestamps
+- Independent Always/Shift visibility, American/European/ISO/custom formats, local/SkyBlock/UTC zones, optional time/zone/seconds, compact age and one-to-four-unit precision
 - Auction comparison and purchase safeguards
 - Exact Auction outbid recognition with configurable title, sound, text and color
 - Bazaar order ladder information plus filled, partial, expired, expiring, outbid and matched state markers
