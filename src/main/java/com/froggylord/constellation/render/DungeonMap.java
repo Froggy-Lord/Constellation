@@ -31,7 +31,7 @@ public class DungeonMap {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.dungeonMap) return false;
         if (!ConstellationClient.loc().inDungeons()) return false;
-        if (com.froggylord.constellation.data.DungeonScore.inBoss()) return false;
+        if (com.froggylord.constellation.ConstellationClient.dungeon().inBoss()) return false;
         MapItemSavedData data = findMap();
         return data != null && data.colors.length >= MAP * MAP;
     }
@@ -160,7 +160,7 @@ public class DungeonMap {
     }
 
     private static void drawRoomName(GuiGraphicsExtractor g, int ox, int oy) {
-        String room = RoomMatch.currentRoom();
+        String room = com.froggylord.constellation.ConstellationClient.dungeon().currentRoom();
         if (room == null || room.isBlank()) return;
         String pretty = room.replace('-', ' ');
         Minecraft mc = Minecraft.getInstance();
