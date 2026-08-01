@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BasicContainerThemeMixin {
     // ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
     @Inject(method = "extractContents", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
+        target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"),
+        require = 1)
     private void constellation$containerTheme(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
                                                float delta, CallbackInfo ci) {
         ContainerTheme.drawBasicContainer(graphics, (AbstractContainerScreen<?>) (Object) this);

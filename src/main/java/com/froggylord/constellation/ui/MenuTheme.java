@@ -5,6 +5,7 @@ import com.froggylord.constellation.config.VisualConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.DirectJoinServerScreen;
 import net.minecraft.client.gui.screens.ManageServerScreen;
 import net.minecraft.client.gui.screens.CreateBuffetWorldScreen;
@@ -48,6 +49,12 @@ public final class MenuTheme {
         PackSelectionScreen.class, CreditsAndAttributionScreen.class,
         TelemetryInfoScreen.class, StatsScreen.class
     );
+    private static final Set<Class<? extends Screen>> IN_GAME_MENU_SCREENS = Set.of(
+        PauseScreen.class, OptionsScreen.class, VideoSettingsScreen.class, SoundOptionsScreen.class,
+        ControlsScreen.class, KeyBindsScreen.class, MouseSettingsScreen.class,
+        ChatOptionsScreen.class, SkinCustomizationScreen.class, FontOptionsScreen.class,
+        OnlineOptionsScreen.class, MultiplayerOptionsScreen.class, InWorldGameRulesScreen.class
+    );
     private MenuTheme() {}
 
     public static VisualConfig config() {
@@ -84,11 +91,43 @@ public final class MenuTheme {
 
     public static boolean menuSliders() {
         VisualConfig config = config();
-        return config != null && config.enabled && config.menuSliders
-            && Minecraft.getInstance().level == null && allowedMenu(currentScreen());
+        if (config == null || !config.enabled) return false;
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.level == null
+            ? config.menuSliders && allowedMenu(currentScreen())
+            : config.inGameMenuSliders && allowedInGameMenu(currentScreen());
     }
 
-    public static boolean buttons() { return titleButtons() || menuButtons(); }
+    public static boolean inGameMenuBackdrop(Screen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.inGameMenuBackdrop
+            && Minecraft.getInstance().level != null && allowedInGameMenu(screen);
+    }
+
+    public static boolean inGameMenuButtons() {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.inGameMenuButtons
+            && Minecraft.getInstance().level != null && allowedInGameMenu(currentScreen());
+    }
+
+    public static boolean inGameMenuBlur(Screen screen) {
+        VisualConfig config = config();
+        return config == null || config.inGameMenuBlur || !inGameMenuBackdrop(screen);
+    }
+
+    // ported from CryptKit (GPL-3.0-only): gui/theme/CryptTheme.java
+    public static void drawInGameBackdrop(net.minecraft.client.gui.GuiGraphicsExtractor graphics, Screen screen) {
+        VisualConfig config = config();
+        if (config == null) return;
+        int opacity = Math.clamp(config.inGameMenuScrimOpacity, 0, 255);
+        int color = opacity << 24 | config.inGameMenuScrimColor & 0x00FFFFFF;
+        graphics.fill(0, 0, screen.width, screen.height, color);
+        if (config.inGameMenuAccentRule) {
+            graphics.fill(0, 0, screen.width, 1, config.inGameMenuAccentColor);
+        }
+    }
+
+    public static boolean buttons() { return titleButtons() || menuButtons() || inGameMenuButtons(); }
 
     public static void setRenderingScreen(Screen screen) { renderingScreen = screen; }
 
@@ -96,5 +135,11 @@ public final class MenuTheme {
         return screen != null && MENU_SCREENS.contains(screen.getClass());
     }
 
-    private static Screen currentScreen() { return Minecraft.getInstance().gui.screen(); }
+    private static boolean allowedInGameMenu(Screen screen) {
+        return screen != null && IN_GAME_MENU_SCREENS.contains(screen.getClass());
+    }
+
+    private static Screen currentScreen() {
+        return renderingScreen != null ? renderingScreen : Minecraft.getInstance().gui.screen();
+    }
 }

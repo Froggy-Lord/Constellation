@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.806 (2026-08-01) — In-game Menu Visual Shell
+
+- added an exact-class Constellation shell for Pause and the ordinary options screens opened from a world
+- kept the live world visible beneath a configurable scrim, optional vanilla blur and optional accent rule
+- added independent in-game backdrop, button and slider controls plus configurable scrim color, opacity and accent color
+- preserved vanilla navigation, labels, tooltips, focus, narration, sliders and every accessibility, language, warning, inventory, chat, death, loading, Realms and third-party screen
+- pinned the basic-container injection target so mapping drift fails visibly instead of silently disabling the overlay
+
 ## 0.9.805 (2026-08-01) — Safe Inventory Visuals
 
 - added a configurable Constellation player-inventory panel, model frame and slot treatment while preserving the recipe book, effects, equipment, tooltips and carried items

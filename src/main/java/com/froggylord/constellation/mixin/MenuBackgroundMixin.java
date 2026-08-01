@@ -32,10 +32,22 @@ public abstract class MenuBackgroundMixin {
         at = @At("HEAD"), cancellable = true)
     private void constellation$menuBackdrop(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         Screen screen = (Screen) (Object) this;
+        if (MenuTheme.inGameMenuBackdrop(screen)) {
+            MenuTheme.drawInGameBackdrop(graphics, screen);
+            ci.cancel();
+            return;
+        }
         if (!MenuTheme.menuBackdrop(screen)) return;
         Minecraft minecraft = Minecraft.getInstance();
         SpaceBackground.renderMenu(graphics, minecraft.getWindow().getGuiScaledWidth(),
             minecraft.getWindow().getGuiScaledHeight(), 0f, MenuTheme.config().reducedMotion);
         ci.cancel();
+    }
+
+    // ported from CryptKit (GPL-3.0-only): mixin/ScreenBackgroundMixin.java
+    @Inject(method = "extractBlurredBackground", at = @At("HEAD"), cancellable = true)
+    private void constellation$inGameMenuBlur(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        Screen screen = (Screen) (Object) this;
+        if (!MenuTheme.inGameMenuBlur(screen)) ci.cancel();
     }
 }

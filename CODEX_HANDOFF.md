@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.805 Safe Inventory Visuals.
+Last updated: 2026-08-01 for version 0.9.806 In-game Menu Visual Shell.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.805`.
+- Current artifact version: `0.9.806`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3487,3 +3487,15 @@ The owner-only shelf promoted version 0.9.804 into Current and moved 0.9.803 int
 Basic-container styling accepts only the exact vanilla `ContainerScreen` class. It is disabled on Hypixel and in dungeons by default, each scope requires its own opt-in, and puzzle/terminal, Spirit Leap, Auction, Bazaar, trade, salvage and Museum titles remain hard-protected after opt-in. Specialized vanilla containers, creative inventory, third-party screens and `TerminalSimulatorScreen` are structurally excluded. Users can add semicolon-separated title fragments to the denylist. Panel, border, accent, slot, slot-edge and model-frame colors plus each visual layer are independently configurable in Visuals.
 
 `tools/release.sh` is now the single local CI-style release entry point. It builds, requires the exact 11/0 test markers, runs the 160-second retained-client gate, checks room and constellation startup markers plus fatal-log exclusions, archives/deploys Gather with checksum comparison, then invokes the existing drip enqueue helper. The helper rebuilds the isolated drip tree, publishes the owner-only Current/Archived shelf, creates the Froggy-Lord commit and schedules it. Future agents should run `tools/release.sh 'message'` after version/docs/audits instead of manually repeating those release operations.
+
+Verification passed with exactly 11 successful tests and zero failed. The 160-second Xvfb client run ended with expected timeout status 124, loaded 138 rooms across 9 shapes, reached `Constellation ready. 14 constellations loaded.`, and contained no mixin-apply, crash-report or fatal-error marker. The release jar and Gather deployment both have SHA-256 `aed4ea4be582f3dca3fef457e1c47fd579226c029b3322ee56a538b6c7b5ab59`; Gather's config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`. The old 0.9.804 jar is archived at `~/Desktop/To-Delete/gather-jars/20260801-143944-0.9.805/`.
+
+The owner-only shelf has 0.9.805 in Current and 0.9.802 through 0.9.804 in separate archived folders. Anonymous requests to both the shelf root and direct 0.9.805 jar return 401. The release is queued as Froggy-Lord drip commit `53cb16c363` with message `add safe inventory and basic container visuals`.
+
+## August 1 version 0.9.806 in-game menu visual shell
+
+`MenuTheme.java`, `MenuBackgroundMixin.java`, `MenuButtonMixin.java` and `MenuSliderMixin.java` extend the CryptKit GPL screen/background/control patterns to the remaining high-frequency in-game menu flow without copying its unsafe broad class-name matching. The in-game allowlist compares exact runtime classes for Pause and ordinary Options, Video, Sound, Controls, Key Binds, Mouse, Chat, Skin, Font, Online, Multiplayer and in-world game-rule screens. It never applies based on `level != null` alone.
+
+The background hook replaces only the vanilla menu texture with a configurable translucent scrim and optional one-pixel accent rule. Vanilla blur remains independently toggleable. All screen renderables, labels, sprite icons, dynamic pause additions, tooltips, focus, narration, keyboard/mouse input and destinations still execute. Backdrop, stock buttons and sliders each have independent toggles; scrim color, 0–255 opacity and accent color are editable through Visuals. Inventory/container, chat, advancements, statistics, social/reporting destinations, accessibility, language, warning, death/disconnect/loading, Realms/account, Constellation-owned and third-party screens are excluded.
+
+Real-client inspection covered Pause, in-world Options and the Language destination. Pause retained every vanilla control over a visibly blurred world; Options retained the FOV slider and full navigation; Language returned to vanilla gray controls and its normal background behavior. `BasicContainerThemeMixin` now explicitly requires its one audited injection target so future mapping drift fails at startup rather than silently removing the layer.

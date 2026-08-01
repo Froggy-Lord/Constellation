@@ -2634,3 +2634,17 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Opt into Hypixel basic containers and open auction, Bazaar, trade, salvage, Museum and a known puzzle menu. Expected: each protected menu remains vanilla despite the broad opt-in.
 - [ ] Opt into dungeon basic containers and open Spirit Leap plus each terminal family. Expected: protected interaction screens remain vanilla and their solvers/input continue working.
 - [ ] Add a lowercase title fragment to Container Title Denylist and open a matching chest. Expected: the matching screen stays vanilla; removing the fragment allows the ordinary chest theme again.
+
+## In-game menu visual shell
+
+- [ ] Join a world and press Escape. Expected: the world remains visible through the translucent scrim, the optional gold rule appears at the top and every vanilla pause control remains present.
+- [ ] Use Back to Game, Options, Advancements, Statistics, social/reporting icons and Save/Disconnect. Expected: every control keeps its vanilla destination, tooltip, sound and enabled state.
+- [ ] Navigate Pause with Tab, arrow keys, Enter and Escape. Expected: focus, activation, return hierarchy and narration remain vanilla.
+- [ ] Open Options from Pause. Expected: the same translucent world treatment continues behind the exact allowlisted options screen and FOV remains fully draggable and keyboard-adjustable.
+- [ ] Open Video, Music and Sounds, Controls, Key Binds, Mouse, Chat, Skin, Font, Online and Multiplayer options. Expected: themed stock controls retain all labels, tooltips, scrolling and Done/reset actions.
+- [ ] Open Language and Accessibility Settings. Expected: both destination screens return completely to vanilla controls and background treatment.
+- [ ] Open inventory, a chest, chat, advancements, death/disconnect/loading screens, Realms/account/reporting flows and another mod's screen. Expected: the in-game menu shell never leaks into them.
+- [ ] Disable In Game Menu Backdrop, Buttons and Sliders independently in Visuals. Expected: only the selected layer returns to vanilla immediately.
+- [ ] Disable In Game Menu Blur. Expected: the live world becomes sharp beneath the scrim without changing controls; enabling it restores vanilla menu blur.
+- [ ] Set scrim opacity to 0 and 255, then choose alternate scrim/accent colors. Expected: opacity clamps safely, colors apply immediately and all text remains under vanilla rendering.
+- [ ] Test several GUI scales and both singleplayer and multiplayer Pause menus. Expected: dynamic vanilla additions remain aligned and no fixed Constellation panel clips them.

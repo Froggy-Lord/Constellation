@@ -782,3 +782,12 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - Optional exact-class vanilla chest styling with independent Hypixel and dungeon opt-ins
 - Puzzle, Spirit Leap, auction, Bazaar, trade, salvage and Museum screens stay protected even when broad container styling is enabled
 - Semicolon-separated custom title denylist for additional servers or modpack-specific menus
+
+## In-game menu visual shell
+
+- Exact-class styling for Pause and ordinary Options, Video, Sound, Controls, Key Binds, Mouse, Chat, Skin, Font, Online, Multiplayer and in-world game-rule screens
+- Live world remains visible beneath an independently configurable scrim and optional vanilla blur
+- Independent in-game backdrop, button, slider and top-accent controls
+- Configurable scrim color, 0–255 opacity and accent color
+- Vanilla labels, sprite icons, focus, narration, keyboard navigation, tooltips, slider dragging and screen destinations remain authoritative
+- Inventory, container, chat, advancements, social/reporting, accessibility, language, warning, death, disconnect, loading, Realms, account and third-party screens remain outside the allowlist

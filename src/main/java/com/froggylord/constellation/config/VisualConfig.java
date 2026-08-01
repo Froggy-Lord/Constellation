@@ -6,6 +6,14 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean menuBackdrops = true;
     public boolean menuButtons = true;
     public boolean menuSliders = true;
+    public boolean inGameMenuBackdrop = true;
+    public boolean inGameMenuButtons = true;
+    public boolean inGameMenuSliders = true;
+    public boolean inGameMenuBlur = true;
+    public boolean inGameMenuAccentRule = true;
+    public int inGameMenuScrimColor = 0xFF080818;
+    public int inGameMenuScrimOpacity = 176;
+    public int inGameMenuAccentColor = 0xFFFFB830;
     public boolean playerInventoryTheme = true;
     public boolean playerInventoryModelFrame = true;
     public boolean playerInventorySlotFrames = true;
