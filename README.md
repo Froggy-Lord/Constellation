@@ -93,6 +93,8 @@ anvils use a purpose-built repair stage and matching rename field while minecraf
 
 grindstones have their own wheel-and-frame stage with minecraft's invalid cross, repair/disenchant result, enchantment removal, experience and output handling left intact.
 
+smithing tables separate the upgrade row from minecraft's live armor preview while retaining cycling ingredient hints, recipe errors, onboarding tooltips, netherite upgrades and armor trims.
+
 its dungeon page includes exact catacombs and class progression, selected class, class average, secrets per run, every floor's completions and all available personal-best time and score records.
 
 the slayer page calculates exact progression for all six slayers, with boss and tier totals, optional raw attempts, reward-claim state and unclaimed reward warnings.

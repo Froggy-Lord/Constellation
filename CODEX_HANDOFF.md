@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-01 for version 0.9.812 Safe Grindstone Visuals.
+Last updated: 2026-08-01 for version 0.9.813 Safe Smithing Table Visuals.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.812`.
+- Current artifact version: `0.9.813`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
 - The user repeatedly says `keep building`; continue the queue without requesting phase approval.
@@ -3579,3 +3579,15 @@ Real-client testing used the local `Anvil Visual 2` creative world with an exact
 The adversarial audit found no high or medium defect. It verified the exact one-call redirect and fallback, runtime/Hypixel gates, error ordering, geometry, labels, hit boxes, result/tooltips, defaults, credit and forbidden-source cleanliness. Its low config finding correctly noted that the decorative Arrow control could not suppress Minecraft's later functional red cross; it is now honestly named Arrow Backplate and the guide explicitly says the validation cross always remains. The four recent manifest entries were also reindented consistently.
 
 Release verification passed with exactly 11 successful tests and zero failed. The retained client ended at expected timeout 124, logged `138 rooms across 9 shapes` and `Constellation ready. 14 constellations loaded.`, and had no mixin-apply, crash-report or fatal-error marker. Build and Gather jars match at SHA-256 `5ff73bda263d72f1efc65ea2800e82bd1c0647293b27c584275530d1a3b4e1b6`. Gather config remained unchanged at SHA-256 `ce2b3e3579527eb5e48d43d840f42a83755f5d8676ef7763ac031d069e57240b`; 0.9.811 was moved to `~/Desktop/To-Delete/gather-jars/20260801-202232-0.9.812/`. The owner-only shelf and direct current jar both return 401 anonymously. Release drip commit `5a30507a3cbcd036746afd6fe9671dbbe3571322` is authored only by Froggy-Lord with subject `add safe grindstone visuals and preserved validation`.
+
+## August 1 version 0.9.813 safe Smithing Table visuals
+
+`ContainerTheme.java` and the existing `ItemCombinerScreenThemeMixin.java` extend the licensed CryptKit GPL `mixin/ContainerThemeMixin.java` panel/slot pattern to the exact vanilla `SmithingScreen`. Minecraft 26.2 uses the same single base-texture `blit` in `ItemCombinerScreen.extractBackground` as Anvil; the already pinned `require = 1` redirect now dispatches exact Anvil and exact Smithing treatments, then replays every original argument for disabled settings and all other combiner subclasses.
+
+The accepted path draws the shared panel and active wells, a configurable template/base/material-to-result stage, separate armor-preview stage, optional palette-matched pixel mallet and optional original directional-arrow backplate. Minecraft's later three `CyclingSlotBackground` calls, conditional recipe-error sprite, missing-input/error tooltips, live armor-stand entity, recipes, component transfer, item rendering, hit boxes, tooltips, carried stacks, Shift-click routing and output collection remain unchanged. Theme, Hypixel use, slots, hammer, work stage, arrow backplate, preview stage and both stage colors are independently persisted.
+
+Real-client testing used the local `Anvil Visual 2` creative world with an exact placed Smithing Table. It covered the empty cycling template hint and armor stand, input onboarding tooltip, a full Netherite Upgrade template plus Diamond Chestplate plus Netherite Ingot recipe, output attributes, equipped Netherite preview, collection/reset, and a Sentry Armor Trim with Redstone whose output tooltip and armor stand both showed the cyan/red trim. Screenshots are `/tmp/smithing-empty813.png`, `/tmp/smithing-onboarding-tooltip813.png`, `/tmp/smithing-netherite-clear813.png`, `/tmp/smithing-netherite-tooltip813.png`, `/tmp/smithing-completed813.png`, `/tmp/smithing-trim813.png`, `/tmp/smithing-trim-tooltip813.png` and `/tmp/smithing-hammerfixed2-813.png`. The first exact screen revealed the opaque vanilla hammer crop as a gray sticker; the restarted screenshot confirms its replacement with the palette-matched mark. No Hypixel interaction was needed.
+
+The adversarial audit found no high functional defect and proved the superclass redirect count/fallback, Anvil separation, exact gates, cycling/error/preview ordering, geometry, labels, hit boxes, config exposure, credit and forbidden-source cleanliness. It rejected the first bent pixel mark as pickaxe-like and noted it lacked configuration ownership. The mark is now a broad straight mallet with its own default-on Hammer control. `/tmp/smithing-malletfinal813.png` is the restarted final proof with the complete `Upgrade Gear` title, cycling template hint and armor stand visible together.
+
+Final release verification belongs below after `tools/release.sh` completes.

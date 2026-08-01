@@ -2744,3 +2744,21 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open an Anvil and Smithing Table. Expected: neither receives any Grindstone layer.
 - [ ] Join Hypixel with Grindstones on Hypixel disabled. Expected: the exact screen stays vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
 - [ ] Test several GUI scales and window sizes. Expected: title, stage, apparatus, arrow/cross, labels, slots and tooltips remain bounded and aligned.
+
+## Safe Smithing Table visuals
+
+- [ ] In a local creative world, place and open an exact vanilla Smithing Table. Expected: a bounded dark panel, readable labels, palette hammer, operation row and separate armor-preview stage appear.
+- [ ] Leave all inputs empty for several seconds. Expected: Minecraft's template cycling hint remains animated and the armor stand stays visible without clipping.
+- [ ] Hover each empty input. Expected: the exact template/base/addition onboarding tooltip appears for the current recipe family.
+- [ ] Insert a Netherite Upgrade template, Diamond equipment and Netherite Ingot. Expected: all three inputs align, the Netherite output appears and the armor stand equips the result.
+- [ ] Hover the output. Expected: its complete attributes/components are visible and no custom stage covers the tooltip.
+- [ ] Collect the Netherite output. Expected: Minecraft consumes the three inputs, places the result normally and clears the armor preview.
+- [ ] Insert an armor-trim template, valid armor and valid trim material. Expected: the output tooltip names the exact pattern/material and the armor stand previews the colored trim.
+- [ ] Try incomplete and invalid combinations. Expected: cycling missing-input hints or Minecraft's red recipe-error cross appears as appropriate; hovering the cross shows its original tooltip.
+- [ ] Shift-click templates, equipment, materials and unrelated items. Expected: vanilla slot predicates and routing remain authoritative.
+- [ ] Toggle Smithing Table Slot Frames, Hammer, Work Stage, Arrow Backplate and Preview Stage independently. Expected: only that presentation layer changes; cycling hints, errors and recipes remain functional.
+- [ ] Change Smithing Table Work Stage Color, Preview Stage Color and Inventory Label Color. Expected: each updates immediately with readable contrast around items and the armor stand.
+- [ ] Disable Smithing Table Theme. Expected: the complete vanilla texture and original label colors return.
+- [ ] Open an Anvil and Grindstone. Expected: neither receives any Smithing-specific stage or preview framing.
+- [ ] Join Hypixel with Smithing Tables on Hypixel disabled. Expected: exact Smithing screens stay vanilla and chest-backed server menus remain untouched. Opt in only for a controlled stationary check.
+- [ ] Test several GUI scales and window sizes. Expected: title, hammer, stages, cycling hints, arrow/error, armor preview, slots and tooltips remain bounded and aligned.

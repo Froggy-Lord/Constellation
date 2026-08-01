@@ -843,3 +843,13 @@ The long engineering history and exact source paths remain in `CODEX_HANDOFF.md`
 - The original conditional red invalid-operation cross renders after the custom background at its exact location
 - Theme, slot frames, work stage, apparatus, arrow backplate, stage color and Hypixel use are independently configurable; the functional invalid cross always remains visible
 - Exact runtime-class and default-off Hypixel gates prevent Anvil, Smithing, subclasses or chest-backed server menus from inheriting the visual
+
+## Safe Smithing Table visuals
+
+- Exact vanilla `SmithingScreen` treatment with bounded dark panel, high-contrast labels, operation stage and separate armor-preview stage
+- Palette-matched hammer identity and optional directional-arrow backplate preserve the familiar template/base/material-to-result flow
+- Minecraft's three cycling empty-slot hints, missing-input onboarding tooltips and conditional recipe-error cross/tooltip render after the custom background
+- The real armor stand remains dynamic for Netherite equipment and every armor-trim pattern/material result
+- Recipes, component copying, template consumption, validation, slots, Shift-click routing, tooltips and output collection remain authoritative
+- Theme, slot frames, hammer, work stage, arrow backplate, preview stage, both stage colors and Hypixel use are independently configurable
+- Exact runtime-class and default-off Hypixel gates prevent Anvil, Grindstone, subclasses or chest-backed server menus from inheriting the visual

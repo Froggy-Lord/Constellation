@@ -50,6 +50,13 @@ public final class VisualConfig extends BaseConfigGroup {
     public boolean grindstoneWorkStage = true;
     public boolean grindstoneApparatus = true;
     public boolean grindstoneArrowBackplate = true;
+    public boolean smithingTableTheme = true;
+    public boolean smithingTablesOnHypixel = false;
+    public boolean smithingTableSlotFrames = true;
+    public boolean smithingTableHammer = true;
+    public boolean smithingTableWorkStage = true;
+    public boolean smithingTableArrowBackplate = true;
+    public boolean smithingTablePreviewStage = true;
     public boolean protectPuzzleContainers = true;
     public boolean protectMarketContainers = true;
     public int inventoryPanelColor = 0xF10E0E22;
@@ -64,6 +71,8 @@ public final class VisualConfig extends BaseConfigGroup {
     public int anvilWorkStageColor = 0xE6080814;
     public int anvilNameFieldColor = 0xEE121229;
     public int grindstoneWorkStageColor = 0xE6080814;
+    public int smithingTableWorkStageColor = 0xE6080814;
+    public int smithingTablePreviewStageColor = 0xE6080814;
     public String containerTitleDenylist = "terminal;melody;harp;chronomatron;ultrasequencer;superpairs;fossil excavator;hacking;simon says";
     public boolean reducedMotion = false;
 }

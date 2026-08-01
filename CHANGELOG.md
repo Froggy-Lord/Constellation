@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.813 (2026-08-01) — Safe Smithing Table Visuals
+
+- added an exact-class Constellation Smithing Table panel with configurable operation and armor-preview stages
+- preserved cycling template/base/material hints, onboarding/error tooltips, validation cross, recipes, components, item tooltips and output collection
+- retained Minecraft's live armor-stand preview for Netherite upgrades and armor trims
+- added independent Smithing theme, slot, hammer, work-stage, arrow-backplate, preview-stage, color and default-off Hypixel controls
+
 ## 0.9.812 (2026-08-01) — Safe Grindstone Visuals
 
 - added an exact-class Constellation Grindstone panel with configurable work stage, apparatus, directional arrow and machine/player slot wells

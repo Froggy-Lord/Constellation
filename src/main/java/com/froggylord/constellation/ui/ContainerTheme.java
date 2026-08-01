@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.GrindstoneScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.SmokerScreen;
+import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
@@ -98,6 +99,13 @@ public final class ContainerTheme {
         return config != null && config.enabled && config.grindstoneTheme
             && screen.getClass() == GrindstoneScreen.class
             && (!ConstellationClient.loc().onHypixel() || config.grindstonesOnHypixel);
+    }
+
+    public static boolean smithingTable(SmithingScreen screen) {
+        VisualConfig config = config();
+        return config != null && config.enabled && config.smithingTableTheme
+            && screen.getClass() == SmithingScreen.class
+            && (!ConstellationClient.loc().onHypixel() || config.smithingTablesOnHypixel);
     }
 
     // ported from CryptKit (GPL-3.0-only): mixin/InventoryButtonsMixin.java
@@ -240,6 +248,32 @@ public final class ContainerTheme {
         if (config.grindstoneSlotFrames) slots(graphics, screen, x, y, config);
     }
 
+    // panel and slot pattern ported from CryptKit (GPL-3.0-only): mixin/ContainerThemeMixin.java
+    public static void drawSmithingTable(GuiGraphicsExtractor graphics, SmithingScreen screen,
+                                         RenderPipeline pipeline, Identifier texture,
+                                         int x, int y, int width, int height,
+                                         int textureWidth, int textureHeight) {
+        VisualConfig config = config();
+        if (config == null) return;
+        panel(graphics, x, y, width, height, config);
+        if (config.smithingTableWorkStage) {
+            graphics.fill(x + 6, y + 38, x + 120, y + 72, config.smithingTableWorkStageColor);
+            frame(graphics, x + 6, y + 38, 114, 34,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.smithingTablePreviewStage) {
+            graphics.fill(x + 120, y + 18, x + 163, y + 82, config.smithingTablePreviewStageColor);
+            frame(graphics, x + 120, y + 18, 43, 64,
+                config.inventoryAccentColor, config.inventoryBorderColor);
+        }
+        if (config.smithingTableHammer) smithingHammer(graphics, x, y, config);
+        if (config.smithingTableArrowBackplate) {
+            graphics.blit(pipeline, texture, x + 65, y + 46, 65f, 46f,
+                28, 21, textureWidth, textureHeight);
+        }
+        if (config.smithingTableSlotFrames) slots(graphics, screen, x, y, config);
+    }
+
     public static int labelColor(AbstractContainerScreen<?> screen, int original) {
         VisualConfig config = config();
         if (config == null) return original;
@@ -250,6 +284,7 @@ public final class ContainerTheme {
             || screen instanceof EnchantmentScreen enchantment && enchantmentTable(enchantment)
             || screen instanceof AnvilScreen anvil && anvil(anvil)
             || screen instanceof GrindstoneScreen grindstone && grindstone(grindstone)
+            || screen instanceof SmithingScreen smithing && smithingTable(smithing)
             || basicContainer(screen);
         return themed ? config.inventoryLabelColor : original;
     }
@@ -283,6 +318,17 @@ public final class ContainerTheme {
         graphics.fill(x + 96, y + 15, x + 107, y + 45, well);
         graphics.fill(x + 96, y + 15, x + 107, y + 16, edge);
         graphics.fill(x + 96, y + 15, x + 97, y + 45, edge);
+    }
+
+    private static void smithingHammer(GuiGraphicsExtractor graphics, int x, int y,
+                                       VisualConfig config) {
+        int edge = config.inventoryBorderColor;
+        int head = config.inventoryAccentColor;
+        graphics.fill(x + 7, y + 7, x + 31, y + 14, edge);
+        graphics.fill(x + 10, y + 8, x + 28, y + 13, head);
+        graphics.fill(x + 15, y + 13, x + 23, y + 17, edge);
+        graphics.fill(x + 17, y + 15, x + 21, y + 27, edge);
+        graphics.fill(x + 18, y + 16, x + 20, y + 26, config.inventorySlotEdgeColor);
     }
 
     private static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height,
