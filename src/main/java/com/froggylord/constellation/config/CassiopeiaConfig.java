@@ -47,7 +47,7 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean cleanAOTE = true;
     public boolean cleanImplosion = true;
     public boolean cleanAbilityCooldown = true;
-    public boolean autoGG = true;
+    public boolean autoGG = true; // local completion reminder only
     public boolean autoTip = true;
     public boolean actionBarCleaner = false;
 
