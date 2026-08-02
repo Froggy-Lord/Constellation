@@ -1,10 +1,11 @@
 package com.froggylord.constellation.config;
 
 import com.google.gson.annotations.SerializedName;
+import com.froggylord.constellation.hud.HudPosition;
 
 public class ConstellationConfig {
 
-    public static final int CURRENT_VERSION = 0;
+    public static final int CURRENT_VERSION = 2;
 
     public int cfgVersion = CURRENT_VERSION;
 
@@ -12,6 +13,9 @@ public class ConstellationConfig {
     
     
     public boolean lifetimeStats = true;
+    public boolean verifyMode = false;
+    public java.util.Map<String, Float> hudScales = new java.util.HashMap<>();
+    public java.util.Map<String, HudPosition> hudPositions = new java.util.HashMap<>();
 
     
     @SerializedName("apollo")     public ApolloConfig apollo = new ApolloConfig();
@@ -37,7 +41,11 @@ public class ConstellationConfig {
     }
 
     private void migrateFrom(int fromVersion) {
-        
+        if (fromVersion < 1) {
+            pegasus.enabled = true;
+            pegasus.carryMode = true;
+        }
+        if (fromVersion < 2) perseus.cocoonAlert = hydra.legacyCocoonAlert;
     }
 
     public BaseConfigGroup getSubConfig(String id) {
