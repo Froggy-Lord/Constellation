@@ -1,6 +1,7 @@
 package com.froggylord.constellation.config;
 
 public class AndromedaConfig extends BaseConfigGroup {
+    { enabled = false; }
     @Override public int currentVersion() { return 0; }
     public boolean timeHud = true;
     public boolean enigmaSoulTracker = true;
