@@ -2,6 +2,7 @@ package com.froggylord.constellation.config;
 
 public class AquilaConfig extends BaseConfigGroup {
 
+    { enabled = false; }
     @Override public int currentVersion() { return 0; }
 
     public boolean powderHud = true;
@@ -36,4 +37,113 @@ public class AquilaConfig extends BaseConfigGroup {
     public boolean sapphireCrystalTracker = true;
     public boolean amethystCrystalTracker = true;
     public boolean amberCrystalTracker = true;
+
+    public boolean miningProgressSuite = true;
+    public boolean miningCommissionProgressHud = true;
+    public boolean miningCommissionShowDone = true;
+    public boolean miningCommissionShowPercent = true;
+    public boolean miningCommissionShowAll = true;
+    public boolean miningCrystalStatusHud = true;
+    public boolean miningCrystalShowMissing = true;
+    public boolean miningCrystalShowFound = true;
+    public boolean miningCrystalShowLocation = true;
+    public boolean miningMineshaftPityHud = true;
+    public boolean miningPityShowCounter = true;
+    public boolean miningPityShowRemaining = true;
+    public boolean miningPityShowPercent = true;
+    public boolean miningPityShowLastFound = true;
+    public boolean miningPityModifyFoundChat = true;
+    public boolean miningMineshaftTimerHud = true;
+    public boolean miningTimerShowEntrance = true;
+    public boolean miningTimerShowElapsed = true;
+    public boolean miningTimerShowColdEstimate = true;
+    public boolean miningTimerShowCold = true;
+    public int miningMineshaftPityMaximum = 2000;
+    public int miningMineshaftEntranceSeconds = 60;
+    public int miningTimerCautionSeconds = 30;
+    public int miningTimerWarningSeconds = 10;
+    public int miningPityColor = 0xFFFFAA00;
+    public int miningGoodColor = 0xFF55FF55;
+    public int miningWarningColor = 0xFFFFFF55;
+    public int miningDangerColor = 0xFFFF5555;
+
+    public boolean corpseSuite = true;
+    public boolean corpseFinder = true;
+    public boolean corpseOnlySeen = true;
+    public boolean corpseThroughWalls = true;
+    public boolean corpseShowBox = true;
+    public boolean corpseShowBeam = true;
+    public boolean corpseShowLabel = true;
+    public boolean corpseShowDistance = true;
+    public boolean corpseParsePartyCoordinates = true;
+    public boolean corpseAutoShareParty = true;
+    public boolean corpseLocalFoundMessage = true;
+    public boolean corpseKeyHud = true;
+    public boolean corpseKeyShowRequired = true;
+    public boolean corpseKeyShowAvailable = true;
+    public boolean corpseKeyWarnMissing = true;
+    public boolean corpseTrackerHud = true;
+    public boolean corpseProfitChat = true;
+    public boolean corpseProfitHud = true;
+    public int corpseScanRange = 128;
+    public int corpseBeamHeight = 12;
+    public int corpseLapisColor = 0xFF5555FF;
+    public int corpseUmberColor = 0xFFFFAA00;
+    public int corpseTungstenColor = 0xFFAAAAAA;
+    public int corpseVanguardColor = 0xFF55FFFF;
+
+    public boolean miningGuidanceSuite = true;
+    public boolean commissionWaypoints = true;
+    public boolean commissionDwarvenWaypoints = true;
+    public boolean commissionGlaciteWaypoints = true;
+    public boolean commissionShowBaseCamp = true;
+    public boolean commissionShowEmissaries = true;
+    public boolean commissionHideEmissariesWithPigeon = true;
+    public boolean commissionOnlyNearestGemstone = true;
+    public boolean commissionWaypointBeam = true;
+    public boolean commissionWaypointBox = false;
+    public boolean commissionWaypointLabel = true;
+    public boolean commissionWaypointDistance = true;
+    public boolean commissionWaypointThroughWalls = true;
+    public boolean puzzlerWorldHighlight = true;
+    public boolean puzzlerShowBeam = true;
+    public boolean puzzlerShowBox = true;
+    public boolean puzzlerShowLabel = true;
+    public boolean puzzlerThroughWalls = true;
+    public boolean fetchurAnswer = true;
+    public boolean fetchurReplaceRiddle = true;
+    public boolean miningDailyHud = true;
+    public boolean miningDailyShowFetchur = true;
+    public boolean miningDailyShowPuzzler = true;
+    public boolean miningDailyPersistFetchurOutsideDwarven = true;
+    public int miningGuidanceBeamHeight = 12;
+    public int miningDailyDurationSeconds = 300;
+    public int miningDwarvenColor = 0xFF45BDE0;
+    public int miningTitaniumColor = 0xFFD8D6D8;
+    public int miningGlaciteColor = 0xFF55FFFF;
+    public int miningBaseCampColor = 0xFFFF5555;
+    public int miningEmissaryColor = 0xFFFFFFFF;
+    public int miningPuzzlerColor = 0xFF55FFFF;
+
+    public boolean forgeSuite = true;
+    public boolean forgeTrackerHud = true;
+    public boolean forgeShowSlotNumber = true;
+    public boolean forgeShowRemaining = true;
+    public boolean forgeShowReady = true;
+    public boolean forgeShowEmpty = false;
+    public boolean forgeShowLocked = false;
+    public boolean forgeReadyFirst = true;
+    public boolean forgePersistProfiles = true;
+    public boolean forgeReminder = true;
+    public boolean forgeReminderRepeat = true;
+    public boolean forgeReminderWhileContainerOpen = false;
+    public boolean forgeReminderClickableWarp = true;
+    public boolean forgeReminderClickableFred = false;
+    public boolean forgeReminderListItems = true;
+    public int forgeReminderDelayMinutes = 1;
+    public int forgeStaleHours = 72;
+    public int forgeActiveColor = 0xFFFFFF55;
+    public int forgeReadyColor = 0xFF55FF55;
+    public int forgeEmptyColor = 0xFFAAAAAA;
+    public int forgeLockedColor = 0xFFFF5555;
 }
