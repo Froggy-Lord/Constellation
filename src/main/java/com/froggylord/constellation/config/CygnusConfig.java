@@ -2,6 +2,7 @@ package com.froggylord.constellation.config;
 
 public class CygnusConfig extends BaseConfigGroup {
 
+    { enabled = false; }
     @Override public int currentVersion() { return 0; }
 
     public boolean calendarHud = true;
