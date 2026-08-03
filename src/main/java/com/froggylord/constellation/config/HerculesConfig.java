@@ -1,35 +1,151 @@
 package com.froggylord.constellation.config;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
 public class HerculesConfig extends BaseConfigGroup {
 
+    { enabled = false; }
     @Override public int currentVersion() { return 0; }
 
-    public boolean contestHud = true;
-    public boolean visitorsHud = false;
-    public boolean pestHud = true;
-    public boolean pestAlert = true;
-    public boolean cropMilestones = true;
-    public boolean visitorRequirements = true;
-    public boolean composterHud = true;
-    public boolean speedHud = true;
-    public boolean spaceFarmer = false;
-    public boolean plotBorders = true;
-    public boolean sweepOverlay = true;
-    public boolean dicerFilter = true;
-    public boolean moongladeBeacon = true;
-    public boolean greenhouseHelper = true;
-    public boolean stereoHarmonyHelper = true;
-    public boolean veridianHelper = true;
-    public boolean yawPitchLock = true;
-    public boolean vacuumSolver = true;
-    public boolean glowingMushrooms = true;
-    public boolean cropGrowthDisplay = true;
-    public boolean plotEfficiencyHud = true;
-    public boolean farmingContestTimer = true;
-    public boolean cropProfitTracker = true;
-    public boolean farmingXpDisplay = true;
-    public boolean farmingCapsDisplay = true;
-    public boolean visitorProfitTracker = true;
-    public boolean pestRepellentTimer = true;
-    public boolean cropUpgradeHelper = true;
+    public boolean visitorHelper = true;
+    public boolean visitorShoppingList = true;
+    public boolean visitorShowInGarden = true;
+    public boolean visitorShowInHub = true;
+    public boolean visitorShowPrice = true;
+    public boolean visitorShowTotalPrice = true;
+    public boolean visitorShowInventoryCount = true;
+    public boolean visitorShowSackCount = true;
+    public boolean visitorShowVisitors = true;
+    public boolean visitorTooltip = true;
+    public boolean visitorTooltipItemPrices = false;
+    public boolean visitorTooltipCopperPrice = true;
+    public boolean visitorTooltipGardenExperiencePrice = false;
+    public boolean visitorTooltipProfit = true;
+    public boolean visitorRewardChat = true;
+    public boolean visitorPreventRareRefuse = true;
+    public boolean visitorPreventNewRefuse = true;
+    public boolean visitorPreventCheapCopperRefuse = false;
+    public boolean visitorPreventExpensiveCopperAccept = false;
+    public boolean visitorPreventLowLossRefuse = false;
+    public boolean visitorPreventHighLossAccept = false;
+    public boolean visitorBlockedSlotHighlight = true;
+    public boolean visitorOptionOutline = true;
+    public boolean visitorAllowHoldBypass = true;
+    public int visitorBypassKey = 341;
+    public int visitorCoinsPerCopper = 6000;
+    public int visitorAcceptableLoss = 150000;
+    public int visitorPriceRefreshSeconds = 30;
+    public int visitorBlockedColor = 0xB4555555;
+    public int visitorGoodOutlineColor = 0xE055FF55;
+    public int visitorBadOutlineColor = 0xE0FF5555;
+    public List<String> visitorWarnRewards = new ArrayList<>(List.of(
+        "OVERGROWN_GRASS", "GREEN_BANDANA", "ENCHANTMENT_DEDICATION_4", "MUSIC_1_RUNE",
+        "DCTR_SPACE_HELM", "ENCHANTMENT_CULTIVATING_1", "ENCHANTMENT_REPLENISH_1", "DYE_COPPER",
+        "HYPERCHARGE_GARDEN_CHIP", "DYE_WILD_STRAWBERRY", "VISITORS_GRATITUDE", "FARMING_CONTEST_DISPLAY",
+        "ASTRONAUT_PERSONALITY", "FAST_FOOD_BARN_SKIN", "JELLY_GREENHOUSE_SKIN"
+    ));
+
+    public boolean farmingControlHud = true;
+    public boolean farmingShowCrop = true;
+    public boolean farmingShowSpeed = true;
+    public boolean farmingShowTargetSpeed = true;
+    public boolean farmingShowSpeedDifference = true;
+    public boolean farmingShowYawPitch = true;
+    public boolean farmingShowTargetAngles = true;
+    public boolean farmingShowAngleDifference = true;
+    public boolean farmingRequireTool = true;
+    public boolean farmingShowOutsideGarden = false;
+    public boolean farmingIgnoreAngleTimeout = false;
+    public int farmingAngleTimeoutSeconds = 5;
+    public int farmingYawPrecision = 4;
+    public int farmingPitchPrecision = 4;
+    public int farmingSpeedTolerance = 3;
+    public int farmingAngleToleranceHundredths = 25;
+
+    public boolean farmingRateHud = true;
+    public boolean farmingShowInstantBps = true;
+    public boolean farmingShowAverageBps = true;
+    public boolean farmingShowSessionBlocks = true;
+    public boolean farmingShowSessionTime = true;
+    public boolean farmingShowCropsPerMinute = true;
+    public int farmingResetAfterSeconds = 5;
+    public int farmingBpsPrecision = 2;
+
+    public boolean jacobContestHud = true;
+    public boolean jacobShowCrop = true;
+    public boolean jacobShowCollected = true;
+    public boolean jacobShowRate = true;
+    public boolean jacobShowElapsed = true;
+    public boolean jacobShowProjectedTotal = true;
+    public boolean jacobShowOutsideGarden = false;
+    public int jacobContestMinutes = 20;
+
+    public boolean pestCore = true;
+    public boolean pestSpawnTitle = true;
+    public boolean pestSpawnChat = true;
+    public boolean pestSpawnSound = true;
+    public boolean pestCompactSpawnChat = false;
+    public boolean pestFinderHud = true;
+    public boolean pestFinderWorld = true;
+    public boolean pestFinderBorders = true;
+    public boolean pestFinderNames = true;
+    public boolean pestFinderThroughWalls = true;
+    public boolean pestFinderOnlyWithVacuum = true;
+    public boolean pestFinderKeepAfterHeld = true;
+    public boolean pestFinderCurrentPlotRed = true;
+    public boolean pestNoPestsTitle = false;
+    public boolean pestTimerHud = true;
+    public boolean pestTimerOnlyWithTool = true;
+    public boolean pestTimerShowLastSpawn = true;
+    public boolean pestTimerShowCooldown = true;
+    public boolean pestTimerShowAverage = true;
+    public boolean pestTimerWarning = true;
+    public boolean pestTimerWarningTitle = true;
+    public boolean pestTimerWarningChat = true;
+    public boolean pestTimerWarningSound = true;
+    public boolean pestTimerCustomCooldown = false;
+    public boolean pestTimerRepeatWarning = false;
+    public boolean pestStatsHud = true;
+    public boolean pestStatsOnlyInGarden = true;
+    public boolean pestStatsShowKills = true;
+    public boolean pestStatsShowDrops = true;
+    public boolean pestStatsShowProfit = true;
+    public boolean pestStatsShowProfitPerHour = true;
+    public boolean pestStatsShowSession = true;
+    public boolean pestStatsPersistent = true;
+    public int pestFinderHoldSeconds = 1;
+    public int pestFinderBorderColor = 0x80FFAA00;
+    public int pestFinderCurrentColor = 0x90FF3333;
+    public int pestFinderLabelColor = 0xFFFF5555;
+    public int pestTimerCustomCooldownSeconds = 135;
+    public int pestTimerWarningSeconds = 3;
+    public int pestTimerAverageTimeoutSeconds = 30;
+    public int pestSpawnTitleTicks = 100;
+    public int pestMaxCount = 8;
+    public String pestSpawnTemplate = "{amount} {pest-word} spawned in {plot}";
+    public Map<String, Long> pestLifetimeKills = new HashMap<>();
+    public Map<String, Long> pestLifetimeDrops = new HashMap<>();
+    public Map<String, Integer> pestPlotNames = new HashMap<>();
+    public double pestLifetimeProfit = 0;
+
+    public int speedWheat = 93, speedCarrot = 93, speedPotato = 93, speedNetherWart = 93;
+    public int speedPumpkin = 155, speedMelon = 155, speedCocoa = 155, speedSugarCane = 328;
+    public int speedCactus = 464, speedMushroom = 233, speedSunflower = 328, speedMoonflower = 328, speedWildRose = 328;
+
+    public float yawWheat = 90f, pitchWheat = 0f;
+    public float yawCarrot = -90f, pitchCarrot = 2.8f;
+    public float yawPotato = -90f, pitchPotato = 2.8f;
+    public float yawNetherWart = 90f, pitchNetherWart = 0f;
+    public float yawPumpkin = 90f, pitchPumpkin = -58.5f;
+    public float yawMelon = 90f, pitchMelon = -58.5f;
+    public float yawCocoa = 180f, pitchCocoa = -45f;
+    public float yawSugarCane = -135f, pitchSugarCane = 0f;
+    public float yawCactus = -90f, pitchCactus = 0f;
+    public float yawMushroom = 116.5f, pitchMushroom = 0f;
+    public float yawSunflower = 45f, pitchSunflower = 0f;
+    public float yawMoonflower = 45f, pitchMoonflower = 0f;
+    public float yawWildRose = 45f, pitchWildRose = 0f;
 }
