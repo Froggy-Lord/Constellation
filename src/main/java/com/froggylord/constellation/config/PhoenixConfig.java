@@ -2,6 +2,7 @@ package com.froggylord.constellation.config;
 
 public class PhoenixConfig extends BaseConfigGroup {
 
+    { enabled = false; }
     @Override public int currentVersion() { return 0; }
 
     public boolean fullbright = true;
@@ -25,6 +26,13 @@ public class PhoenixConfig extends BaseConfigGroup {
     public boolean hideAttachedArrows = true;
     public boolean itemProtection = true;
     public boolean preventDroppingValuable = true;
+    public boolean protectStarredItems = true;
+    public boolean protectRecombobulatedItems = true;
+    public boolean protectValuableConsumables = true;
+    public boolean showProtectedItemMarker = true;
+    public boolean itemProtectionNotifications = true;
+    public java.util.Set<String> protectedItemUuids = new java.util.HashSet<>();
+    public java.util.Set<String> protectedSkyblockIds = new java.util.HashSet<>();
     public boolean hotbarScrollLock = false;
     public boolean wardrobeKeybinds = false;
     public boolean autoSaveReminder = true;
