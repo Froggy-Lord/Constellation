@@ -46,10 +46,16 @@ public final class LyraStorageBrowserScreen extends Screen {
     @Override
     protected void init() {
         LyraConfig cfg = config();
+        boolean firstInit = search == null;
+        String activeSearch = firstInit ? cfg.storageBrowserRetainSearch ? retainedSearch : "" : search.getValue();
+        String activeRename = rename == null ? renameDraft : rename.getValue();
+        boolean searchFocused = !firstInit && search.isFocused();
+        boolean renameFocused = rename != null && rename.isFocused();
+        double activeScroll = firstInit ? cfg.storageBrowserRetainScroll ? retainedScroll : 0 : scroll;
         search = new EditBox(font, 12, 32, Math.max(40, Math.min(220, width - 116)), 18, Component.literal("Search storage"));
         search.setHint(Component.literal("search every cached page"));
         search.setMaxLength(80);
-        search.setValue(cfg.storageBrowserRetainSearch ? retainedSearch : "");
+        search.setValue(activeSearch);
         search.setResponder(value -> { retainedSearch = value; scroll = 0; });
         addRenderableWidget(search);
         rename = new EditBox(font, Math.max(12, width / 2 - 110), height / 2 - 5, Math.min(220, width - 24), 18, Component.literal("Storage name"));
@@ -58,14 +64,13 @@ public final class LyraStorageBrowserScreen extends Screen {
         rename.visible = !editing.isBlank();
         addRenderableWidget(rename);
         if (!editing.isBlank()) {
-            rename.setValue(renameDraft);
-            rename.setFocused(true);
-            setFocused(rename);
+            renameDraft = activeRename;
+            rename.setValue(activeRename);
+            if (renameFocused) { rename.setFocused(true); setFocused(rename); }
         } else {
-            search.setFocused(true);
-            setFocused(search);
+            if (firstInit || searchFocused) { search.setFocused(true); setFocused(search); }
         }
-        scroll = cfg.storageBrowserRetainScroll ? retainedScroll : 0;
+        scroll = activeScroll;
     }
 
     @Override

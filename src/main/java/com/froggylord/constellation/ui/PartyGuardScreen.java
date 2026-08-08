@@ -28,15 +28,32 @@ public final class PartyGuardScreen extends Screen {
     @Override
     protected void init() {
         cfg = ConstellationClient.cfg().orion;
+        String floorValue = value(floor, cfg.partyGuardFloor);
+        String cataValue = value(cata, Integer.toString(cfg.partyGuardMinCata));
+        String secretsValue = value(secrets, Integer.toString(cfg.partyGuardMinSecrets));
+        String averageValue = value(average, Double.toString(cfg.partyGuardMinAverageSecrets));
+        String mpValue = value(mp, Integer.toString(cfg.partyGuardMinMagicalPower));
+        String pbValue = value(pb, Integer.toString(cfg.partyGuardMaxPbSeconds));
+        String messageValue = value(message, cfg.partyGuardKickMessage);
+        int focused = focusedField();
+        fields.clear();
         int x = width / 2 - 120;
-        floor = field(x, 50, 52, "AUTO", cfg.partyGuardFloor);
-        cata = field(x + 60, 50, 52, "Cata", Integer.toString(cfg.partyGuardMinCata));
-        secrets = field(x + 120, 50, 110, "Secrets", Integer.toString(cfg.partyGuardMinSecrets));
-        average = field(x, 84, 70, "Average", Double.toString(cfg.partyGuardMinAverageSecrets));
-        mp = field(x + 78, 84, 70, "MP", Integer.toString(cfg.partyGuardMinMagicalPower));
-        pb = field(x + 156, 84, 74, "PB sec", Integer.toString(cfg.partyGuardMaxPbSeconds));
-        message = field(x, 144, 230, "Kick message", cfg.partyGuardKickMessage);
+        floor = field(x, 50, 52, "AUTO", floorValue);
+        cata = field(x + 60, 50, 52, "Cata", cataValue);
+        secrets = field(x + 120, 50, 110, "Secrets", secretsValue);
+        average = field(x, 84, 70, "Average", averageValue);
+        mp = field(x + 78, 84, 70, "MP", mpValue);
+        pb = field(x + 156, 84, 74, "PB sec", pbValue);
+        message = field(x, 144, 230, "Kick message", messageValue);
         message.setMaxLength(120);
+        if (focused >= 0 && focused < fields.size()) { fields.get(focused).setFocused(true); setFocused(fields.get(focused)); }
+    }
+
+    private static String value(EditBox box, String fallback) { return box == null ? fallback : box.getValue(); }
+
+    private int focusedField() {
+        for (int i = 0; i < fields.size(); i++) if (fields.get(i).isFocused()) return i;
+        return -1;
     }
 
     private EditBox field(int x, int y, int w, String hint, String value) {
@@ -59,21 +76,30 @@ public final class PartyGuardScreen extends Screen {
         int x = width / 2 - 120;
         ConstellationUi.panel(g, x - 10, 31, 250, Math.min(211, height - 68));
         g.text(font, "Floor", x, 38, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Minimum Cata", x + 60, 38, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Minimum secrets", x + 120, 38, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Minimum average", x, 72, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Minimum MP", x + 78, 72, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Maximum PB", x + 156, 72, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "Cata level", x + 60, 38, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "Secrets", x + 120, 38, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "Avg secrets", x, 72, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "MP", x + 78, 72, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, "PB seconds", x + 156, 72, ConstellationTheme.TEXT_MUTED, false);
         toggle(g, x, 110, 72, "Enabled", cfg.partyGuard, mx, my);
         toggle(g, x + 78, 110, 72, "Dry run", cfg.partyGuardDryRun, mx, my);
         toggle(g, x + 156, 110, 74, "No PB", cfg.partyGuardKickMissingPb, mx, my);
-        g.text(font, "Message variables: {player} {reasons} {cata} {secrets} {average} {mp} {pb} {floor}",
+        g.text(font, ConstellationUi.fit(font,
+            "Variables: {player} {reasons} {cata} {secrets} {average} {mp} {pb} {floor}", 230),
             x, 132, ConstellationTheme.TEXT_MUTED, false);
         toggle(g, x, 170, 106, "Send reason", cfg.partyGuardSendReason, mx, my);
         toggle(g, x + 112, 170, 118, "Private reason", cfg.partyGuardPrivateReason, mx, my);
-        g.text(font, "Whitelist overrides every rule. Blacklist bypasses API requirements.", x, 198, ConstellationTheme.TEXT, false);
-        g.text(font, "Manage lists: /partyguard whitelist|blacklist|remove <player>", x, 212, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "API failures always fail open. Auto-kick requires confirmed party leadership.", x, 226, 0xFFFFFF55, false);
+        g.text(font, ConstellationUi.fit(font,
+            "Whitelist wins; blacklist forces a kick; API errors fail open.", 240),
+            x - 5, 195, ConstellationTheme.TEXT, false);
+        if (height >= 280) {
+            g.text(font, ConstellationUi.fit(font,
+                "Lists: /partyguard whitelist|blacklist|remove <player>", 240),
+                x - 5, 209, ConstellationTheme.TEXT_MUTED, false);
+            g.text(font, ConstellationUi.fit(font,
+                "Auto-kick requires confirmed party leadership.", 240),
+                x - 5, 223, 0xFFFFFF55, false);
+        }
         if (!validationError.isEmpty())
             g.text(font, ConstellationUi.fit(font, validationError, 240), x, height - 42, 0xFFFF7777, false);
         button(g, width / 2 - 50, height - 28, 100, 18, "Save and close", mx, my);

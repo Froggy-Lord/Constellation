@@ -29,11 +29,15 @@ public final class SlotBindingEditorScreen extends Screen {
 
     @Override
     protected void init() {
+        String draft = profileName == null ? "" : profileName.getValue();
+        boolean focused = profileName != null && profileName.isFocused();
         profileName = new EditBox(font, 10, height - 31, 104, 18, Component.literal("profile name"));
         profileName.setMaxLength(24);
         profileName.setHint(Component.literal("profile name"));
-        profileName.visible = false;
+        profileName.setValue(draft);
+        profileName.visible = creating;
         addRenderableWidget(profileName);
+        if (creating && focused) { profileName.setFocused(true); setFocused(profileName); }
     }
 
     @Override
@@ -73,6 +77,12 @@ public final class SlotBindingEditorScreen extends Screen {
             rowY += 19;
         }
         if (!creating) button(graphics, x + 3, this.height - 31, width - 6, "New profile", mouseX, mouseY);
+        else {
+            graphics.text(font, ConstellationUi.fit(font, "Enter create  Esc cancel", width - 10), x + 5,
+                this.height - 44, ConstellationTheme.TEXT_MUTED, false);
+            ConstellationTheme.search(graphics, profileName.getX() - 2, profileName.getY() - 2,
+                profileName.getWidth() + 4, profileName.getHeight() + 4, profileName.isFocused());
+        }
     }
 
     private void drawInventory(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
@@ -139,6 +149,7 @@ public final class SlotBindingEditorScreen extends Screen {
             creating = true;
             profileName.visible = true;
             profileName.setFocused(true);
+            setFocused(profileName);
             return true;
         }
         int slot = slotAt(mouseX, mouseY);
@@ -174,6 +185,8 @@ public final class SlotBindingEditorScreen extends Screen {
             creating = false;
             profileName.visible = false;
             profileName.setValue("");
+            profileName.setFocused(false);
+            setFocused(null);
             return true;
         }
         if (event.key() == GLFW.GLFW_KEY_ESCAPE) {
@@ -188,6 +201,8 @@ public final class SlotBindingEditorScreen extends Screen {
         if (!name.isBlank()) PhoenixSlotBinding.createProfileFromEditor(name);
         profileName.setValue("");
         profileName.visible = false;
+        profileName.setFocused(false);
+        setFocused(null);
         creating = false;
         PhoenixSlotBinding.clearEditorSelection();
     }

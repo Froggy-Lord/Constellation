@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.828 (2026-08-09) — Safe Editable Screen Resizing
+
+- fixed Party Guard retaining stale field widgets after resize and preserved all seven unsaved rule drafts and keyboard focus
+- corrected Party Guard's ordinary-window label collisions, overflowing guidance and footer overlap
+- fixed New Profile keyboard focus in Slot Binding and preserved its unsubmitted name through resize
+- preserved Storage Browser's active search, rename draft and scroll during resize independently of cross-reopen retention options
+
 ## 0.9.827 (2026-08-09) — Resize-Safe SkyBlock Screens
 
 - preserved searches, focus, selections and scrolling across resize in the Hub, module config, recipe browser, party messages, profile viewer, scoreboard ordering and tunnel map

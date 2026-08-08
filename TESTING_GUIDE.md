@@ -2550,6 +2550,7 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open Smart Sack Refill at several window heights. Expected: target rows stay inside the central panel, the scrollbar appears only when needed and no hidden row accepts a click.
 - [ ] Toggle refill mode and targets, left-click plus/minus and right-click a quantity button. Expected: one/all mode, enable state and the existing one/eight/sixteen quantity steps remain intact.
 - [ ] Open Slot Binding Editor, create/select/delete profiles and test left, middle and right clicks on inventory and hotbar slots. Expected: the redesigned panels do not alter profile confirmation, binding, color cycling or unbinding.
+- [ ] Click New Profile, enter a draft name, resize the window, then press Escape. Expected: the draft and focus survive resize, while Escape cancels without creating a profile.
 - [ ] Inspect the HUD editor separately. Expected: it still has no decorative panels, borders or screen background; the game remains visible and wheel resizing/current-or-recent element rules are unchanged.
 
 ## Workflow editor UI migration
@@ -2559,6 +2560,7 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open Spirit Leap settings and test every sorting mode, scale limit, background choice and toggle. Expected: controls retain their exact behavior and the custom-order line remains width-safe.
 - [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save and close. Expected: a readable error remains on screen, invalid fields do not overwrite prior values, and valid values still save.
 - [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
+- [ ] Change several Party Guard fields without saving and resize the window. Expected: every draft and focused field survives, no duplicate fields appear and the compact labels/footer remain separate.
 - [ ] Populate enough carries to scroll. Expected: rows stay clipped inside the panel, the scrollbar tracks position and buttons on hidden rows cannot be clicked.
 - [ ] Left- and right-click Carry plus/minus buttons. Expected: left changes completed runs, right changes total runs, and remove still requires its visible button.
 
