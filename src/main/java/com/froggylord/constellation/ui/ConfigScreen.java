@@ -282,6 +282,15 @@ public class ConfigScreen extends Screen {
                     .b("Milestone sound", () -> c.scorePingSound, v -> { c.scorePingSound = v; ConstellationClient.saveConfig(); })
                     .sub("Includes letter grade", true)
                     .sub("S at 270 and S+ at 300", true));
+                modules.add(new Module("dungeonEndingPresentation", "Quiet custom dungeon completion", "HUD",
+                    () -> c.dungeonEndingPresentation, v -> { c.dungeonEndingPresentation = v; ConstellationClient.saveConfig(); })
+                    .b("Custom title", () -> c.dungeonEndingTitle, v -> { c.dungeonEndingTitle = v; ConstellationClient.saveConfig(); })
+                    .b("Subtitle", () -> c.dungeonEndingSubtitle, v -> { c.dungeonEndingSubtitle = v; ConstellationClient.saveConfig(); })
+                    .b("Hide server titles", () -> c.dungeonEndingHideServerTitles, v -> { c.dungeonEndingHideServerTitles = v; ConstellationClient.saveConfig(); })
+                    .b("Hide particles", () -> c.dungeonEndingHideParticles, v -> { c.dungeonEndingHideParticles = v; ConstellationClient.saveConfig(); })
+                    .b("Mute server sounds", () -> c.dungeonEndingMuteSounds, v -> { c.dungeonEndingMuteSounds = v; ConstellationClient.saveConfig(); })
+                    .b("Completion sound", () -> c.dungeonEndingSound, v -> { c.dungeonEndingSound = v; ConstellationClient.saveConfig(); })
+                    .sub("Use /dungeonending test to preview", true));
                 modules.add(new Module("secretsHud", "Secrets found / total", "HUD",
                     () -> c.secretsHud, v -> { c.secretsHud = v; ConstellationClient.saveConfig(); })
                     .b("Per-room count", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); })

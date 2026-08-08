@@ -46,6 +46,23 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean scorePingTitle = true;
     public boolean scorePingSound = true;
 
+    public boolean dungeonEndingPresentation = true;
+    public boolean dungeonEndingTitle = true;
+    public boolean dungeonEndingSubtitle = true;
+    public boolean dungeonEndingHideServerTitles = true;
+    public boolean dungeonEndingHideParticles = true;
+    public boolean dungeonEndingMuteSounds = true;
+    public boolean dungeonEndingSound = true;
+    public int dungeonEndingDurationMillis = 5_000;
+    public int dungeonEndingFadeInTicks = 5;
+    public int dungeonEndingFadeOutTicks = 15;
+    public String dungeonEndingTitleTemplate = "{grade} CLEAR";
+    public String dungeonEndingSubtitleTemplate = "{floor} | {score} score | {time}";
+    public int dungeonEndingTitleColour = 0xFFFFCC33;
+    public int dungeonEndingSubtitleColour = 0xFFB8C7E8;
+    public float dungeonEndingSoundVolume = 0.65f;
+    public float dungeonEndingSoundPitch = 1.1f;
+
     
     public boolean dungeonMap = true;
     public int mapScale = 2; 

@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.844 (2026-08-09) — Quiet Dungeon Completion
+
+- added an exact-once custom dungeon completion title and subtitle driven by the authoritative dungeon-ended event
+- added editable `{score}`, `{grade}`, `{floor}` and `{time}` templates with independent colours, duration and fade timing
+- fitted custom title text at Minecraft's real four-times/two-times title scales so edited messages cannot leave the viewport
+- added independent bounded suppression for server completion titles, particles and sounds plus configurable completion sound volume and pitch
+- added `/dungeonending test` and `/dungeonending stop` for safe local-world presentation checks
+
 ## 0.9.843 (2026-08-09) — Reproducible World Overlay Check
 
 - fixed every world label being submitted roughly 15.7 million pixels offscreen by correcting the Minecraft 26.2 name-tag argument order

@@ -117,7 +117,8 @@ public class ClientPacketListenerMixin {
             || com.froggylord.constellation.constellation.HerculesHoeLevel.shouldCancel(packet)
             || com.froggylord.constellation.constellation.AquilaMiningAwareness.shouldCancel(packet)
             || com.froggylord.constellation.constellation.AquilaMiningHighlights.shouldCancel(packet)
-            || com.froggylord.constellation.constellation.AndromedaDreadfarm.shouldCancelSound(packet)) ci.cancel();
+            || com.froggylord.constellation.constellation.AndromedaDreadfarm.shouldCancelSound(packet)
+            || com.froggylord.constellation.constellation.DungeonEndingPresentation.shouldMuteSound()) ci.cancel();
     }
 
     // ported from SkyHanni (LGPL-2.1): features/dungeon/DungeonSecretTrackerLocator.kt (particle event input)
@@ -134,7 +135,8 @@ public class ClientPacketListenerMixin {
         boolean hideBerberis = com.froggylord.constellation.constellation.AndromedaDreadfarm.onParticle(packet);
         boolean hideLiving = com.froggylord.constellation.constellation.AndromedaLivingCave.onParticle(packet);
         com.froggylord.constellation.constellation.AndromedaStillgore.onParticle(packet);
-        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis || hideLiving) ci.cancel();
+        if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis || hideLiving
+            || com.froggylord.constellation.constellation.DungeonEndingPresentation.shouldHideParticles()) ci.cancel();
     }
 
     @Inject(method = "handleParticleEvent", at = @At("RETURN"))
@@ -163,6 +165,10 @@ public class ClientPacketListenerMixin {
             ci.cancel();
             return;
         }
+        if (com.froggylord.constellation.constellation.DungeonEndingPresentation.shouldHideServerTitle()) {
+            ci.cancel();
+            return;
+        }
         if (com.froggylord.constellation.constellation.TerminalTitleFilter.shouldHide(packet.text(), false)) ci.cancel();
     }
 
@@ -171,6 +177,10 @@ public class ClientPacketListenerMixin {
         target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/network/PacketProcessor;)V",
         shift = At.Shift.AFTER), cancellable = true)
     private void constellation$filterGoldorSubtitle(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
+        if (com.froggylord.constellation.constellation.DungeonEndingPresentation.shouldHideServerTitle()) {
+            ci.cancel();
+            return;
+        }
         if (com.froggylord.constellation.constellation.TerminalTitleFilter.shouldHide(packet.text(), true)) ci.cancel();
     }
 }

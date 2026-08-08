@@ -58,6 +58,7 @@ public class OrionDungeons extends BaseConstellation {
         DungeonPartyAlerts.init();
         ArchitectNotifier.init(cfg);
         DungeonMilestone.init();
+        DungeonEndingPresentation.init(cfg);
         M7RelicTimer.init();
         SpiritBearTimer.init();
         SpiritMaskState.init(cfg);
@@ -498,6 +499,7 @@ public class OrionDungeons extends BaseConstellation {
         GoldorWaypoints.registerCommands(dispatcher);
         WitherHighlight.registerCommands(dispatcher);
         WatcherBossBar.registerCommands(dispatcher);
+        DungeonEndingPresentation.registerCommands(dispatcher);
         SpiritMaskState.registerCommands(dispatcher);
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dwaypoint")
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("add")
