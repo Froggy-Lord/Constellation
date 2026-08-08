@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.841 (2026-08-09) — Viewport-Safe Inventory Buttons
+
+- reduced only the effective Inventory Button gap and size when seven configured buttons cannot fit the viewport
+- kept saved button size and spacing unchanged for wider windows
+- used identical responsive geometry for rendering, hover animation and click hit-testing
+
 ## 0.9.840 (2026-08-09) — Bounded Dungeon Selection Overlays
 
 - replaced Party Finder's unbounded fixed-position detail panel with the native wrapped tooltip layer
