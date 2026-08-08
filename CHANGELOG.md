@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.853 (2026-08-09) — Readable Economy Status Markers
+
+- allow Bazaar status and quantity helpers to work immediately while the profile identifier is still loading
+- retain an isolated unknown-profile tracker bucket and reset it when the real profile becomes available
+- cap Bazaar full/outbid tint opacity so the underlying order item remains identifiable
+- render every Bazaar status letter on a compact dark badge with an opaque semantic colour
+- live-verified Auction sold/expired states and all six Bazaar full, partial, expired, expiring, outbid and matched states with native tooltips
+
 ## 0.9.852 (2026-08-09) — Working Accessory and Inventory Search UI
 
 - replaced Inventory Search's vanilla floating edit box and prompt with compact translucent Constellation controls

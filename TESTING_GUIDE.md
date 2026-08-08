@@ -2588,6 +2588,9 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 
 ## Container overlay responsiveness
 
+- [ ] Open Manage Auctions containing sold and expired listings. Expected: sold slots receive a translucent green tint, expired slots a translucent red tint, item identity remains visible and native tooltips render above both.
+- [ ] Open Your or Co-op Bazaar Orders with full, partial, expired, expiring, outbid and competitive orders. Expected: badges read F, %, !, !, O and M respectively; full/outbid tints remain translucent and every item remains identifiable.
+- [ ] Open Bazaar Orders immediately after joining or changing islands before profile data finishes loading. Expected: fixed status badges appear immediately; once the real profile is learned the order tracker resets into that profile without retaining unknown-profile orders.
 - [ ] Open any SkyBlock container and press Ctrl+F. Expected: a compact translucent Constellation search field appears, matching slots remain bright, non-matches dim and native items remain above every tint.
 - [ ] Press Escape while Inventory Search is focused. Expected: search closes, all slot tints clear and the compact clickable prompt returns; a second Escape closes the container normally.
 - [ ] With Remember Query enabled, dismiss and reopen search. Expected: the prior query returns. Disable it and repeat; expected: the field reopens empty.

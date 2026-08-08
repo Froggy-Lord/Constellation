@@ -137,8 +137,12 @@ public final class LyraBazaarHelper {
         if (status == null) return;
         String marker = switch (status) { case FULL -> "F"; case PARTIAL -> "%"; case EXPIRED, EXPIRING -> "!"; case OUTBID -> "O"; case MATCHED -> "M"; };
         int color = switch (status) { case FULL -> cfg.bazaarFilledColor; case PARTIAL -> cfg.bazaarPartialColor; case EXPIRED -> cfg.bazaarExpiredColor; case EXPIRING -> cfg.bazaarExpiringColor; case OUTBID -> cfg.bazaarOutbidColor; case MATCHED -> cfg.bazaarMatchedColor; };
-        if (status == Status.OUTBID || status == Status.FULL) graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, color);
-        graphics.text(Minecraft.getInstance().font, marker, slot.x + 1, slot.y + 1, color, true);
+        if (status == Status.OUTBID || status == Status.FULL) {
+            int tint = (Math.min(0x90, color >>> 24) << 24) | (color & 0xFFFFFF);
+            graphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, tint);
+        }
+        graphics.fill(slot.x, slot.y, slot.x + 7, slot.y + 10, 0xC0101018);
+        graphics.text(Minecraft.getInstance().font, marker, slot.x + 1, slot.y + 1, 0xFF000000 | (color & 0xFFFFFF), true);
     }
 
     private static boolean validOrderSlot(Slot slot) {
@@ -333,7 +337,7 @@ public final class LyraBazaarHelper {
     private static boolean scope() {
         if (!active()) { clear(); return false; }
         String profile = LyraStorageValue.currentProfileKey();
-        if (profile.isBlank()) { clear(); return false; }
+        if (profile.isBlank()) profile = "unknown";
         if (!profile.equals(orderProfile)) { clear(); orderProfile = profile; }
         return true;
     }
