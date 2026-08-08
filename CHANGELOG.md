@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.824 (2026-08-09) — Clear HUD Editing and Hub Footer
+
+- removed Minecraft's inherited menu blur from the HUD editor so the game remains visible beneath its light positioning overlay
+- live-tested pointer-wheel scaling on a hovered HUD without changing neighbouring elements
+- moved the hub footer controls above their keyboard hint so both remain readable at ordinary GUI scale
+
 ## 0.9.823 (2026-08-09) — Compact SkyBlock HUD Corrections
 
 - applied the compact translucent HUD treatment to Mirrorverse Dance as well as the shared 99-widget HUD family

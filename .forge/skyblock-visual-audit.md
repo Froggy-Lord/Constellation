@@ -5,19 +5,19 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 ## Shared HUD system
 
 - [x] 99 `ThemedHudWidget` panels use the compact translucent Dross Pickles HUD structure, one-pixel outline and Constellation palette.
-- [x] HUD editor is only a 12.5% black game overlay plus real HUD previews, with no editor chrome.
+- [x] HUD editor is only a 12.5% black game overlay plus real HUD previews, with no editor chrome or inherited Minecraft blur (`/tmp/hud-editor-no-blur-823.png`).
 - [x] HUD editor exposes only currently visible elements or elements seen in the preceding five seconds.
-- [x] Every exposed HUD supports drag positioning and pointer-wheel scaling from 0.5x to 3.0x.
+- [x] Every exposed HUD supports drag positioning and pointer-wheel scaling from 0.5x to 3.0x; live wheel input resized only the hovered Performance HUD (`/tmp/hud-editor-wheel-up-823.png`).
 - [x] Custom scoreboard retains its purpose-built configurable SkyBlock layout.
 - [x] Dungeon map retains its purpose-built room-map renderer.
 - [x] Pet display retains its purpose-built item-icon-first layout.
 - [x] Mirrorverse Dance uses the same compact translucent Dross Pickles panel treatment.
 - [ ] Capture representative compact, long-row, multi-row, icon-bearing, scoreboard, map, pet and Mirrorverse HUDs at multiple GUI scales.
-- [ ] Check simultaneous HUDs for readable spacing and document recommended default positions where collisions remain.
+- [x] Check simultaneous default Apollo HUDs for readable spacing; Performance, Location and Movement use the verified 2/38/70 percent stack (`/tmp/hud-defaults-823.png`). Saved user positions remain authoritative.
 
 ## Full custom screens
 
-- [x] Hub and main configuration screens use the Constellation space identity and shared controls.
+- [x] Hub and main configuration screens use the Constellation space identity and shared controls; the corrected footer leaves a clear gap above its keyboard hint (`/tmp/hub-footer-fixed-823.png`).
 - [x] Advanced configuration has search, grouped values and empty/error-safe rendering.
 - [x] SkyBlock Craft Item preserves server slots with dedicated grid/result/quick-craft stages.
 - [x] Market Search has loading, empty, error, keyboard, scroll and filter states with live screenshots.

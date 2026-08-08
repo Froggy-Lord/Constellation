@@ -153,7 +153,7 @@ public class HubScreen extends Screen {
         int btnW = Math.max(76, Math.min(132, (w - 36 - btnGap * 2) / 3));
         int footerW = btnW * 3 + btnGap * 2;
         int hudX = (w - footerW) / 2, visualX = hudX + btnW + btnGap, cfgX = visualX + btnW + btnGap;
-        int btnY = h - btnH - 10;
+        int btnY = h - btnH - font.lineHeight - 18;
 
         boolean hoverHud = mx >= hudX && mx <= hudX + btnW && my >= btnY && my <= btnY + btnH;
         boolean hoverVisual = mx >= visualX && mx <= visualX + btnW && my >= btnY && my <= btnY + btnH;
@@ -211,7 +211,7 @@ public class HubScreen extends Screen {
         int btnW = Math.max(76, Math.min(132, (w - 36 - btnGap * 2) / 3));
         int footerW = btnW * 3 + btnGap * 2;
         int hudX = (w - footerW) / 2, visualX = hudX + btnW + btnGap, cfgX = visualX + btnW + btnGap;
-        int btnY = h - btnH - 10;
+        int btnY = h - btnH - Minecraft.getInstance().font.lineHeight - 18;
 
         if (mx >= cfgX && mx <= cfgX + btnW && my >= btnY && my <= btnY + btnH) {
             cfgFlashAt = System.currentTimeMillis();
