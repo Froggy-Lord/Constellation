@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.833 (2026-08-09) — Reliable Preset and Map Editing
+
+- added confirmation before deleting a Speed Preset or restoring every default preset
+- separated successful Speed Preset feedback from validation errors with clear green/red states
+- re-clamped retained list positions after resizing Speed Presets, Scoreboard Order and Tunnel Map
+
 ## 0.9.832 (2026-08-09) — Safer Compact Editors
 
 - made Scoreboard Order move filtered rows relative to adjacent visible results instead of hidden global entries

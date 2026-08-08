@@ -36,7 +36,7 @@ public final class ScoreboardOrderScreen extends Screen {
         ConstellationTheme.search(graphics,12,24,Math.min(244,width-24),22,search.isFocused());
         int top=52,bottom=height-29;
         ConstellationUi.panel(graphics,8,top-4,width-16,bottom-top+8);
-        List<String> rows=visible();int y=top-scroll;
+        List<String> rows=visible();scroll=Math.clamp(scroll,0,Math.max(0,rows.size()*20-(height-83)));int y=top-scroll;
         graphics.enableScissor(8,top,width-8,bottom);
         for(String id:rows){if(y+17>=top&&y<bottom){boolean hidden=ApolloCustomScoreboard.config().customScoreboardHidden.contains(id);boolean hover=inside(mx,my,12,y,width-24,17);ConstellationTheme.surface(graphics,12,y,width-24,17,hover?0xFF303044:0xC020202C,ConstellationTheme.BORDER_SOFT);graphics.text(font,ConstellationUi.fit(font,label(id),Math.max(20,width-136)),18,y+5,hidden?ConstellationTheme.TEXT_MUTED:ConstellationTheme.TEXT,false);button(graphics,width-112,y+1,28,"Up",mx,my);button(graphics,width-80,y+1,34,"Down",mx,my);button(graphics,width-42,y+1,28,hidden?"Show":"Hide",mx,my);}y+=20;}
         graphics.disableScissor();

@@ -34,7 +34,7 @@ public final class TunnelMapScreen extends Screen {
         ConstellationUi.background(g,width,height,delta);
         ConstellationUi.header(g,font,"Glacite Tunnel Maps",AquilaTunnelMaps.routeStatus(),width);
         ConstellationTheme.search(g,12,25,Math.min(244,width-24),22,search.isFocused());
-        int top=52,bottom=height-31,rowHeight=20,y=top-(int)scroll;List<String> rows=rows();
+        int top=52,bottom=height-31,rowHeight=20;List<String> rows=rows();scroll=Math.clamp(scroll,0,Math.max(0,rows.size()*rowHeight-(height-84)));int y=top-(int)scroll;
         ConstellationUi.panel(g,8,top-4,width-16,bottom-top+8);
         g.enableScissor(8,top,width-8,bottom);
         for(String name:rows){

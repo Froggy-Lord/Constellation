@@ -2570,11 +2570,14 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 ## Compact screen UI completion
 
 - [ ] Open Speed Presets at multiple GUI scales, search enough entries to scroll and select a visible row. Expected: list rows remain clipped, the scrollbar tracks position and hidden rows cannot be selected.
+- [ ] Click Delete or Reset once in Speed Presets. Expected: it changes to `Confirm` without modifying presets; selecting/editing elsewhere cancels it. Successful saves/restores are green and invalid names/speeds are red.
+- [ ] Scroll Speed Presets to its bottom, then make the window taller. Expected: retained scroll is clamped immediately and rows remain visible rather than opening on blank space.
 - [ ] Create, rename, delete, use and reset presets. Expected: validation still limits names and speeds to the licensed feature rules and every action updates the selected state correctly.
 - [ ] Open Scoreboard Order, filter to a small subset and move lines up/down. Expected: movement updates the complete saved order, long labels do not overlap controls and off-screen rows cannot toggle.
 - [ ] With Scoreboard Order filtered, move the middle visible result up and down. Expected: it trades places with the adjacent visible result, even when hidden global rows lie between them. Click Reset once and then elsewhere; expected: no reset occurs until `Confirm reset` is clicked.
 - [ ] Hide and show scoreboard lines, close and reopen the screen. Expected: visibility and complete ordering persist.
 - [ ] Open Tunnel Maps, search and scroll destinations, then select a visible route. Expected: only visible rows accept clicks and active route status, Clear, Next spot and Campfire remain functional.
+- [ ] Scroll Tunnel Maps to its bottom, then increase the window height. Expected: the list immediately clamps to its new bottom with no empty retained-scroll gap.
 - [ ] Open Dungeon Records at a short window height. Expected: ALL, E, F1–F7 and M1–M7 remain reachable in the two-column selector.
 - [ ] Run `/dungeonstats`. Expected: the Dungeon Records screen opens; it must not print only the legacy session summary in chat.
 - [ ] Click `Clear ALL` once, then press Escape. Expected: the button changes to `Confirm`, no records are deleted, and Escape returns to the game.
