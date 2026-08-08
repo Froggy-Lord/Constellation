@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.838 (2026-08-09) — Responsive Dungeon Chest Profit
+
+- moved Dungeon Chest Profit into the larger available side gutter instead of assuming right-side space
+- collapsed loot rows before covering the chest and retained cost, profit and unknown-price status
+- bounded long chest names, loot values and panel height at narrow or short window sizes
+
 ## 0.9.837 (2026-08-09) — Correct Garden Overlay Placement
 
 - fixed Composter, Anita, Visitor Logbook, Pesthunter and Plot Price panels using screen coordinates inside container-local rendering
