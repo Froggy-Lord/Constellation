@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.851 (2026-08-09) — World Overlay Visual Check
+
+- expanded `/cn box` into a complete local-only check for filled highlights, outlines, beams, labels and multi-segment paths
+- shows through-wall and depth-tested primitives together with distinct labels and colours
+- verified through-wall primitives remain visible behind a solid local wall while depth-tested primitives are fully occluded
+- refreshed every local reference repository without moving detached Athen or SkyblockAddons snapshots
+
 ## 0.9.850 (2026-08-09) — Correct Container Layers
 
 - moved decorative Accessory, Storage Value, Inventory Button and dungeon chest-profit panels below native contents and tooltips

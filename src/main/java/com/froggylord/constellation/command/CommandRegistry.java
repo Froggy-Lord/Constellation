@@ -195,11 +195,21 @@ public final class CommandRegistry {
             ctx.highlight(new AABB(centre.x - 0.5, centre.y - 0.5, centre.z - 0.5,
                 centre.x + 0.5, centre.y + 0.5, centre.z + 0.5), 0xA000E5FF, true);
             ctx.label(centre.add(0, 0.9, 0), "through walls", 0xFF00E5FF, true);
+            ctx.beam(centre.x, centre.y - 1.0, centre.z, 0xFF00E5FF, 4, true);
             var depth = centre.add(3.0, 0, 0);
-            ctx.outline(new AABB(depth.x - 0.5, depth.y - 0.5, depth.z - 0.5,
-                depth.x + 0.5, depth.y + 0.5, depth.z + 0.5), 0xFFFFAA33, false);
+            ctx.box(new AABB(depth.x - 0.5, depth.y - 0.5, depth.z - 0.5,
+                depth.x + 0.5, depth.y + 0.5, depth.z + 0.5), 0x50FFAA33, false);
+            ctx.outline(new AABB(depth.x - 0.52, depth.y - 0.52, depth.z - 0.52,
+                depth.x + 0.52, depth.y + 0.52, depth.z + 0.52), 0xFFFFAA33, false);
             ctx.line(centre, depth, 0xFFFF55AA, false, 3);
             ctx.label(depth.add(0, 1.25, 0), "depth tested", 0xFFFFAA33, false);
+            var routeOne = centre.add(-1.5, -0.75, 1.5);
+            var routeTwo = routeOne.add(1.5, 0.5, 1.5);
+            var routeThree = routeTwo.add(-1.0, 0.75, 1.5);
+            ctx.line(centre, routeOne, 0xFF5599FF, true, 4);
+            ctx.line(routeOne, routeTwo, 0xFF5599FF, true, 4);
+            ctx.line(routeTwo, routeThree, 0xFF5599FF, true, 4);
+            ctx.label(routeTwo.add(0, 1.15, 0), "route path", 0xFF5599FF, true);
         });
         message("§aWorld render check enabled; run /cn box again to hide it");
         return 1;

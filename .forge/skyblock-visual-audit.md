@@ -41,7 +41,7 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 
 ## World and event overlays
 
-- [ ] Capture representative waypoint labels, boxes, beams, paths and solver lines with through-walls both enabled and disabled where configurable.
+- [x] Capture representative waypoint labels, boxes, beams, paths and solver lines with through-walls both enabled and disabled where configurable. `/tmp/world-primitives-850.png` proves the complete primitive set in open view; `/tmp/world-primitives-occlusion-850.png` proves cyan through-wall highlight, beam, label and path remain visible behind a solid wall while the orange box and magenta depth-tested line are fully occluded.
 - [x] Check every puzzle solver is room-gated and never renders outside its matching room; all room solvers match bundled skeleton stems, while F7 devices use exact floor, phase and coordinate gates (source audit, 0.9.825).
 - [ ] Check title, boss-bar, action-bar, scoreboard and chat replacements for clipping, duplication and readable fallback. Chat/action-bar separation, style retention, original hover/click retention and URL confirmation are proven on 0.9.848 candidate (`/tmp/chatvisual-848.png`, `/tmp/chatvisual-actionbar-848.png`, `/tmp/chatvisual-coin-hover2-848.png`, `/tmp/chatvisual-url-confirm-848.png`); title, boss-bar and scoreboard encounter states remain open.
 - [ ] Check reduced visual-noise/end-of-run presentation and particle substitutions in a safe local reproduction or stationary Hypixel test.
