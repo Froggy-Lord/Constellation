@@ -1,5 +1,11 @@
 # Constellation testing guide
 
+## Narrow Speed Presets (0.9.858)
+
+- [ ] Open `/speedpreset` at a 640x480 window with GUI scale 2. Expected: Save, Delete, Use and Reset share a centered row above the name/speed fields; Done remains on the bottom row and nothing leaves the viewport.
+- [ ] Select a preset, click Delete twice, then Reset twice. Expected: each first click changes only its own button to Confirm; the second click performs the action.
+- [ ] Focus Search, Name and Speed in turn, scroll to both list boundaries, use a preset, close with Done, then reopen and close with Escape.
+
 ## Shared SkyBlock HUD layout (0.9.857)
 
 Open `/cn hud` while the SkyBlock displays you want to move are visible, or were visible in the last five seconds.

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.858 (2026-08-09) — Repair Narrow Speed Presets
+
+- move the four Speed Preset actions onto their own centered row below 440 logical pixels
+- share responsive drawing and click geometry so Save, Delete/Confirm, Use and Reset/Confirm remain reachable
+- reserve the extra narrow action row from the scrolling list and fit status text beside Done
+- move Currency to the open middle-left region so it no longer intersects the right-side custom scoreboard
+
 ## 0.9.857 (2026-08-09) — Keep SkyBlock HUDs Readable
 
 - keep every live and editor HUD fully inside the viewport at any supported scale

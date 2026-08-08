@@ -78,7 +78,7 @@ public class LyraEconomy extends BaseConstellation {
     public void registerHud(HudManager hud) {
         cfg = (LyraConfig) config;
         hud.register(new com.froggylord.constellation.hud.LyraCurrencyHudWidget(
-            HudPosition.of(45, 55), () -> cfg != null && cfg.enabled
+            HudPosition.of(30, 40), () -> cfg != null && cfg.enabled
                 && (cfg.purseHud || cfg.coinSession || cfg.coinSessionRate || cfg.coinRecentChange || cfg.bitsHud)));
     }
 
