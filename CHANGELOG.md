@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.840 (2026-08-09) — Bounded Dungeon Selection Overlays
+
+- replaced Party Finder's unbounded fixed-position detail panel with the native wrapped tooltip layer
+- fitted Party Finder's joinable/dupe/blocked summary to the container width
+- capped Spirit Leap's effective card scale to the current viewport while preserving the configured preference
+
 ## 0.9.839 (2026-08-09) — Non-Overlapping Reforge Filters
 
 - made the Reforge Helper filter editor choose the larger actual side gutter
