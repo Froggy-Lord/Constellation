@@ -369,6 +369,13 @@ public class OrionConfig extends BaseConfigGroup {
     public boolean iceFillSolver = true;       
     public boolean teleportMazeSolver = true;  
     public boolean silverfishSolver = true;    // highlight silverfish bfs path ...
+    // ported from Odin (BSD-3-Clause): features/impl/dungeon/puzzlesolvers/PuzzleSolvers.kt
+    public boolean boulderSolver = true;
+    public boolean boulderHighlight = true;
+    public boolean boulderLabel = true;
+    public boolean boulderTracer = true;
+    public boolean boulderThroughWalls = false;
+    public int boulderColour = 0x8055FF55;
     public boolean lightsOnSolver = true;     
     public boolean arrowAlignSolver = true;    
     public boolean targetPracticeSolver = true;

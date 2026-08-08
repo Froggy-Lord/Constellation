@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.825 (2026-08-09) — Independent Boulder Solver Controls
+
+- fixed the Boulder solver being incorrectly controlled by the terminal-solver setting
+- added independent Boulder highlight, label, tracer, through-wall and ARGB colour controls
+- retained the exact `boxes-room` gate and advisory-only rendering with no automatic clicks
+
 ## 0.9.824 (2026-08-09) — Clear HUD Editing and Hub Footer
 
 - removed Minecraft's inherited menu blur from the HUD editor so the game remains visible beneath its light positioning overlay

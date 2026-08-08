@@ -1264,7 +1264,8 @@ Because this is the largest area, test it across normal runs instead of staging 
 For each puzzle, verify the overlay appears only inside its matching room and disappears immediately after leaving.
 
 - [ ] Blaze: ordered targets match health order.
-- [ ] Boulder: boxes follow the valid solution in `boxes-room`.
+- [ ] Boulder: boxes follow the valid solution in `boxes-room`; its own Boulder toggle disables the overlay without changing terminal solvers.
+- [ ] In Orion advanced settings, toggle Boulder Highlight, Label, Tracer and Through Walls independently and change Boulder Colour. Expected: only the selected visual layers change and no click is ever sent automatically.
 - [ ] Creeper Beams: exactly the intended beam pairs are connected.
 - [ ] Ice Fill: path covers the board without revisiting tiles.
 - [ ] Silverfish: maze path leads from the silverfish to the finish.

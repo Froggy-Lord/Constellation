@@ -455,6 +455,12 @@ public class ConfigScreen extends Screen {
                     () -> c.iceFillSolver, v -> { c.iceFillSolver = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("silverfishSolver", "Silverfish — maze path", "Solvers",
                     () -> c.silverfishSolver, v -> { c.silverfishSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("boulderSolver", "Boulder — next box", "Solvers",
+                    () -> c.boulderSolver, v -> { c.boulderSolver = v; ConstellationClient.saveConfig(); })
+                    .sub("Highlight", c.boulderHighlight)
+                    .sub("Label", c.boulderLabel)
+                    .sub("Tracer", c.boulderTracer)
+                    .sub("Through walls", c.boulderThroughWalls));
                 modules.add(new Module("teleportMazeSolver", "Teleport Maze — safe pads", "Solvers",
                     () -> c.teleportMazeSolver, v -> { c.teleportMazeSolver = v; ConstellationClient.saveConfig(); }));
 
