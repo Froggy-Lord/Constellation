@@ -36,16 +36,12 @@ public class CassiopeiaChat extends BaseConstellation {
         pipeline.init();
 
         
-        if (cfg.actionBarCleaner) {
-            net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
-                if (!isEnabled() || !cfg.enabled) return true;
-                if (!overlay || !cfg.actionBarCleaner) return true;
-                String s = msg.getString();
-                
-                if (s.contains("❤") && s.length() > 30) return false; 
-                return true;
-            });
-        }
+        // ported from Skyblocker (LGPL-3.0-or-later): skyblock/StatusBarTracker.java
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
+            if (!isEnabled() || !cfg.enabled || !overlay || !cfg.actionBarCleaner) return true;
+            String s = msg.getString();
+            return !s.contains("❤") || s.length() <= 30;
+        });
 
         
         pipeline.allow(msg -> {

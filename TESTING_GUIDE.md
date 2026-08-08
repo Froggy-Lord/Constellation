@@ -2970,3 +2970,9 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 - [ ] Toggle Custom Title, Subtitle, Hide Server Titles, Hide Particles, Mute Server Sounds and Completion Sound independently. Expected: each switch owns only its named channel, and all suppression ends after the configured 1-15 second duration.
 - [ ] Change title/subtitle colours, duration, fade-in/fade-out, sound volume and pitch in Advanced Settings. Expected: the next preview uses the saved values; `/dungeonending stop` immediately clears the presentation.
 - [ ] Complete a real dungeon without leaving the instance. Expected: the presentation triggers exactly once from the team-score completion event, uses the live floor/score/grade/time, and never repeats on later `EXTRA STATS` lines.
+### Action Bar Cleaner live toggle
+
+1. Open Constellation settings, select Cassiopeia and enable `Action Bar Cleaner` without restarting Minecraft.
+2. On SkyBlock, confirm a long health status action bar is hidden immediately.
+3. Disable the setting again and confirm the next health status action bar is visible immediately.
+4. Confirm ordinary short action-bar notices remain visible in both states.

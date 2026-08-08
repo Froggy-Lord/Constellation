@@ -1,5 +1,10 @@
 # Constellation Changelog
 
+## 0.9.845 (2026-08-09) — Live Action Bar Setting
+
+- fixed Action Bar Cleaner doing nothing when enabled after startup
+- kept its listener registered and applied the setting at message time, matching other live configuration controls
+
 ## 0.9.844 (2026-08-09) — Quiet Dungeon Completion
 
 - added an exact-once custom dungeon completion title and subtitle driven by the authoritative dungeon-ended event
