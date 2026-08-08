@@ -1,5 +1,7 @@
 package com.froggylord.constellation.core;
 
+import com.froggylord.constellation.config.CassiopeiaConfig;
+import com.froggylord.constellation.constellation.ActionBarCleaner;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +46,18 @@ class PatternsTest {
         assertTrue(m.find());
         assertEquals("5.2k", m.group(1));
         assertEquals("4,805", m.group(2));
+
+        CassiopeiaConfig cfg = new CassiopeiaConfig();
+        String combined = "5.2k/4,805❤     -20 Mana (Instant Transmission)     T3!";
+        assertEquals("-20 Mana (Instant Transmission)     T3!", ActionBarCleaner.filter(combined, cfg));
+        cfg.actionBarHideHealth = false;
+        cfg.actionBarHideManaUse = true;
+        assertEquals("5.2k/4,805❤     T3!", ActionBarCleaner.filter(combined, cfg));
+        cfg.actionBarHideTerminalLaser = true;
+        assertEquals("5.2k/4,805❤", ActionBarCleaner.filter(combined, cfg));
+        cfg.actionBarDungeonSegments = false;
+        assertEquals("5.2k/4,805❤     T3!", ActionBarCleaner.filter(combined, cfg));
+        assertEquals("Unknown encounter text", ActionBarCleaner.filter("Unknown encounter text", cfg));
     }
 
     @Test

@@ -2972,7 +2972,9 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 - [ ] Complete a real dungeon without leaving the instance. Expected: the presentation triggers exactly once from the team-score completion event, uses the live floor/score/grade/time, and never repeats on later `EXTRA STATS` lines.
 ### Action Bar Cleaner live toggle
 
-1. Open Constellation settings, select Cassiopeia and enable `Action Bar Cleaner` without restarting Minecraft.
-2. On SkyBlock, confirm a long health status action bar is hidden immediately.
-3. Disable the setting again and confirm the next health status action bar is visible immediately.
-4. Confirm ordinary short action-bar notices remain visible in both states.
+1. Open Constellation settings, select Cassiopeia, then Action bar. Confirm Core, Dungeon/combat and Mining/Rift/event cards are all reachable; right-click each card to open its bounded options.
+2. Run `/actionbarcleaner on`, then `/actionbarcleaner test`. Expected: default health is removed while mana-use, terminal and unknown encounter text remain visible.
+3. Toggle Health, Mana use and Terminal laser independently and repeat the test. Expected: only selected segments disappear; unknown text is always retained.
+4. Disable either group master. Expected: its saved child selections remain, but none of that group's segments are removed until the group is re-enabled.
+5. On SkyBlock, compare the action bar with Vitals enabled. Expected: hidden health/mana/defense segments still update the Vitals HUD because observation happens before presentation filtering.
+6. Run `/actionbarcleaner off` without restarting. Expected: the next server action bar is unchanged, including its original styling.

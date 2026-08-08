@@ -217,7 +217,7 @@ public class ConfigScreen extends Screen {
                     .b("Disable NPC dialogue", () -> c.disableNpcDialogue, v -> { c.disableNpcDialogue = v; ConstellationClient.saveConfig(); }));
             }
             case "cassiopeia" -> {
-                cats = new String[]{"Filters", "Chat", "Commands", "Party"};
+                cats = new String[]{"Filters", "Chat", "Action bar", "Commands", "Party"};
                 CassiopeiaConfig c = cfg.cassiopeia;
                 for (var field : CassiopeiaConfig.class.getFields()) {
                     String n = field.getName();
@@ -251,6 +251,30 @@ public class ConfigScreen extends Screen {
                     () -> c.mentionAlert, v -> { c.mentionAlert = v; ConstellationClient.saveConfig(); })
                     .b("Sound", () -> c.mentionAlert, v -> c.mentionAlert = v)
                     .sub("Title", true));
+                modules.add(new Module("actionBarCleaner", "Keep selected status segments off the action bar", "Action bar",
+                    () -> c.actionBarCleaner, v -> { c.actionBarCleaner = v; ConstellationClient.saveConfig(); })
+                    .b("Health", () -> c.actionBarHideHealth, v -> { c.actionBarHideHealth = v; ConstellationClient.saveConfig(); })
+                    .b("Defense", () -> c.actionBarHideDefense, v -> { c.actionBarHideDefense = v; ConstellationClient.saveConfig(); })
+                    .b("Mana", () -> c.actionBarHideMana, v -> { c.actionBarHideMana = v; ConstellationClient.saveConfig(); })
+                    .b("Mana use", () -> c.actionBarHideManaUse, v -> { c.actionBarHideManaUse = v; ConstellationClient.saveConfig(); })
+                    .b("True Defense", () -> c.actionBarHideTrueDefense, v -> { c.actionBarHideTrueDefense = v; ConstellationClient.saveConfig(); })
+                    .b("Skill XP", () -> c.actionBarHideSkillXp, v -> { c.actionBarHideSkillXp = v; ConstellationClient.saveConfig(); })
+                    .sub("Unknown text is always preserved", true));
+                modules.add(new Module("actionBarDungeonSegments", "Dungeon and combat action-bar segments", "Action bar",
+                    () -> c.actionBarDungeonSegments, v -> { c.actionBarDungeonSegments = v; ConstellationClient.saveConfig(); })
+                    .b("Dungeon secrets", () -> c.actionBarHideSecrets, v -> { c.actionBarHideSecrets = v; ConstellationClient.saveConfig(); })
+                    .b("Terminal laser", () -> c.actionBarHideTerminalLaser, v -> { c.actionBarHideTerminalLaser = v; ConstellationClient.saveConfig(); })
+                    .b("Essence gained", () -> c.actionBarHideEssence, v -> { c.actionBarHideEssence = v; ConstellationClient.saveConfig(); })
+                    .b("Ragnarock timer", () -> c.actionBarHideRagnarock, v -> { c.actionBarHideRagnarock = v; ConstellationClient.saveConfig(); })
+                    .b("Aurora rune", () -> c.actionBarHideAuroraRune, v -> { c.actionBarHideAuroraRune = v; ConstellationClient.saveConfig(); })
+                    .b("Soul Esoward", () -> c.actionBarHideSoulEsoward, v -> { c.actionBarHideSoulEsoward = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("actionBarWorldSegments", "Mining, Rift and event action-bar segments", "Action bar",
+                    () -> c.actionBarWorldSegments, v -> { c.actionBarWorldSegments = v; ConstellationClient.saveConfig(); })
+                    .b("Drill fuel", () -> c.actionBarHideDrillFuel, v -> { c.actionBarHideDrillFuel = v; ConstellationClient.saveConfig(); })
+                    .b("Armor stacks", () -> c.actionBarHideArmorStacks, v -> { c.actionBarHideArmorStacks = v; ConstellationClient.saveConfig(); })
+                    .b("Rift time", () -> c.actionBarHideRiftTime, v -> { c.actionBarHideRiftTime = v; ConstellationClient.saveConfig(); })
+                    .b("Gecko combo", () -> c.actionBarHideGeckoCombo, v -> { c.actionBarHideGeckoCombo = v; ConstellationClient.saveConfig(); })
+                    .b("Bits gained", () -> c.actionBarHideBits, v -> { c.actionBarHideBits = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("floorShortcuts", "/f1-/f7 /m1-/m7", "Commands",
                     () -> c.floorShortcuts, v -> { c.floorShortcuts = v; ConstellationClient.saveConfig(); })
                     .b("Floors", () -> c.floorShortcuts, v -> c.floorShortcuts = v)

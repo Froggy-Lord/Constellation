@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.846 (2026-08-09) — Selective Action Bar Cleaner
+
+- replaced whole-line health cancellation with Devonian-derived segment classification
+- added independent health, defense, mana, mana-use, True Defense, skill XP, dungeon, combat, mining, Rift and event filters
+- preserved unrecognized encounter text and every recognized segment whose filter is disabled
+- moved status observation ahead of filtering so Vitals continues updating when its source segment is hidden
+- added three bounded settings cards plus `/actionbarcleaner on|off|test` for immediate configuration and safe visual checks
+
 ## 0.9.845 (2026-08-09) — Live Action Bar Setting
 
 - fixed Action Bar Cleaner doing nothing when enabled after startup

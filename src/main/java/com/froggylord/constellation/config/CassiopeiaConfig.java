@@ -50,6 +50,25 @@ public class CassiopeiaConfig extends BaseConfigGroup {
     public boolean autoGG = true; // local completion reminder only
     public boolean autoTip = true;
     public boolean actionBarCleaner = false;
+    public boolean actionBarHideHealth = true;
+    public boolean actionBarHideDefense = false;
+    public boolean actionBarHideMana = false;
+    public boolean actionBarHideManaUse = false;
+    public boolean actionBarHideTrueDefense = false;
+    public boolean actionBarHideSkillXp = false;
+    public boolean actionBarDungeonSegments = true;
+    public boolean actionBarHideSecrets = false;
+    public boolean actionBarHideTerminalLaser = false;
+    public boolean actionBarHideDrillFuel = false;
+    public boolean actionBarHideArmorStacks = false;
+    public boolean actionBarHideRiftTime = false;
+    public boolean actionBarHideGeckoCombo = false;
+    public boolean actionBarHideEssence = false;
+    public boolean actionBarHideRagnarock = false;
+    public boolean actionBarHideAuroraRune = false;
+    public boolean actionBarHideSoulEsoward = false;
+    public boolean actionBarWorldSegments = true;
+    public boolean actionBarHideBits = false;
 
     
     public boolean timestamps = true;

@@ -36,11 +36,10 @@ public class CassiopeiaChat extends BaseConstellation {
         pipeline.init();
 
         
-        // ported from Skyblocker (LGPL-3.0-or-later): skyblock/StatusBarTracker.java
-        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
-            if (!isEnabled() || !cfg.enabled || !overlay || !cfg.actionBarCleaner) return true;
-            String s = msg.getString();
-            return !s.contains("❤") || s.length() <= 30;
+        // ported from Devonian (GPL-3.0): features/misc/ActionbarParser.kt
+        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.MODIFY_GAME.register((msg, overlay) -> {
+            if (!isEnabled() || !cfg.enabled || !overlay || !cfg.actionBarCleaner) return msg;
+            return ActionBarCleaner.filter(msg, cfg);
         });
 
         
@@ -113,6 +112,11 @@ public class CassiopeiaChat extends BaseConstellation {
         CassiopeiaAlerts.init(cfg, pipeline);
     }
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("actionbarcleaner")
+            .executes(ctx -> actionBarStatus())
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes(ctx -> setActionBarCleaner(true)))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes(ctx -> setActionBarCleaner(false)))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("test").executes(ctx -> actionBarTest())));
         if (!cfg.floorShortcuts && !cfg.warpShortcuts && !cfg.partyShortcuts) return;
 
         
@@ -272,6 +276,27 @@ public class CassiopeiaChat extends BaseConstellation {
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("ps")
                 .executes(ctx -> { sendCmd("p settings"); return 1; }));
         }
+    }
+
+    private int actionBarStatus() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("§dAction Bar §8> §fCleaner "
+            + (cfg.actionBarCleaner ? "on" : "off") + "; open Cassiopeia > Action bar for segment controls."));
+        return 1;
+    }
+
+    private int actionBarTest() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return 0;
+        Component sample = Component.literal("2,500/2,500❤     -20 Mana (Instant Transmission)     T3!     Encounter notice");
+        mc.gui.hud.setOverlayMessage(cfg.actionBarCleaner ? ActionBarCleaner.filter(sample, cfg) : sample, false);
+        return 1;
+    }
+
+    private int setActionBarCleaner(boolean enabled) {
+        cfg.actionBarCleaner = enabled;
+        ConstellationClient.saveConfig();
+        return actionBarStatus();
     }
 
     // hypixel dungeon-join instance ...

@@ -1,5 +1,12 @@
 # Constellation feature overview
 
+## Selective SkyBlock action bar
+
+- Cassiopeia can remove seventeen independently selected status segments without hiding unrelated ability or encounter text.
+- Core stats, dungeon/combat and mining/Rift/event filters have separate group controls and bounded option cards.
+- Vitals observes raw server values before presentation filtering, so moving health, mana and defense into the HUD does not stop their updates.
+- `/actionbarcleaner on|off|test` supports immediate toggling and a safe local visual sample.
+
 This is the readable map of what Constellation currently contains. It is organized by game area so you can find things without reading the development handoff or hundreds of changelog entries.
 
 ## Start here

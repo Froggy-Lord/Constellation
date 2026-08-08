@@ -25,9 +25,11 @@ public final class ActionBar {
     private static long lastUpdate, lastSkillAt;
 
     public static void init() {
-        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (!overlay) return; 
+        // ported from Skyblocker (LGPL-3.0-or-later): skyblock/StatusBarTracker.java
+        ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (!overlay) return true;
             parse(ChatFormatting.stripFormatting(message.getString()));
+            return true;
         });
     }
 
