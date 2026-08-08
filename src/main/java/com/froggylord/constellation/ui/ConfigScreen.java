@@ -18,7 +18,9 @@ import java.util.function.*;
 public class ConfigScreen extends Screen {
 
     static class Module {
-        record SubOpt(String label, BooleanSupplier get, Consumer<Boolean> set) {}
+        // ported from Athen (BSD-3-Clause): src/main/kotlin/xyz/aerii/athen/config/ui/elements/TextParagraphElement.kt
+        // ported from Athen (BSD-3-Clause): src/main/kotlin/xyz/aerii/athen/config/ui/elements/SwitchElement.kt
+        record SubOpt(String label, BooleanSupplier get, Consumer<Boolean> set, boolean editable) {}
         final String name, desc, cat;
         final BooleanSupplier get; final Consumer<Boolean> set;
         final List<SubOpt> subs = new ArrayList<>();
@@ -28,13 +30,13 @@ public class ConfigScreen extends Screen {
             name = n; desc = d; cat = c; get = g; set = s; knob = g.getAsBoolean() ? 1 : 0;
         }
         
-        Module b(String l, BooleanSupplier g, Consumer<Boolean> s) { subs.add(new SubOpt(l, g, s)); return this; }
+        Module b(String l, BooleanSupplier g, Consumer<Boolean> s) {
+            subs.add(new SubOpt(l, g, s, true));
+            return this;
+        }
         
         Module sub(String l, boolean def) {
-            String key = name + "." + l;
-            subs.add(new SubOpt(l,
-                () -> backing != null && backing.getSub(key, def),
-                v -> { if (backing != null) { backing.setSub(key, v); ConstellationClient.saveConfig(); } }));
+            subs.add(new SubOpt(l, () -> def, v -> {}, false));
             return this;
         }
     }
@@ -90,38 +92,6 @@ public class ConfigScreen extends Screen {
         var cfg = ConstellationClient.cfg();
 
         switch (constellationId) {
-            case "apollo" -> {
-                cats = new String[]{"HUD", "Display"};
-                ApolloConfig c = cfg.apollo;
-                var names = List.of("fps","ping","tps","clock","coords","health","mana","defense","speed");
-                for (String n : names) {
-                    try {
-                        var field = ApolloConfig.class.getField(n);
-                        ApolloConfig.HudEntry he = (ApolloConfig.HudEntry) field.get(c);
-                        String label = n.substring(0,1).toUpperCase() + n.substring(1);
-                        modules.add(new Module(n, label, "HUD",
-                            () -> he.visible, v -> { he.visible = v; ConstellationClient.saveConfig(); })
-                            .b("Show label", () -> he.visible, v -> he.visible = v)
-                            .sub("Compact mode", false));
-                    } catch (Exception e) {}
-                }
-                modules.add(new Module("customScoreboard", "Replace vanilla sidebar", "Display",
-                    () -> c.customScoreboard, v -> { c.customScoreboard = v; ConstellationClient.saveConfig(); })
-                    .b("Clean design", () -> c.customScoreboard, v -> c.customScoreboard = v)
-                    .sub("Hide red scores", false));
-                modules.add(new Module("customTabList", "Replace vanilla tab list", "Display",
-                    () -> c.customTabList, v -> { c.customTabList = v; ConstellationClient.saveConfig(); })
-                    .b("Compact mode", () -> c.customTabList, v -> c.customTabList = v)
-                    .sub("Hide NPCs", false));
-                modules.add(new Module("compactDamage", "Shorten damage numbers", "Display",
-                    () -> c.compactDamage, v -> { c.compactDamage = v; ConstellationClient.saveConfig(); })
-                    .b("Show full in boss", () -> c.compactDamage, v -> c.compactDamage = v)
-                    .sub("1.2M format", true));
-                modules.add(new Module("rainbowActionBar", "Rainbow action bar", "Display",
-                    () -> c.rainbowActionBar, v -> { c.rainbowActionBar = v; ConstellationClient.saveConfig(); })
-                    .b("Speed", () -> c.rainbowActionBar, v -> c.rainbowActionBar = v)
-                    .sub("Pulsing", false));
-            }
             case "phoenix" -> {
                 cats = new String[]{"Visual", "Gameplay"};
                 PhoenixConfig c = cfg.phoenix;
@@ -200,36 +170,71 @@ public class ConfigScreen extends Screen {
                     .b("Safe mode", () -> c.triggerSafeMode, v -> { c.triggerSafeMode = v; ConstellationClient.saveConfig(); }));
             }
             case "orion" -> {
-                cats = new String[]{"HUD", "Map", "Secrets", "Party", "Solvers", "Combat"};
+                cats = new String[]{"HUD", "Map", "Secrets", "Party", "Solvers", "Combat", "Boss", "Devices", "Timers"};
                 OrionConfig c = cfg.orion;
                 modules.add(new Module("scoreHud", "Live 0-300 score", "HUD",
                     () -> c.scoreHud, v -> { c.scoreHud = v; ConstellationClient.saveConfig(); })
-                    .b("Show letter grade", () -> c.scoreHud, v -> c.scoreHud = v)
-                    .sub("Milestone pings", true));
+                    .b("Milestone alerts", () -> c.scorePings, v -> { c.scorePings = v; ConstellationClient.saveConfig(); })
+                    .b("Milestone title", () -> c.scorePingTitle, v -> { c.scorePingTitle = v; ConstellationClient.saveConfig(); })
+                    .b("Milestone sound", () -> c.scorePingSound, v -> { c.scorePingSound = v; ConstellationClient.saveConfig(); })
+                    .sub("Includes letter grade", true)
+                    .sub("S at 270 and S+ at 300", true));
                 modules.add(new Module("secretsHud", "Secrets found / total", "HUD",
                     () -> c.secretsHud, v -> { c.secretsHud = v; ConstellationClient.saveConfig(); })
                     .b("Per-room count", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); })
-                    .b("Percentage", () -> c.secretsHud, v -> c.secretsHud = v));
+                    .sub("Displays percentage", true));
                 modules.add(new Module("cryptsHud", "Crypt count", "HUD",
                     () -> c.cryptsHud, v -> { c.cryptsHud = v; ConstellationClient.saveConfig(); })
-                    .sub("Warn under 5", true)
-                    .sub("Show in chat", false));
+                    .sub("Low-crypt guidance is in Copilot", true));
                 modules.add(new Module("deathsHud", "Death counter", "HUD",
                     () -> c.deathsHud, v -> { c.deathsHud = v; ConstellationClient.saveConfig(); })
-                    .sub("Score impact", true)
-                    .sub("Per-player", false));
+                    .sub("Score impact appears in the score panel", true));
+                modules.add(new Module("puzzlesDisplay", "Puzzle status HUD", "HUD",
+                    () -> c.puzzlesDisplay, v -> { c.puzzlesDisplay = v; ConstellationClient.saveConfig(); })
+                    .b("Compact counts", () -> c.puzzlesCompact, v -> { c.puzzlesCompact = v; ConstellationClient.saveConfig(); })
+                    .sub("Tab-list status", true));
+                modules.add(new Module("architectNotifier", "Remind on puzzle failure", "Solvers",
+                    () -> c.architectNotifier, v -> { c.architectNotifier = v; ConstellationClient.saveConfig(); })
+                    .sub("Clickable get/use actions", true)
+                    .sub("Unbound use-draft key in Controls", true)
+                    .sub("Only your failures during clear", true));
+                modules.add(new Module("smartRefill", "Keybind refills the lowest configured stack", "Party",
+                    () -> c.smartRefill, v -> { c.smartRefill = v; ConstellationClient.saveConfig(); })
+                    .b("One item per press", () -> c.smartRefillOneAtATime, v -> { c.smartRefillOneAtATime = v; ConstellationClient.saveConfig(); })
+                    .sub("Open card to edit items", true));
+                modules.add(new Module("dungeonQueueCooldown", "Dungeon creation cooldown and queue position", "Party",
+                    () -> c.dungeonQueueCooldown, v -> { c.dungeonQueueCooldown = v; ConstellationClient.saveConfig(); })
+                    .b("Block early queue commands", () -> c.dungeonQueueBlockCommands, v -> { c.dungeonQueueBlockCommands = v; ConstellationClient.saveConfig(); })
+                    .b("Transfer recovery controls", () -> c.dungeonQueueTransferRecovery, v -> { c.dungeonQueueTransferRecovery = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("springBootsHelper", "Charge height and obstruction preview", "HUD",
+                    () -> c.springBootsHelper, v -> { c.springBootsHelper = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.springBootsHud, v -> { c.springBootsHud = v; ConstellationClient.saveConfig(); })
+                    .b("Target box", () -> c.springBootsBox, v -> { c.springBootsBox = v; ConstellationClient.saveConfig(); })
+                    .b("Guide line", () -> c.springBootsLine, v -> { c.springBootsLine = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> c.springBootsThroughWalls, v -> { c.springBootsThroughWalls = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("timerHud", "Run timer", "HUD",
                     () -> c.timerHud, v -> { c.timerHud = v; ConstellationClient.saveConfig(); })
-                    .b("Show splits", () -> c.splitsHud, v -> { c.splitsHud = v; ConstellationClient.saveConfig(); })
-                    .sub("Milliseconds", false));
+                    .b("Show splits", () -> c.splitsHud, v -> { c.splitsHud = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("milestoneHud", "Current class milestone", "HUD",
+                    () -> c.milestoneHud, v -> { c.milestoneHud = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("abilityTracker", "Defensive ability tracker", "HUD",
+                    () -> c.abilityTracker, v -> { c.abilityTracker = v; ConstellationClient.saveConfig(); })
+                    .b("Ready sound", () -> c.abilityReadyDing, v -> { c.abilityReadyDing = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("dungeonCopilot", "Live score and clear guidance", "HUD",
+                    () -> c.dungeonCopilot, v -> { c.dungeonCopilot = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("dungeonStats", "Run history, records and terminal splits", "Timers",
+                    () -> c.saveDungeonRunHistory, v -> { c.saveDungeonRunHistory = v; ConstellationClient.saveConfig(); })
+                    .sub("Open card for records", true));
                 modules.add(new Module("roomNameHud", "Current room name", "HUD",
                     () -> c.roomNameHud, v -> { c.roomNameHud = v; ConstellationClient.saveConfig(); })
                     .sub("Cleared indicator", true)
                     .b("Show secrets in room", () -> c.perRoomCount, v -> { c.perRoomCount = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("mimicIndicator", "Mimic killed marker", "HUD",
                     () -> c.mimicIndicator, v -> { c.mimicIndicator = v; ConstellationClient.saveConfig(); })
-                    .sub("Ping party", true)
-                    .sub("Sound", true));
+                    .b("Party message", () -> c.mimicPartyPing, v -> { c.mimicPartyPing = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("dungeonPotionsHud", "Active dungeon potion effects", "HUD",
+                    () -> c.dungeonPotionsHud, v -> { c.dungeonPotionsHud = v; ConstellationClient.saveConfig(); })
+                    .sub("Shows two shortest active effects", true));
                 modules.add(new Module("dungeonMap", "Hypixel map overlay", "Map",
                     () -> c.dungeonMap, v -> { c.dungeonMap = v; ConstellationClient.saveConfig(); })
                     .sub("Room names", true)
@@ -237,61 +242,266 @@ public class ConfigScreen extends Screen {
                     .sub("Auto-hide in boss", true));
                 modules.add(new Module("secretWaypoints", "In-world secret boxes", "Secrets",
                     () -> c.secretWaypoints, v -> { c.secretWaypoints = v; ConstellationClient.saveConfig(); })
+                    .b("Beams", () -> c.secretBeams, v -> { c.secretBeams = v; ConstellationClient.saveConfig(); })
                     .b("Progressive reveal", () -> c.progressiveReveal, v -> { c.progressiveReveal = v; ConstellationClient.saveConfig(); })
-                    .b("One at a time", () -> c.oneSecretAtATime, v -> { c.oneSecretAtATime = v; ConstellationClient.saveConfig(); }));
+                    .b("One at a time", () -> c.oneSecretAtATime, v -> { c.oneSecretAtATime = v; ConstellationClient.saveConfig(); })
+                    .b("Secrets done alert", () -> c.secretsDoneAlert, v -> { c.secretsDoneAlert = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("secretCompassHelper", "Secret Tracker destination locator", "Secrets",
+                    () -> c.secretCompassHelper, v -> { c.secretCompassHelper = v; ConstellationClient.saveConfig(); })
+                    .b("Tracer", () -> c.secretCompassTracer, v -> { c.secretCompassTracer = v; ConstellationClient.saveConfig(); })
+                    .b("Beam", () -> c.secretCompassBeam, v -> { c.secretCompassBeam = v; ConstellationClient.saveConfig(); })
+                    .b("Target box", () -> c.secretCompassBox, v -> { c.secretCompassBox = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> c.secretCompassThroughWalls, v -> { c.secretCompassThroughWalls = v; ConstellationClient.saveConfig(); })
+                    .b("Duplicate-use guard", () -> c.secretCompassDuplicateGuard, v -> { c.secretCompassDuplicateGuard = v; ConstellationClient.saveConfig(); })
+                    .b("Acquisition HUD", () -> c.secretCompassHud, v -> { c.secretCompassHud = v; ConstellationClient.saveConfig(); })
+                    .sub("Color via /secretcompass", true));
                 modules.add(new Module("routes", "Secret routes", "Secrets",
                     () -> c.routes, v -> { c.routes = v; ConstellationClient.saveConfig(); })
-                    .b("Route lines", () -> c.routeLines, v -> { c.routeLines = v; ConstellationClient.saveConfig(); })
-                    .b("Prefer pearl-clips", () -> c.pearlRoutes, v -> { c.pearlRoutes = v; ConstellationClient.saveConfig(); }));
+                    .b("Whole remaining route", () -> c.routeWholeRoute, v -> { c.routeWholeRoute = v; ConstellationClient.saveConfig(); })
+                    .b("Prefer pearl-clips", () -> c.pearlRoutes, v -> { c.pearlRoutes = v; ConstellationClient.saveConfig(); })
+                    .b("Exact-target auto advance", () -> c.routeAutoAdvance, v -> { c.routeAutoAdvance = v; ConstellationClient.saveConfig(); })
+                    .b("Recording HUD", () -> c.routeRecordingHud, v -> { c.routeRecordingHud = v; ConstellationClient.saveConfig(); })
+                    .b("Online updates next launch", () -> c.secretRoutesOnlineDb, v -> { c.secretRoutesOnlineDb = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("routeLines", "Walking path lines", "Secrets",
+                    () -> c.routeLines, v -> { c.routeLines = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> c.routeThroughWalls, v -> { c.routeThroughWalls = v; ConstellationClient.saveConfig(); })
+                    .b("Player to current secret", () -> c.routePlayerToSecret, v -> { c.routePlayerToSecret = v; ConstellationClient.saveConfig(); })
+                    .b("Player to first etherwarp", () -> c.routePlayerToEtherwarp, v -> { c.routePlayerToEtherwarp = v; ConstellationClient.saveConfig(); })
+                    .sub("Steps/colors: /cn route", true));
+                modules.add(new Module("routeMarkers", "Route action and secret markers", "Secrets",
+                    () -> c.routeMarkers, v -> { c.routeMarkers = v; ConstellationClient.saveConfig(); })
+                    .b("Secrets", () -> c.routeRenderSecrets, v -> { c.routeRenderSecrets = v; ConstellationClient.saveConfig(); })
+                    .b("Etherwarps", () -> c.routeRenderEtherwarps, v -> { c.routeRenderEtherwarps = v; ConstellationClient.saveConfig(); })
+                    .b("Mines", () -> c.routeRenderMines, v -> { c.routeRenderMines = v; ConstellationClient.saveConfig(); })
+                    .b("Interacts", () -> c.routeRenderInteracts, v -> { c.routeRenderInteracts = v; ConstellationClient.saveConfig(); })
+                    .b("Superbooms", () -> c.routeRenderSuperboom, v -> { c.routeRenderSuperboom = v; ConstellationClient.saveConfig(); })
+                    .b("Pearls", () -> c.routeRenderPearls, v -> { c.routeRenderPearls = v; ConstellationClient.saveConfig(); })
+                    .b("Labels", () -> c.routeLabels, v -> { c.routeLabels = v; ConstellationClient.saveConfig(); })
+                    .b("Filled markers", () -> c.routeFilledMarkers, v -> { c.routeFilledMarkers = v; ConstellationClient.saveConfig(); })
+                    .b("Dim future steps", () -> c.routeDistinguishFuture, v -> { c.routeDistinguishFuture = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("echoOnCollect", "Chime on secret", "Secrets",
                     () -> c.echoOnCollect, v -> { c.echoOnCollect = v; ConstellationClient.saveConfig(); })
-                    .b("Sound", () -> c.echoOnCollect, v -> c.echoOnCollect = v)
+                    .sub("Plays a pickup chime", true)
                     .b("Custom waypoints", () -> c.customWaypoints, v -> { c.customWaypoints = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("quickCloseDungeonChests", "Close dungeon chests on a key", "Secrets",
+                    () -> c.quickCloseDungeonChests, v -> { c.quickCloseDungeonChests = v; ConstellationClient.saveConfig(); })
+                    .b("Any keyboard key", () -> c.quickCloseAnyKey, v -> { c.quickCloseAnyKey = v; ConstellationClient.saveConfig(); })
+                    .b("Movement keys", () -> c.quickCloseMovementKeys, v -> { c.quickCloseMovementKeys = v; ConstellationClient.saveConfig(); })
+                    .b("Crouch key", () -> c.quickCloseCrouchKey, v -> { c.quickCloseCrouchKey = v; ConstellationClient.saveConfig(); })
+                    .b("Reward chests too", () -> c.quickCloseRewardChests, v -> { c.quickCloseRewardChests = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("salvageHelper", "Low-value dungeon salvage", "Secrets",
+                    () -> c.salvageHelper, v -> { c.salvageHelper = v; ConstellationClient.saveConfig(); })
+                    .b("Exclude protected items", () -> c.salvageExcludeProtected, v -> { c.salvageExcludeProtected = v; ConstellationClient.saveConfig(); })
+                    .b("Exclude upgraded items", () -> c.salvageExcludeModified, v -> { c.salvageExcludeModified = v; ConstellationClient.saveConfig(); })
+                    .b("Mark unknown prices", () -> c.salvageMarkUnknown, v -> { c.salvageMarkUnknown = v; ConstellationClient.saveConfig(); })
+                    .sub("Limit: " + String.format(java.util.Locale.US, "%,d", c.salvageMaxValue) + " (/dungeonloot limit)", true));
+                modules.add(new Module("sellableDungeonLoot", "Dungeon junk at Ophelia", "Secrets",
+                    () -> c.sellableDungeonLoot, v -> { c.sellableDungeonLoot = v; ConstellationClient.saveConfig(); })
+                    .b("Include hotbar", () -> c.sellableIncludeHotbar, v -> { c.sellableIncludeHotbar = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("partyFinderGui", "Fancy party finder", "Party",
                     () -> c.partyFinderGui, v -> { c.partyFinderGui = v; ConstellationClient.saveConfig(); })
-                    .b("Class filter", () -> c.partyFinderGui, v -> c.partyFinderGui = v)
-                    .b("Secret filter", () -> c.partyFinderGui, v -> c.partyFinderGui = v));
-                modules.add(new Module("autoRequeue", "Auto-requeue after run", "Party",
+                    .b("Player stats", () -> c.partyFinderStats, v -> { c.partyFinderStats = v; ConstellationClient.saveConfig(); })
+                    .sub("Joinable, dupe, blocked highlights", true)
+                    .sub("Party size on listings", true));
+                modules.add(new Module("partyGuard", "Party Finder rules and lists", "Party",
+                    () -> c.partyGuard, v -> { c.partyGuard = v; ConstellationClient.saveConfig(); })
+                    .b("Dry run", () -> c.partyGuardDryRun, v -> { c.partyGuardDryRun = v; ConstellationClient.saveConfig(); })
+                    .b("Send reason", () -> c.partyGuardSendReason, v -> { c.partyGuardSendReason = v; ConstellationClient.saveConfig(); })
+                    .sub("Open card or /partyguard", true));
+                modules.add(new Module("partyMessages", "Useful dungeon party messages", "Party",
+                    () -> c.partyMessages, v -> { c.partyMessages = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("streamerMode", "Suppress outgoing Orion messages", "Party",
+                    () -> c.streamerMode, v -> { c.streamerMode = v; ConstellationClient.saveConfig(); })
+                    .sub("Also suppresses mimic and Prince announcements", true));
+                modules.add(new Module("princePartyPing", "Announce F4/M4 Prince kill", "Party",
+                    () -> c.princePartyPing, v -> { c.princePartyPing = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("messageEditor", "Edit, search and sort every message", "Party",
+                    () -> true, v -> {}));
+                modules.add(new Module("autoRequeue", "Automatically requeue after run", "Party",
                     () -> c.autoRequeue, v -> { c.autoRequeue = v; ConstellationClient.saveConfig(); })
-                    .b("Safe mode", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); })
-                    .b("Confirm first", () -> c.requeueSafeMode, v -> { c.requeueSafeMode = v; ConstellationClient.saveConfig(); }));
+                    .b("Cancel if party changes", () -> c.requeueCancelOnPartyChange, v -> { c.requeueCancelOnPartyChange = v; ConstellationClient.saveConfig(); })
+                    .b("Respect dt / r", () -> c.requeueDowntime, v -> { c.requeueDowntime = v; ConstellationClient.saveConfig(); })
+                    .b("Feedback and controls", () -> c.requeueFeedback, v -> { c.requeueFeedback = v; ConstellationClient.saveConfig(); })
+                    .sub("Delay: /requeue delay 0-30", true));
                 
                 modules.add(new Module("terminalSolvers", "F7 phase-3 terminals", "Solvers",
                     () -> c.terminalSolvers, v -> { c.terminalSolvers = v; ConstellationClient.saveConfig(); })
                     .b("Show numbers", () -> c.terminalNumbers, v -> { c.terminalNumbers = v; ConstellationClient.saveConfig(); })
-                    .b("Block wrong clicks", () -> c.blockWrongTerminalClicks, v -> { c.blockWrongTerminalClicks = v; ConstellationClient.saveConfig(); }));
+                    .b("Block wrong clicks", () -> c.blockWrongTerminalClicks, v -> { c.blockWrongTerminalClicks = v; ConstellationClient.saveConfig(); })
+                    .b("Middle-click terminals", () -> c.terminalMiddleClick, v -> { c.terminalMiddleClick = v; ConstellationClient.saveConfig(); })
+                    .b("Drop key clicks", () -> c.terminalDropKeyClick, v -> { c.terminalDropKeyClick = v; ConstellationClient.saveConfig(); })
+                    .b("Hide tooltips", () -> c.terminalDisableTooltips, v -> { c.terminalDisableTooltips = v; ConstellationClient.saveConfig(); })
+                    .b("Hide labels", () -> c.terminalHideLabels, v -> { c.terminalHideLabels = v; ConstellationClient.saveConfig(); })
+                    .b("Slot background", () -> c.terminalSlotBackground, v -> { c.terminalSlotBackground = v; ConstellationClient.saveConfig(); })
+                    .b("Hide completed", () -> c.terminalHideDone, v -> { c.terminalHideDone = v; ConstellationClient.saveConfig(); })
+                    .b("Hide solution items", () -> c.terminalHideItems, v -> { c.terminalHideItems = v; ConstellationClient.saveConfig(); })
+                    .b("Block bad Rubix direction", () -> c.terminalRubixBlockBadDirection, v -> { c.terminalRubixBlockBadDirection = v; ConstellationClient.saveConfig(); })
+                    .b("Click sounds", () -> c.terminalClickSounds, v -> { c.terminalClickSounds = v; ConstellationClient.saveConfig(); })
+                    .b("Live terminal progress", () -> c.terminalDisplay, v -> { c.terminalDisplay = v; ConstellationClient.saveConfig(); })
+                    .b("Simple progress display", () -> c.terminalDisplaySimple, v -> { c.terminalDisplaySimple = v; ConstellationClient.saveConfig(); })
+                    .b("Show section number", () -> c.terminalDisplayShowSection, v -> { c.terminalDisplayShowSection = v; ConstellationClient.saveConfig(); })
+                    .b("Terminal breakdown", () -> c.terminalBreakdown, v -> { c.terminalBreakdown = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("blazeSolver", "F3/M3 blaze puzzle", "Solvers",
                     () -> c.blazeSolver, v -> { c.blazeSolver = v; ConstellationClient.saveConfig(); })
                     .sub("Show labels", true));
                 modules.add(new Module("simonSaysSolver", "Simon Says — highlight button", "Solvers",
                     () -> c.simonSaysSolver, v -> { c.simonSaysSolver = v; ConstellationClient.saveConfig(); })
-                    .sub("Sound", true));
+                    .sub("Party messages configured separately", true));
                 modules.add(new Module("threeWeirdosSolver", "Three Weirdos — correct chest", "Solvers",
-                    () -> c.threeWeirdosSolver, v -> { c.threeWeirdosSolver = v; ConstellationClient.saveConfig(); })
-                    .sub("Highlight all", false));
+                    () -> c.threeWeirdosSolver, v -> { c.threeWeirdosSolver = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("triviaSolver", "Trivia — highlight answer", "Solvers",
-                    () -> c.triviaSolver, v -> { c.triviaSolver = v; ConstellationClient.saveConfig(); })
-                    .sub("Show question", false));
+                    () -> c.triviaSolver, v -> { c.triviaSolver = v; ConstellationClient.saveConfig(); }));
                 modules.add(new Module("creeperBeamsSolver", "Creeper Beams — lantern links", "Solvers",
                     () -> c.creeperBeamsSolver, v -> { c.creeperBeamsSolver = v; ConstellationClient.saveConfig(); })
                     .sub("Beam colour", true));
+                modules.add(new Module("ticTacToeSolver", "Tic Tac Toe — show best move", "Solvers",
+                    () -> c.ticTacToeSolver, v -> { c.ticTacToeSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("waterboardSolver", "Water Board — next lever", "Solvers",
+                    () -> c.waterboardSolver, v -> { c.waterboardSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("iceFillSolver", "Ice Fill — walking path", "Solvers",
+                    () -> c.iceFillSolver, v -> { c.iceFillSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("silverfishSolver", "Silverfish — maze path", "Solvers",
+                    () -> c.silverfishSolver, v -> { c.silverfishSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("teleportMazeSolver", "Teleport Maze — safe pads", "Solvers",
+                    () -> c.teleportMazeSolver, v -> { c.teleportMazeSolver = v; ConstellationClient.saveConfig(); }));
+
+                modules.add(new Module("lightsOnSolver", "Lights On device", "Devices",
+                    () -> c.lightsOnSolver, v -> { c.lightsOnSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("arrowAlignSolver", "Arrow Align device", "Devices",
+                    () -> c.arrowAlignSolver, v -> { c.arrowAlignSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("targetPracticeSolver", "Target Practice device", "Devices",
+                    () -> c.targetPracticeSolver, v -> { c.targetPracticeSolver = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("melodyTerminalHelper", "Melody terminal helper", "Devices",
+                    () -> c.melodyTerminalHelper, v -> { c.melodyTerminalHelper = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("terminalSimulator", "Terminal simulator command", "Devices",
+                    () -> c.terminalSimulator, v -> { c.terminalSimulator = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("goldorInactiveTerminals", "Goldor inactive objectives", "Devices",
+                    () -> c.goldorInactiveTerminals, v -> { c.goldorInactiveTerminals = v; ConstellationClient.saveConfig(); })
+                    .sub("Armor-stand fallback; requires objective waypoints with fixed positions off", true));
+                modules.add(new Module("goldorWaypoints", "Goldor objective waypoints", "Devices",
+                    () -> c.goldorWaypoints, v -> { c.goldorWaypoints = v; ConstellationClient.saveConfig(); })
+                    .b("Use fixed positions", () -> c.goldorWaypointFixedPositions, v -> { c.goldorWaypointFixedPositions = v; ConstellationClient.saveConfig(); })
+                    .b("Terminals", () -> c.goldorWaypointTerminals, v -> { c.goldorWaypointTerminals = v; ConstellationClient.saveConfig(); })
+                    .b("Devices", () -> c.goldorWaypointDevices, v -> { c.goldorWaypointDevices = v; ConstellationClient.saveConfig(); })
+                    .b("Levers", () -> c.goldorWaypointLevers, v -> { c.goldorWaypointLevers = v; ConstellationClient.saveConfig(); })
+                    .b("Hide completed", () -> c.goldorWaypointHideCompleted, v -> { c.goldorWaypointHideCompleted = v; ConstellationClient.saveConfig(); })
+                    .b("Only assigned class", () -> c.goldorWaypointClassFilter, v -> { c.goldorWaypointClassFilter = v; ConstellationClient.saveConfig(); })
+                    .b("Show assigned class", () -> c.goldorWaypointShowClass, v -> { c.goldorWaypointShowClass = v; ConstellationClient.saveConfig(); })
+                    .b("Labels", () -> c.goldorWaypointLabels, v -> { c.goldorWaypointLabels = v; ConstellationClient.saveConfig(); })
+                    .b("Beams", () -> c.goldorWaypointBeam, v -> { c.goldorWaypointBeam = v; ConstellationClient.saveConfig(); })
+                    .b("Filled boxes", () -> c.goldorWaypointFilled, v -> { c.goldorWaypointFilled = v; ConstellationClient.saveConfig(); })
+                    .b("Outlines", () -> c.goldorWaypointOutline, v -> { c.goldorWaypointOutline = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> c.goldorWaypointThroughWalls, v -> { c.goldorWaypointThroughWalls = v; ConstellationClient.saveConfig(); })
+                    .sub("Assignments and colors: /goldorwaypoints", true));
+                modules.add(new Module("terminalHideCompletion", "Filter Goldor completion titles", "Devices",
+                    () -> c.terminalHideCompletion, v -> { c.terminalHideCompletion = v; ConstellationClient.saveConfig(); })
+                    .b("Keep your completions", () -> c.terminalCompletionOnlyOwn, v -> { c.terminalCompletionOnlyOwn = v; ConstellationClient.saveConfig(); })
+                    .b("Filter title packets", () -> c.terminalCompletionFilterTitles, v -> { c.terminalCompletionFilterTitles = v; ConstellationClient.saveConfig(); })
+                    .b("Filter subtitle packets", () -> c.terminalCompletionFilterSubtitles, v -> { c.terminalCompletionFilterSubtitles = v; ConstellationClient.saveConfig(); }));
+
+                modules.add(new Module("bloodTimer", "Blood room timer", "Timers",
+                    () -> c.bloodTimer, v -> { c.bloodTimer = v; ConstellationClient.saveConfig(); })
+                    .b("Blood camp helper", () -> c.bloodCampHelper, v -> { c.bloodCampHelper = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("watcherBossBar", "Watcher wave boss-bar progress", "Timers",
+                    () -> c.watcherBossBar, v -> { c.watcherBossBar = v; ConstellationClient.saveConfig(); })
+                    .b("Show progress", () -> c.watcherBossBarShowProgress, v -> { c.watcherBossBarShowProgress = v; ConstellationClient.saveConfig(); })
+                    .b("Hide outside Blood", () -> c.watcherBossBarHideNotBlood, v -> { c.watcherBossBarHideNotBlood = v; ConstellationClient.saveConfig(); })
+                    .b("Show percentage", () -> c.watcherBossBarShowPercent, v -> { c.watcherBossBarShowPercent = v; if (v) c.watcherBossBarShowRemaining = false; ConstellationClient.saveConfig(); })
+                    .b("Show remaining", () -> c.watcherBossBarShowRemaining, v -> { c.watcherBossBarShowRemaining = v; if (v) c.watcherBossBarShowPercent = false; ConstellationClient.saveConfig(); })
+                    .sub("Colors: /watcherbar", true));
+                modules.add(new Module("fireFreezeTimer", "Professor fire-freeze timer", "Timers",
+                    () -> c.fireFreezeTimer, v -> { c.fireFreezeTimer = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("spiritBowTimer", "Thorn spirit bow timer", "Timers",
+                    () -> c.spiritBowTimer, v -> { c.spiritBowTimer = v; ConstellationClient.saveConfig(); })
+                    .b("Highlight bow", () -> c.spiritBowHighlight, v -> { c.spiritBowHighlight = v; ConstellationClient.saveConfig(); })
+                    .b("Bear timer", () -> c.spiritBearTimer, v -> { c.spiritBearTimer = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("lividInvulnerableTimer", "Livid spawn protection timer", "Timers",
+                    () -> c.lividInvulnerableTimer, v -> { c.lividInvulnerableTimer = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("saVanishTimer", "Shadow Assassin vanish timer", "Timers",
+                    () -> c.saVanishTimer, v -> { c.saVanishTimer = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("terracottaTimer", "F6/M6 Terracotta respawn timers", "Timers",
+                    () -> c.terracottaTimer, v -> { c.terracottaTimer = v; ConstellationClient.saveConfig(); })
+                    .b("World respawn labels", () -> c.terracottaRespawnLabels, v -> { c.terracottaRespawnLabels = v; ConstellationClient.saveConfig(); })
+                    .b("Elapsed phase HUD", () -> c.terracottaPhaseHud, v -> { c.terracottaPhaseHud = v; ConstellationClient.saveConfig(); })
+                    .b("Labels through walls", () -> c.terracottaThroughWalls, v -> { c.terracottaThroughWalls = v; ConstellationClient.saveConfig(); })
+                    .b("Ready sound", () -> c.terracottaReadySound, v -> { c.terracottaReadySound = v; ConstellationClient.saveConfig(); })
+                    .sub("F6 15.0s / M6 12.0s; red, yellow, green", true)
+                    .sub("Precision and custom colors: /terracotta", true));
+
+                modules.add(new Module("guardianHealth", "Professor guardian health", "Boss",
+                    () -> c.guardianHealth, v -> { c.guardianHealth = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("healerPlatformHighlight", "Goldor healer platform", "Boss",
+                    () -> c.healerPlatformHighlight, v -> { c.healerPlatformHighlight = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("m7DragonMarkers", "M7 dragon spawn markers", "Boss",
+                    () -> c.m7DragonMarkers, v -> { c.m7DragonMarkers = v; ConstellationClient.saveConfig(); })
+                    .b("Arrow stack aimer", () -> c.m7DragonStackAimer, v -> { c.m7DragonStackAimer = v; ConstellationClient.saveConfig(); })
+                    .b("Ping compensation", () -> c.m7DragonStackPing, v -> { c.m7DragonStackPing = v; ConstellationClient.saveConfig(); })
+                    .b("Shot countdown HUD", () -> c.m7DragonStackHud, v -> { c.m7DragonStackHud = v; ConstellationClient.saveConfig(); })
+                    .b("Arrow hit counter", () -> c.m7DragonHitCounter, v -> { c.m7DragonHitCounter = v; ConstellationClient.saveConfig(); })
+                    .b("Arrow hit HUD", () -> c.m7DragonHitHud, v -> { c.m7DragonHitHud = v; ConstellationClient.saveConfig(); })
+                    .b("Local kill report", () -> c.m7DragonHitReport, v -> { c.m7DragonHitReport = v; ConstellationClient.saveConfig(); })
+                    .b("Party kill report", () -> c.m7DragonHitPartyMessage, v -> { c.m7DragonHitPartyMessage = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("m7RelicHighlight", "M7 relic highlighting", "Boss",
+                    () -> c.m7RelicHighlight, v -> { c.m7RelicHighlight = v; ConstellationClient.saveConfig(); })
+                    .b("Relic timer", () -> c.m7RelicTimer, v -> { c.m7RelicTimer = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("witherHighlight", "F7/M7 Wither boss highlight", "Boss",
+                    () -> c.witherHighlight, v -> { c.witherHighlight = v; ConstellationClient.saveConfig(); })
+                    .b("Outline", () -> c.witherHighlightOutline, v -> { c.witherHighlightOutline = v; ConstellationClient.saveConfig(); })
+                    .b("Filled box", () -> c.witherHighlightFill, v -> { c.witherHighlightFill = v; ConstellationClient.saveConfig(); })
+                    .b("Through walls", () -> c.witherHighlightThroughWalls, v -> { c.witherHighlightThroughWalls = v; ConstellationClient.saveConfig(); })
+                    .b("Boss and health label", () -> c.witherHighlightLabel, v -> { c.witherHighlightLabel = v; ConstellationClient.saveConfig(); })
+                    .b("Beam", () -> c.witherHighlightBeam, v -> { c.witherHighlightBeam = v; ConstellationClient.saveConfig(); })
+                    .b("Hide invisible", () -> c.witherHighlightHideInvisible, v -> { c.witherHighlightHideInvisible = v; ConstellationClient.saveConfig(); })
+                    .b("Exclude armor summon", () -> c.witherHighlightExcludeArmorSummon, v -> { c.witherHighlightExcludeArmorSummon = v; ConstellationClient.saveConfig(); })
+                    .b("Maxor", () -> c.witherHighlightMaxor, v -> { c.witherHighlightMaxor = v; ConstellationClient.saveConfig(); })
+                    .b("Storm", () -> c.witherHighlightStorm, v -> { c.witherHighlightStorm = v; ConstellationClient.saveConfig(); })
+                    .b("Goldor", () -> c.witherHighlightGoldor, v -> { c.witherHighlightGoldor = v; ConstellationClient.saveConfig(); })
+                    .b("Necron", () -> c.witherHighlightNecron, v -> { c.witherHighlightNecron = v; ConstellationClient.saveConfig(); })
+                    .b("Wither King phase", () -> c.witherHighlightWitherKing, v -> { c.witherHighlightWitherKing = v; ConstellationClient.saveConfig(); })
+                    .sub("Colors, width and range: /witherhighlight", true));
+                modules.add(new Module("chestProfitCalc", "Dungeon chest profit", "Boss",
+                    () -> c.chestProfitCalc, v -> { c.chestProfitCalc = v; ConstellationClient.saveConfig(); })
+                    .b("Include essence", () -> c.chestProfitUseEssence, v -> { c.chestProfitUseEssence = v; ConstellationClient.saveConfig(); })
+                    .b("Compact item list", () -> c.chestProfitCompact, v -> { c.chestProfitCompact = v; ConstellationClient.saveConfig(); })
+                    .b("Subtract chest keys", () -> c.chestProfitSubtractKey, v -> { c.chestProfitSubtractKey = v; ConstellationClient.saveConfig(); })
+                    .b("Show unknown prices", () -> c.chestProfitShowUnknown, v -> { c.chestProfitShowUnknown = v; ConstellationClient.saveConfig(); })
+                    .b("Persistent run HUD", () -> c.chestProfitHud, v -> { c.chestProfitHud = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("dungeonBreakerDisplay", "Dungeon breaker charges", "Boss",
+                    () -> c.dungeonBreakerDisplay, v -> { c.dungeonBreakerDisplay = v; ConstellationClient.saveConfig(); }));
                 
                 modules.add(new Module("starredMobs", "Starred / objective mobs", "Combat",
                     () -> c.starredMobs, v -> { c.starredMobs = v; ConstellationClient.saveConfig(); })
-                    .b("Through walls", () -> false, v -> {}) 
-                    .sub("Show ✯", true));
+                    .sub("Line-of-sight outline", true));
+                modules.add(new Module("minibossHighlights", "Dungeon miniboss highlights", "Combat",
+                    () -> c.minibossHighlights, v -> { c.minibossHighlights = v; ConstellationClient.saveConfig(); })
+                    .sub("Adventurer, Assassin, Midas and Spirit Bear", true));
+                modules.add(new Module("deathmiteHighlight", "Deathmite warning", "Combat",
+                    () -> c.deathmiteHighlight, v -> { c.deathmiteHighlight = v; ConstellationClient.saveConfig(); })
+                    .b("Tracer", () -> c.deathmiteTracer, v -> { c.deathmiteTracer = v; ConstellationClient.saveConfig(); })
+                    .sub("Dark-red box and label", true));
+                modules.add(new Module("felHighlight", "Inactive Fel highlight", "Combat",
+                    () -> c.felHighlight, v -> { c.felHighlight = v; ConstellationClient.saveConfig(); })
+                    .b("Tracer", () -> c.felTracer, v -> { c.felTracer = v; ConstellationClient.saveConfig(); })
+                    .b("Keep after activation", () -> c.felHighlightActive, v -> { c.felHighlightActive = v; ConstellationClient.saveConfig(); })
+                    .sub("Magenta box and label", true));
+                modules.add(new Module("hideSkeletonSkulls", "Hide idle Skeleton Skulls", "Combat",
+                    () -> c.hideSkeletonSkulls, v -> { c.hideSkeletonSkulls = v; ConstellationClient.saveConfig(); })
+                    .b("Highlight moving skulls", () -> c.highlightMovingSkeletonSkulls, v -> { c.highlightMovingSkeletonSkulls = v; ConstellationClient.saveConfig(); })
+                    .sub("Moving skulls remain visible", true));
+                modules.add(new Module("hideSoulweaverSkulls", "Hide Soulweaver skulls", "Combat",
+                    () -> c.hideSoulweaverSkulls, v -> { c.hideSoulweaverSkulls = v; ConstellationClient.saveConfig(); })
+                    .sub("Exact haunted-skull texture only", true));
                 modules.add(new Module("secretBats", "Secret bat highlights", "Combat",
                     () -> c.secretBats, v -> { c.secretBats = v; ConstellationClient.saveConfig(); })
-                    .b("Filter doors", () -> true, v -> {}) 
-                    .sub("Glow", false));
-                modules.add(new Module("lividFinder", "F5/M5 — hide fake clones", "Combat",
+                    .sub("Only 100-HP secret bats", true)
+                    .sub("F4/M4 boss bats excluded", true));
+                modules.add(new Module("lividFinder", "F5/M5 — highlight real Livid", "Combat",
                     () -> c.lividFinder, v -> { c.lividFinder = v; ConstellationClient.saveConfig(); })
-                    .b("Show HP bar", () -> true, v -> {})
-                    .sub("Box colour", true));
+                    .sub("Green outline and label", true));
                 modules.add(new Module("teammateBoxes", "Teammate highlights", "Combat",
                     () -> c.teammateBoxes, v -> { c.teammateBoxes = v; ConstellationClient.saveConfig(); })
-                    .b("Names", () -> true, v -> {})
-                    .sub("Colour by class", false));
+                    .sub("Names and class initials", true)
+                    .sub("Colours follow dungeon class", true));
                 modules.add(new Module("dropEsp", "Dropped items ESP", "Combat",
                     () -> c.dropEsp, v -> { c.dropEsp = v; ConstellationClient.saveConfig(); })
                     .sub("Show labels", true)
@@ -301,10 +511,52 @@ public class ConfigScreen extends Screen {
                     .sub("Compact", true));
                 modules.add(new Module("doorTracker", "Wither/blood key + door ESP", "Combat",
                     () -> c.doorTracker, v -> { c.doorTracker = v; ConstellationClient.saveConfig(); })
-                    .b("Key beam", () -> c.doorTracker, v -> c.doorTracker = v)
+                    .sub("Keys include a beam", true)
                     .sub("Door colours", true));
+                modules.add(new Module("shadowAssassinAlert", "Shadow Assassin target alert", "Combat",
+                    () -> c.shadowAssassinAlert, v -> { c.shadowAssassinAlert = v; ConstellationClient.saveConfig(); })
+                    .sub("Title and Wither sound", true));
+                modules.add(new Module("rareDropAlerts", "Rare dungeon drop alerts", "Combat",
+                    () -> c.rareDropAlerts, v -> { c.rareDropAlerts = v; ConstellationClient.saveConfig(); })
+                    .sub("Ice Spray and M7 Skeleton Master chestplate", true));
+                modules.add(new Module("rareRoomAlerts", "Rare dungeon room alerts", "Combat",
+                    () -> c.rareRoomAlerts, v -> { c.rareRoomAlerts = v; ConstellationClient.saveConfig(); })
+                    .sub("Trinity, Tomioka, Duncan and Empty", true));
+                modules.add(new Module("mageBeamCleaner", "Replace mage beam particles with a line", "Combat",
+                    () -> c.mageBeamCleaner, v -> { c.mageBeamCleaner = v; ConstellationClient.saveConfig(); })
+                    .b("Hide all dungeon firework particles", () -> c.mageBeamHideParticles, v -> { c.mageBeamHideParticles = v; ConstellationClient.saveConfig(); })
+                    .b("Depth check", () -> c.mageBeamDepthCheck, v -> { c.mageBeamDepthCheck = v; ConstellationClient.saveConfig(); })
+                    .sub("Duration/points/color: /magebeam", true));
+                modules.add(new Module("etherwarpHelper", "Etherwarp target box (advisory)", "Combat",
+                    () -> c.etherwarpHelper, v -> { c.etherwarpHelper = v; ConstellationClient.saveConfig(); })
+                    .sub("Green valid / red no headroom", true));
+                modules.add(new Module("spiritLeapHelper", "Custom Spirit Leap interface", "Combat",
+                    () -> c.spiritLeapHelper, v -> { c.spiritLeapHelper = v; ConstellationClient.saveConfig(); })
+                    .b("Replace the vanilla menu", () -> c.spiritLeapCustomGui, v -> { c.spiritLeapCustomGui = v; ConstellationClient.saveConfig(); })
+                    .b("Static role slots", () -> c.spiritLeapStaticSlots, v -> { c.spiritLeapStaticSlots = v; ConstellationClient.saveConfig(); })
+                    .b("Act on mouse press", () -> c.spiritLeapClickOnPress, v -> { c.spiritLeapClickOnPress = v; ConstellationClient.saveConfig(); })
+                    .b("Show class", () -> c.spiritLeapShowClass, v -> { c.spiritLeapShowClass = v; ConstellationClient.saveConfig(); })
+                    .b("Show dead players", () -> c.spiritLeapShowDead, v -> { c.spiritLeapShowDead = v; ConstellationClient.saveConfig(); })
+                    .b("Class leap keys (1-5)", () -> c.spiritLeapKeybinds, v -> { c.spiritLeapKeybinds = v; ConstellationClient.saveConfig(); })
+                    .sub("Sorting, scale, color and custom order: /leapgui", true));
+                modules.add(new Module("leapCounter", "F7/M7 players leaped HUD", "Combat",
+                    () -> c.leapCounter, v -> { c.leapCounter = v; ConstellationClient.saveConfig(); })
+                    .b("Completion alert", () -> c.leapCounterAlert, v -> { c.leapCounterAlert = v; ConstellationClient.saveConfig(); })
+                    .b("Alert sound", () -> c.leapCounterSound, v -> { c.leapCounterSound = v; ConstellationClient.saveConfig(); }));
+                modules.add(new Module("lowHealthAlert", "Low-health title + sound", "Combat",
+                    () -> c.lowHealthAlert, v -> { c.lowHealthAlert = v; ConstellationClient.saveConfig(); })
+                    .sub("Threshold: " + c.lowHealthPercent + "%", true));
+                modules.add(new Module("spiritMaskTracker", "Spirit Mask state", "Combat",
+                    () -> c.spiritMaskTracker, v -> { c.spiritMaskTracker = v; ConstellationClient.saveConfig(); })
+                    .b("Only in dungeons", () -> c.spiritMaskOnlyDungeons, v -> { c.spiritMaskOnlyDungeons = v; ConstellationClient.saveConfig(); })
+                    .b("Used alert", () -> c.spiritMaskUsedAlert, v -> { c.spiritMaskUsedAlert = v; ConstellationClient.saveConfig(); })
+                    .b("Ready alert", () -> c.spiritMaskReadyAlert, v -> { c.spiritMaskReadyAlert = v; ConstellationClient.saveConfig(); })
+                    .b("Ready chat", () -> c.spiritMaskReadyChat, v -> { c.spiritMaskReadyChat = v; ConstellationClient.saveConfig(); })
+                    .b("HUD", () -> c.spiritMaskHud, v -> { c.spiritMaskHud = v; ConstellationClient.saveConfig(); })
+                    .b("Item cooldown", () -> c.spiritMaskItemCooldown, v -> { c.spiritMaskItemCooldown = v; ConstellationClient.saveConfig(); })
+                    .sub("All alert, HUD, item, timing and template options: /spiritmask", true));
             }
-            
+
             // builds modules from every bool...
             default -> {
                 BaseConfigGroup c = cfg.getSubConfig(constellationId);
@@ -371,7 +623,7 @@ public class ConfigScreen extends Screen {
 
         g.fill(0, 0, w, TB, 0xFF0E0E1A);
         g.fill(0, TB - 1, w, TB, ConstellationTheme.ACCENT);
-        g.text(mc.font, "✧ " + constellationId, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
+        g.text(mc.font, constellationId, 12, 10, ConstellationTheme.ACCENT_BRIGHT, false);
         String esc = "esc to close  ·  right-click for settings";
         g.text(mc.font, esc, w - mc.font.width(esc) - 10, 12, ConstellationTheme.TEXT_MUTED, false);
 
@@ -419,7 +671,10 @@ public class ConfigScreen extends Screen {
             int oy = my2 + 44;
             for (var sub : openModule.subs) {
                 boolean on = sub.get.getAsBoolean();
-                g.text(mc.font, (on ? "✦ " : "  ") + sub.label, mx2 + 10, oy, on ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_MUTED, false);
+                String prefix = sub.editable ? (on ? "> " : "  ") : "- ";
+                int colour = sub.editable ? (on ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT_MUTED)
+                    : ConstellationTheme.TEXT_MUTED;
+                g.text(mc.font, prefix + sub.label, mx2 + 10, oy, colour, false);
                 oy += 18;
             }
             g.text(mc.font, "click to close", mx2 + 360 - mc.font.width("click to close") - 10, my2 + 230, ConstellationTheme.TEXT_MUTED, false);
@@ -452,7 +707,8 @@ public class ConfigScreen extends Screen {
         g.text(mc.font, m.desc, cx + 5, cy + 22, ConstellationTheme.TEXT_MUTED, false);
         
         if (!m.subs.isEmpty()) {
-            String badge = m.subs.size() + " opts";
+            long editable = m.subs.stream().filter(sub -> sub.editable).count();
+            String badge = editable > 0 ? editable + " opts" : "details";
             g.text(mc.font, badge, cx + cardW - mc.font.width(badge) - 5, cy + 32, ConstellationTheme.ACCENT_DIM, false);
         }
     }
@@ -479,8 +735,10 @@ public class ConfigScreen extends Screen {
             int mx2 = w/2 - 180, my2 = h/2 - 120, oy = my2 + 44;
             for (var sub : openModule.subs) {
                 if (mx >= mx2 + 10 && mx <= mx2 + 350 && my >= oy && my < oy + 18) {
-                    sub.set.accept(!sub.get.getAsBoolean());
-                    ConstellationClient.saveConfig();
+                    if (sub.editable) {
+                        sub.set.accept(!sub.get.getAsBoolean());
+                        ConstellationClient.saveConfig();
+                    }
                     return true;
                 }
                 oy += 18;
@@ -507,6 +765,26 @@ public class ConfigScreen extends Screen {
             int cx = gx + (idx % cols) * (cardW + CARD_GAP);
             int cy = gTop + (idx / cols) * (CARD_H + CARD_GAP) - sc;
             if (mx >= cx && mx < cx + cardW && my >= cy && my < cy + CARD_H && my >= gTop) {
+                if (m.name.equals("messageEditor")) {
+                    Minecraft.getInstance().setScreenAndShow(new PartyMessageScreen(this));
+                    return true;
+                }
+                if (rightClick && m.name.equals("partyGuard")) {
+                    Minecraft.getInstance().setScreenAndShow(new PartyGuardScreen(this));
+                    return true;
+                }
+                if (rightClick && m.name.equals("smartRefill")) {
+                    Minecraft.getInstance().setScreenAndShow(new SmartRefillScreen(this));
+                    return true;
+                }
+                if (rightClick && m.name.equals("dungeonStats")) {
+                    Minecraft.getInstance().setScreenAndShow(new DungeonStatsScreen(this));
+                    return true;
+                }
+                if (rightClick && m.name.equals("spiritLeapHelper")) {
+                    Minecraft.getInstance().setScreenAndShow(new SpiritLeapSettingsScreen(this));
+                    return true;
+                }
                 if (rightClick) {
                     
                     if (!m.subs.isEmpty()) openModule = (openModule == m) ? null : m;
