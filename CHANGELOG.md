@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.831 (2026-08-09) — Complete Spirit Leap Settings
+
+- made every Spirit Leap setting reachable at standard GUI scale with bounded scrolling
+- made toggle, sorting and background columns adapt to the available panel width
+- kept long custom-order guidance inside the panel and added `/leapgui config` as a direct entry point
+
 ## 0.9.830 (2026-08-09) — Reachable Dungeon Records
 
 - fixed the legacy chat-only `/dungeonstats` registration replacing the complete records screen command
