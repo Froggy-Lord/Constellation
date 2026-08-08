@@ -52,7 +52,8 @@ public final class SlotBindingEditorScreen extends Screen {
             PhoenixSlotBinding.profileNames().size() + " profiles", width);
         drawProfiles(graphics, mouseX, mouseY);
         drawInventory(graphics, mouseX, mouseY);
-        String help = PhoenixSlotBinding.editorSelection() == null
+        String help = confirmDelete != null ? "Left click the highlighted profile to confirm deletion; click elsewhere to cancel"
+            : PhoenixSlotBinding.editorSelection() == null
             ? "Left: select   Middle: cycle color   Right: unbind   Shift-left in inventory: swap"
             : "Select one slot from the other inventory section";
         graphics.text(font, ConstellationUi.fit(font, help, width - 136), 126, height - 11,
@@ -71,7 +72,8 @@ public final class SlotBindingEditorScreen extends Screen {
                 int color = name.equals(confirmDelete) ? 0xFF5A252B : selected ? 0xFF363052 : hover ? 0xFF29293B : 0xFF1C1C2A;
                 ConstellationTheme.surface(graphics, x + 3, rowY, width - 6, 18, color,
                     selected ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
-                graphics.text(font, ConstellationUi.fit(font, name, width - 14), x + 7, rowY + 5,
+                String label = name.equals(confirmDelete) ? "Confirm delete" : name;
+                graphics.text(font, ConstellationUi.fit(font, label, width - 14), x + 7, rowY + 5,
                     selected ? ConstellationTheme.ACCENT_BRIGHT : ConstellationTheme.TEXT, false);
             }
             rowY += 19;
@@ -140,7 +142,10 @@ public final class SlotBindingEditorScreen extends Screen {
                 if (name.equals(confirmDelete)) {
                     PhoenixSlotBinding.deleteProfileFromEditor(name);
                     confirmDelete = null;
-                } else PhoenixSlotBinding.selectProfileFromEditor(name);
+                } else {
+                    confirmDelete = null;
+                    PhoenixSlotBinding.selectProfileFromEditor(name);
+                }
                 PhoenixSlotBinding.clearEditorSelection();
             }
             return true;
@@ -211,7 +216,7 @@ public final class SlotBindingEditorScreen extends Screen {
         int rowY = 48 - profileScroll * 19;
         List<String> names = PhoenixSlotBinding.profileNames();
         for (int i = 0; i < names.size(); i++, rowY += 19)
-            if (inside(mouseX, mouseY, 11, rowY, 102, 18)) return i;
+            if (rowY >= 48 && rowY + 18 <= height - 38 && inside(mouseX, mouseY, 11, rowY, 102, 18)) return i;
         return -1;
     }
 

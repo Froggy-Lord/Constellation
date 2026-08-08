@@ -49,17 +49,18 @@ public final class TunnelMapScreen extends Screen {
         }
         g.disableScissor();
         ConstellationUi.scrollbar(g,width-11,top,bottom-top,bottom-top,rows.size()*rowHeight,(int)scroll);
-        button(g,12,height-24,62,"Clear",mx,my);
-        button(g,80,height-24,72,"Next spot",mx,my);
-        button(g,158,height-24,78,"Campfire",mx,my);
-        g.text(font,"click a destination to route",width-14-font.width("click a destination to route"),height-18,ConstellationTheme.TEXT_MUTED,false);
+        button(g,12,height-24,70,"Stop route",mx,my);
+        button(g,88,height-24,72,"Next spot",mx,my);
+        button(g,166,height-24,78,"Campfire",mx,my);
+        String help="click a destination to route";int helpX=width-14-font.width(help);
+        if(helpX>=252)g.text(font,help,helpX,height-18,ConstellationTheme.TEXT_MUTED,false);
     }
 
     @Override public boolean mouseClicked(MouseButtonEvent event,boolean dbl){
         int mx=(int)event.x(),my=(int)event.y();
-        if(inside(mx,my,12,height-24,62,18)){AquilaTunnelMaps.clear();return true;}
-        if(inside(mx,my,80,height-24,72,18)){AquilaTunnelMaps.nextFromUi();return true;}
-        if(inside(mx,my,158,height-24,78,18)){AquilaTunnelMaps.campfireFromUi();return true;}
+        if(inside(mx,my,12,height-24,70,18)){AquilaTunnelMaps.clear();return true;}
+        if(inside(mx,my,88,height-24,72,18)){AquilaTunnelMaps.nextFromUi();return true;}
+        if(inside(mx,my,166,height-24,78,18)){AquilaTunnelMaps.campfireFromUi();return true;}
         int y=52-(int)scroll;for(String name:rows()){if(my>=52&&my<height-31&&inside(mx,my,12,y,width-24,17)){AquilaTunnelMaps.choose(name);return true;}y+=20;}
         return super.mouseClicked(event,dbl);
     }

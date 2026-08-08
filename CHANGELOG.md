@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.835 (2026-08-09) — Bounded SkyBlock Screen Controls
+
+- prevented clipped Smart Refill rows and slot-binding profiles from accepting hidden clicks
+- clamped Smart Refill after resize and kept long refill labels away from row controls
+- restored clear slot-profile deletion guidance and cancellation behavior from the reference flow
+- renamed Tunnel Maps' route-only Clear action to Stop route and removed narrow footer overlap
+- made shared screen headers reserve space for both title and status, including Dungeon Records summaries
+
 ## 0.9.834 (2026-08-09) — Readable Party and Carry Editors
 
 - separated Party Message details from the template controls at standard and compact window heights

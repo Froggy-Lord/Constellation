@@ -2552,7 +2552,9 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Click a carry's remove button once, right-click it, and click elsewhere. Expected: each action cancels or leaves the carry intact; only a second consecutive left click on Confirm removes it.
 - [ ] Open Smart Sack Refill at several window heights. Expected: target rows stay inside the central panel, the scrollbar appears only when needed and no hidden row accepts a click.
 - [ ] Toggle refill mode and targets, left-click plus/minus and right-click a quantity button. Expected: one/all mode, enable state and the existing one/eight/sixteen quantity steps remain intact.
+- [ ] Scroll Smart Refill so rows cross both viewport boundaries, then click the same coordinates above and below the list. Expected: partially clipped and hidden controls never respond; resizing taller clamps the list instead of leaving an empty gap.
 - [ ] Open Slot Binding Editor, create/select/delete profiles and test left, middle and right clicks on inventory and hotbar slots. Expected: the redesigned panels do not alter profile confirmation, binding, color cycling or unbinding.
+- [ ] Right-click a slot-binding profile, select another profile, and repeat deletion. Expected: the armed row reads Confirm delete, the footer explains the required left click, selecting elsewhere cancels it, and clipped profile rows never respond.
 - [ ] Click New Profile, enter a draft name, resize the window, then press Escape. Expected: the draft and focus survive resize, while Escape cancels without creating a profile.
 - [ ] Inspect the HUD editor separately. Expected: it still has no decorative panels, borders or screen background; the game remains visible and wheel resizing/current-or-recent element rules are unchanged.
 
@@ -2563,6 +2565,8 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Enter an invalid title regular expression. Expected: the editor clearly reports literal matching fallback without losing the entered value or disabling the button.
 - [ ] Run `/leapgui config`, then test every sorting mode, scale limit, background choice and toggle. Expected: the direct command opens the screen, controls retain their exact behavior, and the custom-order line remains width-safe.
 - [ ] At 854×480 and GUI scale 2, scroll Spirit Leap settings from top to bottom. Expected: upper controls leave cleanly, Scale and Custom Order become fully reachable, and no partial control remains clickable outside the visible panel.
+- [ ] Open Tunnel Maps in a narrow window. Expected: Stop route accurately describes clearing only the current route, all three controls remain separate, and the optional destination hint appears only when it cannot overlap them.
+- [ ] Open Dungeon Records with a long populated-floor summary at narrow and wide widths. Expected: the title, fitted summary and column heading remain separate with no duplicate header text.
 - [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save. Expected: a readable error remains on screen and no field or toggle is persisted until the entire form is valid.
 - [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
 - [ ] Change several Party Guard fields without saving and resize the window. Expected: every draft and focused field survives, no duplicate fields appear and the compact labels/footer remain separate.

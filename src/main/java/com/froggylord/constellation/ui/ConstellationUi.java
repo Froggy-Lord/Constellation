@@ -17,9 +17,12 @@ public final class ConstellationUi {
         graphics.fill(0, 0, width, 27, 0xF20E0E1A);
         graphics.fill(0, 26, width, 27, ConstellationTheme.BORDER_SOFT);
         graphics.fill(0, 26, Math.min(72, width), 27, ConstellationTheme.ACCENT);
-        graphics.text(font, title, 10, 9, ConstellationTheme.ACCENT_BRIGHT, false);
-        if (detail != null && !detail.isBlank())
-            graphics.text(font, detail, width - font.width(detail) - 10, 9, ConstellationTheme.TEXT_MUTED, false);
+        int available = Math.max(24, width - 20);
+        String shownDetail = detail == null || detail.isBlank() ? "" : fit(font, detail, Math.max(24, available / 2));
+        int titleWidth = shownDetail.isBlank() ? available : Math.max(24, available - font.width(shownDetail) - 12);
+        graphics.text(font, fit(font, title, titleWidth), 10, 9, ConstellationTheme.ACCENT_BRIGHT, false);
+        if (!shownDetail.isBlank())
+            graphics.text(font, shownDetail, width - font.width(shownDetail) - 10, 9, ConstellationTheme.TEXT_MUTED, false);
     }
 
     public static void panel(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {

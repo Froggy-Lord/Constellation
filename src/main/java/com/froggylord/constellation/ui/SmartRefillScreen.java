@@ -32,15 +32,16 @@ public final class SmartRefillScreen extends Screen {
         String mode = ConstellationClient.cfg().orion.smartRefillOneAtATime ? "one item per press" : "paced refill all";
         ConstellationUi.header(g, font, "Smart Sack Refill", mode, width);
         ConstellationUi.panel(g, x, 36, w, height - 48);
-        g.text(font, "Pulls the enabled item with the lowest fill ratio.", x + 10, 46, ConstellationTheme.TEXT, false);
-        g.text(font, "Bind Smart Refill in Controls. /refill all handles every deficit.", x + 10, 59, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, ConstellationUi.fit(font, "Pulls the enabled item with the lowest fill ratio.", w - 20), x + 10, 46, ConstellationTheme.TEXT, false);
+        g.text(font, ConstellationUi.fit(font, "Bind Smart Refill in Controls. /refill all handles every deficit.", w - 20), x + 10, 59, ConstellationTheme.TEXT_MUTED, false);
         button(g, x + w - 126, 74, 116, mode, mx, my, true);
         int top = 101, bottom = height - 19;
-        int y = top - (int) scroll;
         List<Map.Entry<String, Integer>> rows = rows();
+        scroll = Math.clamp(scroll, 0, Math.max(0, rows.size() * 38 - (height - 120)));
+        int y = top - (int) scroll;
         g.enableScissor(x + 4, top, x + w - 4, bottom);
         for (Map.Entry<String, Integer> e : rows) {
-            if (y + 32 >= top && y < bottom) row(g, e.getKey(), e.getValue(), x + 7, y, w - 14, mx, my);
+            if (y >= top && y + 32 <= bottom) row(g, e.getKey(), e.getValue(), x + 7, y, w - 14, mx, my);
             y += 38;
         }
         g.disableScissor();
@@ -51,8 +52,9 @@ public final class SmartRefillScreen extends Screen {
         boolean enabled = SmartRefill.enabled(id);
         ConstellationTheme.surface(g, x, y, w, 32, enabled ? 0xD8203C34 : 0xD81B1B28,
             enabled ? 0xFF315D4C : ConstellationTheme.BORDER_SOFT);
-        g.text(font, display(id), x + 9, y + 7, enabled ? 0xFF77FFAA : ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "target " + target, x + 9, y + 19, ConstellationTheme.TEXT_MUTED, false);
+        int textWidth = Math.max(24, w - 134);
+        g.text(font, ConstellationUi.fit(font, display(id), textWidth), x + 9, y + 7, enabled ? 0xFF77FFAA : ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, ConstellationUi.fit(font, "target " + target, textWidth), x + 9, y + 19, ConstellationTheme.TEXT_MUTED, false);
         button(g, x + w - 116, y + 6, 42, enabled ? "on" : "off", mx, my, enabled);
         button(g, x + w - 68, y + 6, 26, "-", mx, my, false);
         button(g, x + w - 36, y + 6, 26, "+", mx, my, false);
@@ -64,7 +66,7 @@ public final class SmartRefillScreen extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
-        int w = Math.min(430, width - 24), x = (width - w) / 2, y = 101 - (int) scroll;
+        int w = Math.min(430, width - 24), x = (width - w) / 2, top = 101, bottom = height - 19, y = top - (int) scroll;
         if (inside((int) event.x(), (int) event.y(), x + w - 126, 74, 116, 20)) {
             var cfg = ConstellationClient.cfg().orion;
             cfg.smartRefillOneAtATime = !cfg.smartRefillOneAtATime;
@@ -73,10 +75,11 @@ public final class SmartRefillScreen extends Screen {
         }
         for (Map.Entry<String, Integer> e : rows()) {
             int mx = (int) event.x(), my = (int) event.y();
-            if (inside(mx, my, x + 7 + w - 14 - 116, y + 6, 42, 20)) { SmartRefill.toggle(e.getKey()); return true; }
+            boolean visible = y >= top && y + 32 <= bottom;
+            if (visible && inside(mx, my, x + 7 + w - 14 - 116, y + 6, 42, 20)) { SmartRefill.toggle(e.getKey()); return true; }
             int step = e.getValue() <= 16 ? 1 : event.button() == 1 ? 16 : 8;
-            if (inside(mx, my, x + 7 + w - 14 - 68, y + 6, 26, 20)) { SmartRefill.change(e.getKey(), -step); return true; }
-            if (inside(mx, my, x + 7 + w - 14 - 36, y + 6, 26, 20)) { SmartRefill.change(e.getKey(), step); return true; }
+            if (visible && inside(mx, my, x + 7 + w - 14 - 68, y + 6, 26, 20)) { SmartRefill.change(e.getKey(), -step); return true; }
+            if (visible && inside(mx, my, x + 7 + w - 14 - 36, y + 6, 26, 20)) { SmartRefill.change(e.getKey(), step); return true; }
             y += 38;
         }
         return super.mouseClicked(event, dbl);

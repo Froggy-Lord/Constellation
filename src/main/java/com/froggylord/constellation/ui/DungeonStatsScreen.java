@@ -30,7 +30,12 @@ public final class DungeonStatsScreen extends Screen {
     public void extractBackground(GuiGraphicsExtractor g, int mx, int my, float delta) {
         ConstellationUi.background(g, width, height, delta);
         int x = 12, panelX = 90, w = width - panelX - 12;
-        ConstellationUi.header(g, font, "Dungeon Records", floor, width);
+        List<OrionConfig.DungeonRunRecord> rows = filtered();
+        long best = rows.stream().mapToLong(r -> r.totalMs).filter(v -> v > 0).min().orElse(0);
+        double avg = rows.stream().mapToLong(r -> r.totalMs).filter(v -> v > 0).average().orElse(0);
+        int bestScore = rows.stream().mapToInt(r -> r.score).max().orElse(0);
+        String summary = floor + "  " + rows.size() + " runs  best " + time(best) + "  avg " + time((long) avg) + "  score " + bestScore;
+        ConstellationUi.header(g, font, "Dungeon Records", summary, width);
         ConstellationUi.panel(g, 8, 30, 70, height - 42);
         ConstellationUi.panel(g, panelX - 4, 30, w + 4, height - 42);
         for (int i = 0; i < FLOORS.length; i++) {
@@ -42,13 +47,8 @@ public final class DungeonStatsScreen extends Screen {
             g.text(font, f, fx + (30 - font.width(f)) / 2, fy + 5,
                 f.equals(floor) ? 0xFFFFFFFF : ConstellationTheme.TEXT_MUTED, false);
         }
-        List<OrionConfig.DungeonRunRecord> rows = filtered();
-        long best = rows.stream().mapToLong(r -> r.totalMs).filter(v -> v > 0).min().orElse(0);
-        double avg = rows.stream().mapToLong(r -> r.totalMs).filter(v -> v > 0).average().orElse(0);
-        int bestScore = rows.stream().mapToInt(r -> r.score).max().orElse(0);
-        g.text(font, floor + "  runs " + rows.size() + "  best " + time(best) + "  average " + time((long) avg) + "  best score " + bestScore,
-            panelX, 13, ConstellationTheme.TEXT, false);
-        g.text(font, "Date          Score   Total    Blood    Boss     Terminal milestones", panelX, 33, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, ConstellationUi.fit(font, "Date          Score   Total    Blood    Boss     Terminal milestones", w - 8),
+            panelX, 33, ConstellationTheme.TEXT_MUTED, false);
         int top = 49, bottom = height - 34, y = top - (int) scroll;
         g.enableScissor(panelX - 2, top, width - 10, bottom);
         for (OrionConfig.DungeonRunRecord r : rows) {
