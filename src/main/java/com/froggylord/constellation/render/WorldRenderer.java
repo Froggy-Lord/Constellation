@@ -159,9 +159,7 @@ public class WorldRenderer {
         // ported from Skyblocker (LGPL-3.0-or-later): utils/render/primitive/PrimitiveCollectorImpl.java
         for (LabelPrim l : ctx.labels) {
             Component c = Component.literal(l.text()).withColor(l.colour() & 0xFFFFFF);
-            int bgAlpha = Math.clamp(l.colour() >>> 24, 0x20, 0x60);
-            int bg = bgAlpha << 24;
-            collector.submitNameTag(pose, l.pos().subtract(cam), LightCoordsUtil.FULL_BRIGHT, c, l.throughWalls(), bg, camState);
+            collector.submitNameTag(pose, l.pos().subtract(cam), 0, c, l.throughWalls(), LightCoordsUtil.FULL_BRIGHT, camState);
         }
 
         pose.popPose();

@@ -1,9 +1,17 @@
 # Constellation Changelog
 
+## 0.9.843 (2026-08-09) — Reproducible World Overlay Check
+
+- fixed every world label being submitted roughly 15.7 million pixels offscreen by correcting the Minecraft 26.2 name-tag argument order
+- restored full-bright label lighting and Minecraft's native accessibility-controlled translucent backing
+- expanded `/cn box` to show separate cyan through-wall and orange depth-tested labels
+- added a depth-tested outline and coloured line so shared primitive behaviour can be checked in a local world
+- made the same command cleanly remove its diagnostic overlay on the second use
+
 ## 0.9.842 (2026-08-09) — Readable Coloured World Labels
 
 - applied each world overlay's configured RGB colour to its label text
-- replaced accidental fully opaque black name-tag rectangles with a bounded translucent neutral backing
+- identified the shared name-tag submission path for the subsequent 26.2 argument-order correction
 - retained depth-tested and through-wall label modes across all waypoint and encounter overlays
 
 ## 0.9.841 (2026-08-09) — Viewport-Safe Inventory Buttons

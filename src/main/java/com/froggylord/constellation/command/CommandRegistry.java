@@ -182,16 +182,26 @@ public final class CommandRegistry {
     }
 
     private static int debugBox() {
-        if (debugBox != null) ConstellationClient.world().remove(debugBox);
+        if (debugBox != null) {
+            ConstellationClient.world().remove(debugBox);
+            debugBox = null;
+            message("§7World render check disabled");
+            return 1;
+        }
         debugBox = ConstellationClient.world().register(ctx -> {
             Minecraft mc = Minecraft.getInstance();
             if (mc.player == null) return;
             var centre = mc.player.getEyePosition().add(mc.player.getLookAngle().scale(4.0));
             ctx.highlight(new AABB(centre.x - 0.5, centre.y - 0.5, centre.z - 0.5,
                 centre.x + 0.5, centre.y + 0.5, centre.z + 0.5), 0xA000E5FF, true);
-            ctx.label(centre.add(0, 0.8, 0), "constellation render check", 0xFFFFFFFF, true);
+            ctx.label(centre.add(0, 0.9, 0), "through walls", 0xFF00E5FF, true);
+            var depth = centre.add(3.0, 0, 0);
+            ctx.outline(new AABB(depth.x - 0.5, depth.y - 0.5, depth.z - 0.5,
+                depth.x + 0.5, depth.y + 0.5, depth.z + 0.5), 0xFFFFAA33, false);
+            ctx.line(centre, depth, 0xFFFF55AA, false, 3);
+            ctx.label(depth.add(0, 1.25, 0), "depth tested", 0xFFFFAA33, false);
         });
-        message("§aSee-through render box enabled");
+        message("§aWorld render check enabled; run /cn box again to hide it");
         return 1;
     }
 
