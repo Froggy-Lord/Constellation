@@ -1,5 +1,6 @@
 package com.froggylord.constellation.constellation;
 
+import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.core.BaseConstellation;
 import com.froggylord.constellation.core.InitContext;
 import com.froggylord.constellation.hud.HudManager;
@@ -48,8 +49,9 @@ public class AurigaMisc extends BaseConstellation {
             com.froggylord.constellation.hud.HudPosition.of(65, 56),
             () -> cfg.enabled && cfg.hoppityEventSummary && cfg.hoppityEventSummaryHud));
         hud.register(new com.froggylord.constellation.hud.UnclaimedEggsHudWidget(
-            com.froggylord.constellation.hud.HudPosition.of(80, 32),
-            () -> cfg.enabled && cfg.hoppityUnclaimedEggs && cfg.hoppityUnclaimedEggsHud));
+            com.froggylord.constellation.hud.HudPosition.of(27, 2),
+            () -> cfg.enabled && cfg.hoppityUnclaimedEggs && cfg.hoppityUnclaimedEggsHud
+                && !ConstellationClient.loc().inDungeons()));
         hud.register(new com.froggylord.constellation.hud.StrayTimerHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(80, 44),
             () -> cfg.enabled && cfg.chocolateFactoryStrayTimer && cfg.chocolateFactoryStrayTimerHud));

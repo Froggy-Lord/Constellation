@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.857 (2026-08-09) — Keep SkyBlock HUDs Readable
+
+- keep every live and editor HUD fully inside the viewport at any supported scale
+- give simple HUD panels their real feature titles instead of the generic Dungeon heading, split multi-part values into rows and wrap long values
+- move Currency, Dungeon Score, Room and Milestone defaults out of the overlapping left-bottom cluster
+- hide redundant standalone Events and Mayor HUDs while Custom Scoreboard already presents them, and keep the Hoppity egg schedule out of dungeon runs
+- stop Dungeon Copilot from repeating the same low-score message every ten seconds; it now reports only meaningful score-band changes
+- verified the combined fake-dungeon HUD state and current HUD editor in an 854x480 viewport
+
 ## 0.9.856 (2026-08-09) — Clear Dungeon Container Overlays
 
 - recognize paginated Croesus and Vesuvius menus in the Dungeon Hub, including the previously unreachable Dungeon Hub area classification

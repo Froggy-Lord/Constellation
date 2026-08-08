@@ -1,5 +1,15 @@
 # Constellation testing guide
 
+## Shared SkyBlock HUD layout (0.9.857)
+
+Open `/cn hud` while the SkyBlock displays you want to move are visible, or were visible in the last five seconds.
+
+- [ ] Confirm every simple panel uses its own feature name and long or multi-part values wrap into readable rows.
+- [ ] Move a panel against each screen edge and scroll it from 0.5x through 3.0x. Expected: the complete scaled panel remains visible in both the editor and ordinary play.
+- [ ] Enable Custom Scoreboard together with Event Calendar and Mayor HUD. Expected: Events and Mayor appear once inside the custom scoreboard, not as duplicate panels.
+- [ ] Enter a dungeon with Hoppity egg reminders enabled. Expected: the egg schedule hides for the run and returns after leaving.
+- [ ] Cross 230 and 270 dungeon score. Expected: Copilot reports each new score band once and never repeats an unchanged score every ten seconds.
+
 ## Dungeon container overlays (0.9.856)
 
 - [ ] In Dungeon Hub, open Croesus or a paginated `(n/n) Croesus`/Vesuvius page. Expected: unopened runs are green, previously opened runs are orange, completed runs are red, and the two-line side panel shows every count.

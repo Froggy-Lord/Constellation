@@ -28,6 +28,7 @@ public class OrionDungeons extends BaseConstellation {
     // party-ping guards: fire at most once per run and never on our own party echo (see onChat below)
     private boolean mimicPinged = false;
     private boolean princePinged = false;
+    private int copilotBand = 0;
     private static long fireFreezeMs = 0;
     private static long spiritBowUntil = 0;
     private static long saVanishUntil = 0;
@@ -253,16 +254,17 @@ public class OrionDungeons extends BaseConstellation {
             return true;
         });
 
-        // dungeon copilot — occasional c...
         every(200, "orion-copilot", () -> {
             if (!isEnabled() || cfg == null || !cfg.enabled || !cfg.dungeonCopilot || !ConstellationClient.loc().inDungeons()) return;
             var mc2 = Minecraft.getInstance();
             if (mc2.player == null) return;
             int s = com.froggylord.constellation.data.DungeonScore.score();
+            int band = s >= 270 ? 2 : s >= 230 ? 1 : 0;
+            if (band == copilotBand) return;
+            copilotBand = band;
             String grade = com.froggylord.constellation.data.DungeonScore.grade();
             if (s >= 270) mc2.player.sendSystemMessage(Component.literal("§aCopilot: Score is " + s + " (" + grade + ") — looking good!"));
             else if (s >= 230) mc2.player.sendSystemMessage(Component.literal("§eCopilot: " + s + " — find more secrets for S+"));
-            else mc2.player.sendSystemMessage(Component.literal("§cCopilot: " + s + " — need secrets + crypts for higher score"));
         });
 
         
@@ -274,6 +276,7 @@ public class OrionDungeons extends BaseConstellation {
                 com.froggylord.constellation.data.DefensiveTracker.tick();
                 wasInDungeon = true;
             } else if (wasInDungeon) {
+                copilotBand = 0;
                 
                 doorsOpened = 0;
                 mimicPinged = false;
@@ -385,15 +388,15 @@ public class OrionDungeons extends BaseConstellation {
                 HudPosition.of(25, 52), () -> cfg.chestProfitCalc && cfg.chestProfitHud));
         hud.register(new com.froggylord.constellation.hud.BlessingsHudWidget(
                 "orion-blessings", HudPosition.of(6, 46), () -> cfg.blessingDisplay));
-        // consolidated skyhanni-style score panel: live 0-300 score + grade and a compact
+        // consolidated score panel: live 0-300 score + grade and a compact
         // breakdown (secrets %, crypts, deaths, room completion). replaces the old single line.
         hud.register(new com.froggylord.constellation.hud.ScoreHudWidget(
-                "orion-score", HudPosition.of(6, 54), () -> cfg.scoreHud));
+                "orion-score", HudPosition.of(25, 8), () -> cfg.scoreHud));
         hud.register(new PuzzleHudWidget(
             "orion-puzzles", HudPosition.of(6, 74), () -> cfg.puzzlesDisplay, () -> cfg.puzzlesCompact));
         hud.register(new HudWidget("orion-secrets", "Secrets",
                 () -> !scoreReady() ? null : com.froggylord.constellation.data.DungeonScore.secretPercent() + "%",
-                HudPosition.of(6, 66), () -> cfg.secretsHud));
+                HudPosition.of(6, 66), () -> cfg.secretsHud && !cfg.scoreHud));
         hud.register(new HudWidget("orion-secret-compass", "SecretCompass",
                 SecretCompassHelper::hudText,
                 HudPosition.of(25, 66), () -> cfg.secretCompassHelper && cfg.secretCompassHud));
@@ -414,10 +417,10 @@ public class OrionDungeons extends BaseConstellation {
                 HudPosition.of(6, 44), () -> cfg.m7RelicTimer));
         hud.register(new HudWidget("orion-crypts", "Crypts",
                 () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.crypts()),
-                HudPosition.of(6, 78), () -> cfg.cryptsHud));
+                HudPosition.of(6, 78), () -> cfg.cryptsHud && !cfg.scoreHud));
         hud.register(new HudWidget("orion-deaths", "Deaths",
                 () -> !scoreReady() ? null : String.valueOf(ConstellationClient.dungeon().deaths()),
-                HudPosition.of(6, 90), () -> cfg.deathsHud));
+                HudPosition.of(6, 90), () -> cfg.deathsHud && !cfg.scoreHud));
         hud.register(new HudWidget("orion-timer", "Timer",
                 () -> !scoreReady() ? null : formatTime(com.froggylord.constellation.data.DungeonScore.timeSeconds()),
                 HudPosition.of(25, 54), () -> cfg.timerHud));
@@ -426,7 +429,7 @@ public class OrionDungeons extends BaseConstellation {
                 HudPosition.of(25, 62), () -> cfg.timerHud));
         hud.register(new HudWidget("orion-milestone", "Milestone",
                 DungeonMilestone::hudText,
-                HudPosition.of(25, 70), () -> cfg.milestoneHud));
+                HudPosition.of(30, 72), () -> cfg.milestoneHud));
         hud.register(new HudWidget("orion-terminal-display", "Terminals",
                 TerminalBreakdown::hudText,
                 HudPosition.of(6, 60), () -> cfg.terminalDisplay));
@@ -442,7 +445,7 @@ public class OrionDungeons extends BaseConstellation {
                     if (!inDungeon()) return null;
                     return ConstellationClient.dungeon().currentRoom().isEmpty() ? "-" : ConstellationClient.dungeon().currentRoom();
                 },
-                HudPosition.of(25, 86), () -> cfg.roomNameHud));
+                HudPosition.of(30, 58), () -> cfg.roomNameHud));
         hud.register(new HudWidget("orion-mimic", "Mimic",
                 () -> {
                     if (!scoreReady() || !com.froggylord.constellation.data.DungeonScore.isMimicFloor()) return null;

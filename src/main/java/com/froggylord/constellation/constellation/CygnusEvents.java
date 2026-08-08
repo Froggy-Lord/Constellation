@@ -92,9 +92,11 @@ public class CygnusEvents extends BaseConstellation {
         hud.register(new HudWidget("cygnus-diana-drops", "Diana Drops", CygnusDiana::dropHud,
             HudPosition.of(76, 80), () -> cfg.enabled && cfg.dianaDropTracker && cfg.dianaDropHud));
         hud.register(new HudWidget("cygnus-calendar", "Events", CygnusCalendar::hudText,
-            HudPosition.of(76, 86), () -> cfg.enabled && cfg.eventCalendar && cfg.eventCalendarHud));
+            HudPosition.of(76, 86), () -> cfg.enabled && cfg.eventCalendar && cfg.eventCalendarHud
+                && !ApolloCustomScoreboard.active()));
         hud.register(new HudWidget("cygnus-mayor", "Mayor", CygnusMayor::hudText,
-            HudPosition.of(76, 92), () -> cfg.enabled && cfg.mayorState && cfg.mayorHud));
+            HudPosition.of(76, 92), () -> cfg.enabled && cfg.mayorState && cfg.mayorHud
+                && !ApolloCustomScoreboard.active()));
         hud.register(new HudWidget("cygnus-gifts", "Gifts", CygnusGifts::hudText,
             HudPosition.of(76, 98), () -> cfg.enabled && cfg.giftProfitTracker && cfg.giftProfitHud));
         hud.register(new HudWidget("cygnus-unique-gifts", "Unique Gifts", CygnusUniqueGifts::hudText,
