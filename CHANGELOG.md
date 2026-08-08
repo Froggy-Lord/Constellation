@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.832 (2026-08-09) — Safer Compact Editors
+
+- made Scoreboard Order move filtered rows relative to adjacent visible results instead of hidden global entries
+- added a two-click confirmation before resetting the complete scoreboard order
+- added separate confirmations for one-button and all-button inventory resets
+- preserved the focused Inventory Button field through window and GUI-scale changes
+
 ## 0.9.831 (2026-08-09) — Complete Spirit Leap Settings
 
 - made every Spirit Leap setting reachable at standard GUI scale with bounded scrolling

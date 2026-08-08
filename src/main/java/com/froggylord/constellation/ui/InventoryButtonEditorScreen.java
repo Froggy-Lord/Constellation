@@ -24,6 +24,8 @@ public final class InventoryButtonEditorScreen extends Screen {
     private int selected;
     private boolean layoutPage;
     private boolean loading;
+    private boolean confirmReset;
+    private boolean confirmResetAll;
     private EditBox icon;
     private EditBox command;
     private EditBox title;
@@ -36,6 +38,8 @@ public final class InventoryButtonEditorScreen extends Screen {
     }
 
     @Override protected void init() {
+        int focused = icon != null && icon.isFocused() ? 1 : command != null && command.isFocused() ? 2
+            : title != null && title.isFocused() ? 3 : tooltip != null && tooltip.isFocused() ? 4 : 0;
         int x = 12, w = Math.max(100, width - 24);
         icon = field(x, 90, w, 80, "minecraft:item_id", value -> current().icon = value);
         command = field(x, 121, w, 256, "command without slash", value -> current().command = value);
@@ -43,13 +47,15 @@ public final class InventoryButtonEditorScreen extends Screen {
         tooltip = field(x, 183, w, 120, "tooltip", value -> current().tooltip = value);
         select(selected >= 0 && selected < entries().size() ? selected : 0);
         updateFieldVisibility();
+        EditBox restore = focused == 1 ? icon : focused == 2 ? command : focused == 3 ? title : focused == 4 ? tooltip : null;
+        if (restore != null && restore.visible) { restore.setFocused(true); setFocused(restore); }
     }
 
     private EditBox field(int x, int y, int width, int max, String hint, java.util.function.Consumer<String> consumer) {
         EditBox box = new EditBox(font, x, y, width, 18, Component.literal(hint));
         box.setMaxLength(max);
         box.setHint(Component.literal(hint));
-        box.setResponder(value -> { if (!loading && selected >= 0) consumer.accept(value); });
+        box.setResponder(value -> { if (!loading && selected >= 0) { consumer.accept(value); confirmReset = confirmResetAll = false; } });
         addRenderableWidget(box);
         return box;
     }
@@ -77,8 +83,8 @@ public final class InventoryButtonEditorScreen extends Screen {
         int actionsY = Math.min(207, height - 32);
         int third = Math.max(72, (width - 40) / 3);
         button(graphics, 12, actionsY, third, value.enabled ? "Enabled" : "Disabled", value.enabled, mouseX, mouseY);
-        button(graphics, 16 + third, actionsY, third, "Reset button", false, mouseX, mouseY);
-        button(graphics, 20 + third * 2, actionsY, Math.max(60, width - (20 + third * 2) - 12), "Reset all", false, mouseX, mouseY);
+        button(graphics, 16 + third, actionsY, third, confirmReset ? "Confirm reset" : "Reset button", confirmReset, mouseX, mouseY);
+        button(graphics, 20 + third * 2, actionsY, Math.max(60, width - (20 + third * 2) - 12), confirmResetAll ? "Confirm all" : "Reset all", confirmResetAll, mouseX, mouseY);
         boolean valid = validRegex(value.title);
         String status = valid ? "Button " + (selected + 1) + " selected" : "Invalid regex; literal title matching will be used";
         graphics.text(font, ConstellationUi.fit(font, status, width - 24), 12, height - 11,
@@ -129,14 +135,15 @@ public final class InventoryButtonEditorScreen extends Screen {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubled) {
         int mouseX = (int) event.x(), mouseY = (int) event.y();
-        if (inside(mouseX, mouseY, width - 82, 31, 72, 19)) { layoutPage = !layoutPage; updateFieldVisibility(); return true; }
+        if (inside(mouseX, mouseY, width - 82, 31, 72, 19)) { layoutPage = !layoutPage; confirmReset = confirmResetAll = false; updateFieldVisibility(); return true; }
         if (layoutPage) return clickLayout(mouseX, mouseY) || super.mouseClicked(event, doubled);
         int index = gridIndex(mouseX, mouseY);
-        if (index >= 0) { select(index); return true; }
+        if (index >= 0) { confirmReset = confirmResetAll = false; select(index); return true; }
         int actionsY = Math.min(207, height - 32), third = Math.max(72, (width - 40) / 3);
-        if (inside(mouseX, mouseY, 12, actionsY, third, 19)) { current().enabled = !current().enabled; save(); return true; }
-        if (inside(mouseX, mouseY, 16 + third, actionsY, third, 19)) { LyraInventoryButtons.reset(selected); select(selected); return true; }
-        if (inside(mouseX, mouseY, 20 + third * 2, actionsY, Math.max(60, width - (20 + third * 2) - 12), 19)) { LyraInventoryButtons.resetAll(); select(selected); return true; }
+        if (inside(mouseX, mouseY, 12, actionsY, third, 19)) { confirmReset = confirmResetAll = false; current().enabled = !current().enabled; save(); return true; }
+        if (inside(mouseX, mouseY, 16 + third, actionsY, third, 19)) { if (confirmReset) { LyraInventoryButtons.reset(selected); select(selected); confirmReset = false; } else { confirmReset = true; confirmResetAll = false; } return true; }
+        if (inside(mouseX, mouseY, 20 + third * 2, actionsY, Math.max(60, width - (20 + third * 2) - 12), 19)) { if (confirmResetAll) { LyraInventoryButtons.resetAll(); select(selected); confirmResetAll = false; } else { confirmResetAll = true; confirmReset = false; } return true; }
+        confirmReset = confirmResetAll = false;
         return super.mouseClicked(event, doubled);
     }
 
@@ -173,6 +180,7 @@ public final class InventoryButtonEditorScreen extends Screen {
     }
 
     private void select(int index) {
+        confirmReset = confirmResetAll = false;
         selected = Math.clamp(index, 0, entries().size() - 1);
         LyraConfig.InventoryButtonEntry value = current();
         loading = true;
