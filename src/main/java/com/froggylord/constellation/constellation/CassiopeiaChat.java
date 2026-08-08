@@ -9,7 +9,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -55,7 +58,7 @@ public class CassiopeiaChat extends BaseConstellation {
         
         pipeline.allow(msg -> {
             String s = msg.getString();
-            if (s.contains("●") && (s.contains("/warp") || s.contains("/hub"))) return false;
+            if (s.contains("\u25CF") && (s.contains("/warp") || s.contains("/hub"))) return false;
             return true;
         }, ChatPipeline.Priority.LATEST);
 
@@ -94,7 +97,7 @@ public class CassiopeiaChat extends BaseConstellation {
             if (cfg.cleanAutopet && s.contains("autopet")) return false;
             if (cfg.cleanCombo && s.contains("kill combo")) return false;
             if (cfg.cleanMimic && s.contains("mimic")) return false;
-            if (cfg.cleanDeath && s.contains("☠")) return false;
+            if (cfg.cleanDeath && s.contains("\u2620")) return false;
             if (cfg.cleanHeal && (s.contains("healed") || s.contains("healed you"))) return false;
             if (cfg.cleanAOTE && s.contains("blocks in the way")) return false;
             if (cfg.cleanImplosion && s.contains("implosion")) return false;
@@ -117,6 +120,8 @@ public class CassiopeiaChat extends BaseConstellation {
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("on").executes(ctx -> setActionBarCleaner(true)))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("off").executes(ctx -> setActionBarCleaner(false)))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("test").executes(ctx -> actionBarTest())));
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("chatvisual")
+            .executes(ctx -> chatVisualTest()));
         if (!cfg.floorShortcuts && !cfg.warpShortcuts && !cfg.partyShortcuts) return;
 
         
@@ -156,7 +161,7 @@ public class CassiopeiaChat extends BaseConstellation {
                 var mc = Minecraft.getInstance();
                 if (mc.player != null) {
                     var server = mc.getCurrentServer();
-                    mc.player.sendSystemMessage(Component.literal("§a⏱ " + (server != null ? server.ping + "ms" : "N/A")));
+                    mc.player.sendSystemMessage(Component.literal("§aPing: " + (server != null ? server.ping + "ms" : "N/A")));
                 }
                 return 1;
             }));
@@ -288,8 +293,24 @@ public class CassiopeiaChat extends BaseConstellation {
     private int actionBarTest() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return 0;
-        Component sample = Component.literal("2,500/2,500❤     -20 Mana (Instant Transmission)     T3!     Encounter notice");
+        Component sample = Component.literal("Health 2,500/2,500     -20 Mana (Instant Transmission)     T3!     Encounter notice");
         mc.gui.hud.setOverlayMessage(cfg.actionBarCleaner ? ActionBarCleaner.filter(sample, cfg) : sample, false);
+        return 1;
+    }
+
+    private int chatVisualTest() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return 0;
+        Component sample = Component.literal("Styled auction: ").withStyle(ChatFormatting.GOLD)
+            .append(Component.literal("1,250,000 coins").withStyle(style -> style
+                .withColor(ChatFormatting.GREEN)
+                .withClickEvent(new ClickEvent.RunCommand("/ah"))
+                .withHoverEvent(new HoverEvent.ShowText(Component.literal("Open the Auction House")))))
+            .append(Component.literal(" at https://hypixel.net/test.").withStyle(ChatFormatting.GRAY));
+        Component linked = CassiopeiaAlerts.linkUrls(CassiopeiaCompact.shortenNumbers(sample));
+        mc.player.sendSystemMessage(Component.literal("Chat presentation check").withStyle(ChatFormatting.LIGHT_PURPLE));
+        mc.player.sendSystemMessage(linked);
+        mc.gui.hud.setOverlayMessage(Component.literal("Action bar remains separate: Health 2,500/2,500; Mana 1,200/1,200"), false);
         return 1;
     }
 

@@ -34,8 +34,9 @@ public class ChatPipeline {
     public ChatPipeline(BooleanSupplier active) { this.active = active; }
 
     public void init() {
+        // ported from Devonian (GPL-3.0): src/main/kotlin/com/github/synnerz/devonian/api/events/EventBus.kt
         ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
-            if (!active.getAsBoolean()) return true;
+            if (!active.getAsBoolean() || overlay) return true;
             for (AllowEntry e : allowListeners) {
                 if (!e.filter.allow(message)) return false;
             }
@@ -43,16 +44,17 @@ public class ChatPipeline {
         });
 
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (!active.getAsBoolean()) return;
+            if (!active.getAsBoolean() || overlay) return;
             for (GameEntry e : gameListeners) {
                 try { e.handler.handle(message); } catch (Exception ex) {}
             }
         });
 
         ClientReceiveMessageEvents.MODIFY_GAME.register((message, overlay) -> {
-            if (!active.getAsBoolean()) return message;
+            if (!active.getAsBoolean() || overlay) return message;
             Component modified = message;
             for (ModifyEntry e : modifyListeners) {
+                if (modified == null) break;
                 try { modified = e.handler.modify(modified); } catch (Exception ex) {}
             }
             return modified;

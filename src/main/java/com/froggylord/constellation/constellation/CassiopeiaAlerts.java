@@ -3,11 +3,19 @@ package com.froggylord.constellation.constellation;
 import com.froggylord.constellation.config.CassiopeiaConfig;
 import com.froggylord.constellation.chat.ChatPipeline;
 import net.minecraft.client.Minecraft;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
 
+import java.net.URI;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * chat alerts — mention pings, timestamps, clickable links, auto-gg,
@@ -15,6 +23,8 @@ import java.util.Locale;
  * extracted from CassiopeiaChat for Phase 5a splitting.
  */
 public final class CassiopeiaAlerts {
+
+    private static final Pattern URL = Pattern.compile("https?://[^\\s<>]+", Pattern.CASE_INSENSITIVE);
 
     private CassiopeiaAlerts() {}
 
@@ -45,10 +55,8 @@ public final class CassiopeiaAlerts {
         // clickable links — make http/https urls blue and underlined
         pipeline.modify(msg -> {
             if (!cfg.clickableLinks) return msg;
-            String s = msg.getString();
-            if (!s.contains("http://") && !s.contains("https://")) return msg;
-            s = s.replaceAll("(https?://[^\\s]+)", "§9$1§r");
-            return Component.literal(s);
+            if (!URL.matcher(msg.getString()).find()) return msg;
+            return linkUrls(msg);
         });
 
         // ported from devonian (GPL-3.0): features/dungeons/AutoRequeueDungeons.kt
@@ -84,5 +92,33 @@ public final class CassiopeiaAlerts {
                     }
                 }
             });
+    }
+
+    // ported from Skyblocker (LGPL-3.0): src/main/java/de/hysky/skyblocker/utils/TextTransformer.java
+    public static Component linkUrls(Component message) {
+        MutableComponent result = Component.empty();
+        message.visit((style, text) -> {
+            Matcher matcher = URL.matcher(text);
+            int end = 0;
+            while (matcher.find()) {
+                if (matcher.start() > end) result.append(Component.literal(text.substring(end, matcher.start())).withStyle(style));
+                String raw = matcher.group();
+                int keep = raw.length();
+                while (keep > 0 && ".,;:!?)]}".indexOf(raw.charAt(keep - 1)) >= 0) keep--;
+                String link = raw.substring(0, keep);
+                try {
+                    Style linkStyle = style.withColor(ChatFormatting.BLUE).withUnderlined(true);
+                    if (style.getClickEvent() == null) linkStyle = linkStyle.withClickEvent(new ClickEvent.OpenUrl(URI.create(link)));
+                    result.append(Component.literal(link).withStyle(linkStyle));
+                } catch (IllegalArgumentException ignored) {
+                    result.append(Component.literal(link).withStyle(style));
+                }
+                if (keep < raw.length()) result.append(Component.literal(raw.substring(keep)).withStyle(style));
+                end = matcher.end();
+            }
+            if (end < text.length()) result.append(Component.literal(text.substring(end)).withStyle(style));
+            return Optional.empty();
+        }, Style.EMPTY);
+        return result;
     }
 }

@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.849 (2026-08-09) — Verified Chat and Pet HUD
+
+- added `/chatvisual`, a local-only rich chat and separate action-bar presentation check
+- added deterministic coverage for preserved URL, command, hover, underline and colour metadata
+- removed the empty icon gutter when Pet Display has learned a pet but has not cached its item yet
+- added an icon-bearing Pet Display editor preview without inventing live pet state
+
 ## 0.9.848 (2026-08-09) — Safe Chat Presentation
 
 - kept chat filters, timestamps and formatters out of the action bar

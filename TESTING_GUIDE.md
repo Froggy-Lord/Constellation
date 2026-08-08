@@ -2,6 +2,7 @@
 
 ## Chat and action-bar separation (0.9.848)
 
+- [ ] In a safe local world, run `/chatvisual`. Expected: the gold label, green shortened amount and blue underlined URL appear in chat while a separate action-bar sample appears above the hotbar. Hover the amount to see `Open the Auction House`; clicking the URL must open Minecraft's confirmation screen.
 - [ ] Enable timestamps, clickable links, shortened numbers, and selected Action Bar Cleaner filters.
 - [ ] Confirm timestamps appear in ordinary chat but never in the action bar.
 - [ ] Confirm an ordinary `http://` or `https://` link is blue, underlined, and opens the normal confirmation flow when clicked.
@@ -22,6 +23,7 @@ Enable Lyra and Recipe Browser. Use `/cn config lyra` for browser, repository an
 - [ ] Start an update with `/recipesupdate`, then temporarily interrupt network access. Expected: the existing usable catalogue remains available, updating/error state is visible and retry obeys the update setting.
 - [ ] With REI installed and Skyblocker absent, enable REI Integration, Entries and Collapsible Families, then enter a world. Expected: five Constellation categories load after the repository, R/U works and user-clicked transfer sends only `/viewrecipe` when connected to Hypixel.
 - [ ] Repeat with Skyblocker installed. Expected: Constellation registers no duplicate REI catalogue, families or comparator.
+- [ ] With Pet Display icons enabled, summon a pet from chat before opening the Pets menu. Expected: text begins at the configured HUD position with no empty icon gutter. After the real pet item is cached, the icon appears and the text moves into the icon-bearing layout.
 - [ ] Test 1280x720 and a narrow window at multiple GUI scales. Expected: result and detail panes remain bounded, scroll independently, show complete lists and never hide controls or tooltips.
 
 ## Unified SkyBlock storage browser

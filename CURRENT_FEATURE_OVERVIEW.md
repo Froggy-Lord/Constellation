@@ -1,8 +1,10 @@
 # Constellation feature overview
 
-Current test build: 0.9.848.
+Current test build: 0.9.849.
 
 Chat presentation treats the action bar as a separate HUD channel. URL and number formatting preserves server component styling and interactions, and compact-chat settings apply immediately when changed.
+
+`/chatvisual` provides a safe local presentation check. Pet Display no longer leaves a blank icon gutter before its real pet item has been cached.
 
 ## Selective SkyBlock action bar
 
