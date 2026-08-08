@@ -2558,9 +2558,10 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Open Inventory Buttons and switch between Buttons and Layout. Expected: all fourteen icons, four text fields, resets and every layout toggle/quantity remain usable at each GUI scale.
 - [ ] Enter an invalid title regular expression. Expected: the editor clearly reports literal matching fallback without losing the entered value or disabling the button.
 - [ ] Open Spirit Leap settings and test every sorting mode, scale limit, background choice and toggle. Expected: controls retain their exact behavior and the custom-order line remains width-safe.
-- [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save and close. Expected: a readable error remains on screen, invalid fields do not overwrite prior values, and valid values still save.
+- [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save. Expected: a readable error remains on screen and no field or toggle is persisted until the entire form is valid.
 - [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
 - [ ] Change several Party Guard fields without saving and resize the window. Expected: every draft and focused field survives, no duplicate fields appear and the compact labels/footer remain separate.
+- [ ] Change Party Guard fields and toggles, then press Escape or Cancel. Expected: every unsaved change is discarded. Repeat with Save and expect the complete valid form to persist.
 - [ ] Populate enough carries to scroll. Expected: rows stay clipped inside the panel, the scrollbar tracks position and buttons on hidden rows cannot be clicked.
 - [ ] Left- and right-click Carry plus/minus buttons. Expected: left changes completed runs, right changes total runs, and remove still requires its visible button.
 

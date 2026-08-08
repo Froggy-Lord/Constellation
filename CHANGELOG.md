@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.829 (2026-08-09) — Transactional SkyBlock Editors
+
+- made Party Guard Save validate the complete draft before changing live configuration
+- added explicit Save and Cancel actions, with Escape restoring the original live toggle state
+- replaced overlapping validation guidance with one stateful footer line
+- removed the recipe detail list's nine-entry cap so every input and output is reachable through scrolling
+
 ## 0.9.828 (2026-08-09) — Safe Editable Screen Resizing
 
 - fixed Party Guard retaining stale field widgets after resize and preserved all seven unsaved rule drafts and keyboard focus
