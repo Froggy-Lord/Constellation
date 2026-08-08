@@ -2573,6 +2573,8 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Hide and show scoreboard lines, close and reopen the screen. Expected: visibility and complete ordering persist.
 - [ ] Open Tunnel Maps, search and scroll destinations, then select a visible route. Expected: only visible rows accept clicks and active route status, Clear, Next spot and Campfire remain functional.
 - [ ] Open Dungeon Records at a short window height. Expected: ALL, E, F1–F7 and M1–M7 remain reachable in the two-column selector.
+- [ ] Run `/dungeonstats`. Expected: the Dungeon Records screen opens; it must not print only the legacy session summary in chat.
+- [ ] Click `Clear ALL` once, then press Escape. Expected: the button changes to `Confirm`, no records are deleted, and Escape returns to the game.
 - [ ] Scroll a long dungeon history. Expected: records remain clipped inside the panel, long terminal lines truncate safely and the scrollbar represents position.
 - [ ] Click Clear once. Expected: the button changes to Confirm without deleting anything. Click elsewhere or change floors to cancel; click Confirm to delete only the selected floor scope.
 - [ ] Export records. Expected: JSON export remains independent of clear confirmation and preserves all configured record fields.

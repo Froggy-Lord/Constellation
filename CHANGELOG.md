@@ -1,5 +1,10 @@
 # Constellation Changelog
 
+## 0.9.830 (2026-08-09) — Reachable Dungeon Records
+
+- fixed the legacy chat-only `/dungeonstats` registration replacing the complete records screen command
+- restored floor filtering, JSON export and guarded clearing through the normal `/dungeonstats` entry point
+
 ## 0.9.829 (2026-08-09) — Transactional SkyBlock Editors
 
 - made Party Guard Save validate the complete draft before changing live configuration

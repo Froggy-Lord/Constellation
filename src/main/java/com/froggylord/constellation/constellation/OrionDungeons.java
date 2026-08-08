@@ -642,9 +642,6 @@ public class OrionDungeons extends BaseConstellation {
                 return 1;
             }));
 
-        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
-            .executes(ctx -> { com.froggylord.constellation.data.RunStats.printSession(); return 1; }));
-        
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("key")
             .executes(ctx -> {
                 var mc = Minecraft.getInstance();
