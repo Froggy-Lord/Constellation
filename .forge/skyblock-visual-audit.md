@@ -27,7 +27,7 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 - [x] Dungeon records, carry tracking, party guard, party messages and Spirit Leap settings use shared themed surfaces.
 - [x] Inventory Button, slot binding, scoreboard order, refill and speed preset editors use shared themed controls.
 - [x] Tunnel Map and terminal simulator retain purpose-built interactive diagrams.
-- [ ] Re-open every screen above on the current build at 1280x720 and a narrow window; capture any screen changed since its last release screenshot. Recipe Browser current wide/narrow layout and long Info scroll are proven (`/tmp/recipes-current3-848.png`, `/tmp/recipes-narrow-848.png`, `/tmp/recipes-info-narrow-848.png`, `/tmp/recipes-info-narrow-scroll-848.png`).
+- [ ] Re-open every screen above on the current build at 1280x720 and a narrow window; capture any screen changed since its last release screenshot. Recipe Browser current wide/narrow layout and long Info scroll are proven (`/tmp/recipes-current3-848.png`, `/tmp/recipes-narrow-848.png`, `/tmp/recipes-info-narrow-848.png`, `/tmp/recipes-info-narrow-scroll-848.png`). Speed Presets is now proven wide and at 640x480 after repairing its chat-close race (`/tmp/speed-race-fixed-858.png`, `/tmp/speed-narrow-window-858.png`).
 - [ ] Verify every modal, tooltip, scroll boundary, keyboard focus and close/back path in the current build.
 
 ## Container-attached SkyBlock overlays

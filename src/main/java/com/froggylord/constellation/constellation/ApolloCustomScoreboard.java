@@ -178,7 +178,7 @@ public final class ApolloCustomScoreboard {
         if(cfg.customScoreboardOrder.isEmpty())resetOrder(false);
     }
     public static void resetOrder(boolean save){cfg.customScoreboardOrder=new ArrayList<>(List.of("lobby","date","time","players","server","bank","sbLevel","magicPower","tuning","powerStone","gems","quiver","godPot","events","mayor","party","election","area","purse","bits","footer"));cfg.customScoreboardHidden.clear();if(save)save();}
-    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)mc.setScreenAndShow(new ScoreboardOrderScreen(mc.gui.screen()));}
+    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)mc.execute(()->mc.setScreenAndShow(new ScoreboardOrderScreen(mc.gui.screen())));}
     public static void save(){ConstellationClient.saveConfig();}
 
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){

@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.859 (2026-08-09) — Open Client Screens Reliably
+
+- defer Speed Presets, Custom Scoreboard and Tunnel Map command-open actions until chat has finished closing
+- live-verify Speed Presets at wide and 640x480 widths, including search focus, selection, Use and both confirmation states
+- refresh all 25 local reference repositories without moving detached Athen or SkyblockAddons checkouts
+
 ## 0.9.858 (2026-08-09) — Repair Narrow Speed Presets
 
 - move the four Speed Preset actions onto their own centered row below 440 logical pixels

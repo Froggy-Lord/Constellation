@@ -53,7 +53,7 @@ public final class PhoenixSpeedPresets {
     public static boolean enabled(){return cfg!=null&&cfg.enabled&&cfg.speedPresets;}
     public static PhoenixConfig config(){return cfg;}
     public static boolean validName(String name){return name!=null&&NAME.matcher(name).matches();}
-    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)mc.setScreenAndShow(new SpeedPresetScreen(mc.gui.screen()));}
+    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)mc.execute(()->mc.setScreenAndShow(new SpeedPresetScreen(mc.gui.screen())));}
     public static boolean set(String name,int speed){if(!validName(name)||speed<0||speed>500)return false;presets().put(key(name),speed);save();return true;}
     public static boolean remove(String name){if(presets().remove(key(name))==null)return false;save();return true;}
     public static void reset(){cfg.speedPresetProfiles.put(profile(),defaults());save();}

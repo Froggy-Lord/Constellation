@@ -216,7 +216,7 @@ public final class AquilaTunnelMaps {
     public static String routeStatus(){return route==null?"No route":route.nodes.size()+" nodes, "+Math.round(route.distance)+"m";}
     public static boolean usable(){return active();}
     public static AquilaConfig config(){return cfg;}
-    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player==null)return;if(!active()){local("Tunnel Maps is only available in the Glacite Tunnels.");return;}mc.setScreenAndShow(new TunnelMapScreen(mc.gui.screen()));}
+    public static void open(){Minecraft mc=Minecraft.getInstance();if(mc.player==null)return;if(!active()){local("Tunnel Maps is only available in the Glacite Tunnels.");return;}mc.execute(()->mc.setScreenAndShow(new TunnelMapScreen(mc.gui.screen())));}
     public static void choose(String name){commissionTarget=false;setActive(name);}
     public static void clear(){commissionTarget=false;clearPath(true);}
     public static void nextFromUi(){next();}

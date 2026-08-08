@@ -3052,3 +3052,12 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 3. Damage a boss. Expected: the suffix follows the smoothly rendered bar progress and never falls below 0% or above 100%.
 4. Repeat in Kuudra, then disable only Kuudra bars. Expected: dungeon behavior remains enabled while Kuudra returns to the untouched server bar.
 5. Try decimal precision 0, 1 and 2. Expected: values render as `25%`, `25.0%` and `25.00%` without accumulating duplicate suffixes.
+
+### Speed Presets screen
+
+1. Run `/speedpreset`. Expected: the screen opens after chat closes instead of flashing or disappearing.
+2. Resize Minecraft to 640x480. Expected: Save, Delete, Use, Reset and Done remain visible and do not overlap the list or fields.
+3. Focus Search and type part of a preset name. Expected: the list filters immediately and keyboard focus remains visible.
+4. Select a preset and click Delete once, then Reset once. Expected: only the selected action changes to Confirm; choosing another action cancels the prior confirmation.
+5. Click Use outside Hypixel. Expected: an advisory says Speed Presets only work on Hypixel and no command is sent.
+6. Press Escape and repeat with Done. Expected: both return cleanly to gameplay or the parent screen.
