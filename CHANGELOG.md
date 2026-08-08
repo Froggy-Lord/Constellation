@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.847 (2026-08-09) — Working Boss Health Bars
+
+- connected the previously unused Boss Bar Improvement setting to the actual boss-bar render path
+- ported Devonian's health-percentage presentation for dungeon boss phases and Kuudra
+- added independent dungeon/Kuudra scope, 0–2 decimal precision, separator colour and health colour settings
+- preserved each server bar's progress, colour, overlay, fog, music and darkening properties
+
 ## 0.9.846 (2026-08-09) — Selective Action Bar Cleaner
 
 - replaced whole-line health cancellation with Devonian-derived segment classification

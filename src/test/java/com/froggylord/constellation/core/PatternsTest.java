@@ -1,7 +1,10 @@
 package com.froggylord.constellation.core;
 
 import com.froggylord.constellation.config.CassiopeiaConfig;
+import com.froggylord.constellation.config.PerseusConfig;
 import com.froggylord.constellation.constellation.ActionBarCleaner;
+import com.froggylord.constellation.constellation.BossBarImprovement;
+import net.minecraft.network.chat.Component;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -58,6 +61,11 @@ class PatternsTest {
         cfg.actionBarDungeonSegments = false;
         assertEquals("5.2k/4,805❤     T3!", ActionBarCleaner.filter(combined, cfg));
         assertEquals("Unknown encounter text", ActionBarCleaner.filter("Unknown encounter text", cfg));
+
+        PerseusConfig boss = new PerseusConfig();
+        assertEquals("Maxor - 25.0%", BossBarImprovement.formatName(Component.literal("Maxor"), .25f, boss).getString());
+        boss.bossBarDecimals = 0;
+        assertEquals("Kuudra - 100%", BossBarImprovement.formatName(Component.literal("Kuudra"), 1.2f, boss).getString());
     }
 
     @Test

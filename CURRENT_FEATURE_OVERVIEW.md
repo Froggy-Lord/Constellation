@@ -7,6 +7,11 @@
 - Vitals observes raw server values before presentation filtering, so moving health, mana and defense into the HUD does not stop their updates.
 - `/actionbarcleaner on|off|test` supports immediate toggling and a safe local visual sample.
 
+## Dungeon and Kuudra boss bars
+
+- Perseus can append a configurable, coloured 0–2 decimal health percentage to dungeon-boss and Kuudra bars.
+- Dungeon and Kuudra scope are independent, while every original server bar property remains intact.
+
 This is the readable map of what Constellation currently contains. It is organized by game area so you can find things without reading the development handoff or hundreds of changelog entries.
 
 ## Start here

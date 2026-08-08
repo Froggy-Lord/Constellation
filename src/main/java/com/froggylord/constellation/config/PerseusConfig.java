@@ -91,6 +91,11 @@ public class PerseusConfig extends BaseConfigGroup {
     public boolean damageIndicatorHud = true;
     public boolean autoSlayerHelper = true;
     public boolean bossBarImprovement = true;
+    public boolean bossBarDungeons = true;
+    public boolean bossBarKuudra = true;
+    public int bossBarDecimals = 1;
+    public int bossBarSeparatorColour = 0x555555;
+    public int bossBarHealthColour = 0xFF55FF;
     public boolean slayerLevelDisplay = true;
     public boolean bossDamageTracker = true;
     public boolean slayerDisplay = true;

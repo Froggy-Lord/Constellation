@@ -2978,3 +2978,11 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 4. Disable either group master. Expected: its saved child selections remain, but none of that group's segments are removed until the group is re-enabled.
 5. On SkyBlock, compare the action bar with Vitals enabled. Expected: hidden health/mana/defense segments still update the Vitals HUD because observation happens before presentation filtering.
 6. Run `/actionbarcleaner off` without restarting. Expected: the next server action bar is unchanged, including its original styling.
+
+### Dungeon and Kuudra boss health bars
+
+1. Enable Perseus and Boss Bar Improvement. In All settings, confirm Dungeon bars, Kuudra bars, decimal precision, separator colour and health colour are saved independently.
+2. Enter a dungeon boss phase without moving for the test. Expected: every server boss bar keeps its original name/bar styling and adds a fitted ` - 100.0%` health suffix.
+3. Damage a boss. Expected: the suffix follows the smoothly rendered bar progress and never falls below 0% or above 100%.
+4. Repeat in Kuudra, then disable only Kuudra bars. Expected: dungeon behavior remains enabled while Kuudra returns to the untouched server bar.
+5. Try decimal precision 0, 1 and 2. Expected: values render as `25%`, `25.0%` and `25.00%` without accumulating duplicate suffixes.
