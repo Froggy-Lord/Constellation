@@ -20,6 +20,8 @@ bazaar, auction house and museum search signs can open a proper searchable overl
 
 vanilla crafting, furnace-family, brewing, enchanting, anvil, grindstone, smithing, stonecutter, loom, cartography and crafter screens can use exact-class workstation treatments with independently configurable stages, slots, machine details and colors. every treatment is off on hypixel by default and leaves minecraft's recipes, validation, dynamic sprites, tooltips, hit boxes and output behavior authoritative.
 
+`/recipes [query]` opens the SkyBlock item and recipe browser. It searches names, internal IDs and lore, follows recipes and usages, shows complete Crafting, Forge, NPC Shop and Kat requirements, and can optionally add the same catalogue to REI. Repository downloads are lazy and staged; `/recipesupdate` performs the explicitly enabled refresh.
+
 each module config also has an all settings browser, so its toggles, numbers, text and colors can be searched and edited without remembering feature commands.
 
 ## what it does

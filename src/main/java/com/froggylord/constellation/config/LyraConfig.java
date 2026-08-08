@@ -69,6 +69,25 @@ public class LyraConfig extends BaseConfigGroup {
     public java.util.List<String> marketSearchBazaarHistory = new java.util.ArrayList<>();
     public java.util.List<String> marketSearchAuctionHistory = new java.util.ArrayList<>();
     public java.util.List<String> marketSearchMuseumHistory = new java.util.ArrayList<>();
+    // ported from Skyblocker (LGPL-3.0-or-later): config/configs/GeneralConfig.java ItemList
+    public boolean recipeBrowser = true;
+    public boolean recipeBrowserItemIcons = true;
+    public boolean recipeBrowserTooltips = true;
+    public boolean recipeBrowserClickableChains = true;
+    public boolean recipeBrowserRememberSearch = true;
+    public boolean recipeBrowserRememberSelection = true;
+    public boolean recipeBrowserReiIntegration = true;
+    public boolean recipeBrowserReiEntries = true;
+    public boolean recipeBrowserReiCollapsible = true;
+    public boolean recipeBrowserSafeViewRecipe = true;
+    public boolean recipeBrowserUpdateOnRequest = true;
+    public int recipeBrowserResultLimit = 40;
+    public int recipeBrowserRows = 12;
+    public int recipeBrowserBackground = 0xF0101018;
+    public int recipeBrowserRowColor = 0xE0181626;
+    public int recipeBrowserSelectedColor = 0xE0554168;
+    public String recipeBrowserLastSearch = "";
+    public String recipeBrowserLastItem = "";
     public boolean inventorySearchCalculator = true;
     public int inventorySearchDimColor = 0xB0000000;
     public int inventorySearchHighlightColor = 0x8055FF55;

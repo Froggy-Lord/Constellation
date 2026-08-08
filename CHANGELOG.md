@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.822 (2026-08-09) — SkyBlock Recipe and Item Browser
+
+- added a lazy, cached NEU item repository with safe staged updates and usable-snapshot preservation
+- added `/recipes` browsing with name, ID and lore search, item/entity/NPC/mayor filters, full inputs and outputs, recipes, usages, info and clickable recipe chains
+- added exact SkyBlock item icons and lore plus Crafting, Forge, NPC Shop and Kat recipe presentation
+- added optional REI categories, shaped 3x3 crafting, recipe/usage lookup, item families and a user-clicked `/viewrecipe` action; integration disables itself when Skyblocker owns REI
+- added loading, updating, empty and recovery states plus detailed browser, repository and REI controls
+- refreshed the shared HUD panel from the compact Dross Pickles treatment with Constellation colors and translucency
+
 ## 0.9.821 (2026-08-01) — SkyBlock Market Search Overlay
 
 - ported Skyblocker's Bazaar, Auction House and Museum search overlay with exact sign interception and direct `/ahs` and `/bzs` entry

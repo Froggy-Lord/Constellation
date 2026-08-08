@@ -13,6 +13,18 @@ repositories {
     maven { url = 'https://maven.isxander.dev/releases' }
     maven { url = 'https://api.modrinth.com/maven' }
     maven { url = 'https://maven.azureaaron.net/releases' }
+    exclusiveContent {
+        forRepository { maven { url = 'https://maven.shedaniel.me/' } }
+        filter {
+            includeGroup 'me.shedaniel'
+            includeGroup 'me.shedaniel.cloth'
+            includeGroup 'dev.architectury'
+        }
+    }
+    exclusiveContent {
+        forRepository { maven { url = 'https://repo.nea.moe/releases' } }
+        filter { includeGroup 'moe.nea' }
+    }
 }
 
 dependencies {
@@ -23,6 +35,23 @@ dependencies {
     // ModMenu for config button integration
     implementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
     include implementation("net.azureaaron:legacy-item-dfu:1.0.4+26.2")
+    include implementation("moe.nea:neurepoparser:${project.repoparser_version}")
+    include implementation("org.eclipse.jgit:org.eclipse.jgit:${project.jgit_version}")
+
+    // REI is optional; Constellation must still launch without it.
+    compileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    compileOnly "me.shedaniel.cloth:basic-math:${project.rei_math_version}"
+    compileOnly("dev.architectury:architectury-fabric:${project.rei_architectury_version}") {
+        exclude group: "net.fabricmc.fabric-api"
+    }
+    if (project.hasProperty("recipeReiRuntime")) {
+        localRuntime "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+        localRuntime("dev.architectury:architectury-fabric:${project.rei_architectury_version}") {
+            exclude group: "net.fabricmc.fabric-api"
+        }
+    }
 
     // test deps — patterns test doesn't touch minecraft, just pure java
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'

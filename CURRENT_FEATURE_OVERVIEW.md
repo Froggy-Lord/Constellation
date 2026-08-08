@@ -430,6 +430,11 @@ Verified builds and this guide are mirrored to the private Constellation release
 
 ## Lyra: economy, storage and inventory
 
+- Complete SkyBlock item and recipe browser through `/recipes [query]`, with name/ID/lore search, five catalogue filters, native icons/tooltips, remembered state and visible loading/update/error recovery
+- Recipe and usage traversal for Crafting, Forge, NPC Shop and Kat, including exact shaped crafting placement, complete scrollable inputs/outputs and clickable ingredient/result chains
+- Optional REI integration with five categories, R/U lookup, collapsible item families, SkyBlock identity comparison and a deliberate `/viewrecipe` transfer action; automatically suppressed when Skyblocker owns REI
+- Lazy shallow cached NEU repository with atomic staging, corrupt-cache quarantine and preservation of the last usable snapshot during updates
+
 - Purse and currency tracking
 - Bazaar and Auction House pricing
 - Item-price and value tooltips

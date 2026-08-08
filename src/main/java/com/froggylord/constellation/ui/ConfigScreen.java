@@ -671,6 +671,10 @@ public class ConfigScreen extends Screen {
                     "marketSearchMuseum", "marketSearchCommands", "marketSearchKeepPrevious", "marketSearchSuggestions",
                     "marketSearchHistory", "marketSearchItemIcons", "marketSearchMaxPet", "marketSearchDungeonStars",
                     "marketSearchLocalWorlds");
+                Set<String> recipeFields = Set.of("recipeBrowser", "recipeBrowserItemIcons", "recipeBrowserTooltips",
+                    "recipeBrowserClickableChains", "recipeBrowserRememberSearch", "recipeBrowserRememberSelection",
+                    "recipeBrowserReiIntegration", "recipeBrowserReiEntries", "recipeBrowserReiCollapsible",
+                    "recipeBrowserSafeViewRecipe", "recipeBrowserUpdateOnRequest");
                 modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
                     () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
                     .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
@@ -710,9 +714,23 @@ public class ConfigScreen extends Screen {
                     .sub("Open directly with /ahs or /bzs", true)
                     .sub("Suggestion, history and filter depth: /marketsearch", true)
                     .sub("Numeric limits and colors: All settings", true));
+                modules.add(new Module("recipeBrowser", "SkyBlock recipes, usages and item catalogue", "Search",
+                    () -> c.recipeBrowser, v -> { c.recipeBrowser = v; ConstellationClient.saveConfig(); com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload(); })
+                    .b("Item icons", () -> c.recipeBrowserItemIcons, v -> { c.recipeBrowserItemIcons = v; ConstellationClient.saveConfig(); })
+                    .b("Native tooltips", () -> c.recipeBrowserTooltips, v -> { c.recipeBrowserTooltips = v; ConstellationClient.saveConfig(); })
+                    .b("Clickable recipe chains", () -> c.recipeBrowserClickableChains, v -> { c.recipeBrowserClickableChains = v; ConstellationClient.saveConfig(); })
+                    .b("Remember search", () -> c.recipeBrowserRememberSearch, v -> { c.recipeBrowserRememberSearch = v; ConstellationClient.saveConfig(); })
+                    .b("Remember selected item", () -> c.recipeBrowserRememberSelection, v -> { c.recipeBrowserRememberSelection = v; ConstellationClient.saveConfig(); })
+                    .b("REI integration", () -> c.recipeBrowserReiIntegration, v -> { c.recipeBrowserReiIntegration = v; ConstellationClient.saveConfig(); com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload(); })
+                    .b("Add SkyBlock items to REI", () -> c.recipeBrowserReiEntries, v -> { c.recipeBrowserReiEntries = v; ConstellationClient.saveConfig(); com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload(); })
+                    .b("Collapsible REI families", () -> c.recipeBrowserReiCollapsible, v -> { c.recipeBrowserReiCollapsible = v; ConstellationClient.saveConfig(); com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload(); })
+                    .b("Safe View Recipe action", () -> c.recipeBrowserSafeViewRecipe, v -> { c.recipeBrowserSafeViewRecipe = v; ConstellationClient.saveConfig(); com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload(); })
+                    .b("Allow requested repository updates", () -> c.recipeBrowserUpdateOnRequest, v -> { c.recipeBrowserUpdateOnRequest = v; ConstellationClient.saveConfig(); })
+                    .sub("Open: /recipes  |  Refresh: /recipesupdate", true)
+                    .sub("Result depth, visible rows and colors: All settings", true));
                 for (var field : LyraConfig.class.getFields()) {
                     String n = field.getName();
-                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || field.getType() != boolean.class) continue;
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || recipeFields.contains(n) || field.getType() != boolean.class) continue;
                     modules.add(new Module(n, autoLabel(n), "Features",
                         () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                         v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));

@@ -2,6 +2,19 @@
 
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
+## SkyBlock recipe and item browser
+
+Enable Lyra and Recipe Browser. Use `/cn config lyra` for browser, repository and optional REI settings. The first `/recipes` open may download the item repository; progress and errors must remain visible and the screen must stay responsive.
+
+- [ ] Run `/recipes hyperion`. Expected: Hyperion appears with its real icon, display name and full native tooltip; search matches names, internal IDs and lore without case sensitivity.
+- [ ] Cycle All, Items, Entities, NPCs and Mayors. Expected: each filter changes only catalogue membership and never leaves a stale invisible selection.
+- [ ] Open Recipes, Usages and Info, page through multiple recipes, scroll the detail pane and click an ingredient/result. Expected: every input and output is reachable, quantities are grouped readably, shaped crafting holes remain exact and chains open the selected item.
+- [ ] Test a Forge, NPC Shop and Kat recipe. Expected: costs, duration or upgrade detail are labelled without pretending they are 3x3 crafting recipes.
+- [ ] Start an update with `/recipesupdate`, then temporarily interrupt network access. Expected: the existing usable catalogue remains available, updating/error state is visible and retry obeys the update setting.
+- [ ] With REI installed and Skyblocker absent, enable REI Integration, Entries and Collapsible Families, then enter a world. Expected: five Constellation categories load after the repository, R/U works and user-clicked transfer sends only `/viewrecipe` when connected to Hypixel.
+- [ ] Repeat with Skyblocker installed. Expected: Constellation registers no duplicate REI catalogue, families or comparator.
+- [ ] Test 1280x720 and a narrow window at multiple GUI scales. Expected: result and detail panes remain bounded, scroll independently, show complete lists and never hide controls or tooltips.
+
 ## Unified SkyBlock storage browser
 
 Enable Lyra, Storage Browser and Backpack Preview. Open Lyra directly with `/cn config lyra`, choose Storage for the browser switches, and use `/storagepreview cards 1-6`, `/storagepreview rows 1-6` or `/storagepreview speed 4-72` for layout density.

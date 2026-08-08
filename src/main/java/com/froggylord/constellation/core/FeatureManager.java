@@ -103,6 +103,7 @@ public class FeatureManager {
             }
             c.getConfig().enabled = loaded.contains(id);
             ConstellationClient.saveConfig();
+            if (id.equals("lyra")) com.froggylord.constellation.constellation.LyraRecipeRepository.requestReiReload();
         });
     }
 

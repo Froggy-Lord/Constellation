@@ -11,6 +11,8 @@ import com.froggylord.constellation.render.WorldRenderer;
 import com.froggylord.constellation.ui.ConfigScreen;
 import com.froggylord.constellation.ui.HubScreen;
 import com.froggylord.constellation.ui.ProfileViewerScreen;
+import com.froggylord.constellation.ui.LyraRecipeBrowserScreen;
+import com.froggylord.constellation.constellation.LyraRecipeRepository;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -36,6 +38,11 @@ public final class CommandRegistry {
                 .executes(ctx -> openProfile(null))
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", StringArgumentType.word())
                     .executes(ctx -> openProfile(StringArgumentType.getString(ctx, "player")))));
+            dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("recipes")
+                .executes(ctx -> openRecipes(""))
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("query", StringArgumentType.greedyString())
+                    .executes(ctx -> openRecipes(StringArgumentType.getString(ctx, "query")))));
+            dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("recipesupdate").executes(ctx -> updateRecipes()));
             features.registerCommands(dispatcher);
             ItemProtection.registerCommands(dispatcher);
         });
@@ -70,6 +77,10 @@ public final class CommandRegistry {
                 .executes(ctx -> openProfile(null))
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("player", StringArgumentType.word())
                     .executes(ctx -> openProfile(StringArgumentType.getString(ctx, "player")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("recipes")
+                .executes(ctx -> openRecipes(""))
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("query", StringArgumentType.greedyString())
+                    .executes(ctx -> openRecipes(StringArgumentType.getString(ctx, "query")))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("scrape")
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("mode", StringArgumentType.word())
                     .executes(ctx -> { Scraper.scrape(StringArgumentType.getString(ctx, "mode")); return 1; })))
@@ -153,6 +164,20 @@ public final class CommandRegistry {
         }
         String target = name == null ? mc.getUser().getName() : name;
         mc.execute(() -> mc.setScreenAndShow(new ProfileViewerScreen(null, target)));
+        return 1;
+    }
+
+    private static int openRecipes(String query) {
+        if (!ConstellationClient.cfg().lyra.enabled || !ConstellationClient.cfg().lyra.recipeBrowser) { message("§cRecipe Browser is disabled in Lyra."); return 0; }
+        Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreenAndShow(new LyraRecipeBrowserScreen(null, query)));
+        return 1;
+    }
+
+    private static int updateRecipes() {
+        if (!ConstellationClient.cfg().lyra.enabled || !ConstellationClient.cfg().lyra.recipeBrowser) { message("§cRecipe Browser is disabled in Lyra."); return 0; }
+        if (!ConstellationClient.cfg().lyra.recipeBrowserUpdateOnRequest) { message("§cRecipe repository updates are disabled in Lyra."); return 0; }
+        LyraRecipeRepository.reload(true);
+        message("§bUpdating the SkyBlock item repository in the background.");
         return 1;
     }
 

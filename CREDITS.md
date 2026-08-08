@@ -12,9 +12,14 @@ header saying which mod and which file it came from. This document is the master
 
 | Project | License | Used for |
 |---------|---------|----------|
-| [Skyblocker](https://github.com/SkyblockerMod/Skyblocker) | LGPL-3.0 | Room detection + map coordinate math, dungeon score formula and floor tables, terminal solvers, secret auto-detect, render primitives (`PrimitiveCollector`), Croesus helper, Goldor waypoints |
+| [Skyblocker](https://github.com/SkyblockerMod/Skyblocker) | LGPL-3.0 | Room detection + map coordinate math, dungeon score formula and floor tables, terminal solvers, secret auto-detect, render primitives (`PrimitiveCollector`), Croesus helper, Goldor waypoints, SkyBlock Craft Item screen and slot mapping, Bazaar/Auction/Museum search overlay and market-set filtering, NEU recipe repository and REI integration |
+| [NotEnoughUpdates-REPO](https://github.com/NotEnoughUpdates/NotEnoughUpdates-REPO) | MIT | Live SkyBlock item metadata, recipes, usages and parent families |
+| [NEU Repo Parser](https://github.com/NotEnoughUpdates/RepoParser) | BSD-2-Clause | Typed item, recipe and constants parser |
+| [Roughly Enough Items](https://github.com/shedaniel/RoughlyEnoughItems) | MIT | Optional recipe/category/entry integration API |
+| [JGit](https://www.eclipse.org/jgit/) | EPL-2.0 | Safe shallow clone and update support for the local item repository cache |
+| Dross Pickles | MIT | Compact translucent HUD panel structure and outline treatment |
 | [Odin](https://github.com/odtheking/Odin) | BSD-3-Clause | Puzzle solvers and their solution JSONs (Blaze, Boulder, Ice Fill, Creeper Beams, Water Board, Three Weirdos, Trivia, Tic-Tac-Toe), etherwarp DDA traversal, M7 dragon/terminal suite, tick timers, waypoint editor, blood-camp prediction, terminal practice simulator, end-of-run stats |
-| [Devonian](https://github.com/otarits/devonian) | GPL-3.0 | Dungeon map renderer, boss-phase `Stages` model, full M7 dragon suite, blessings display, boss splits |
+| [Devonian](https://github.com/otarits/devonian) | GPL-3.0 | Dungeon map renderer, boss-phase `Stages` model, full M7 dragon suite, blessings display, boss splits, SkyBlock item timestamp parsing and age display |
 | [NoFrills](https://github.com/kevinthegreat1/NoFrills) | GPL-3.0 | Starred-mob / miniboss / secret ESP and highlights, ArrowAlign 9-solution solver, Livid finder, class nametags/teammate glow, spirit leap overlay, mimic/prince messages |
 | [SecretRoutes](https://github.com/Bloud01/SecretRoutes) | GPL-3.0 | Secret route record/playback, rotation-aware coordinate transforms |
 | [DungeonRoomsMod](https://github.com/Quantizr/DungeonRoomsMod) | GPL-3.0 | `secretlocations.json` room secret data (124 rooms), room-hash approach |
@@ -27,8 +32,6 @@ here is reimplemented from scratch against observed behaviour — never copied.
 | Project | License | Referenced for |
 |---------|---------|----------------|
 | [SkyHanni](https://github.com/hannibal002/SkyHanni) | LGPL-2.1 | State API shape, blood timer, secret compass, spirit leap, chat filter categories |
-| [Skytils](https://github.com/Skytils/SkytilsMod) | AGPL-3.0 | Reference only |
-| [DungeonsGuide](https://github.com/SkytilsPlus/DungeonsGuide) | AGPL-3.0 | Reference only — TSP secret routing, Action DAG, inter-mod protocol concepts |
 | [SkyOcean](https://github.com/Ocean-Labs/SkyOcean) | SkyOcean License v1 | Reference only |
 
 ## Bundled data
@@ -36,6 +39,8 @@ here is reimplemented from scratch against observed behaviour — never copied.
 - Odin puzzle solution JSONs and room table — Odin (BSD-3), MC-version independent.
 - `secretlocations.json` — DungeonRoomsMod (GPL-3).
 - `goldorwaypoints.json` — Skyblocker (LGPL-3).
+- SkyBlock crafting More Crafts button sprites — Skyblocker (LGPL-3).
+- `market-search-names.json` shard-name index — derived from NotEnoughUpdates-REPO `constants/bazaarstocks.json` and `items/*.json` (MIT, copyright Moulberry and contributors).
 - Room fingerprints for MC 26.2 are regenerated in-house from a live scan; the old
   `.skeleton` files used 1.8.9 block IDs and are not portable.
 

@@ -271,13 +271,13 @@ public final class ProfileItemDecoder {
                 stacks.add(ItemStack.EMPTY);
                 continue;
             }
-            stacks.add(fix(legacy));
+            stacks.add(fixLegacyStack(legacy));
         }
         return List.copyOf(stacks);
     }
 
     @SuppressWarnings("unchecked")
-    private static ItemStack fix(CompoundTag legacy) {
+    public static ItemStack fixLegacyStack(CompoundTag legacy) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return ItemStack.EMPTY;
         RegistryOps<Tag> ops = mc.player.registryAccess().createSerializationContext(NbtOps.INSTANCE);

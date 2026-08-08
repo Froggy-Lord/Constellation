@@ -18,6 +18,12 @@
         ],
         "modmenu": [
             "com.froggylord.constellation.ui.ModMenuIntegration"
+        ],
+        "rei_client": [
+            "com.froggylord.constellation.compat.rei.LyraReiClientPlugin"
+        ],
+        "rei_common": [
+            "com.froggylord.constellation.compat.rei.LyraReiCommonPlugin"
         ]
     },
     "mixins": [
@@ -31,6 +37,7 @@
         "fabric-api": "*"
     },
     "suggests": {
-        "modmenu": "*"
+        "modmenu": "*",
+        "roughlyenoughitems": "*"
     }
 }

@@ -65,15 +65,15 @@ public abstract class ThemedHudWidget implements HudElement {
         int w = size[0];
         int h = size[1];
 
-        g.fill(x, y, x + w, y + h, ConstellationTheme.PANEL);
-        g.fill(x, y, x + 2, y + h, ConstellationTheme.ACCENT);
-        g.fill(x + 2, y, x + w, y + 1, ConstellationTheme.BORDER);
+        // ported from Dross Pickles (MIT): hud/EntityHud.java
+        g.fill(x, y, x + w, y + h, 0xAA0E0E22);
+        g.outline(x, y, w, h, ConstellationTheme.BORDER_SOFT);
 
         int textX = x + PAD_X + 2;
         int cursorY = y + PAD_Y - 1;
         g.text(font, title(), textX, cursorY, ConstellationTheme.ACCENT_BRIGHT, true);
         cursorY += font.lineHeight + TITLE_GAP;
-        g.fill(textX, cursorY - 2, x + w - PAD_X, cursorY - 1, ConstellationTheme.BORDER);
+        g.fill(textX, cursorY - 2, x + w - PAD_X, cursorY - 1, 0x885E5874);
 
         for (Row row : content) {
             int rowX = textX;
