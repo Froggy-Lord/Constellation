@@ -2961,3 +2961,5 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 - [ ] Disable Bazaar, Auction, Museum and Direct Search Commands independently. Expected: only the disabled entry path returns to Hypixel's normal sign or reports unavailable.
 - [ ] Change suggestion/history counts, pet level, default stars and panel/row/selected colors through All settings. Expected: values clamp safely and apply after reopening without editing JSON.
 - [ ] Enable Local-world visual testing only in a throwaway world and use `/ahs`/`/bzs`. Expected: the presentation can be reviewed without enabling any Hypixel action; turn the option off afterward.
+- [ ] Enable representative waypoint, solver, slayer, Kuudra and mining world labels with distinct configured colours. Expected: label glyphs use each feature colour instead of always appearing white.
+- [ ] View those labels against bright sky, dark blocks and through a wall where the feature permits it. Expected: the backing remains lightly translucent rather than becoming a solid black rectangle, and the through-walls option changes occlusion without changing colour.

@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.842 (2026-08-09) — Readable Coloured World Labels
+
+- applied each world overlay's configured RGB colour to its label text
+- replaced accidental fully opaque black name-tag rectangles with a bounded translucent neutral backing
+- retained depth-tested and through-wall label modes across all waypoint and encounter overlays
+
 ## 0.9.841 (2026-08-09) — Viewport-Safe Inventory Buttons
 
 - reduced only the effective Inventory Button gap and size when seven configured buttons cannot fit the viewport
