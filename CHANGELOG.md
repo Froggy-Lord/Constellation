@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.834 (2026-08-09) — Readable Party and Carry Editors
+
+- separated Party Message details from the template controls at standard and compact window heights
+- added independent scrolling for long Party Message details and confirmation before resetting a template
+- replaced Carry Tracker's immediate remove control with a clear two-click confirmation
+- kept long carry names, targets and payment totals away from the progress controls
+
 ## 0.9.833 (2026-08-09) — Reliable Preset and Map Editing
 
 - added confirmation before deleting a Speed Preset or restoring every default preset

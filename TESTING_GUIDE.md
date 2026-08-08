@@ -2546,7 +2546,10 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 ## Bespoke editor UI migration
 
 - [ ] Open Party Messages at small, normal and large GUI scale. Expected: search, sort, filter, list and detail editor remain readable without escaping their panels.
-- [ ] Search and scroll a long Party Messages result set. Expected: the thumb tracks position, rows stay clipped and selecting/toggling/resetting templates works exactly as before.
+- [ ] Search and scroll a long Party Messages result set, then scroll the selected message's detail pane independently. Expected: both thumbs track their own position, rows stay clipped and the detail preview never overlaps Toggle, Reset or the template field.
+- [ ] Click Reset on a customized Party Message once, then click elsewhere; repeat and click Confirm. Expected: the first click never changes the template, leaving the action cancels it, and only the second consecutive click restores the default.
+- [ ] Add a carry with a long player/type/target and a large price, then open `/carry gui`. Expected: all three text rows fit before the plus, minus and remove controls without overlapping them.
+- [ ] Click a carry's remove button once, right-click it, and click elsewhere. Expected: each action cancels or leaves the carry intact; only a second consecutive left click on Confirm removes it.
 - [ ] Open Smart Sack Refill at several window heights. Expected: target rows stay inside the central panel, the scrollbar appears only when needed and no hidden row accepts a click.
 - [ ] Toggle refill mode and targets, left-click plus/minus and right-click a quantity button. Expected: one/all mode, enable state and the existing one/eight/sixteen quantity steps remain intact.
 - [ ] Open Slot Binding Editor, create/select/delete profiles and test left, middle and right clicks on inventory and hotbar slots. Expected: the redesigned panels do not alter profile confirmation, binding, color cycling or unbinding.

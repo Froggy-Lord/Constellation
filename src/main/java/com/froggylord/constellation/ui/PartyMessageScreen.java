@@ -26,7 +26,10 @@ public final class PartyMessageScreen extends Screen {
     private Filter filter = Filter.ALL;
     private int scroll;
     private int maxScroll;
+    private int detailScroll;
+    private int maxDetailScroll;
     private boolean changingTemplate;
+    private boolean confirmReset;
 
     public PartyMessageScreen(Screen parent) {
         super(Component.literal("Party Messages"));
@@ -51,7 +54,7 @@ public final class PartyMessageScreen extends Screen {
         template.setMaxLength(120);
         template.setHint(Component.literal("Select a message to edit"));
         template.setResponder(value -> {
-            if (!changingTemplate && selected != null) PartyMessages.setTemplate(selected.id(), value);
+            if (!changingTemplate && selected != null) { confirmReset = false; PartyMessages.setTemplate(selected.id(), value); }
         });
         if (selected != null) {
             changingTemplate = true;
@@ -107,22 +110,31 @@ public final class PartyMessageScreen extends Screen {
             g.text(font, "Select a message", rx, 34, ConstellationTheme.TEXT_MUTED, false);
             return;
         }
-        g.text(font, selected.name(), rx, 34, ConstellationTheme.ACCENT_BRIGHT, false);
-        g.text(font, "Category: " + selected.category(), rx, 49, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, PartyMessages.enabled(selected.id()) ? "Enabled" : "Disabled", rx, 64,
-            PartyMessages.enabled(selected.id()) ? 0xFF55FF55 : 0xFFFF5555, false);
-        g.text(font, "Variables", rx, 88, ConstellationTheme.TEXT, false);
+        int detailTop = 34, detailBottom = height - 90, detailY = detailTop - detailScroll;
+        int detailWidth = width - rx - 18;
+        maxDetailScroll = Math.max(0, 158 - Math.max(1, detailBottom - detailTop));
+        detailScroll = Math.clamp(detailScroll, 0, maxDetailScroll);
+        detailText(g, ConstellationUi.fit(font, selected.name(), detailWidth), rx, detailY,
+            ConstellationTheme.ACCENT_BRIGHT, detailTop, detailBottom);
+        detailText(g, ConstellationUi.fit(font, "Category: " + selected.category(), detailWidth), rx, detailY + 15,
+            ConstellationTheme.TEXT_MUTED, detailTop, detailBottom);
+        detailText(g, PartyMessages.enabled(selected.id()) ? "Enabled" : "Disabled", rx, detailY + 30,
+            PartyMessages.enabled(selected.id()) ? 0xFF55FF55 : 0xFFFF5555, detailTop, detailBottom);
+        detailText(g, "Variables", rx, detailY + 54, ConstellationTheme.TEXT, detailTop, detailBottom);
         String vars = selected.variables().isEmpty() ? "none" : selected.variables().stream()
             .map(value -> "{" + value + "}").reduce((a, b) -> a + "  " + b).orElse("none");
-        g.text(font, vars, rx, 102, ConstellationTheme.ACCENT_BRIGHT, false);
-        g.text(font, "Default", rx, 126, ConstellationTheme.TEXT, false);
-        g.text(font, ConstellationUi.fit(font, selected.defaultTemplate(), width - rx - 18),
-            rx, 140, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Current preview", rx, 164, ConstellationTheme.TEXT, false);
-        g.text(font, ConstellationUi.fit(font, preview(selected, PartyMessages.template(selected.id())),
-            width - rx - 18), rx, 178, 0xFFFFFFFF, false);
+        detailText(g, ConstellationUi.fit(font, vars, detailWidth), rx, detailY + 68,
+            ConstellationTheme.ACCENT_BRIGHT, detailTop, detailBottom);
+        detailText(g, "Default", rx, detailY + 92, ConstellationTheme.TEXT, detailTop, detailBottom);
+        detailText(g, ConstellationUi.fit(font, selected.defaultTemplate(), detailWidth),
+            rx, detailY + 106, ConstellationTheme.TEXT_MUTED, detailTop, detailBottom);
+        detailText(g, "Current preview", rx, detailY + 130, ConstellationTheme.TEXT, detailTop, detailBottom);
+        detailText(g, ConstellationUi.fit(font, preview(selected, PartyMessages.template(selected.id())), detailWidth),
+            rx, detailY + 144, 0xFFFFFFFF, detailTop, detailBottom);
+        ConstellationUi.scrollbar(g, width - 17, detailTop, Math.max(1, detailBottom - detailTop),
+            Math.max(1, detailBottom - detailTop), 158, detailScroll);
         button(g, rx, height - 82, 70, 18, "Toggle", mx, my, PartyMessages.enabled(selected.id()));
-        button(g, rx + 76, height - 82, 70, 18, "Reset", mx, my, false);
+        button(g, rx + 76, height - 82, 70, 18, confirmReset ? "Confirm" : "Reset", mx, my, confirmReset);
         g.text(font, "Template", rx, height - 66, ConstellationTheme.TEXT_MUTED, false);
         ConstellationTheme.search(g, width / 2 + 8, height - 56, width / 2 - 24, 22, template.isFocused());
         g.text(font, "esc to return", width - font.width("esc to return") - 12, height - 12, ConstellationTheme.TEXT_MUTED, false);
@@ -131,12 +143,12 @@ public final class PartyMessageScreen extends Screen {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         int mx = (int) event.x(), my = (int) event.y();
-        if (inside(mx, my, 18, 51, 104, 18)) { sort = Sort.values()[(sort.ordinal() + 1) % Sort.values().length]; return true; }
-        if (inside(mx, my, 126, 51, 104, 18)) { filter = Filter.values()[(filter.ordinal() + 1) % Filter.values().length]; scroll = 0; return true; }
+        if (inside(mx, my, 18, 51, 104, 18)) { confirmReset = false; sort = Sort.values()[(sort.ordinal() + 1) % Sort.values().length]; return true; }
+        if (inside(mx, my, 126, 51, 104, 18)) { confirmReset = false; filter = Filter.values()[(filter.ordinal() + 1) % Filter.values().length]; scroll = 0; return true; }
         int split = width / 2;
         List<PartyMessages.Definition> shown = visible();
-        if (mx >= 10 && mx < split - 10 && my >= 75 && my < height - 12) {
-            int index = (my - 75 + scroll) / 24;
+        if (mx >= 10 && mx < split - 10 && my >= 77 && my < height - 13) {
+            int index = (my - 77 + scroll) / 24;
             if (index >= 0 && index < shown.size()) {
                 PartyMessages.Definition clicked = shown.get(index);
                 if (mx < 26) PartyMessages.setEnabled(clicked.id(), !PartyMessages.enabled(clicked.id()));
@@ -146,21 +158,27 @@ public final class PartyMessageScreen extends Screen {
         }
         int rx = split + 12;
         if (selected != null && inside(mx, my, rx, height - 82, 70, 18)) {
-            PartyMessages.setEnabled(selected.id(), !PartyMessages.enabled(selected.id())); return true;
+            confirmReset = false; PartyMessages.setEnabled(selected.id(), !PartyMessages.enabled(selected.id())); return true;
         }
         if (selected != null && inside(mx, my, rx + 76, height - 82, 70, 18)) {
-            PartyMessages.resetTemplate(selected.id()); select(selected); return true;
+            if (confirmReset) { PartyMessages.resetTemplate(selected.id()); select(selected); confirmReset = false; }
+            else confirmReset = true;
+            return true;
         }
+        confirmReset = false;
         return super.mouseClicked(event, dbl);
     }
 
     @Override
     public boolean mouseScrolled(double mx, double my, double scrollX, double scrollY) {
         if (mx < width / 2) scroll = Math.clamp(scroll - (int) (scrollY * 30), 0, maxScroll);
+        else detailScroll = Math.clamp(detailScroll - (int) (scrollY * 24), 0, maxDetailScroll);
         return true;
     }
 
     private void select(PartyMessages.Definition definition) {
+        confirmReset = false;
+        detailScroll = 0;
         selected = definition;
         changingTemplate = true;
         template.setValue(PartyMessages.template(definition.id()));
@@ -201,6 +219,11 @@ public final class PartyMessageScreen extends Screen {
 
     private void button(GuiGraphicsExtractor g, int x, int y, int w, int h, String text, int mx, int my, boolean active) {
         ConstellationUi.button(g, font, x, y, w, h, text, inside(mx, my, x, y, w, h), active);
+    }
+
+    private void detailText(GuiGraphicsExtractor g, String value, int x, int y, int colour, int top, int bottom) {
+        if (y < top || y + font.lineHeight > bottom) return;
+        g.text(font, value, x, y, colour, false);
     }
 
     private static boolean inside(int mx, int my, int x, int y, int w, int h) {

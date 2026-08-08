@@ -17,6 +17,7 @@ public final class CarryTrackerScreen extends Screen {
     private final Screen parent;
     private final PegasusParty tracker;
     private double scroll;
+    private String confirmRemovePlayer = "";
 
     public CarryTrackerScreen(Screen parent, PegasusParty tracker) {
         super(Component.literal("Carry Tracker"));
@@ -33,15 +34,16 @@ public final class CarryTrackerScreen extends Screen {
         List<PegasusConfig.CarryData> carries = tracker.activeCarries();
         ConstellationUi.header(g, font, "Carry Tracker", carries.size() + " active", width);
         ConstellationUi.panel(g, x, y, w, height - y - 12);
-        g.text(font, "/carry add <type> <player> <runs> <target> <price>",
+        g.text(font, ConstellationUi.fit(font, "/carry add <type> <player> <runs> <target> <price>", w - 20),
             x + 10, y + 11, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "Left click changes progress. Right click changes total.",
+        g.text(font, ConstellationUi.fit(font, "Left click changes progress. Right click changes total.", w - 20),
             x + 10, y + 24, ConstellationTheme.TEXT_MUTED, false);
         if (carries.isEmpty()) {
             g.text(font, "No active carries", x + (w - font.width("No active carries")) / 2, height / 2, ConstellationTheme.TEXT_MUTED, false);
             return;
         }
         int top = y + 44, bottom = height - 19;
+        scroll = Math.clamp(scroll, 0, Math.max(0, carries.size() * 48 - (height - 98)));
         int rowY = top - (int) scroll;
         g.enableScissor(x + 4, top, x + w - 4, bottom);
         for (PegasusConfig.CarryData c : carries) {
@@ -55,12 +57,13 @@ public final class CarryTrackerScreen extends Screen {
 
     private void drawRow(GuiGraphicsExtractor g, PegasusConfig.CarryData c, int x, int y, int w, int mx, int my) {
         ConstellationTheme.surface(g, x, y, w, 42, 0xDD1B1B2A, ConstellationTheme.BORDER_SOFT);
-        g.text(font, c.player + "  " + c.type + " " + c.target, x + 9, y + 6, ConstellationTheme.TEXT, false);
-        g.text(font, c.completed + "/" + c.total + "  price " + money(c.pricePerRun) + "/run", x + 9, y + 19, ConstellationTheme.TEXT_MUTED, false);
-        g.text(font, "paid " + money(c.paid) + "/" + money(expected(c)) + " (" + c.paidRuns + " exact runs)", x + 9, y + 31, ConstellationTheme.TEXT_MUTED, false);
-        button(g, x + w - 92, y + 11, 24, "+", mx, my);
-        button(g, x + w - 62, y + 11, 24, "-", mx, my);
-        button(g, x + w - 32, y + 11, 24, "x", mx, my);
+        int textWidth = Math.max(24, w - 140);
+        g.text(font, ConstellationUi.fit(font, c.player + "  " + c.type + " " + c.target, textWidth), x + 9, y + 6, ConstellationTheme.TEXT, false);
+        g.text(font, ConstellationUi.fit(font, c.completed + "/" + c.total + "  price " + money(c.pricePerRun) + "/run", textWidth), x + 9, y + 19, ConstellationTheme.TEXT_MUTED, false);
+        g.text(font, ConstellationUi.fit(font, "paid " + money(c.paid) + "/" + money(expected(c)) + " (" + c.paidRuns + " exact runs)", textWidth), x + 9, y + 31, ConstellationTheme.TEXT_MUTED, false);
+        button(g, x + w - 122, y + 11, 24, "+", mx, my);
+        button(g, x + w - 92, y + 11, 24, "-", mx, my);
+        button(g, x + w - 62, y + 11, 54, confirmRemovePlayer.equalsIgnoreCase(c.player) ? "confirm" : "remove", mx, my);
     }
 
     private void button(GuiGraphicsExtractor g, int x, int y, int w, String label, int mx, int my) {
@@ -75,21 +78,27 @@ public final class CarryTrackerScreen extends Screen {
         for (PegasusConfig.CarryData c : tracker.activeCarries()) {
             int mouseY = (int) event.y();
             if (mouseY >= top && mouseY < bottom
-                && inside((int) event.x(), mouseY, x + w - 99, rowY + 11, 24, 20)) {
+                && inside((int) event.x(), mouseY, x + w - 129, rowY + 11, 24, 20)) {
+                confirmRemovePlayer = "";
                 if (button == 1) tracker.screenAdjustTotal(c.player, 1); else tracker.screenAdjust(c.player, 1);
                 return true;
             }
             if (mouseY >= top && mouseY < bottom
-                && inside((int) event.x(), mouseY, x + w - 69, rowY + 11, 24, 20)) {
+                && inside((int) event.x(), mouseY, x + w - 99, rowY + 11, 24, 20)) {
+                confirmRemovePlayer = "";
                 if (button == 1) tracker.screenAdjustTotal(c.player, -1); else tracker.screenAdjust(c.player, -1);
                 return true;
             }
             if (mouseY >= top && mouseY < bottom
-                && inside((int) event.x(), mouseY, x + w - 39, rowY + 11, 24, 20)) {
-                tracker.screenRemove(c.player); return true;
+                && inside((int) event.x(), mouseY, x + w - 69, rowY + 11, 54, 20)) {
+                if (button != 0) { confirmRemovePlayer = ""; return true; }
+                if (confirmRemovePlayer.equalsIgnoreCase(c.player)) { tracker.screenRemove(c.player); confirmRemovePlayer = ""; }
+                else confirmRemovePlayer = c.player;
+                return true;
             }
             rowY += 48;
         }
+        confirmRemovePlayer = "";
         return super.mouseClicked(event, dbl);
     }
 
