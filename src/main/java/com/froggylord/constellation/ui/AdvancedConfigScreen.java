@@ -53,6 +53,12 @@ public final class AdvancedConfigScreen extends Screen {
     }
 
     @Override protected void init() {
+        String retainedSearch = search == null ? "" : search.getValue();
+        boolean retainedSearchFocus = search != null && search.isFocused();
+        String retainedEditor = editor == null ? "" : editor.getValue();
+        boolean retainedEditorFocus = editor != null && editor.isFocused();
+        int retainedScroll = scroll;
+
         search = new EditBox(font, 12, SEARCH_Y, Math.max(80, width - 116), 18, Component.literal("Search settings"));
         search.setHint(Component.literal("search name, type or value"));
         search.setMaxLength(80);
@@ -62,12 +68,24 @@ public final class AdvancedConfigScreen extends Screen {
             scroll = 0;
             selected = visible().stream().findFirst().orElse(null);
         });
+        search.setValue(retainedSearch);
         addRenderableWidget(search);
 
         editor = new EditBox(font, width / 2 - 138, height / 2 + 2, 276, 18, Component.literal("Value"));
         editor.setMaxLength(512);
-        editor.visible = false;
+        editor.setValue(retainedEditor);
+        editor.visible = editing != null;
+        search.visible = editing == null;
         addRenderableWidget(editor);
+
+        scroll = retainedScroll;
+        if (editing != null && retainedEditorFocus) {
+            editor.setFocused(true);
+            setFocused(editor);
+        } else if (editing == null && retainedSearchFocus) {
+            search.setFocused(true);
+            setFocused(search);
+        }
     }
 
     private void collect() {

@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.826 (2026-08-09) — Resize-Safe Advanced Settings
+
+- preserved Advanced Settings search text, filter context, selection and scroll position across window and GUI-scale changes
+- preserved an open typed-value editor, its unsaved text and keyboard focus across resize without committing it
+- live-tested the complete Boulder result set and an unsaved ARGB colour edit in both normal and narrow layouts
+
 ## 0.9.825 (2026-08-09) — Independent Boulder Solver Controls
 
 - fixed the Boulder solver being incorrectly controlled by the terminal-solver setting

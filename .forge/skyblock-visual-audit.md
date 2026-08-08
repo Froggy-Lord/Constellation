@@ -42,7 +42,7 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 ## World and event overlays
 
 - [ ] Capture representative waypoint labels, boxes, beams, paths and solver lines with through-walls both enabled and disabled where configurable.
-- [ ] Check every puzzle solver is room-gated and never renders outside its matching room.
+- [x] Check every puzzle solver is room-gated and never renders outside its matching room; all room solvers match bundled skeleton stems, while F7 devices use exact floor, phase and coordinate gates (source audit, 0.9.825).
 - [ ] Check title, boss-bar, action-bar, scoreboard and chat replacements for clipping, duplication and readable fallback.
 - [ ] Check reduced visual-noise/end-of-run presentation and particle substitutions in a safe local reproduction or stationary Hypixel test.
 
