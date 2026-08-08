@@ -38,14 +38,21 @@ public class HubScreen extends Screen {
     }
 
     @Override protected void init() {
-        this.openTime = System.currentTimeMillis();
+        String retainedSearch = search == null ? "" : search.getValue();
+        boolean retainedFocus = search != null && search.isFocused();
+        float retainedScroll = scrollTarget;
+        if (openTime == 0) this.openTime = System.currentTimeMillis();
         this.lastFrame = openTime;
         search = new EditBox(font, 141, 11, Math.max(54, Math.min(184, width - 241)), 18, Component.literal("Search modules"));
         search.setBordered(false);
         search.setHint(Component.literal("search modules"));
         search.setMaxLength(48);
         search.setResponder(value -> { scrollOff = 0; scrollTarget = 0; });
+        search.setValue(retainedSearch);
         addRenderableWidget(search);
+        scrollTarget = retainedScroll;
+        scrollOff = retainedScroll;
+        if (retainedFocus) { search.setFocused(true); setFocused(search); }
     }
     @Override public boolean isPauseScreen() { return false; }
 

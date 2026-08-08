@@ -21,10 +21,13 @@ public final class TunnelMapScreen extends Screen {
     public TunnelMapScreen(Screen parent){super(Component.literal("Tunnel Maps"));this.parent=parent;}
     @Override public boolean isPauseScreen(){return false;}
     @Override protected void init(){
+        String retainedValue=search==null?"":search.getValue();boolean focused=search!=null&&search.isFocused();double retainedScroll=scroll;
         search=new EditBox(font,14,27,Math.min(240,width-28),18,Component.literal("Search destinations"));
         search.setHint(Component.literal("search destinations"));
         search.setResponder(value->scroll=0);
+        search.setValue(retainedValue);
         addRenderableWidget(search);
+        scroll=retainedScroll;if(focused){search.setFocused(true);setFocused(search);}
     }
 
     @Override public void extractBackground(GuiGraphicsExtractor g,int mx,int my,float delta){

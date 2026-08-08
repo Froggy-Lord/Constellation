@@ -71,6 +71,11 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
+        String retainedSearch = search == null ? "" : search.getValue();
+        boolean retainedFocus = search != null && search.isFocused();
+        int retainedCategory = selectedCat;
+        int retainedScroll = scrollTarget;
+        float retainedScrollF = scrollF;
         int w = panelW(width);
         int px = (width - w) / 2;
         int searchX = w - 158;
@@ -93,7 +98,12 @@ public class ConfigScreen extends Screen {
                 }
             }
         });
+        search.setValue(retainedSearch);
         addRenderableWidget(search);
+        selectedCat = retainedCategory;
+        scrollTarget = retainedScroll;
+        scrollF = retainedScrollF;
+        if (retainedFocus) { search.setFocused(true); setFocused(search); }
     }
     
     private static String autoLabel(String camel) {

@@ -21,9 +21,11 @@ public final class SpeedPresetScreen extends Screen {
     public SpeedPresetScreen(Screen parent){super(Component.literal("Speed Presets"));this.parent=parent;}
     @Override public boolean isPauseScreen(){return false;}
     @Override protected void init(){
+        String searchValue=search==null?"":search.getValue(),nameValue=name==null?"":name.getValue(),speedValue=speed==null?"":speed.getValue();boolean searchFocus=search!=null&&search.isFocused(),nameFocus=name!=null&&name.isFocused(),speedFocus=speed!=null&&speed.isFocused();int retainedScroll=scroll;
         search=new EditBox(font,14,26,Math.min(190,width-28),18,Component.literal("Search presets"));search.setHint(Component.literal("search presets"));search.setResponder(value->scroll=0);addRenderableWidget(search);
         name=new EditBox(font,14,height-47,120,18,Component.literal("Preset name"));name.setHint(Component.literal("preset name"));name.setMaxLength(16);addRenderableWidget(name);
         speed=new EditBox(font,140,height-47,48,18,Component.literal("Speed"));speed.setHint(Component.literal("speed"));speed.setMaxLength(3);addRenderableWidget(speed);
+        search.setValue(searchValue);name.setValue(nameValue);speed.setValue(speedValue);scroll=retainedScroll;if(speedFocus){speed.setFocused(true);setFocused(speed);}else if(nameFocus){name.setFocused(true);setFocused(name);}else if(searchFocus){search.setFocused(true);setFocused(search);}
     }
     @Override public void extractBackground(GuiGraphicsExtractor graphics,int mx,int my,float delta){
         ConstellationUi.background(graphics,width,height,delta);

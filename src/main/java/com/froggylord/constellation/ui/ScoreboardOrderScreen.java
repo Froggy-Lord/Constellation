@@ -29,7 +29,7 @@ public final class ScoreboardOrderScreen extends Screen {
         for(String id:cfg.customScoreboardOrder){if(id.equals("server")){for(String key:labels.keySet())if(key.startsWith("srv:")&&!order.contains(key))order.add(key);}else if(!order.contains(id))order.add(id);}
         for(String id:labels.keySet())if(!order.contains(id))order.add(id);
     }
-    @Override protected void init(){search=new EditBox(font,14,26,Math.min(240,width-28),18,Component.literal("Search lines"));search.setHint(Component.literal("search lines"));search.setResponder(value->scroll=0);addRenderableWidget(search);}
+    @Override protected void init(){String value=search==null?"":search.getValue();boolean focused=search!=null&&search.isFocused();int retainedScroll=scroll;search=new EditBox(font,14,26,Math.min(240,width-28),18,Component.literal("Search lines"));search.setHint(Component.literal("search lines"));search.setResponder(v->scroll=0);search.setValue(value);addRenderableWidget(search);scroll=retainedScroll;if(focused){search.setFocused(true);setFocused(search);}}
     @Override public void extractBackground(GuiGraphicsExtractor graphics,int mx,int my,float delta){
         ConstellationUi.background(graphics,width,height,delta);
         ConstellationUi.header(graphics,font,"Scoreboard Lines","Click a line to show or hide it",width);

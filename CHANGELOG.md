@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.827 (2026-08-09) — Resize-Safe SkyBlock Screens
+
+- preserved searches, focus, selections and scrolling across resize in the Hub, module config, recipe browser, party messages, profile viewer, scoreboard ordering and tunnel map
+- preserved unsaved speed-preset name and speed drafts across window and GUI-scale changes
+- kept recipe selection, recipe/usage context and detail scrolling instead of reopening remembered defaults after resize
+- live-tested Orion's filtered solver view and Hyperion's recipe detail at normal and narrow sizes
+
 ## 0.9.826 (2026-08-09) — Resize-Safe Advanced Settings
 
 - preserved Advanced Settings search text, filter context, selection and scroll position across window and GUI-scale changes

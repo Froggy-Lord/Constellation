@@ -53,20 +53,27 @@ public final class LyraRecipeBrowserScreen extends Screen {
     @Override public boolean isPauseScreen() { return false; }
 
     @Override protected void init() {
+        boolean firstInit = search == null;
+        String retainedSearch = firstInit ? "" : search.getValue();
+        boolean retainedFocus = !firstInit && search.isFocused();
+        int retainedOffset = resultOffset;
+        int retainedDetailScroll = detailScroll;
         LyraRecipeRepository.init();
         int x = panelX();
         search = new EditBox(font, x + 13, panelY() + 37, Math.min(245, Math.max(120, panelWidth() - 120)), 20, Component.literal("Search SkyBlock items"));
         search.setHint(Component.literal("item name or SkyBlock ID"));
         search.setMaxLength(80);
         String remembered = ConstellationClient.cfg().lyra.recipeBrowserRememberSearch ? ConstellationClient.cfg().lyra.recipeBrowserLastSearch : "";
-        search.setValue(initialQuery.isBlank() ? remembered : initialQuery);
+        search.setValue(firstInit ? initialQuery.isBlank() ? remembered : initialQuery : retainedSearch);
         search.setResponder(value -> { resultOffset = 0; refresh(); });
         addRenderableWidget(search);
-        search.setFocused(true);
-        setFocused(search);
+        search.setFocused(firstInit || retainedFocus);
+        if (firstInit || retainedFocus) setFocused(search);
         refresh();
+        resultOffset = retainedOffset;
+        detailScroll = retainedDetailScroll;
         repositoryRevision = LyraRecipeRepository.revision();
-        if (ConstellationClient.cfg().lyra.recipeBrowserRememberSelection && !ConstellationClient.cfg().lyra.recipeBrowserLastItem.isBlank()) {
+        if (firstInit && ConstellationClient.cfg().lyra.recipeBrowserRememberSelection && !ConstellationClient.cfg().lyra.recipeBrowserLastItem.isBlank()) {
             Item rememberedItem = LyraRecipeRepository.item(ConstellationClient.cfg().lyra.recipeBrowserLastItem);
             if (rememberedItem != null) select(rememberedItem);
         }

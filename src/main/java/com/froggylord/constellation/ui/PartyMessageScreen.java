@@ -36,10 +36,15 @@ public final class PartyMessageScreen extends Screen {
     // search/editor layout ported from Skyblocker (LGPL-3.0): utils/render/gui/SearchableGridWidget.java
     @Override
     protected void init() {
+        String retainedSearch = search == null ? "" : search.getValue();
+        boolean searchFocused = search != null && search.isFocused();
+        boolean templateFocused = template != null && template.isFocused();
+        int retainedScroll = scroll;
         search = new EditBox(font, 18, 28, Math.min(240, width / 3), 18, Component.literal("Search messages"));
         search.setMaxLength(64);
         search.setHint(Component.literal("Search name, category, variable"));
         search.setResponder(value -> scroll = 0);
+        search.setValue(retainedSearch);
         addRenderableWidget(search);
 
         template = new EditBox(font, width / 2 + 10, height - 54, width / 2 - 28, 18, Component.literal("Message template"));
@@ -48,7 +53,15 @@ public final class PartyMessageScreen extends Screen {
         template.setResponder(value -> {
             if (!changingTemplate && selected != null) PartyMessages.setTemplate(selected.id(), value);
         });
+        if (selected != null) {
+            changingTemplate = true;
+            template.setValue(PartyMessages.template(selected.id()));
+            changingTemplate = false;
+        }
         addRenderableWidget(template);
+        scroll = retainedScroll;
+        if (templateFocused) { template.setFocused(true); setFocused(template); }
+        else if (searchFocused) { search.setFocused(true); setFocused(search); }
     }
 
     @Override public boolean isPauseScreen() { return false; }

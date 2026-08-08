@@ -101,13 +101,16 @@ public final class ProfileViewerScreen extends Screen {
     }
 
     @Override protected void init() {
-        String initial = result == null ? initialName : result.name();
+        boolean firstInit = player == null;
+        String initial = firstInit ? result == null ? initialName : result.name() : player.getValue();
+        boolean retainedFocus = !firstInit && player.isFocused();
         player = new EditBox(font, 12, 6, 132, 18, Component.literal("Player"));
         player.setHint(Component.literal("player name"));
         player.setMaxLength(16);
         player.setValue(initial);
         addRenderableWidget(player);
-        if (result == null && !initialName.isBlank()) load(false);
+        if (retainedFocus) { player.setFocused(true); setFocused(player); }
+        if (firstInit && result == null && !initialName.isBlank()) load(false);
     }
 
     @Override public boolean isPauseScreen() { return false; }
