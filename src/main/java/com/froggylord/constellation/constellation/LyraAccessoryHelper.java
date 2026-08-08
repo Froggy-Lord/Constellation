@@ -16,6 +16,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -55,11 +56,12 @@ import java.util.regex.Pattern;
 // catalogue transport ported from Skyblocker (LGPL-3.0-or-later): skyblock/item/tooltip/info/DataTooltipInfo.java, TooltipInfoType.java
 public final class LyraAccessoryHelper {
     private static final Pattern TITLE=Pattern.compile("^Accessory Bag(?: \\((\\d+)/(\\d+)\\))?$");
-    private static final String ENDPOINT="https://hysky.de/api/accessories";
+    private static final String ENDPOINT="https://api.azureaaron.net/skyblock/accessories";
     private static final Path CACHE=Path.of("config","constellation-accessories.json");
     private static final long REFRESH=86_400_000L;
     private static final Map<String,Integer> MP=Map.of("COMMON",3,"UNCOMMON",5,"RARE",8,"EPIC",12,"LEGENDARY",16,"MYTHIC",22,"DIVINE",28,"SPECIAL",3,"VERY_SPECIAL",5);
     private static final AtomicBoolean FETCHING=new AtomicBoolean();
+    private static volatile String catalogueError="";
     private static final Map<String,Accessory> CATALOGUE=new LinkedHashMap<>();
     private static final Map<String,String> NAMES=new HashMap<>();
     private static final Map<String,Integer> ITEM_MP=new HashMap<>();
@@ -81,8 +83,10 @@ public final class LyraAccessoryHelper {
             if(!(opened instanceof AbstractContainerScreen<?> container))return;
             Matcher matcher=TITLE.matcher(clean(container.getTitle().getString()));if(!matcher.matches())return;
             screen=container;page=matcher.group(1)==null?1:number(matcher.group(1));pages=matcher.group(2)==null?1:number(matcher.group(2));panelPage=0;
+            refreshIfNeeded();
             ScreenEvents.afterTick(opened).register(ignored->scan(container));
             ScreenEvents.afterBackground(opened).register((ignored,graphics,mouseX,mouseY,delta)->drawPanel(container,graphics,mouseX,mouseY));
+            ScreenMouseEvents.allowMouseScroll(opened).register((ignored,x,y,horizontal,vertical)->scrollPanel(container,x,y,vertical));
             ScreenEvents.remove(opened).register(ignored->{if(screen==container){screen=null;hoveredFamily="";}});
         });
         ItemTooltipCallback.EVENT.register((stack,context,flags,lines)->tooltip(stack,lines));
@@ -142,17 +146,31 @@ public final class LyraAccessoryHelper {
         int x=useRight?containerRight+4:4,y=Math.clamp(accessor.constellation$top(),2,Math.max(2,container.height-20));
         int heightRows=Math.max(1,(container.height-y-20)/11),rows=Math.min(Math.clamp(cfg.accessoryPanelRows,3,18),heightRows);
         int maxPage=Math.max(1,(entries.size()+rows-1)/rows);panelPage=Math.clamp(panelPage,0,maxPage-1);
-        int drawnRows=Math.min(rows,Math.max(0,entries.size()-panelPage*rows)),panelHeight=18+drawnRows*11;
+        int drawnRows=Math.min(rows,Math.max(0,entries.size()-panelPage*rows)),panelHeight=18+Math.max(1,drawnRows)*11;
         g.fill(x,y,x+panelWidth,y+panelHeight,0xD0101018);g.fill(x,y,x+2,y+panelHeight,0xFF55AAFF);
         Font font=Minecraft.getInstance().font;
-        g.text(font,ConstellationUi.fit(font,"Accessory Helper  "+(panelPage+1)+"/"+maxPage,panelWidth-10),x+6,y+5,0xFF55FFFF,true);
+        g.text(font,ConstellationUi.fit(font,"Accessories  "+(panelPage+1)+"/"+maxPage,panelWidth-10),x+6,y+5,0xFF55FFFF,true);
         hoveredFamily="";
+        if(drawnRows==0){String empty=CATALOGUE.isEmpty()?(FETCHING.get()?"Loading accessory data...":catalogueError.isBlank()?"Accessory data unavailable":catalogueError):"No matching accessories";g.text(font,ConstellationUi.fit(font,empty,panelWidth-10),x+6,y+19,0xFFAAAAAA,true);return;}
         for(int i=0;i<drawnRows;i++){int index=panelPage*rows+i;Entry entry=entries.get(index);int ry=y+18+i*11;boolean hover=mouseX>=x&&mouseX<x+panelWidth&&mouseY>=ry&&mouseY<ry+11;if(hover){g.fill(x+2,ry,x+panelWidth,ry+11,0x4055AAFF);hoveredFamily=entry.accessory.family;}
             String right="";if(cfg.accessoryShowMp)right+="+"+entry.mp+" MP";if(cfg.accessoryShowPrice&&entry.price>0)right+=(right.isBlank()?"":" | ")+coins(entry.price);
             int color=entry.type==Type.MISSING?cfg.accessoryMissingColor:cfg.accessoryUpgradeColor;String name=display(entry.accessory.id);
             if(panelWidth>=130&&!right.isBlank()){int rightWidth=font.width(right);g.text(font,ConstellationUi.fit(font,name,Math.max(16,panelWidth-rightWidth-15)),x+6,ry+1,color,true);g.text(font,right,x+panelWidth-rightWidth-4,ry+1,0xFFAAAAAA,true);}
             else g.text(font,ConstellationUi.fit(font,name,panelWidth-10),x+6,ry+1,color,true);
         }
+    }
+
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/accessories/AccessoriesHelperWidget.java page switching
+    private static boolean scrollPanel(AbstractContainerScreen<?> container,double mouseX,double mouseY,double vertical){
+        if(!active()||!cfg.accessoryBagPanel||container!=screen||vertical==0)return true;
+        List<Entry> entries=entries();ContainerScreenAccessor accessor=(ContainerScreenAccessor)container;
+        int left=accessor.constellation$left(),containerRight=left+accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,left-4),rightSpace=Math.max(0,container.width-containerRight-4),panelWidth=Math.min(190,rightSpace>=leftSpace?rightSpace:leftSpace);
+        if(panelWidth<56)return true;int x=rightSpace>=leftSpace?containerRight+4:4,y=Math.clamp(accessor.constellation$top(),2,Math.max(2,container.height-20));
+        int rows=Math.min(Math.clamp(cfg.accessoryPanelRows,3,18),Math.max(1,(container.height-y-20)/11));
+        int maxPage=Math.max(1,(entries.size()+rows-1)/rows),drawnRows=Math.min(rows,Math.max(0,entries.size()-panelPage*rows)),height=18+Math.max(1,drawnRows)*11;
+        if(mouseX<x||mouseX>=x+panelWidth||mouseY<y||mouseY>=y+height||maxPage<=1)return true;
+        panelPage=Math.clamp(panelPage+(vertical<0?1:-1),0,maxPage-1);return false;
     }
 
     private static List<Entry> entries(){
@@ -204,12 +222,15 @@ public final class LyraAccessoryHelper {
     private static void refreshIfNeeded(){if(!active())return;if(CATALOGUE.isEmpty()||System.currentTimeMillis()-loadedAt>REFRESH)fetch(false);}
     private static void enrichOne(){
         if(!active()||CATALOGUE.isEmpty())return;
-        List<Accessory> all=List.copyOf(CATALOGUE.values());if(enrichIndex>=all.size())enrichIndex=0;
-        Accessory accessory=all.get(enrichIndex);JsonObject item=NeuRepoLoader.get(accessory.id);
-        if(item!=null){NAMES.put(accessory.id,clean(item.has("displayname")?item.get("displayname").getAsString():accessory.id).replaceAll("\\[[^]]+]","").trim());ITEM_MP.put(accessory.id,readMp(accessory,item));PriceProvider.warm(accessory.id);enrichIndex++;}
+        List<Accessory> all=List.copyOf(CATALOGUE.values());
+        for(int checked=0;checked<16;checked++){
+            if(enrichIndex>=all.size())enrichIndex=0;
+            Accessory accessory=all.get(enrichIndex++);JsonObject item=NeuRepoLoader.get(accessory.id);
+            if(item!=null){NAMES.put(accessory.id,clean(item.has("displayname")?item.get("displayname").getAsString():accessory.id).replaceAll("\\[[^]]+]","").trim());ITEM_MP.put(accessory.id,readMp(accessory,item));PriceProvider.warm(accessory.id);}
+        }
         if(!ITEM_MP.isEmpty()){List<String> enriched=List.copyOf(ITEM_MP.keySet());if(priceIndex>=enriched.size())priceIndex=0;String id=enriched.get(priceIndex++);double price=PriceProvider.purchaseValue(id);if(price>0)PRICES.put(id,price);}
     }
-    private static void fetch(boolean forced){if(!forced&&!CATALOGUE.isEmpty()&&System.currentTimeMillis()-loadedAt<REFRESH||!FETCHING.compareAndSet(false,true))return;Thread thread=new Thread(()->{try{HttpClient client=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();HttpRequest request=HttpRequest.newBuilder(URI.create(ENDPOINT)).timeout(Duration.ofSeconds(12)).header("User-Agent","Constellation/0.9").GET().build();HttpResponse<String> response=client.send(request,HttpResponse.BodyHandlers.ofString());if(response.statusCode()==200&&parse(response.body())){Files.createDirectories(CACHE.getParent());try(Writer writer=Files.newBufferedWriter(CACHE)){writer.write(response.body());}loadedAt=System.currentTimeMillis();}}catch(Exception ignored){}finally{FETCHING.set(false);}},"constellation-accessories");thread.setDaemon(true);thread.start();}
+    private static void fetch(boolean forced){if(!forced&&!CATALOGUE.isEmpty()&&System.currentTimeMillis()-loadedAt<REFRESH||!FETCHING.compareAndSet(false,true))return;catalogueError="";Thread thread=new Thread(()->{try{HttpClient client=HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).connectTimeout(Duration.ofSeconds(5)).build();HttpRequest request=HttpRequest.newBuilder(URI.create(ENDPOINT)).timeout(Duration.ofSeconds(12)).header("User-Agent","Constellation/0.9").GET().build();HttpResponse<String> response=client.send(request,HttpResponse.BodyHandlers.ofString());if(response.statusCode()==200&&parse(response.body())){Files.createDirectories(CACHE.getParent());try(Writer writer=Files.newBufferedWriter(CACHE)){writer.write(response.body());}loadedAt=System.currentTimeMillis();catalogueError="";}else catalogueError="Accessory data unavailable";}catch(Exception ignored){catalogueError="Accessory data unavailable";}finally{FETCHING.set(false);}},"constellation-accessories");thread.setDaemon(true);thread.start();}
     private static void loadCache(){if(!Files.exists(CACHE))return;try(Reader reader=Files.newBufferedReader(CACHE)){if(parse(JsonParser.parseReader(reader).toString()))loadedAt=Files.getLastModifiedTime(CACHE).toMillis();}catch(Exception ignored){}}
     private static boolean parse(String json){try{JsonObject root=JsonParser.parseString(json).getAsJsonObject();Map<String,Accessory> next=new LinkedHashMap<>();for(var entry:root.entrySet()){JsonObject object=entry.getValue().getAsJsonObject();String id=entry.getKey().toUpperCase(Locale.ROOT),family=object.has("family")?object.get("family").getAsString():id,origin=object.has("origin")?object.get("origin").getAsString():"";int tier=object.has("tier")?object.get("tier").getAsInt():0;next.put(id,new Accessory(id,family,tier,origin,object.has("enrichable")&&object.get("enrichable").getAsBoolean(),!object.has("recombobulatable")||object.get("recombobulatable").getAsBoolean()));}if(next.size()<50)return false;synchronized(CATALOGUE){CATALOGUE.clear();CATALOGUE.putAll(next);}return true;}catch(Exception ignored){return false;}}
 

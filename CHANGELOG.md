@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.852 (2026-08-09) — Working Accessory and Inventory Search UI
+
+- replaced Inventory Search's vanilla floating edit box and prompt with compact translucent Constellation controls
+- made the first Escape dismiss Inventory Search and restore its prompt without closing the container
+- updated Accessory Helper to the current accessory endpoint with redirect-safe transport and immediate Accessory Bag refresh
+- prevented missing repository items from stalling enrichment and process sixteen bounded catalogue entries per pass
+- added explicit loading, unavailable and no-match panel states plus panel-local wheel paging
+- live-verified slot annotations, search dimming, search dismissal, populated accessory rows, hover state and page changes
+
 ## 0.9.851 (2026-08-09) — World Overlay Visual Check
 
 - expanded `/cn box` into a complete local-only check for filled highlights, outlines, beams, labels and multi-segment paths

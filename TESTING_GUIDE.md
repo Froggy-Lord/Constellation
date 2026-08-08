@@ -2588,7 +2588,12 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 
 ## Container overlay responsiveness
 
+- [ ] Open any SkyBlock container and press Ctrl+F. Expected: a compact translucent Constellation search field appears, matching slots remain bright, non-matches dim and native items remain above every tint.
+- [ ] Press Escape while Inventory Search is focused. Expected: search closes, all slot tints clear and the compact clickable prompt returns; a second Escape closes the container normally.
+- [ ] With Remember Query enabled, dismiss and reopen search. Expected: the prior query returns. Disable it and repeat; expected: the field reopens empty.
+- [ ] Enter a valid arithmetic expression in Inventory Search. Expected: its formatted result appears in a separate compact result chip without covering the container or search text.
 - [ ] Open a populated Accessory Bag at wide, standard and narrow widths with the helper panel enabled. Expected: the panel chooses the larger free side gutter, never covers a slot, never leaves the screen, and reduces visible rows before crossing the bottom edge.
+- [ ] Move the pointer over Accessory Helper and scroll down/up. Expected: only the panel page changes, its page count remains valid as metadata finishes loading, hovered rows retain their family highlight and scrolling elsewhere continues to reach the container.
 - [ ] Enable Accessory Helper MP and price details, then narrow the window. Expected: wide panels retain the right-hand details while compact panels prioritize a fitted accessory name without overlapping text.
 - [ ] Enable automatic Container Value with a long breakdown and open Storage or an eligible chest at several widths. Expected: the panel stays entirely in a side gutter; when fewer than 92 pixels are free it shows a fitted total without illegible breakdown rows.
 - [ ] Configure an Inventory Button with a 120-character tooltip and hover it near every screen edge. Expected: the native tooltip wraps and repositions inside the window instead of drawing off-screen or using a negative X coordinate.
@@ -2981,8 +2986,8 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 - [ ] Enable Local-world visual testing only in a throwaway world and use `/ahs`/`/bzs`. Expected: the presentation can be reviewed without enabling any Hypixel action; turn the option off afterward.
 - [ ] Enable representative waypoint, solver, slayer, Kuudra and mining world labels with distinct configured colours. Expected: label glyphs use each feature colour instead of always appearing white.
 - [ ] View those labels against bright sky, dark blocks and through a wall where the feature permits it. Expected: Minecraft's native accessibility-controlled backing remains translucent, and the through-walls option changes occlusion without changing colour.
-- [ ] In a throwaway local world, run `/cn box`. Expected: a cyan filled/outlined box and `through walls` label appear ahead of the camera, plus an orange depth-tested outline and label joined by a pink line.
-- [ ] Put blocks between the camera and both diagnostics, then run `/cn box` again. Expected: only the cyan overlay remains visible through blocks before the second command removes the complete diagnostic with no stale primitive.
+- [ ] In a throwaway local world, run `/cn box`. Expected: a cyan filled/outlined box, beam and `through walls` label appear ahead of the camera, plus an orange depth-tested box and label joined by a pink line and a blue multi-segment `route path`.
+- [ ] Put blocks between the camera and both diagnostics. Expected: the cyan box, beam, label and blue route remain visible through blocks while the orange box and pink line disappear; run `/cn box` again to remove the complete diagnostic with no stale primitive.
 - [ ] Enable Orion > Quiet custom dungeon completion and run `/dungeonending test` in a throwaway local world. Expected: one gold `S+ CLEAR` title and one pale `M7 | 300 score | 6:24.250` subtitle appear, with no clipping at narrow window sizes (`/tmp/dungeon-ending-844-fitted.png`).
 - [ ] In Advanced Settings, edit Dungeon Ending Title/Subtitle Template using `{score}`, `{grade}`, `{floor}` and `{time}`, then repeat the preview. Expected: every variable resolves and excessively long text is truncated with `...` inside the actual native title/subtitle viewport.
 - [ ] Toggle Custom Title, Subtitle, Hide Server Titles, Hide Particles, Mute Server Sounds and Completion Sound independently. Expected: each switch owns only its named channel, and all suppression ends after the configured 1-15 second duration.

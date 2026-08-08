@@ -2,6 +2,7 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.LyraConfig;
+import com.froggylord.constellation.render.ConstellationTheme;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -75,8 +76,11 @@ public final class LyraInventorySearch {
             show(screen);
             return false;
         }
+        if (searchBox != null && searchBox.isFocused() && event.key() == GLFW.GLFW_KEY_ESCAPE) {
+            hide(screen);
+            return false;
+        }
         if (searchBox != null && searchBox.isFocused()
-            && event.key() != GLFW.GLFW_KEY_ESCAPE
             && Minecraft.getInstance().options.keyInventory.matches(event)) return false;
         return true;
     }
@@ -110,6 +114,17 @@ public final class LyraInventorySearch {
         openScreen = null;
         searchBox = null;
         if (!cfg.inventorySearchRememberQuery) setQuery("");
+    }
+
+    private static void hide(AbstractContainerScreen<?> screen) {
+        if (openScreen != screen || searchBox == null) return;
+        Screens.getWidgets(screen).remove(searchBox);
+        searchBox.setFocused(false);
+        searchBox = null;
+        openScreen = null;
+        screen.setFocused(null);
+        if (!cfg.inventorySearchRememberQuery) setQuery("");
+        if (cfg.inventorySearchClickablePrompt) Screens.getWidgets(screen).add(new SearchPrompt(screen));
     }
 
     private static void setQuery(String value) {
@@ -337,12 +352,16 @@ public final class LyraInventorySearch {
             normal = Component.literal("Click or Ctrl+" + (cfg.inventorySearchCtrlK ? "K" : "F") + " to search").withStyle(ChatFormatting.GRAY);
             hovered = normal.copy().withStyle(ChatFormatting.UNDERLINE);
             setMessage(normal);
+            setWidth(getWidth() + 16);
+            setHeight(17);
             setPosition((screen.width - getWidth()) / 2, 15);
         }
 
         @Override public void onClick(MouseButtonEvent click, boolean doubled) { show(screen); }
         @Override public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
             setMessage(isHovered() ? hovered : normal);
+            ConstellationTheme.surface(graphics, getX(), getY(), getWidth(), getHeight(),
+                isHovered() ? 0xE0182032 : 0xD0101018, isHovered() ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
             super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
         }
     }
@@ -356,12 +375,21 @@ public final class LyraInventorySearch {
             super(font, 200, 20, label);
             this.font = font;
             this.label = label;
+            setBordered(false);
         }
 
         @Override public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+            ConstellationTheme.surface(graphics, getX() - 4, getY() - 3, width + 8, height + 6,
+                0xEE101018, isFocused() ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
+            if (isFocused()) graphics.fill(getX() - 4, getY() + height + 1, getX() + width + 4, getY() + height + 3, ConstellationTheme.ACCENT);
             super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
-            graphics.centeredText(font, label, getX() + width / 2, getY() - 1 - font.lineHeight, CommonColors.WHITE);
-            if (calculation != null) graphics.text(font, "= " + NUMBER.format(calculation), getX() + width + 5, getY() + 6, 0xFFFFFF55, true);
+            graphics.centeredText(font, label, getX() + width / 2, getY() - 3 - font.lineHeight, ConstellationTheme.ACCENT_BRIGHT);
+            if (calculation != null) {
+                String result = "= " + NUMBER.format(calculation);
+                int resultWidth = font.width(result) + 12;
+                ConstellationTheme.surface(graphics, getX() + width + 7, getY() - 1, resultWidth, 18, 0xE0101018, ConstellationTheme.BORDER_SOFT);
+                graphics.text(font, result, getX() + width + 13, getY() + 4, 0xFFFFFF55, true);
+            }
         }
 
         @Override public boolean keyPressed(KeyEvent event) {

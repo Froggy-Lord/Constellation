@@ -470,9 +470,10 @@ Verified builds and this guide are mirrored to the private Constellation release
 - Per-profile custom page names and order, configurable columns/card rows/empty pages/decorations/dimming, and deliberate server-owned page opening
 - Immutable profile-ID isolation, initial-container-content gating and explicit server-container closure prevent cache crossover, false empty snapshots and invisible menus
 - Container total-value calculation
-- Inventory search and configurable inventory buttons
+- Themed inventory search with name/lore/ID terms, arithmetic, remembered queries, match highlighting, non-match dimming and first-Escape dismissal, plus configurable inventory buttons
 - Exact multi-page Accessory Bag collection saved independently per SkyBlock profile
 - Accessory-family missing, upgrade, downgrade and highest-owned classification in item tooltips
+- Immediate cached accessory-catalogue loading with explicit loading/error/empty states, bounded metadata enrichment and panel-local wheel paging
 - Searchable and filterable missing/upgrade panel with price-per-Magical-Power ordering
 - Gradual bounded item/price loading, last-good catalogue cache, recombobulation state and hovered-family bag highlights
 - Slot/item protection with explicit multi-click overrides where configured
