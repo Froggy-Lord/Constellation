@@ -102,6 +102,8 @@ public class LocationManager {
                 || l.contains("slimehill") || l.contains("diamond reserve") || l.contains("obsidian sanctuary"))
                 return SkyblockArea.DEEP_CAVERNS;
             if (l.contains("deep caverns")) return SkyblockArea.DEEP_CAVERNS;
+            // ported from Skyblocker (LGPL-3.0-or-later): utils/Area.java
+            if (l.contains("your island") || l.contains("private island")) return SkyblockArea.PRIVATE_ISLAND;
             if (l.contains("village") || l.contains("hub")) return SkyblockArea.HUB;
         }
         return SkyblockArea.UNKNOWN;

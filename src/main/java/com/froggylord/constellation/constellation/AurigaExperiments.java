@@ -31,6 +31,7 @@ import java.util.Map;
 // ported from Skyblocker (LGPL-3.0-or-later): skyblock/experiment/ExperimentSolver.java,
 // UltrasequencerSolver.java, SuperpairsSolver.java, ChronomatronSolver.java
 // ported from NoFrills (GPL-3.0-only): features/solvers/ExperimentSolver.java
+// ported from Devonian (GPL-3.0-only): features/misc/ExperimentationTable.kt
 public final class AurigaExperiments {
     public enum Type { NONE, CHRONOMATRON, ULTRASEQUENCER, SUPERPAIRS }
     public enum Phase { REMEMBER, WAIT, SHOW, END }
@@ -269,9 +270,9 @@ public final class AurigaExperiments {
         return -1;
     }
     private static Type identify(String title) {
-        if (title.matches("^Chronomatron \\(\\w+\\)$")) return Type.CHRONOMATRON;
-        if (title.matches("^Ultrasequencer \\(\\w+\\)$")) return Type.ULTRASEQUENCER;
-        if (title.matches("^Superpairs \\(\\w+\\)$")) return Type.SUPERPAIRS;
+        if (title.matches("^Chronomatron \\([\\w ]+\\)$")) return Type.CHRONOMATRON;
+        if (title.matches("^Ultrasequencer \\([\\w ]+\\)$")) return Type.ULTRASEQUENCER;
+        if (title.matches("^Superpairs \\([\\w ]+\\)$")) return Type.SUPERPAIRS;
         return Type.NONE;
     }
     private static void reset(AbstractContainerScreen<?> screen, Type found) {

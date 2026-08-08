@@ -3,6 +3,7 @@ package com.froggylord.constellation.constellation;
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.AurigaConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.render.ConstellationTheme;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -76,7 +77,7 @@ public final class AurigaReforgeHelper {
             createFields(container);
             update(container);
             ScreenEvents.afterTick(opened).register(ignored -> update(container));
-            ScreenEvents.afterExtract(opened).register((ignored, graphics, mouseX, mouseY, delta) -> drawOverlay(container, graphics));
+            ScreenEvents.afterBackground(opened).register((ignored, graphics, mouseX, mouseY, delta) -> drawOverlay(container, graphics));
             ScreenKeyboardEvents.allowKeyPress(opened).register((ignored, event) -> allowKey(event));
             ScreenMouseEvents.allowMouseClick(opened).register((ignored, event) -> allowMouse(event));
             ScreenEvents.remove(opened).register(ignored -> close(container));
@@ -237,10 +238,19 @@ public final class AurigaReforgeHelper {
 
     private static boolean allowMouse(MouseButtonEvent event) {
         if (includes == null) return true;
-        if (includes.isMouseOver(event.x(), event.y())) return !includes.mouseClicked(event, false);
-        if (excludes.isMouseOver(event.x(), event.y())) return !excludes.mouseClicked(event, false);
+        if (includes.isMouseOver(event.x(), event.y())) return !focus(includes, excludes, event);
+        if (excludes.isMouseOver(event.x(), event.y())) return !focus(excludes, includes, event);
         includes.setFocused(false);
         excludes.setFocused(false);
+        if (screen != null) screen.setFocused(null);
+        return true;
+    }
+
+    private static boolean focus(FilterBox selected, FilterBox other, MouseButtonEvent event) {
+        if (!selected.mouseClicked(event, false)) return false;
+        other.setFocused(false);
+        selected.setFocused(true);
+        if (screen != null) screen.setFocused(selected);
         return true;
     }
 
@@ -419,14 +429,19 @@ public final class AurigaReforgeHelper {
         private final Font font;
         private final String label;
         private FilterBox(Font font, int width, String label) {
-            super(font, width, 18, Component.literal(label));
+            super(font, width, 16, Component.literal(label));
             this.font = font;
             this.label = label;
             setMaxLength(500);
+            setBordered(false);
         }
         @Override public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+            ConstellationTheme.surface(graphics, getX() - 4, getY() - 3, width + 8, height + 6,
+                0xE0101018, isFocused() ? ConstellationTheme.ACCENT_DIM : ConstellationTheme.BORDER_SOFT);
+            if (isFocused()) graphics.fill(getX() - 4, getY() + height + 1, getX() + width + 4,
+                getY() + height + 3, ConstellationTheme.ACCENT);
             super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
-            graphics.text(font, label, getX(), getY() - font.lineHeight - 1, 0xFFAAAAAA, true);
+            graphics.text(font, label, getX(), getY() - font.lineHeight - 3, ConstellationTheme.TEXT_MUTED, true);
         }
         @Override public boolean keyPressed(KeyEvent event) {
             return super.keyPressed(event) || (isFocused() && event.key() != GLFW.GLFW_KEY_ESCAPE);

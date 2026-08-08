@@ -1860,3 +1860,9 @@
 - Kept Anita, Pesthunter, locked-plot and Composter side-panel states readable in narrow container gutters.
 - Live-tested plot editing/statuses, visitor protection/tooltips, Garden shops, Composter, Greenhouse, Stereo Harmony and a complete DNA Analyzer board in a local fake-Garden world.
 - Confirmed the Recipe Browser renders every ingredient and output in its scrollable detail pane.
+## 0.9.855 - SkyBlock helper container pass
+
+- Fixed private-island detection so experiment solvers work with their default island restriction.
+- Accepted spaced experiment tier names using Devonian's current title matcher.
+- Moved Reforge status text behind native contents, themed its filter fields, and restored keyboard focus when either field is clicked.
+- Live-tested populated Superpairs, Anvil, Reforge, Chocolate Factory, Hoppity Collection, and Power Stones Guide states.

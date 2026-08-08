@@ -1,5 +1,12 @@
 # Constellation testing guide
 
+## Experiment and utility containers (0.9.855)
+
+- [ ] On your Private Island, run Chronomatron, Ultrasequencer and Superpairs. Expected: the next valid choice is clear, remembered pairs remain visible, wrong-click protection respects Control bypass, and tier names with spaces still activate the solver.
+- [ ] Open SkyBlock Anvil with two different enchanted books. Expected: inputs/result use the mismatch colour, the result click is protected, and the native tooltip lists both enchantments above every overlay.
+- [ ] Open Reforge Item and The Hex. Click and type in both dark side filter fields, then hover the item/button/candidates. Expected: focus underline and text are visible, Escape/inventory behavior remains normal, and native tooltips cover the reforge label.
+- [ ] Open Chocolate Factory, Hoppity's Collection and Power Stones Guide. Expected: affordability/rank/stray states, missing/found rabbits, and unlearned Power Stones are visually distinct without obscuring icons.
+
 ## Garden overlays (0.9.854)
 
 Enable Hercules and the Garden helpers you want to test, then visit the matching Garden menus naturally.
