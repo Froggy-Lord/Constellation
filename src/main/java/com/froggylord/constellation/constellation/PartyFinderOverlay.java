@@ -3,11 +3,15 @@ package com.froggylord.constellation.constellation;
 import com.froggylord.constellation.api.DungeonProfileApi;
 import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,6 +33,7 @@ public final class PartyFinderOverlay {
 
     private static OrionConfig cfg;
     private static String selectedClass = "";
+    private static AbstractContainerScreen<?> openPartyFinder;
 
     private PartyFinderOverlay() {}
 
@@ -38,6 +43,12 @@ public final class PartyFinderOverlay {
             if (!(screen instanceof AbstractContainerScreen<?> container)) return;
             String title = container.getTitle().getString();
             if (!title.equals("Party Finder") && !title.equals("Catacombs Gate")) return;
+            if (title.equals("Party Finder")) {
+                openPartyFinder = container;
+                ScreenEvents.remove(screen).register(ignored -> {
+                    if (openPartyFinder == container) openPartyFinder = null;
+                });
+            }
 
             ScreenEvents.afterExtract(screen).register((scr, graphics, mouseX, mouseY, delta) -> {
                 if (cfg == null || !cfg.partyFinderGui) return;
@@ -47,6 +58,7 @@ public final class PartyFinderOverlay {
                 } catch (Exception ignored) {}
             });
         });
+        ItemTooltipCallback.EVENT.register((stack, context, flags, lines) -> appendDetails(stack, lines));
     }
 
     // ported from devonian (GPL-3.0): api/dungeon/PartyFinderListener.kt
@@ -106,36 +118,41 @@ public final class PartyFinderOverlay {
         }
 
         if (joinable + blocked + dupes == 0) return;
-        String role = selectedClass.isEmpty() ? "" : "  Class " + selectedClass;
-        String summary = "§aJoinable " + joinable + "  §eDupe " + dupes + "  §cBlocked " + blocked + "§7" + role;
-        graphics.text(Minecraft.getInstance().font, summary, left + 8, top - 12, 0xFFFFFFFF, true);
-        if (hovered != null) drawDetails(graphics, left + 180, top, hovered);
+        String role = selectedClass.isEmpty() ? "" : "  " + selectedClass;
+        String summary = "§aJoin " + joinable + "  §eDupe " + dupes + "  §cBlock " + blocked + "§7" + role;
+        var font = Minecraft.getInstance().font;
+        int summaryWidth = Math.max(24, ((ContainerScreenAccessor) screen).constellation$imageWidth() - 16);
+        graphics.text(font, ConstellationUi.fit(font, summary, summaryWidth), left + 8, Math.max(2, top - 12), 0xFFFFFFFF, true);
+        if (hovered != null && cfg.partyFinderStats) requestProfiles(hovered);
+    }
+
+    private static void requestProfiles(Listing listing) {
+        List<String> names = new ArrayList<>();
+        for (Member member : listing.memberList) names.add(member.name);
+        DungeonProfileApi.request(names);
     }
 
     // ported from devonian (GPL-3.0): features/dungeons/PartyFinderOverview.kt
     // ported from devonian (GPL-3.0): api/dungeon/DungeonsApi.kt
-    private static void drawDetails(GuiGraphicsExtractor graphics, int x, int y, Listing listing) {
-        List<String> lines = new ArrayList<>();
-        lines.add("§b" + (listing.master ? "Master " : "Normal ") + "Floor " + listing.floor
-            + (listing.requiredCata > 0 ? "  §7Cata " + listing.requiredCata : ""));
-        lines.add("§7Missing: §f" + (listing.missingRoles.isEmpty() ? "none" : String.join(", ", listing.missingRoles)));
-        List<String> names = new ArrayList<>();
-        for (Member member : listing.memberList) names.add(member.name);
-        if (cfg.partyFinderStats) DungeonProfileApi.request(names);
+    private static void appendDetails(ItemStack stack, List<Component> lines) {
+        if (cfg == null || !cfg.partyFinderGui || openPartyFinder == null) return;
+        Listing listing = parse(stack);
+        if (listing == null) return;
+        if (cfg.partyFinderStats) requestProfiles(listing);
+        lines.add(Component.empty());
+        lines.add(Component.literal((listing.master ? "Master " : "Normal ") + "Floor " + listing.floor
+            + (listing.requiredCata > 0 ? "  Cata " + listing.requiredCata : "")).withStyle(ChatFormatting.AQUA));
+        lines.add(Component.literal("Missing: " + (listing.missingRoles.isEmpty() ? "none" : String.join(", ", listing.missingRoles)))
+            .withStyle(ChatFormatting.GRAY));
         for (Member member : listing.memberList) {
-            String line = "§f" + member.name + " §7" + member.role + " " + member.level;
+            String line = member.name + "  " + member.role + " " + member.level;
             DungeonProfileApi.Profile profile = cfg.partyFinderStats ? DungeonProfileApi.get(member.name) : null;
             if (profile != null) {
                 String pb = DungeonProfileApi.personalBest(profile, listing.master, listing.floor);
-                line += " §6C" + Math.round(profile.cata()) + " §b" + compact(profile.secrets()) + "s §dPB " + pb;
-            } else if (cfg.partyFinderStats) line += " §8loading";
-            lines.add(line);
+                line += "  C" + Math.round(profile.cata()) + "  " + compact(profile.secrets()) + "s  PB " + pb;
+            } else if (cfg.partyFinderStats) line += "  loading";
+            lines.add(Component.literal(line).withStyle(profile == null && cfg.partyFinderStats ? ChatFormatting.DARK_GRAY : ChatFormatting.WHITE));
         }
-        var font = Minecraft.getInstance().font;
-        int width = 120;
-        for (String line : lines) width = Math.max(width, font.width(line) + 8);
-        graphics.fill(x, y, x + width, y + 7 + lines.size() * 10, 0xCC101018);
-        for (int i = 0; i < lines.size(); i++) graphics.text(font, lines.get(i), x + 4, y + 4 + i * 10, 0xFFFFFFFF, true);
     }
 
     // ported from devonian (GPL-3.0): api/dungeon/PartyFinderListener.kt

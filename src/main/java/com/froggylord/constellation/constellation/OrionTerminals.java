@@ -75,6 +75,10 @@ public class OrionTerminals {
         return Type.NONE;
     }
 
+    public static boolean isTerminalTitle(String title) {
+        return typeOf(title) != Type.NONE;
+    }
+
     private static boolean inGoldor() {
         var dungeon = ConstellationClient.dungeon();
         return ConstellationClient.loc().inDungeons() && dungeon.inBoss()

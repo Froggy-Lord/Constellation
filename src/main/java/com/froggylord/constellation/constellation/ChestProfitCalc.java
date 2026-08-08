@@ -8,11 +8,14 @@ import com.froggylord.constellation.core.LocationManager.SkyblockArea;
 import com.froggylord.constellation.data.DungeonState;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
 import com.froggylord.constellation.ui.ConstellationUi;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,6 +35,8 @@ public final class ChestProfitCalc {
     private static final Pattern QUANTITY = Pattern.compile(" x([\\d,]+)$");
     private static final Pattern COINS = Pattern.compile("([\\d,]+) Coins");
     private static final Pattern CROESUS_FLOOR = Pattern.compile("^(Master )?Catacombs - Floor [IV]+$");
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/dungeon/CroesusHelper.java
+    private static final Pattern CROESUS_MENU = Pattern.compile("^(?:\\(\\d+/\\d+\\) )?(?:Croesus|Vesuvius)$");
     private static final Pattern LORE_BOOK = Pattern.compile("^Enchanted Book \\(([\\w ]+) ([IVX]+)\\)$");
     private static final Map<String, String> SPECIAL_IDS = Map.ofEntries(
         Map.entry("WITHER_SHARD", "SHARD_WITHER"), Map.entry("THORN_SHARD", "SHARD_THORN"),
@@ -58,16 +63,17 @@ public final class ChestProfitCalc {
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             if (!(screen instanceof AbstractContainerScreen<?> container)) return;
             String title = container.getTitle().getString();
-            boolean croesus = title.equals("Croesus");
+            boolean croesus = CROESUS_MENU.matcher(title).matches();
             boolean croesusFloor = CROESUS_FLOOR.matcher(title).matches();
             String chest = chestName(title);
             if (!croesus && !croesusFloor && chest == null) return;
             if (!validArea()) return;
             if (croesus) reset();
+            if (croesus) Screens.getWidgets(screen).add(new CroesusSummary(container));
             ScreenEvents.afterBackground(screen).register((scr, graphics, mx, my, delta) -> {
                 if (cfg == null || !cfg.chestProfitCalc) return;
                 try {
-                    if (croesus) croesus(container, graphics);
+                    if (croesus) croesusHighlights(container, graphics);
                     else if (croesusFloor) croesusProfits(container, graphics);
                     else calculate(container, graphics, chest);
                 } catch (Exception error) {
@@ -331,7 +337,12 @@ public final class ChestProfitCalc {
 
     // Croesus state ported from devonian (GPL-3.0): api/dungeon/CroesusListener.kt
     // and Odin (BSD-3-Clause): features/impl/dungeon/Croesus.kt
-    private static void croesus(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics) {
+    private record CroesusState(int unopened, int opened, int finished) {
+        String activeText() { return "§aUnopened " + unopened + " §6Opened " + opened; }
+        String doneText() { return "§cDone " + finished; }
+    }
+
+    private static CroesusState croesusState(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics) {
         int left = ((ContainerScreenAccessor) screen).constellation$left();
         int top = ((ContainerScreenAccessor) screen).constellation$top();
         int unopened = 0, opened = 0, finished = 0;
@@ -354,12 +365,42 @@ public final class ChestProfitCalc {
             else if (hasOpened) { opened++; colour = 0x60FFAA00; }
             else if (canOpen) { unopened++; colour = 0x6055FF55; }
             else continue;
-            graphics.fill(left + slot.x, top + slot.y, left + slot.x + 16, top + slot.y + 16, colour);
+            if (graphics != null) graphics.fill(left + slot.x, top + slot.y, left + slot.x + 16, top + slot.y + 16, colour);
         }
-        if (unopened + opened + finished == 0) return;
-        graphics.text(Minecraft.getInstance().font,
-            "§aUnopened " + unopened + " §6Opened " + opened + " §cDone " + finished,
-            left + 8, top - 12, 0xFFFFFFFF, true);
+        return new CroesusState(unopened, opened, finished);
+    }
+
+    private static void croesusHighlights(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics) {
+        croesusState(screen, graphics);
+    }
+
+    private static final class CroesusSummary extends StringWidget {
+        private final AbstractContainerScreen<?> screen;
+        private final int panelWidth;
+
+        private CroesusSummary(AbstractContainerScreen<?> screen) {
+            super(Component.literal("Croesus runs"), screen.getFont());
+            this.screen = screen;
+            var accessor = (ContainerScreenAccessor) screen;
+            int left = accessor.constellation$left();
+            int right = left + accessor.constellation$imageWidth();
+            int leftSpace = Math.max(0, left - 6), rightSpace = Math.max(0, screen.width - right - 6);
+            boolean useRight = rightSpace >= leftSpace;
+            int available = useRight ? rightSpace : leftSpace;
+            panelWidth = Math.max(56, available);
+            setWidth(panelWidth);
+            setHeight(29);
+            setPosition(useRight ? right + 6 : left - panelWidth - 6, Math.clamp(accessor.constellation$top() + 35, 4, screen.height - 33));
+        }
+
+        @Override public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+            CroesusState state = croesusState(screen, null);
+            if (cfg == null || !cfg.chestProfitCalc) return;
+            graphics.fill(getX(), getY(), getX() + panelWidth, getY() + getHeight(), 0xD0101018);
+            graphics.text(screen.getFont(), ConstellationUi.fit(screen.getFont(), state.activeText(), panelWidth - 8),
+                getX() + 4, getY() + 4, 0xFFFFFFFF, true);
+            graphics.text(screen.getFont(), state.doneText(), getX() + 4, getY() + 16, 0xFFFF5555, true);
+        }
     }
 
     private static CompoundTag extra(ItemStack stack) {

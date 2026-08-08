@@ -70,6 +70,7 @@ public final class LyraInventoryButtons {
 
     private static boolean show(AbstractContainerScreen<?> screen) {
         if (cfg == null || !cfg.enabled || !cfg.inventoryButtons || !ConstellationClient.loc().onHypixel()) return false;
+        if (LyraInventorySearch.dedicatedDungeonScreen(screen)) return false;
         if (cfg.inventoryButtonsOnlyPlayerInventory && !(screen instanceof InventoryScreen)) return false;
         return !cfg.inventoryButtonsHideInCreative || !(screen instanceof CreativeModeInventoryScreen);
     }

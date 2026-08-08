@@ -104,6 +104,8 @@ public class LocationManager {
             if (l.contains("deep caverns")) return SkyblockArea.DEEP_CAVERNS;
             // ported from Skyblocker (LGPL-3.0-or-later): utils/Area.java
             if (l.contains("your island") || l.contains("private island")) return SkyblockArea.PRIVATE_ISLAND;
+            // ported from Skyblocker (LGPL-3.0-or-later): utils/Location.java
+            if (l.contains("dungeon hub")) return SkyblockArea.DUNGEON_HUB;
             if (l.contains("village") || l.contains("hub")) return SkyblockArea.HUB;
         }
         return SkyblockArea.UNKNOWN;

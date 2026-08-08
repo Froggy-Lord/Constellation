@@ -54,7 +54,7 @@ public final class LyraInventorySearch {
     public static void init(LyraConfig config) {
         cfg = config;
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
-            if (!(screen instanceof AbstractContainerScreen<?> container) || !active()) return;
+            if (!(screen instanceof AbstractContainerScreen<?> container) || !active() || dedicatedDungeonScreen(container)) return;
             openScreen = null;
             searchBox = null;
             if (!cfg.inventorySearchRememberQuery) setQuery("");
@@ -63,6 +63,12 @@ public final class LyraInventorySearch {
             ScreenKeyboardEvents.allowKeyPress(container).register((ignored, event) -> key(container, event));
             ScreenMouseEvents.allowMouseClick(container).register((ignored, event) -> mouse(container, event));
         });
+    }
+
+    static boolean dedicatedDungeonScreen(AbstractContainerScreen<?> screen) {
+        String title = screen.getTitle().getString();
+        return OrionTerminals.isTerminalTitle(title) || title.equals("Spirit Leap") || title.equals("Teleport to Player")
+            || title.equals("Party Finder") || title.equals("Catacombs Gate");
     }
 
     private static boolean active() {

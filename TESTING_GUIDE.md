@@ -1,5 +1,12 @@
 # Constellation testing guide
 
+## Dungeon container overlays (0.9.856)
+
+- [ ] In Dungeon Hub, open Croesus or a paginated `(n/n) Croesus`/Vesuvius page. Expected: unopened runs are green, previously opened runs are orange, completed runs are red, and the two-line side panel shows every count.
+- [ ] Open Party Finder with joinable, duplicate-class and blocked listings. Expected: slots show `OK`, `D` or `NO`, the compact summary stays complete, and hovering a listing keeps its server lore while appending floor, missing roles, party members and loaded profile details.
+- [ ] Open every terminal family or run `/termsim panes` and `/termsim melody` locally. Expected: the terminal instruction remains fully visible; Inventory Search and Inventory Buttons do not appear on the device screen.
+- [ ] Open Spirit Leap with living and dead teammates. Expected: the four-card replacement shows name, class colour and `DEAD` state without Inventory Search or Inventory Buttons; only a deliberate card click or configured class key activates the server slot.
+
 ## Experiment and utility containers (0.9.855)
 
 - [ ] On your Private Island, run Chronomatron, Ultrasequencer and Superpairs. Expected: the next valid choice is clear, remembered pairs remain visible, wrong-click protection respects Control bypass, and tier names with spaces still activate the solver.

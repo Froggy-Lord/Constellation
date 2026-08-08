@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.856 (2026-08-09) — Clear Dungeon Container Overlays
+
+- recognize paginated Croesus and Vesuvius menus in the Dungeon Hub, including the previously unreachable Dungeon Hub area classification
+- move Croesus run counts into a stable two-line screen panel while retaining unopened, opened and finished slot tints
+- keep inventory search and shortcut buttons off Party Finder, terminal and Spirit Leap screens so dedicated instructions remain unobstructed
+- compact Party Finder counts and append floor, requirement, missing-role and member/profile details to the authoritative native item tooltip
+- live-verify Croesus states, Party Finder join/dupe/block states, Melody and panes terminals, and populated living/dead Spirit Leap cards
+
 ## 0.9.853 (2026-08-09) — Readable Economy Status Markers
 
 - allow Bazaar status and quantity helpers to work immediately while the profile identifier is still loading
