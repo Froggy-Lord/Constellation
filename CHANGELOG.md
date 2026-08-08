@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.848 (2026-08-09) — Safe Chat Presentation
+
+- kept chat filters, timestamps and formatters out of the action bar
+- preserved server styling, hover data and existing click actions when linking URLs or shortening numbers
+- made compact-chat settings respond immediately without restarting
+- replaced decorative symbols in compact reward and rare-drop messages with plain text
+
 ## 0.9.847 (2026-08-09) — Working Boss Health Bars
 
 - connected the previously unused Boss Bar Improvement setting to the actual boss-bar render path

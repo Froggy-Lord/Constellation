@@ -1,5 +1,14 @@
 # Constellation testing guide
 
+## Chat and action-bar separation (0.9.848)
+
+- [ ] Enable timestamps, clickable links, shortened numbers, and selected Action Bar Cleaner filters.
+- [ ] Confirm timestamps appear in ordinary chat but never in the action bar.
+- [ ] Confirm an ordinary `http://` or `https://` link is blue, underlined, and opens the normal confirmation flow when clicked.
+- [ ] Confirm shortening a large formatted number does not remove surrounding colour, hover text, or an existing click action.
+- [ ] Toggle every compact-chat option while connected. Its behavior must change immediately without restarting.
+- [ ] Confirm unrelated action-bar segments remain visible and are handled only by Action Bar Cleaner.
+
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
 ## SkyBlock recipe and item browser

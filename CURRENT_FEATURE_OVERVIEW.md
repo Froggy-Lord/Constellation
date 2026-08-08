@@ -1,5 +1,9 @@
 # Constellation feature overview
 
+Current test build: 0.9.848.
+
+Chat presentation treats the action bar as a separate HUD channel. URL and number formatting preserves server component styling and interactions, and compact-chat settings apply immediately when changed.
+
 ## Selective SkyBlock action bar
 
 - Cassiopeia can remove seventeen independently selected status segments without hiding unrelated ability or encounter text.
