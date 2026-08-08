@@ -5,6 +5,7 @@ import com.froggylord.constellation.api.NeuRepoLoader;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.LyraConfig;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -17,6 +18,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
@@ -132,18 +134,24 @@ public final class LyraAccessoryHelper {
 
     private static void drawPanel(AbstractContainerScreen<?> container,GuiGraphicsExtractor g,int mouseX,int mouseY){
         if(!active()||!cfg.accessoryBagPanel||container!=screen||!cfg.missingAccessoryHelper)return;
-        List<Entry> entries=entries();int rows=Math.clamp(cfg.accessoryPanelRows,3,18),maxPage=Math.max(1,(entries.size()+rows-1)/rows);panelPage=Math.clamp(panelPage,0,maxPage-1);
+        List<Entry> entries=entries();
         ContainerScreenAccessor accessor=(ContainerScreenAccessor)container;
-        int x=accessor.constellation$left()+accessor.constellation$imageWidth()+6;
-        if(x+190>container.width)x=accessor.constellation$left()-196;
-        int y=accessor.constellation$top();
-        g.fill(x,y,x+190,y+18+rows*11,0xD0101018);g.fill(x,y,x+2,y+18+rows*11,0xFF55AAFF);
-        g.text(Minecraft.getInstance().font,"Accessory Helper  "+(panelPage+1)+"/"+maxPage,x+6,y+5,0xFF55FFFF,true);
+        int left=accessor.constellation$left(),containerRight=left+accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,left-4),rightSpace=Math.max(0,container.width-containerRight-4);
+        boolean useRight=rightSpace>=leftSpace;int panelWidth=Math.min(190,useRight?rightSpace:leftSpace);if(panelWidth<56)return;
+        int x=useRight?containerRight+4:4,y=Math.clamp(accessor.constellation$top(),2,Math.max(2,container.height-20));
+        int heightRows=Math.max(1,(container.height-y-20)/11),rows=Math.min(Math.clamp(cfg.accessoryPanelRows,3,18),heightRows);
+        int maxPage=Math.max(1,(entries.size()+rows-1)/rows);panelPage=Math.clamp(panelPage,0,maxPage-1);
+        int drawnRows=Math.min(rows,Math.max(0,entries.size()-panelPage*rows)),panelHeight=18+drawnRows*11;
+        g.fill(x,y,x+panelWidth,y+panelHeight,0xD0101018);g.fill(x,y,x+2,y+panelHeight,0xFF55AAFF);
+        Font font=Minecraft.getInstance().font;
+        g.text(font,ConstellationUi.fit(font,"Accessory Helper  "+(panelPage+1)+"/"+maxPage,panelWidth-10),x+6,y+5,0xFF55FFFF,true);
         hoveredFamily="";
-        for(int i=0;i<rows;i++){int index=panelPage*rows+i;if(index>=entries.size())break;Entry entry=entries.get(index);int ry=y+18+i*11;boolean hover=mouseX>=x&&mouseX<x+190&&mouseY>=ry&&mouseY<ry+11;if(hover){g.fill(x+2,ry,x+190,ry+11,0x4055AAFF);hoveredFamily=entry.accessory.family;}
+        for(int i=0;i<drawnRows;i++){int index=panelPage*rows+i;Entry entry=entries.get(index);int ry=y+18+i*11;boolean hover=mouseX>=x&&mouseX<x+panelWidth&&mouseY>=ry&&mouseY<ry+11;if(hover){g.fill(x+2,ry,x+panelWidth,ry+11,0x4055AAFF);hoveredFamily=entry.accessory.family;}
             String right="";if(cfg.accessoryShowMp)right+="+"+entry.mp+" MP";if(cfg.accessoryShowPrice&&entry.price>0)right+=(right.isBlank()?"":" | ")+coins(entry.price);
-            int color=entry.type==Type.MISSING?cfg.accessoryMissingColor:cfg.accessoryUpgradeColor;String name=display(entry.accessory.id);if(name.length()>22)name=name.substring(0,21)+"...";
-            g.text(Minecraft.getInstance().font,name,x+6,ry+1,color,true);g.text(Minecraft.getInstance().font,right,x+186-Minecraft.getInstance().font.width(right),ry+1,0xFFAAAAAA,true);
+            int color=entry.type==Type.MISSING?cfg.accessoryMissingColor:cfg.accessoryUpgradeColor;String name=display(entry.accessory.id);
+            if(panelWidth>=130&&!right.isBlank()){int rightWidth=font.width(right);g.text(font,ConstellationUi.fit(font,name,Math.max(16,panelWidth-rightWidth-15)),x+6,ry+1,color,true);g.text(font,right,x+panelWidth-rightWidth-4,ry+1,0xFFAAAAAA,true);}
+            else g.text(font,ConstellationUi.fit(font,name,panelWidth-10),x+6,ry+1,color,true);
         }
     }
 

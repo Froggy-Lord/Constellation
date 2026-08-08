@@ -2567,6 +2567,13 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] At 854×480 and GUI scale 2, scroll Spirit Leap settings from top to bottom. Expected: upper controls leave cleanly, Scale and Custom Order become fully reachable, and no partial control remains clickable outside the visible panel.
 - [ ] Open Tunnel Maps in a narrow window. Expected: Stop route accurately describes clearing only the current route, all three controls remain separate, and the optional destination hint appears only when it cannot overlap them.
 - [ ] Open Dungeon Records with a long populated-floor summary at narrow and wide widths. Expected: the title, fitted summary and column heading remain separate with no duplicate header text.
+
+## Container overlay responsiveness
+
+- [ ] Open a populated Accessory Bag at wide, standard and narrow widths with the helper panel enabled. Expected: the panel chooses the larger free side gutter, never covers a slot, never leaves the screen, and reduces visible rows before crossing the bottom edge.
+- [ ] Enable Accessory Helper MP and price details, then narrow the window. Expected: wide panels retain the right-hand details while compact panels prioritize a fitted accessory name without overlapping text.
+- [ ] Enable automatic Container Value with a long breakdown and open Storage or an eligible chest at several widths. Expected: the panel stays entirely in a side gutter; when fewer than 92 pixels are free it shows a fitted total without illegible breakdown rows.
+- [ ] Configure an Inventory Button with a 120-character tooltip and hover it near every screen edge. Expected: the native tooltip wraps and repositions inside the window instead of drawing off-screen or using a negative X coordinate.
 - [ ] Enter malformed floor, Cata, secrets, average, MP and PB values in Party Guard, then click Save. Expected: a readable error remains on screen and no field or toggle is persisted until the entire form is valid.
 - [ ] Enter values outside each Party Guard range. Expected: valid numeric text clamps to the documented safe range while malformed text is rejected.
 - [ ] Change several Party Guard fields without saving and resize the window. Expected: every draft and focused field survives, no duplicate fields appear and the compact labels/footer remain separate.

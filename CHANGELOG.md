@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.836 (2026-08-09) — Responsive Container Side Panels
+
+- kept Accessory Helper entirely inside the larger free container gutter at every window width
+- reduced accessory rows to available height and collapsed price details before covering container slots
+- made Storage Value use a responsive gutter and a compact total-only view when space is limited
+- replaced unbounded Inventory Button tooltip drawing with the native wrapped and screen-clamped tooltip path
+
 ## 0.9.835 (2026-08-09) — Bounded SkyBlock Screen Controls
 
 - prevented clipped Smart Refill rows and slot-binding profiles from accepting hidden clicks

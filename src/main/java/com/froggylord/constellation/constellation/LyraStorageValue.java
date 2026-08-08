@@ -310,17 +310,20 @@ public final class LyraStorageValue {
 
     private static void renderValue(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Font font = Minecraft.getInstance().font;
-        int width = 148;
-        int wantedRows = cfg.containerValueShowBreakdown ? value.entries.size() : 0;
-        int rows = Math.min(wantedRows, Math.max(0, (screen.height - 26) / 18));
-        int height = 22 + rows * 18;
         ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
-        int x = accessor.constellation$left() + accessor.constellation$imageWidth() + 5;
-        if (x + width > screen.width) x = Math.max(2, accessor.constellation$left() - width - 5);
+        int left = accessor.constellation$left(), right = left + accessor.constellation$imageWidth();
+        int leftSpace = Math.max(0, left - 4), rightSpace = Math.max(0, screen.width - right - 4);
+        boolean useRight = rightSpace >= leftSpace;
+        int width = Math.min(148, useRight ? rightSpace : leftSpace);
+        if (width < 56) return;
+        int wantedRows = cfg.containerValueShowBreakdown ? value.entries.size() : 0;
+        int rows = width < 92 ? 0 : Math.min(wantedRows, Math.max(0, (screen.height - 26) / 18));
+        int height = 22 + rows * 18;
+        int x = useRight ? right + 4 : 4;
         int y = Math.clamp(accessor.constellation$top(), 2, Math.max(2, screen.height - height - 2));
         graphics.fill(x, y, x + width, y + height, 0xE8101018);
         int color = value.incomplete ? cfg.containerValueIncompleteColor : cfg.containerValueCompleteColor;
-        graphics.text(font, (value.incomplete ? "Estimated: " : "Value: ") + money(value.total), x + 6, y + 6, color, true);
+        graphics.text(font, trim(font, (value.incomplete ? "Estimated: " : "Value: ") + money(value.total), width - 12), x + 6, y + 6, color, true);
         for (int i = 0; i < rows; i++) {
             ValueEntry entry = value.entries.get(i);
             int rowY = y + 19 + i * 18;
