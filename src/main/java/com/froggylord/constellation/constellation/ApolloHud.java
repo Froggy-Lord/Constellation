@@ -26,15 +26,15 @@ public class ApolloHud extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.PerformanceHudWidget(
             HudPosition.of(2, 2), () -> cfg.enabled && cfg.performanceHud));
         hud.register(new com.froggylord.constellation.hud.LocationHudWidget(
-            HudPosition.of(2, 14), () -> cfg.enabled && cfg.locationHud));
+            HudPosition.of(2, 38), () -> cfg.enabled && cfg.locationHud));
         hud.register(new com.froggylord.constellation.hud.MovementHudWidget(
-            HudPosition.of(2, 38), () -> cfg.enabled && cfg.movementHud));
+            HudPosition.of(2, 70), () -> cfg.enabled && cfg.movementHud));
         hud.register(new com.froggylord.constellation.hud.VitalsHudWidget(
             HudPosition.of(76, 2), () -> cfg.enabled && cfg.vitalsHud));
         hud.register(new com.froggylord.constellation.hud.EffectsHudWidget(
-            HudPosition.of(76, 14), () -> cfg.enabled && cfg.effectsHud));
+            HudPosition.of(76, 38), () -> cfg.enabled && cfg.effectsHud));
         hud.register(new com.froggylord.constellation.hud.CustomScoreboardHudWidget(
-            HudPosition.of(82, 24), () -> cfg.enabled && cfg.customScoreboard));
+            HudPosition.of(82, 70), () -> cfg.enabled && cfg.customScoreboard));
     }
 
     @Override

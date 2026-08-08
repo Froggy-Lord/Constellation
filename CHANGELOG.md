@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.823 (2026-08-09) — Compact SkyBlock HUD Corrections
+
+- applied the compact translucent HUD treatment to Mirrorverse Dance as well as the shared 99-widget HUD family
+- corrected Apollo's default left and right HUD stacks after live testing exposed overlap at ordinary GUI scale
+- added a tracked SkyBlock-only visual completion audit covering screens, HUDs, container overlays and world overlays
+
 ## 0.9.822 (2026-08-09) — SkyBlock Recipe and Item Browser
 
 - added a lazy, cached NEU item repository with safe staged updates and usable-snapshot preservation

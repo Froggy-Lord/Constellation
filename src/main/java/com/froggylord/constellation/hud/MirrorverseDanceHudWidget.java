@@ -23,5 +23,8 @@ public final class MirrorverseDanceHudWidget implements HudElement {
     private List<String> preview(){List<String> value=lines();return value.isEmpty()?List.of("§7Now: §eMove §f0:850","§7Next: §5Sneak","§7Later: §bJump"):value;}
     private int gap(){return Math.clamp(AndromedaMirrorverse.danceSpacing(),-5,10);}
     private int[] size(List<String> lines){var font=Minecraft.getInstance().font;int width=font.width("Mirrorverse Dance");for(String line:lines)width=Math.max(width,font.width(line));int step=Math.max(1,font.lineHeight+gap());return new int[]{width+10,8+font.lineHeight+3+Math.max(1,lines.size())*step};}
-    private void draw(GuiGraphicsExtractor graphics,int x,int y,List<String> lines){if(lines.isEmpty())return;var font=Minecraft.getInstance().font;int[] size=size(lines);graphics.fill(x,y,x+size[0],y+size[1],ConstellationTheme.PANEL);graphics.fill(x,y,x+2,y+size[1],ConstellationTheme.ACCENT);graphics.text(font,"Mirrorverse Dance",x+5,y+4,ConstellationTheme.ACCENT_BRIGHT,true);int cy=y+7+font.lineHeight;for(String line:lines){graphics.text(font,line,x+5,cy,0xFFFFFFFF,true);cy+=Math.max(1,font.lineHeight+gap());}}
+    private void draw(GuiGraphicsExtractor graphics,int x,int y,List<String> lines){if(lines.isEmpty())return;var font=Minecraft.getInstance().font;int[] size=size(lines);
+        // ported from Dross Pickles (MIT): hud/EntityHud.java
+        graphics.fill(x,y,x+size[0],y+size[1],0xAA0E0E22);graphics.outline(x,y,size[0],size[1],ConstellationTheme.BORDER_SOFT);
+        graphics.text(font,"Mirrorverse Dance",x+5,y+4,ConstellationTheme.ACCENT_BRIGHT,true);int cy=y+7+font.lineHeight;for(String line:lines){graphics.text(font,line,x+5,cy,0xFFFFFFFF,true);cy+=Math.max(1,font.lineHeight+gap());}}
 }
