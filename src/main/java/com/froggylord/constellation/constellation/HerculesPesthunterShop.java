@@ -104,8 +104,8 @@ public final class HerculesPesthunterShop {
         int shown=Math.min(offers.size(),Math.max(1,(screen.height-24)/11)),height=20+Math.max(1,shown)*11;
         int x=useRight?imageWidth+4:-width-4,y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.pesthunterPanelColor);
-        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Pesthunter Profit per Pest",width-12),x+6,y+5,0xFFFFFF55,true);
-        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Waiting for complete prices",width-12),x+6,y+17,0xFFFFAA00,false);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Profit / Pest",width-12),x+6,y+5,0xFFFFFF55,true);
+        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Loading prices",width-12),x+6,y+17,0xFFFFAA00,false);
         int line=y+17;
         for(Offer offer:offers.subList(0,shown)){
             graphics.text(font,ConstellationUi.fit(font,offer.name+"  "+coins(offer.perPest),width-12),x+6,line,offer.profit>=0?0xFF55FF55:0xFFFF5555,false);

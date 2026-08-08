@@ -1855,3 +1855,8 @@
 - **~660 features** (~55% of ~1,200-feature catalogue)
 - All headless-verified (0 mixin failures throughout)
 - Email disabled (Google rate-limit from 47 rapid-fire sends)
+## 0.9.854 - Garden overlay visual pass
+
+- Kept Anita, Pesthunter, locked-plot and Composter side-panel states readable in narrow container gutters.
+- Live-tested plot editing/statuses, visitor protection/tooltips, Garden shops, Composter, Greenhouse, Stereo Harmony and a complete DNA Analyzer board in a local fake-Garden world.
+- Confirmed the Recipe Browser renders every ingredient and output in its scrollable detail pane.

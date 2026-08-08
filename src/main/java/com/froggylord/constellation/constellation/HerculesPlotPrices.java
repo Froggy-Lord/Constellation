@@ -99,9 +99,9 @@ public final class HerculesPlotPrices {
         int height=20+Math.max(1,count+extra)*11,x=useRight?imageWidth+4:-width-4;
         int y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.plotPricePanelColor);
-        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Locked Plot Prices",width-12),x+6,y+5,0xFFFFFF55,true);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Locked Plots",width-12),x+6,y+5,0xFFFFFF55,true);
         int line=y+17;
-        if(plots.isEmpty()){graphics.text(font,ConstellationUi.fit(font,"Waiting for complete prices",width-12),x+6,line,0xFFFFAA00,false);return;}
+        if(plots.isEmpty()){graphics.text(font,ConstellationUi.fit(font,"Loading prices",width-12),x+6,line,0xFFFFAA00,false);return;}
         for(Plot plot:plots.subList(0,count)){
             int color=plot.affordable?0xFF55FF55:0xFFFFFFFF;
             graphics.text(font,ConstellationUi.fit(font,plot.name+"  "+coins(plot.total),width-12),x+6,line,color,false);line+=11;

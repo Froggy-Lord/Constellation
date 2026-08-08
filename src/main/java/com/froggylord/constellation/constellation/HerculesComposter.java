@@ -213,7 +213,7 @@ public final class HerculesComposter {
     }
 
     private static List<Row> overlayRows(Material organic, Material fuel) {
-        if (state == null) return List.of(new Row("Status", "Waiting for tab data", 0xFFFFAA00));
+        if (state == null) return List.of(new Row("Status", "Loading", 0xFFFFAA00));
         List<Row> rows = new ArrayList<>();
         long missingOrganic = Math.max(0, maxOrganic() - state.organic);
         long missingFuel = Math.max(0, maxFuel() - state.fuel);

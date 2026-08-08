@@ -1,5 +1,15 @@
 # Constellation testing guide
 
+## Garden overlays (0.9.854)
+
+Enable Hercules and the Garden helpers you want to test, then visit the matching Garden menus naturally.
+
+- [ ] Open Configure Plots. Plot status colours, letters and counts should remain readable; the axe at the lower right cycles the custom-icon editor and its tooltip explains each mode.
+- [ ] Open a visitor offer and hover Accept/Refuse. Protected choices should be tinted and outlined, and the added requirements/profit warning must remain inside the native tooltip.
+- [ ] Open Anita and Pesthunter's Wares. The compact side panel should show `Loading prices` until data is ready, then rank complete offers without covering slots.
+- [ ] Open Composter and Crop Diagnostics. The Composter panel must fit its side gutter; Greenhouse water and harvest/reward states must remain distinguishable.
+- [ ] Open Stereo Harmony and a DNA Analyzer puzzle. Playing/matching vinyls should retain visible item icons; DNA should darken non-target cells and mark the next swap `1` then `2`.
+
 ## Chat and action-bar separation (0.9.848)
 
 - [ ] In a safe local world, run `/chatvisual`. Expected: the gold label, green shortened amount and blue underlined URL appear in chat while a separate action-bar sample appears above the hotbar. Hover the amount to see `Open the Auction House`; clicking the URL must open Minecraft's confirmation screen.

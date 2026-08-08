@@ -131,8 +131,8 @@ public final class HerculesAnitaShop {
         int shown=Math.min(offers.size(),Math.max(1,(screen.height-24)/11)),height=20+Math.max(1,shown)*11;
         int x=useRight?imageWidth+4:-width-4,y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.anitaPanelColor);
-        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Profit per Bronze Medal",width-12),x+6,y+5,0xFFFFFF55,true);
-        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Waiting for item prices",width-12),x+6,y+17,0xFFFFAA00,false);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Profit / Bronze",width-12),x+6,y+5,0xFFFFFF55,true);
+        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Loading prices",width-12),x+6,y+17,0xFFFFAA00,false);
         int line=y+17;
         for(Offer offer:offers.subList(0,shown)){
             String text=shortName(offer.name)+"  "+coins(offer.perBronze);
