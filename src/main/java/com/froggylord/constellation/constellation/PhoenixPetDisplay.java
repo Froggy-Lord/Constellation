@@ -22,6 +22,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemLore;
 
@@ -50,6 +51,7 @@ public final class PhoenixPetDisplay {
     private static double previousProgress=-1,percentPerHour;
     private static long previousProgressAt;
     private static boolean initialized;
+    private static PetDisplayData preview;
 
     private PhoenixPetDisplay(){}
 
@@ -113,8 +115,8 @@ public final class PhoenixPetDisplay {
     private static void remember(PetDisplayData data){if(data==null||data.name.isBlank())return;CACHE.put(key(data.name),copy(data));}
     private static final Map<String,PetDisplayData> CACHE=new java.util.LinkedHashMap<>();
     private static PetDisplayData find(String name){PetDisplayData data=CACHE.get(key(name));if(data!=null)return copy(data);PetDisplayData current=current();return current!=null&&sameName(current.name,name)?copy(current):null;}
-    private static PetDisplayData current(){return cfg==null||profile().isBlank()?null:cfg.activePetsByProfile.get(profile());}
-    private static void clearCurrent(){if(!profile().isBlank()){cfg.activePetsByProfile.remove(profile());if(cfg.petDisplayPersistProfiles)ConstellationClient.saveConfig();}icon=ItemStack.EMPTY;selectedSlot=-1;previousProgress=-1;percentPerHour=0;}
+    private static PetDisplayData current(){if(preview!=null)return preview;return cfg==null||profile().isBlank()?null:cfg.activePetsByProfile.get(profile());}
+    private static void clearCurrent(){preview=null;if(!profile().isBlank()){cfg.activePetsByProfile.remove(profile());if(cfg.petDisplayPersistProfiles)ConstellationClient.saveConfig();}icon=ItemStack.EMPTY;selectedSlot=-1;previousProgress=-1;percentPerHour=0;}
 
     private static void sample(double progress){long now=System.currentTimeMillis();if(previousProgress>=0&&progress>previousProgress&&now-previousProgressAt>=1000){percentPerHour=(progress-previousProgress)*3_600_000d/(now-previousProgressAt);}previousProgress=progress;previousProgressAt=now;}
     public static PetDisplayData state(){return current();}
@@ -133,16 +135,18 @@ public final class PhoenixPetDisplay {
     public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher){
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("petdisplay").executes(c->status())
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status").executes(c->status()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("preview").executes(c->preview()))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("clear").then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("confirm").executes(c->{clearCurrent();return status();})))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("color").then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("target",StringArgumentType.word()).then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("argb",StringArgumentType.word()).executes(c->color(StringArgumentType.getString(c,"target"),StringArgumentType.getString(c,"argb"))))))
             .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("option").then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("name",StringArgumentType.word()).then(RequiredArgumentBuilder.<FabricClientCommandSource,String>argument("state",StringArgumentType.word()).executes(c->option(StringArgumentType.getString(c,"name"),StringArgumentType.getString(c,"state")))))));
     }
+    private static int preview(){Minecraft mc=Minecraft.getInstance();if(!mc.hasSingleplayerServer()){local("Preview is only available in a local world.");return 0;}if(preview!=null){clearCurrent();local("Preview hidden.");return 1;}PetDisplayData data=new PetDisplayData();data.name="Golden Dragon";data.level=200;data.cosmeticLevel=200;data.rarity="LEGENDARY";data.heldItem="Minos Relic";data.skinned=true;data.levelProgress=73.4;data.source="Preview";data.updatedAt=System.currentTimeMillis();preview=data;icon=new ItemStack(Items.PLAYER_HEAD);local("Preview shown. Run /petdisplay preview again to hide it.");return 1;}
     private static int status(){PetDisplayData data=current();local(data==null?"No active pet is known for this profile.":(data.level>=0?"Level "+data.level+" ":"")+data.name+(data.rarity.isBlank()?"":" ("+data.rarity+")")+", source "+data.source+".");return 1;}
     private static int option(String name,String raw){Boolean value=bool(raw);if(value==null){local("State must be on or off.");return 0;}switch(name.toLowerCase(Locale.ROOT)){case"enabled"->cfg.petDisplay=value;case"hud"->cfg.petDisplayHud=value;case"icon"->cfg.petDisplayIcon=value;case"level"->cfg.petDisplayLevel=value;case"cosmetic"->cfg.petDisplayCosmeticLevel=value;case"skin"->cfg.petDisplaySkin=value;case"rarity"->cfg.petDisplayRarity=value;case"item"->cfg.petDisplayHeldItem=value;case"xp"->cfg.petDisplayXp=value;case"rate"->cfg.petDisplayRate=value;case"eta"->cfg.petDisplayEta=value;case"source"->cfg.petDisplaySource=value;case"persist"->cfg.petDisplayPersistProfiles=value;case"highlight"->cfg.petDisplayHighlightSelected=value;case"tooltip"->cfg.petDisplayTooltipTotalXp=value;case"autopettitle"->cfg.petDisplayAutopetTitle=value;case"dungeononly"->cfg.petDisplayAutopetTitleDungeonOnly=value;default->{local("Unknown Pet Display option.");return 0;}}ConstellationClient.saveConfig();return status();}
     private static int color(String target,String raw){try{String value=raw.replaceFirst("^(?:#|0[xX])","");long parsed=Long.parseUnsignedLong(value,16);if(value.length()<=6)parsed|=0xFF000000L;switch(target.toLowerCase(Locale.ROOT)){case"name"->cfg.petDisplayNameColor=(int)parsed;case"info"->cfg.petDisplayInfoColor=(int)parsed;case"progress"->cfg.petDisplayProgressColor=(int)parsed;case"highlight"->cfg.petDisplayHighlightColor=(int)parsed;default->{local("Color target must be name, info, progress or highlight.");return 0;}}ConstellationClient.saveConfig();return status();}catch(Exception ignored){local("Color must be ARGB hex.");return 0;}}
 
     private static String profile(){Minecraft mc=Minecraft.getInstance();if(mc.player==null||mc.getConnection()==null)return"";for(PlayerInfo info:mc.getConnection().getOnlinePlayers()){Component display=info.getTabListDisplayName();if(display==null)continue;String line=clean(display.getString());if(line.startsWith("Profile: ")){String value=line.substring(9).replaceAll("[^A-Za-z0-9_-]","");if(!value.isBlank())return mc.getUser().getProfileId()+"/"+value.toLowerCase(Locale.ROOT);}}return"";}
-    private static boolean active(){return cfg!=null&&cfg.enabled&&cfg.petDisplay&&ConstellationClient.loc().onHypixel();}
+    private static boolean active(){return cfg!=null&&cfg.enabled&&cfg.petDisplay&&(ConstellationClient.loc().onHypixel()||preview!=null&&Minecraft.getInstance().hasSingleplayerServer());}
     private static boolean pet(ItemStack stack){return extra(stack).getStringOr("id","").equals("PET");}
     private static CompoundTag extra(ItemStack stack){CustomData data=stack.get(DataComponents.CUSTOM_DATA);return data==null?new CompoundTag():data.copyTag().getCompoundOrEmpty("ExtraAttributes");}
     private static List<String> lore(ItemStack stack){ItemLore lore=stack.get(DataComponents.LORE);return lore==null?List.of():lore.lines().stream().map(Component::getString).toList();}

@@ -3061,3 +3061,11 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 4. Select a preset and click Delete once, then Reset once. Expected: only the selected action changes to Confirm; choosing another action cancels the prior confirmation.
 5. Click Use outside Hypixel. Expected: an advisory says Speed Presets only work on Hypixel and no command is sent.
 6. Press Escape and repeat with Done. Expected: both return cleanly to gameplay or the parent screen.
+
+### Party Messages, pet display and dungeon map
+
+1. Run `/partymessages`, then resize to 640x480. Expected: Search, Sort, Filter, list, detail, Toggle, Reset and Template remain inside their own panes.
+2. Select a message, scroll each half independently, focus and edit its template, and click Reset once. Expected: only the hovered pane scrolls, the template begins at its first character after resizing and Reset changes to Confirm without immediately destroying the edit.
+3. In a throwaway local world run `/petdisplay preview`. Expected: an icon-first two-row pet panel appears between Location and Movement, with no server command and no collision with Custom Scoreboard. Run it again to hide it.
+4. On a real dungeon map, compare GUI scales and narrow/wide windows. Expected: untouched legacy defaults migrate once to a compact top-center map; customized map position/scale is not changed.
+5. Open `/termsim` while Inventory Search and Inventory Buttons are enabled. Expected: neither generic helper appears on the simulator menu or terminal, and selecting a terminal opens its clean training board.

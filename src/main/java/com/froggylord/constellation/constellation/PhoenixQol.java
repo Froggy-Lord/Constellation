@@ -58,7 +58,7 @@ public class PhoenixQol extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.SpeedPresetHudWidget(
             HudPosition.of(76, 32), () -> cfg.enabled && cfg.speedPresets && cfg.speedPresetsHud));
         hud.register(new com.froggylord.constellation.hud.PetDisplayHudWidget(
-            HudPosition.of(76, 38), () -> cfg.enabled && cfg.petDisplay && cfg.petDisplayHud));
+            HudPosition.of(2, 59), () -> cfg.enabled && cfg.petDisplay && cfg.petDisplayHud));
         hud.register(new com.froggylord.constellation.hud.CollectionTrackerHudWidget(
             HudPosition.of(76, 44), () -> cfg.enabled && cfg.collectionTracker && cfg.collectionTrackerHud));
     }

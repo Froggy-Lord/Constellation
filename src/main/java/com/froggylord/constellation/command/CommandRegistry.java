@@ -12,6 +12,7 @@ import com.froggylord.constellation.ui.ConfigScreen;
 import com.froggylord.constellation.ui.HubScreen;
 import com.froggylord.constellation.ui.ProfileViewerScreen;
 import com.froggylord.constellation.ui.LyraRecipeBrowserScreen;
+import com.froggylord.constellation.ui.PartyMessageScreen;
 import com.froggylord.constellation.constellation.LyraRecipeRepository;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -43,9 +44,17 @@ public final class CommandRegistry {
                 .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("query", StringArgumentType.greedyString())
                     .executes(ctx -> openRecipes(StringArgumentType.getString(ctx, "query")))));
             dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("recipesupdate").executes(ctx -> updateRecipes()));
+            dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("partymessages")
+                .executes(ctx -> openPartyMessages()));
             features.registerCommands(dispatcher);
             ItemProtection.registerCommands(dispatcher);
         });
+    }
+
+    private static int openPartyMessages() {
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.execute(() -> minecraft.setScreenAndShow(new PartyMessageScreen(minecraft.gui.screen())));
+        return 1;
     }
 
     private static LiteralArgumentBuilder<FabricClientCommandSource> root(String name, FeatureManager features) {

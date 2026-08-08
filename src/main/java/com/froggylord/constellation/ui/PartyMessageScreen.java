@@ -43,9 +43,10 @@ public final class PartyMessageScreen extends Screen {
         boolean searchFocused = search != null && search.isFocused();
         boolean templateFocused = template != null && template.isFocused();
         int retainedScroll = scroll;
-        search = new EditBox(font, 18, 28, Math.min(240, width / 3), 18, Component.literal("Search messages"));
+        int split = width / 2;
+        search = new EditBox(font, 18, 28, Math.max(48, Math.min(240, split - 30)), 18, Component.literal("Search messages"));
         search.setMaxLength(64);
-        search.setHint(Component.literal("Search name, category, variable"));
+        search.setHint(Component.literal(narrow() ? "Search" : "Search name, category, variable"));
         search.setResponder(value -> scroll = 0);
         search.setValue(retainedSearch);
         addRenderableWidget(search);
@@ -64,7 +65,11 @@ public final class PartyMessageScreen extends Screen {
         addRenderableWidget(template);
         scroll = retainedScroll;
         if (templateFocused) { template.setFocused(true); setFocused(template); }
-        else if (searchFocused) { search.setFocused(true); setFocused(search); }
+        else {
+            template.setCursorPosition(0);
+            template.setHighlightPos(0);
+            if (searchFocused) { search.setFocused(true); setFocused(search); }
+        }
     }
 
     @Override public boolean isPauseScreen() { return false; }
@@ -75,11 +80,11 @@ public final class PartyMessageScreen extends Screen {
         ConstellationUi.background(g, width, height, delta);
         ConstellationUi.header(g, font, "Party Messages", summary, width);
 
-        ConstellationTheme.search(g, 16, 26, Math.min(244, width / 3 + 4), 22, search.isFocused());
-        button(g, 18, 53, 104, 18, "Sort: " + label(sort.name()), mx, my, false);
-        button(g, 126, 53, 104, 18, "Filter: " + label(filter.name()), mx, my, filter != Filter.ALL);
-
         int split = width / 2;
+        ConstellationTheme.search(g, 16, 26, Math.max(52, Math.min(244, split - 26)), 22, search.isFocused());
+        button(g, sortX(), 53, controlWidth(), 18, sortText(), mx, my, false);
+        button(g, filterX(), 53, controlWidth(), 18, filterText(), mx, my, filter != Filter.ALL);
+
         List<PartyMessages.Definition> shown = visible();
         int listTop = 77, rowH = 24, viewBottom = height - 13;
         maxScroll = Math.max(0, shown.size() * rowH - (viewBottom - listTop));
@@ -143,8 +148,8 @@ public final class PartyMessageScreen extends Screen {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean dbl) {
         int mx = (int) event.x(), my = (int) event.y();
-        if (inside(mx, my, 18, 51, 104, 18)) { confirmReset = false; sort = Sort.values()[(sort.ordinal() + 1) % Sort.values().length]; return true; }
-        if (inside(mx, my, 126, 51, 104, 18)) { confirmReset = false; filter = Filter.values()[(filter.ordinal() + 1) % Filter.values().length]; scroll = 0; return true; }
+        if (inside(mx, my, sortX(), 51, controlWidth(), 18)) { confirmReset = false; sort = Sort.values()[(sort.ordinal() + 1) % Sort.values().length]; return true; }
+        if (inside(mx, my, filterX(), 51, controlWidth(), 18)) { confirmReset = false; filter = Filter.values()[(filter.ordinal() + 1) % Filter.values().length]; scroll = 0; return true; }
         int split = width / 2;
         List<PartyMessages.Definition> shown = visible();
         if (mx >= 10 && mx < split - 10 && my >= 77 && my < height - 13) {
@@ -182,6 +187,10 @@ public final class PartyMessageScreen extends Screen {
         selected = definition;
         changingTemplate = true;
         template.setValue(PartyMessages.template(definition.id()));
+        if (!template.isFocused()) {
+            template.setCursorPosition(0);
+            template.setHighlightPos(0);
+        }
         changingTemplate = false;
     }
 
@@ -215,6 +224,19 @@ public final class PartyMessageScreen extends Screen {
         int count = 0;
         for (PartyMessages.Definition definition : PartyMessages.definitions()) if (PartyMessages.enabled(definition.id())) count++;
         return count;
+    }
+
+    private boolean narrow() { return width < 520; }
+    private int controlWidth() { return narrow() ? Math.max(44, (width / 2 - 30) / 2) : 104; }
+    private int sortX() { return narrow() ? 10 : 18; }
+    private int filterX() { return narrow() ? sortX() + controlWidth() + 6 : 126; }
+    private String sortText() {
+        if (!narrow()) return "Sort: " + label(sort.name());
+        return switch (sort) { case NAME -> "Sort: Name"; case CATEGORY -> "Sort: Cat"; case ENABLED -> "Sort: On"; };
+    }
+    private String filterText() {
+        if (!narrow()) return "Filter: " + label(filter.name());
+        return switch (filter) { case ALL -> "All"; case ENABLED -> "On"; case DISABLED -> "Off"; };
     }
 
     private void button(GuiGraphicsExtractor g, int x, int y, int w, int h, String text, int mx, int my, boolean active) {

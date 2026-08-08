@@ -4,7 +4,14 @@ import com.froggylord.constellation.hud.HudPosition;
 
 public class OrionConfig extends BaseConfigGroup {
 
-    @Override public int currentVersion() { return 0; }
+    @Override public int currentVersion() { return 1; }
+    @Override public void migrate(int fromVersion) {
+        if (fromVersion < 1 && mapScale == 2 && mapX == 1 && mapY == 2) {
+            mapScale = 1;
+            mapX = 36;
+            mapY = 2;
+        }
+    }
 
     
     public boolean scoreHud = true;
@@ -65,8 +72,8 @@ public class OrionConfig extends BaseConfigGroup {
 
     
     public boolean dungeonMap = true;
-    public int mapScale = 2; 
-    public int mapX = 1;     
+    public int mapScale = 1; 
+    public int mapX = 36;     
     public int mapY = 2;
 
     

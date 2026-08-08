@@ -35,12 +35,21 @@ public class ConstellationConfig {
     @SerializedName("auriga")     public AurigaConfig auriga = new AurigaConfig();
     @SerializedName("artemis")    public ArtemisConfig artemis = new ArtemisConfig();
 
-    public void migrate() {
-        if (visual == null) visual = new VisualConfig();
+    public boolean migrate() {
+        boolean changed = false;
+        if (visual == null) { visual = new VisualConfig(); changed = true; }
         if (cfgVersion < CURRENT_VERSION) {
             migrateFrom(cfgVersion);
             cfgVersion = CURRENT_VERSION;
+            changed = true;
         }
+        for (BaseConfigGroup group : java.util.List.of(visual, apollo, cassiopeia, orion, phoenix, aquila,
+            lyra, cygnus, hercules, draco, hydra, perseus, andromeda, pegasus, auriga, artemis)) {
+            int before = group.version;
+            group.checkMigration();
+            changed |= before != group.version;
+        }
+        return changed;
     }
 
     private void migrateFrom(int fromVersion) {

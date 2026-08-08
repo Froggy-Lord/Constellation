@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.860 (2026-08-09) — Finish Responsive SkyBlock HUD Placement
+
+- add `/partymessages` and make Party Messages search, sorting, filtering, template view and confirmation controls responsive at 640x480
+- keep Inventory Search and Inventory Buttons off the dedicated Terminal Simulator, then live-verify menu-to-terminal flow
+- add a local-only `/petdisplay preview`, compact the icon-first pet HUD to two option-aware rows and place it between Location and Movement
+- activate and persist per-group config migrations, moving only untouched legacy dungeon maps to a compact top-center default
+- live-verify Market Search, Profile Viewer recovery, Custom Scoreboard, Tunnel Maps, Party Messages, Terminal Simulator, pet HUD and real map-data rendering at narrow and wide sizes
+
 ## 0.9.859 (2026-08-09) — Open Client Screens Reliably
 
 - defer Speed Presets, Custom Scoreboard and Tunnel Map command-open actions until chat has finished closing

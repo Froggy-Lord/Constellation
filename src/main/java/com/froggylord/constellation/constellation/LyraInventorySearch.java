@@ -67,7 +67,8 @@ public final class LyraInventorySearch {
 
     static boolean dedicatedDungeonScreen(AbstractContainerScreen<?> screen) {
         String title = screen.getTitle().getString();
-        return OrionTerminals.isTerminalTitle(title) || title.equals("Spirit Leap") || title.equals("Teleport to Player")
+        return screen instanceof TerminalSimulatorScreen || OrionTerminals.isTerminalTitle(title)
+            || title.equals("Spirit Leap") || title.equals("Teleport to Player")
             || title.equals("Party Finder") || title.equals("Catacombs Gate");
     }
 
