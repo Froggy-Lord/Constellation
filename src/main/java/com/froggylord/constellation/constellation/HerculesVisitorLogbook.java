@@ -2,6 +2,8 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.HerculesConfig;
+import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -146,14 +148,16 @@ public final class HerculesVisitorLogbook {
 
     private static void drawPanel(GuiGraphicsExtractor graphics,AbstractContainerScreen<?> screen){
         List<Row> rows=rows();
-        int left=screen.getMenu().slots.stream().mapToInt(slot->slot.x).min().orElse(8);
-        int top=screen.getMenu().slots.stream().mapToInt(slot->slot.y).min().orElse(18);
-        int width=174,x=Math.max(2,left-width-8),y=top,height=20+Math.max(1,rows.size())*11;
+        ContainerScreenAccessor accessor=(ContainerScreenAccessor)screen;int screenLeft=accessor.constellation$left(),imageWidth=accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,screenLeft-4),rightSpace=Math.max(0,screen.width-screenLeft-imageWidth-4);boolean useRight=rightSpace>=leftSpace;
+        int width=Math.min(174,useRight?rightSpace:leftSpace);if(width<56)return;
+        int shown=Math.min(rows.size(),Math.max(1,(screen.height-24)/11)),height=20+Math.max(1,shown)*11;
+        int x=useRight?imageWidth+4:-width-4,y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.visitorLogbookPanelColor);
-        graphics.text(Minecraft.getInstance().font,"Visitor Logbook",x+6,y+5,0xFFFFAA00,true);
-        if(rows.isEmpty())graphics.text(Minecraft.getInstance().font,"Open a Logbook page",x+6,y+17,0xFFFFAA00,false);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Visitor Logbook",width-12),x+6,y+5,0xFFFFAA00,true);
+        if(rows.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Open a Logbook page",width-12),x+6,y+17,0xFFFFAA00,false);
         int line=y+17;
-        for(Row row:rows){graphics.text(Minecraft.getInstance().font,shortText(row.label+": "+row.value,29),x+6,line,row.color,false);line+=11;}
+        for(Row row:rows.subList(0,shown)){graphics.text(font,ConstellationUi.fit(font,row.label+": "+row.value,width-12),x+6,line,row.color,false);line+=11;}
     }
 
     public static List<Component> appendTooltip(AbstractContainerScreen<?> screen,ItemStack stack,List<Component> input){

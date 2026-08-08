@@ -4,6 +4,8 @@ import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.api.BazaarApi;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.HerculesConfig;
+import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -123,17 +125,18 @@ public final class HerculesAnitaShop {
     }
 
     private static void drawPanel(GuiGraphicsExtractor graphics,AbstractContainerScreen<?> screen){
-        int left=screen.getMenu().slots.stream().mapToInt(s->s.x).min().orElse(8);
-        int top=screen.getMenu().slots.stream().mapToInt(s->s.y).min().orElse(18);
-        int width=196,x=Math.max(2,left-width-8),y=top;
-        int rows=Math.max(1,offers.size()),height=20+rows*11;
+        ContainerScreenAccessor accessor=(ContainerScreenAccessor)screen;int screenLeft=accessor.constellation$left(),imageWidth=accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,screenLeft-4),rightSpace=Math.max(0,screen.width-screenLeft-imageWidth-4);boolean useRight=rightSpace>=leftSpace;
+        int width=Math.min(196,useRight?rightSpace:leftSpace);if(width<56)return;
+        int shown=Math.min(offers.size(),Math.max(1,(screen.height-24)/11)),height=20+Math.max(1,shown)*11;
+        int x=useRight?imageWidth+4:-width-4,y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.anitaPanelColor);
-        graphics.text(Minecraft.getInstance().font,"Profit per Bronze Medal",x+6,y+5,0xFFFFFF55,true);
-        if(offers.isEmpty())graphics.text(Minecraft.getInstance().font,"Waiting for item prices",x+6,y+17,0xFFFFAA00,false);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Profit per Bronze Medal",width-12),x+6,y+5,0xFFFFFF55,true);
+        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Waiting for item prices",width-12),x+6,y+17,0xFFFFAA00,false);
         int line=y+17;
-        for(Offer offer:offers){
+        for(Offer offer:offers.subList(0,shown)){
             String text=shortName(offer.name)+"  "+coins(offer.perBronze);
-            graphics.text(Minecraft.getInstance().font,text,x+6,line,offer.profit>=0?0xFF55FF55:0xFFFF5555,false);
+            graphics.text(font,ConstellationUi.fit(font,text,width-12),x+6,line,offer.profit>=0?0xFF55FF55:0xFFFF5555,false);
             line+=11;
         }
     }

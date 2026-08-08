@@ -5,6 +5,8 @@ import com.froggylord.constellation.api.BazaarApi;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.HerculesConfig;
 import com.froggylord.constellation.core.LocationManager;
+import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -96,15 +98,17 @@ public final class HerculesPesthunterShop {
     }
 
     private static void drawPanel(GuiGraphicsExtractor graphics,AbstractContainerScreen<?> screen){
-        int left=screen.getMenu().slots.stream().mapToInt(slot->slot.x).min().orElse(8);
-        int top=screen.getMenu().slots.stream().mapToInt(slot->slot.y).min().orElse(18);
-        int width=190,x=Math.max(2,left-width-8),y=top,height=20+Math.max(1,offers.size())*11;
+        ContainerScreenAccessor accessor=(ContainerScreenAccessor)screen;int screenLeft=accessor.constellation$left(),imageWidth=accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,screenLeft-4),rightSpace=Math.max(0,screen.width-screenLeft-imageWidth-4);boolean useRight=rightSpace>=leftSpace;
+        int width=Math.min(190,useRight?rightSpace:leftSpace);if(width<56)return;
+        int shown=Math.min(offers.size(),Math.max(1,(screen.height-24)/11)),height=20+Math.max(1,shown)*11;
+        int x=useRight?imageWidth+4:-width-4,y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.pesthunterPanelColor);
-        graphics.text(Minecraft.getInstance().font,"Pesthunter Profit per Pest",x+6,y+5,0xFFFFFF55,true);
-        if(offers.isEmpty())graphics.text(Minecraft.getInstance().font,"Waiting for complete prices",x+6,y+17,0xFFFFAA00,false);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Pesthunter Profit per Pest",width-12),x+6,y+5,0xFFFFFF55,true);
+        if(offers.isEmpty())graphics.text(font,ConstellationUi.fit(font,"Waiting for complete prices",width-12),x+6,y+17,0xFFFFAA00,false);
         int line=y+17;
-        for(Offer offer:offers){
-            graphics.text(Minecraft.getInstance().font,shortText(offer.name,21)+"  "+coins(offer.perPest),x+6,line,offer.profit>=0?0xFF55FF55:0xFFFF5555,false);
+        for(Offer offer:offers.subList(0,shown)){
+            graphics.text(font,ConstellationUi.fit(font,offer.name+"  "+coins(offer.perPest),width-12),x+6,line,offer.profit>=0?0xFF55FF55:0xFFFF5555,false);
             line+=11;
         }
     }

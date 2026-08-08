@@ -4,6 +4,8 @@ import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.HerculesConfig;
 import com.froggylord.constellation.core.LocationManager;
+import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -188,17 +190,24 @@ public final class HerculesComposter {
     }
 
     private static void drawOverlay(GuiGraphicsExtractor graphics, AbstractContainerScreen<?> screen) {
-        int left = screen.getMenu().slots.stream().mapToInt(value -> value.x).min().orElse(8);
-        int top = screen.getMenu().slots.stream().mapToInt(value -> value.y).min().orElse(18);
         Material organic = best(false), fuel = best(true);
-        int width = 154, x = Math.max(2, left - width - 8), y = top;
         List<Row> rows = overlayRows(organic, fuel);
         int height = 18 + rows.size() * 11;
+        ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
+        int screenLeft = accessor.constellation$left(), imageWidth = accessor.constellation$imageWidth();
+        int leftSpace = Math.max(0, screenLeft - 4), rightSpace = Math.max(0, screen.width - screenLeft - imageWidth - 4);
+        boolean useRight = rightSpace >= leftSpace;
+        int width = Math.min(154, useRight ? rightSpace : leftSpace);
+        if (width < 56) return;
+        int x = useRight ? imageWidth + 4 : -width - 4;
+        int y = Math.clamp(0, 2 - accessor.constellation$top(),
+            Math.max(2 - accessor.constellation$top(), screen.height - accessor.constellation$top() - height - 2));
         graphics.fill(x, y, x + width, y + height, cfg.composterOverlayColor);
-        graphics.text(Minecraft.getInstance().font, "Composter", x + 6, y + 5, 0xFF55FFFF, true);
+        var font = Minecraft.getInstance().font;
+        graphics.text(font, ConstellationUi.fit(font, "Composter", width - 12), x + 6, y + 5, 0xFF55FFFF, true);
         int line = y + 17;
         for (Row row : rows) {
-            graphics.text(Minecraft.getInstance().font, row.label + ": " + row.value, x + 6, line, row.color, false);
+            graphics.text(font, ConstellationUi.fit(font, row.label + ": " + row.value, width - 12), x + 6, line, row.color, false);
             line += 11;
         }
     }

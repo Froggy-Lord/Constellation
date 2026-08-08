@@ -5,6 +5,8 @@ import com.froggylord.constellation.api.BazaarApi;
 import com.froggylord.constellation.api.PriceProvider;
 import com.froggylord.constellation.config.HerculesConfig;
 import com.froggylord.constellation.core.LocationManager;
+import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -89,19 +91,22 @@ public final class HerculesPlotPrices {
     }
 
     private static void drawPanel(GuiGraphicsExtractor graphics,AbstractContainerScreen<?> screen){
-        int left=screen.getMenu().slots.stream().mapToInt(slot->slot.x).min().orElse(8);
-        int top=screen.getMenu().slots.stream().mapToInt(slot->slot.y).min().orElse(18);
-        int count=Math.min(Math.clamp(cfg.plotPriceMaxRows,1,20),plots.size());
-        int extra=cfg.plotPriceShowVisibleTotal?1:0,width=184,x=Math.max(2,left-width-8),y=top,height=20+Math.max(1,count+extra)*11;
+        ContainerScreenAccessor accessor=(ContainerScreenAccessor)screen;int screenLeft=accessor.constellation$left(),imageWidth=accessor.constellation$imageWidth();
+        int leftSpace=Math.max(0,screenLeft-4),rightSpace=Math.max(0,screen.width-screenLeft-imageWidth-4);boolean useRight=rightSpace>=leftSpace;
+        int width=Math.min(184,useRight?rightSpace:leftSpace);if(width<56)return;
+        int capacity=Math.max(1,(screen.height-24)/11),extra=cfg.plotPriceShowVisibleTotal?1:0;
+        int count=Math.min(Math.min(Math.clamp(cfg.plotPriceMaxRows,1,20),plots.size()),Math.max(0,capacity-extra));
+        int height=20+Math.max(1,count+extra)*11,x=useRight?imageWidth+4:-width-4;
+        int y=Math.clamp(0,2-accessor.constellation$top(),Math.max(2-accessor.constellation$top(),screen.height-accessor.constellation$top()-height-2));
         graphics.fill(x,y,x+width,y+height,cfg.plotPricePanelColor);
-        graphics.text(Minecraft.getInstance().font,"Locked Plot Prices",x+6,y+5,0xFFFFFF55,true);
+        var font=Minecraft.getInstance().font;graphics.text(font,ConstellationUi.fit(font,"Locked Plot Prices",width-12),x+6,y+5,0xFFFFFF55,true);
         int line=y+17;
-        if(plots.isEmpty()){graphics.text(Minecraft.getInstance().font,"Waiting for complete prices",x+6,line,0xFFFFAA00,false);return;}
+        if(plots.isEmpty()){graphics.text(font,ConstellationUi.fit(font,"Waiting for complete prices",width-12),x+6,line,0xFFFFAA00,false);return;}
         for(Plot plot:plots.subList(0,count)){
             int color=plot.affordable?0xFF55FF55:0xFFFFFFFF;
-            graphics.text(Minecraft.getInstance().font,shortText(plot.name,20)+"  "+coins(plot.total),x+6,line,color,false);line+=11;
+            graphics.text(font,ConstellationUi.fit(font,plot.name+"  "+coins(plot.total),width-12),x+6,line,color,false);line+=11;
         }
-        if(cfg.plotPriceShowVisibleTotal)graphics.text(Minecraft.getInstance().font,"Visible total: "+coins(plots.stream().mapToDouble(Plot::total).sum()),x+6,line,0xFFFFAA00,false);
+        if(cfg.plotPriceShowVisibleTotal)graphics.text(font,ConstellationUi.fit(font,"Visible total: "+coins(plots.stream().mapToDouble(Plot::total).sum()),width-12),x+6,line,0xFFFFAA00,false);
     }
 
     public static List<Component> appendTooltip(AbstractContainerScreen<?> screen,ItemStack stack,List<Component> input){

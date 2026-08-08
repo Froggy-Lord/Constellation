@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.837 (2026-08-09) — Correct Garden Overlay Placement
+
+- fixed Composter, Anita, Visitor Logbook, Pesthunter and Plot Price panels using screen coordinates inside container-local rendering
+- moved every affected panel into the largest free side gutter instead of covering server slots
+- capped Garden panel rows to available window height and fitted every heading and value to compact widths
+
 ## 0.9.836 (2026-08-09) — Responsive Container Side Panels
 
 - kept Accessory Helper entirely inside the larger free container gutter at every window width
