@@ -207,10 +207,14 @@ public final class AurigaReforgeHelper {
         excludes = null;
         if (!cfg.reforgeFilterEditor) return;
         Font font = container.getFont();
-        int left = ((ContainerScreenAccessor) container).constellation$left();
-        int width = Math.clamp(left - 30, 90, 180);
-        int x = Math.max(10, left - width - 10);
-        int y = Math.max(20, container.height / 2 - 30);
+        ContainerScreenAccessor accessor = (ContainerScreenAccessor) container;
+        int left = accessor.constellation$left(), right = left + accessor.constellation$imageWidth();
+        int leftSpace = Math.max(0, left - 20), rightSpace = Math.max(0, container.width - right - 20);
+        boolean useRight = rightSpace >= leftSpace;
+        int width = Math.min(180, useRight ? rightSpace : leftSpace);
+        if (width < 90 || container.height < 80) return;
+        int x = useRight ? right + 10 : 10;
+        int y = Math.clamp(container.height / 2 - 30, 20, container.height - 60);
         includes = new FilterBox(font, width, "Wanted reforges");
         excludes = new FilterBox(font, width, "Excluded substrings");
         includes.setPosition(x, y);

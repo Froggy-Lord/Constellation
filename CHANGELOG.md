@@ -1,5 +1,11 @@
 # Constellation Changelog
 
+## 0.9.839 (2026-08-09) — Non-Overlapping Reforge Filters
+
+- made the Reforge Helper filter editor choose the larger actual side gutter
+- prevented forced minimum-width filter fields from covering Hex/Reforge slots or intercepting their clicks
+- kept the editor hidden when neither gutter is wide enough for readable input
+
 ## 0.9.838 (2026-08-09) — Responsive Dungeon Chest Profit
 
 - moved Dungeon Chest Profit into the larger available side gutter instead of assuming right-side space
