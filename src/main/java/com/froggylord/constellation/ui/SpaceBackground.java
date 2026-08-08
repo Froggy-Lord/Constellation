@@ -6,28 +6,12 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import java.util.Random;
 
-/**
- * animated space background — AI-generated nebula video from Pika/Runway,
- * converted to 80-frame sequence at 8fps (10-second seamless loop).
- * nasa carina + helix stills kept as fallback assets.
- */
 public final class SpaceBackground {
 
     private static final Identifier BG =
         Identifier.fromNamespaceAndPath("constellation", "textures/gui/background.png");
     private static final Identifier BG_ALT =
         Identifier.fromNamespaceAndPath("constellation", "textures/gui/bg_config.png");
-
-    // AI-generated animated frames
-    private static final int ANIM_FRAMES = 50;
-    private static final int ANIM_FPS = 5;
-    private static final int FRAME_W = 256;
-    private static final int FRAME_H = 256;
-
-    static Identifier animFrame(int idx) {
-        return Identifier.fromNamespaceAndPath("constellation",
-            "textures/gui/anim/frame_" + String.format("%03d", idx) + ".png");
-    }
 
     // shooting stars
     private static long nextShootingStar = 0;
@@ -36,27 +20,14 @@ public final class SpaceBackground {
     private static final Random RNG = new Random(42);
 
     public static void render(GuiGraphicsExtractor g, int w, int h, float delta) {
-        renderAnimated(g, w, h, delta);
-    }
-
-    public static void renderConfig(GuiGraphicsExtractor g, int w, int h, float delta) {
-        // config uses the static helix bg for variety — replace with anim later
-        g.blit(RenderPipelines.GUI_TEXTURED, BG_ALT, 0, 0, 0, 0, w, h, 2048, 2048);
+        g.blit(RenderPipelines.GUI_TEXTURED, BG, 0, 0, 0, 0, w, h, 2048, 2048);
         g.fill(0, 0, w, h, 0xAA080814);
         shootStars(g, w, h);
     }
 
-    static void renderAnimated(GuiGraphicsExtractor g, int w, int h, float delta) {
-        long now = System.currentTimeMillis();
-
-        // cycle through 80 AI-generated frames at 8fps — smooth nebula animation
-        int frameIdx = (int) ((now / (1000 / ANIM_FPS)) % ANIM_FRAMES);
-        g.blit(RenderPipelines.GUI_TEXTURED, animFrame(frameIdx),
-            0, 0, 0, 0, w, h, FRAME_W, FRAME_H);
-
-        // dark overlay for readability
-        g.fill(0, 0, w, h, 0x99080814);
-
+    public static void renderConfig(GuiGraphicsExtractor g, int w, int h, float delta) {
+        g.blit(RenderPipelines.GUI_TEXTURED, BG_ALT, 0, 0, 0, 0, w, h, 2048, 2048);
+        g.fill(0, 0, w, h, 0xAA080814);
         shootStars(g, w, h);
     }
 
