@@ -7,6 +7,7 @@ import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.core.LocationManager.SkyblockArea;
 import com.froggylord.constellation.data.DungeonState;
 import com.froggylord.constellation.mixin.ContainerScreenAccessor;
+import com.froggylord.constellation.ui.ConstellationUi;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.client.Minecraft;
@@ -63,7 +64,7 @@ public final class ChestProfitCalc {
             if (!croesus && !croesusFloor && chest == null) return;
             if (!validArea()) return;
             if (croesus) reset();
-            ScreenEvents.afterExtract(screen).register((scr, graphics, mx, my, delta) -> {
+            ScreenEvents.afterBackground(screen).register((scr, graphics, mx, my, delta) -> {
                 if (cfg == null || !cfg.chestProfitCalc) return;
                 try {
                     if (croesus) croesus(container, graphics);
@@ -183,29 +184,37 @@ public final class ChestProfitCalc {
 
     private static void drawCurrent(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, ChestData data) {
         ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
-        int x = accessor.constellation$left() + accessor.constellation$imageWidth() + 8;
-        int y = accessor.constellation$top() + 5;
         var font = Minecraft.getInstance().font;
-        int width = 128;
-        int rows = 3 + (cfg.chestProfitCompact ? 0 : data.loot().size()) + (data.unknown() > 0 && cfg.chestProfitShowUnknown ? 1 : 0);
+        int left = accessor.constellation$left(), right = left + accessor.constellation$imageWidth();
+        int leftSpace = Math.max(0, left - 6), rightSpace = Math.max(0, screen.width - right - 6);
+        boolean useRight = rightSpace >= leftSpace;
+        int width = Math.min(128, useRight ? rightSpace : leftSpace);
+        if (width < 56) return;
+        boolean unknown = data.unknown() > 0 && cfg.chestProfitShowUnknown;
+        int maxLines = Math.max(3, (screen.height - 8) / (font.lineHeight + 2));
+        int lootRows = cfg.chestProfitCompact || width < 92 ? 0 : Math.min(data.loot().size(), Math.max(0, maxLines - 3 - (unknown ? 1 : 0)));
+        int rows = 3 + lootRows + (unknown ? 1 : 0);
+        int panelHeight = rows * (font.lineHeight + 2) + 6;
+        int x = useRight ? right + 6 : left - width - 6;
+        int y = Math.clamp(accessor.constellation$top() + 5, 4, Math.max(4, screen.height - panelHeight - 4));
         graphics.fill(x - 4, y - 4, x + width, y + rows * (font.lineHeight + 2) + 2, 0xD0101018);
-        graphics.text(font, "§6" + data.name() + " Chest", x, y, 0xFFFFAA00, true);
+        graphics.text(font, ConstellationUi.fit(font, "§6" + data.name() + " Chest", width - 4), x, y, 0xFFFFAA00, true);
         y += font.lineHeight + 2;
-        if (!cfg.chestProfitCompact) {
-            for (Loot item : data.loot()) {
+        if (lootRows > 0) {
+            for (Loot item : data.loot().subList(0, lootRows)) {
                 String value = item.value() > 0 ? money(item.value()) : "not counted";
-                graphics.text(font, "§7" + trim(item.name(), 17) + " §f" + value, x, y, 0xFFFFFFFF, true);
+                graphics.text(font, ConstellationUi.fit(font, "§7" + item.name() + " §f" + value, width - 4), x, y, 0xFFFFFFFF, true);
                 y += font.lineHeight + 2;
             }
         }
-        graphics.text(font, "§7Cost §f" + money(data.cost()), x, y, 0xFFFFFFFF, true);
+        graphics.text(font, ConstellationUi.fit(font, "§7Cost §f" + money(data.cost()), width - 4), x, y, 0xFFFFFFFF, true);
         y += font.lineHeight + 2;
         int colour = data.profit() >= 0 ? 0xFF55FF55 : 0xFFFF5555;
         String profitLabel = data.unknown() > 0 ? "Minimum profit" : "Profit";
-        graphics.text(font, "§b" + profitLabel + " §f" + signedMoney(data.profit()), x, y, colour, true);
+        graphics.text(font, ConstellationUi.fit(font, "§b" + profitLabel + " §f" + signedMoney(data.profit()), width - 4), x, y, colour, true);
         y += font.lineHeight + 2;
-        if (data.unknown() > 0 && cfg.chestProfitShowUnknown)
-            graphics.text(font, "§e" + data.unknown() + " unknown price" + (data.unknown() == 1 ? "" : "s"), x, y, 0xFFFFFF55, true);
+        if (unknown)
+            graphics.text(font, ConstellationUi.fit(font, "§e" + data.unknown() + " unknown price" + (data.unknown() == 1 ? "" : "s"), width - 4), x, y, 0xFFFFFF55, true);
     }
 
     public static String hudText() {

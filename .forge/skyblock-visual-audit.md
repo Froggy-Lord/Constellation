@@ -32,12 +32,12 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 
 ## Container-attached SkyBlock overlays
 
-- [ ] Audit Auction, Bazaar, accessory, storage-value, inventory-search, inventory-button and slot-text overlays together on representative server-shaped containers.
+- [ ] Audit Auction, Bazaar, accessory, storage-value, inventory-search, inventory-button and slot-text overlays together on representative server-shaped containers. A real local chest under a fake `SKYBLOCK` scoreboard proves Inventory Buttons, native item tooltip ordering, Storage Browse click authority, and the manual Storage Value panel (`/tmp/inventory-buttons-tooltip-layer-849.png`, `/tmp/inventory-native-tooltip-layer-849.png`, `/tmp/storage-exact-layer2-849.png`, `/tmp/storage-native-tooltip-layer-849.png`, `/tmp/storage-browse-click-layer-849.png`, `/tmp/value-panel-layer-849.png`). Auction, Bazaar, accessory, inventory-search and slot-text live combinations remain open.
 - [ ] Audit Garden plot, visitor, Anita, Pesthunter, Composter, Greenhouse, DNA Analyzer and Stereo overlays.
 - [ ] Audit experiments, anvil/reforge helpers, Chocolate Factory, Hoppity and SkyBlock Guide overlays.
 - [ ] Audit dungeon chest profit, Croesus, Party Finder, terminal and Spirit Leap overlays.
 - [ ] Audit Rift price/storage/guide and fishing overlays.
-- [ ] Verify layer order: vanilla/SkyBlock items and tooltips must remain above decorative surfaces, while click targets remain authoritative.
+- [x] Verify layer order: vanilla/SkyBlock items and tooltips must remain above decorative surfaces, while click targets remain authoritative. Source ordering is corrected for Accessory, Storage Value, Inventory Buttons and chest-profit side panels by drawing after the screen background but before native contents/tooltips; slot highlights and full replacement UIs intentionally retain their later phases. The current-build local chest captures above prove native and custom tooltips plus Browse/value click targets.
 
 ## World and event overlays
 

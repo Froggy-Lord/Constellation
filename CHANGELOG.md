@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.850 (2026-08-09) — Correct Container Layers
+
+- moved decorative Accessory, Storage Value, Inventory Button and dungeon chest-profit panels below native contents and tooltips
+- retained independent click handling for Storage Browse, value controls and inventory shortcuts
+- kept intentional per-slot highlights and full replacement terminal/Spirit Leap interfaces above native slots
+- verified native and custom tooltips plus Browse/value clicks in a real local container under a fake SkyBlock scoreboard
+
 ## 0.9.849 (2026-08-09) — Verified Chat and Pet HUD
 
 - added `/chatvisual`, a local-only rich chat and separate action-bar presentation check

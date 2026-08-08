@@ -98,7 +98,7 @@ public final class LyraStorageValue {
             manualValue = false;
             lastValueAt = 0;
             value = ValueResult.EMPTY;
-            ScreenEvents.afterExtract(container).register((ignored, graphics, mouseX, mouseY, delta) -> draw(container, graphics, mouseX, mouseY));
+            ScreenEvents.afterBackground(container).register((ignored, graphics, mouseX, mouseY, delta) -> draw(container, graphics, mouseX, mouseY));
             ScreenMouseEvents.allowMouseClick(container).register((ignored, event) -> !click(container, event));
             ScreenEvents.remove(container).register(ignored -> close(container));
         });

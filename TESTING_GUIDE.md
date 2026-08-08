@@ -10,6 +10,13 @@
 - [ ] Toggle every compact-chat option while connected. Its behavior must change immediately without restarting.
 - [ ] Confirm unrelated action-bar segments remain visible and are handled only by Action Bar Cleaner.
 
+## Container visual layers (0.9.850)
+
+- [ ] Open Storage with Inventory Buttons enabled. Expected: shortcut rows remain outside the chest, Browse remains clickable, and hovering a shortcut shows its tooltip above every decorative surface.
+- [ ] Hover several native container and player-inventory items, including items with long lore. Expected: the complete native tooltip renders above Inventory Buttons, Storage Value, Accessory Helper and chest-profit panels.
+- [ ] Toggle the `$` value button. Expected: the side panel appears without covering slots; hovering a breakdown row may highlight its source slots, but the native item and tooltip remain readable.
+- [ ] Open a dungeon reward chest and Croesus. Expected: chest-profit information stays behind native tooltips and all server slots remain clickable.
+
 You do not need to test everything in one sitting. Start with the five-minute check, then test one game-area session whenever you naturally play that area. Checkboxes are intentionally split into small groups.
 
 ## SkyBlock recipe and item browser

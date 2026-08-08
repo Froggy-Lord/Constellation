@@ -82,7 +82,7 @@ public final class LyraAccessoryHelper {
             Matcher matcher=TITLE.matcher(clean(container.getTitle().getString()));if(!matcher.matches())return;
             screen=container;page=matcher.group(1)==null?1:number(matcher.group(1));pages=matcher.group(2)==null?1:number(matcher.group(2));panelPage=0;
             ScreenEvents.afterTick(opened).register(ignored->scan(container));
-            ScreenEvents.afterExtract(opened).register((ignored,graphics,mouseX,mouseY,delta)->drawPanel(container,graphics,mouseX,mouseY));
+            ScreenEvents.afterBackground(opened).register((ignored,graphics,mouseX,mouseY,delta)->drawPanel(container,graphics,mouseX,mouseY));
             ScreenEvents.remove(opened).register(ignored->{if(screen==container){screen=null;hoveredFamily="";}});
         });
         ItemTooltipCallback.EVENT.register((stack,context,flags,lines)->tooltip(stack,lines));

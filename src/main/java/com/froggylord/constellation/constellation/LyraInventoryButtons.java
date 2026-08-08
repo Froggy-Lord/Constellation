@@ -62,7 +62,7 @@ public final class LyraInventoryButtons {
         normalize();
         ScreenEvents.AFTER_INIT.register((client, screen, width, height) -> {
             if (!(screen instanceof AbstractContainerScreen<?> container) || !show(container)) return;
-            ScreenEvents.afterExtract(container).register((ignored, graphics, mouseX, mouseY, delta) -> draw(container, graphics, mouseX, mouseY));
+            ScreenEvents.afterBackground(container).register((ignored, graphics, mouseX, mouseY, delta) -> draw(container, graphics, mouseX, mouseY));
             ScreenMouseEvents.allowMouseClick(container).register((ignored, event) -> !click(container, event));
             ScreenEvents.remove(container).register(ignored -> clearHover());
         });
@@ -128,12 +128,26 @@ public final class LyraInventoryButtons {
         ContainerScreenAccessor accessor = (ContainerScreenAccessor) screen;
         int size = Math.clamp(cfg.inventoryButtonsSize, 18, 32);
         int gap = Math.clamp(cfg.inventoryButtonsGap, -4, 12);
+        int available = Math.max(1, screen.width - 8);
         int total = BUTTONS_PER_ROW * size + (BUTTONS_PER_ROW - 1) * gap;
-        int startX = accessor.constellation$left() + (accessor.constellation$imageWidth() - total) / 2;
+        if (total > available) {
+            gap = Math.clamp((available - BUTTONS_PER_ROW * size) / (BUTTONS_PER_ROW - 1), -4, 12);
+            total = BUTTONS_PER_ROW * size + (BUTTONS_PER_ROW - 1) * gap;
+        }
+        if (total > available) {
+            size = Math.max(18, (available - (BUTTONS_PER_ROW - 1) * gap) / BUTTONS_PER_ROW);
+            total = BUTTONS_PER_ROW * size + (BUTTONS_PER_ROW - 1) * gap;
+        }
+        int preferredX = accessor.constellation$left() + (accessor.constellation$imageWidth() - total) / 2;
+        int startX = Math.clamp(preferredX, 4, Math.max(4, screen.width - total - 4));
         int row = index / BUTTONS_PER_ROW, column = index % BUTTONS_PER_ROW;
         int x = startX + column * (size + gap);
         int offset = Math.clamp(cfg.inventoryButtonsOffset, 0, 24);
-        int y = row == 0 ? accessor.constellation$top() - size + offset : accessor.constellation$top() + accessor.constellation$imageHeight() - offset;
+        int shiftRoom = cfg.inventoryButtonsHoverAnimation ? 4 : 0;
+        int wantedY = row == 0 ? accessor.constellation$top() - size + offset : accessor.constellation$top() + accessor.constellation$imageHeight() - offset;
+        int y = row == 0
+            ? Math.clamp(wantedY, 4 + shiftRoom, Math.max(4 + shiftRoom, screen.height - size - 4))
+            : Math.clamp(wantedY, 4, Math.max(4, screen.height - size - 4 - shiftRoom));
         return new Rect(x, y, size, size);
     }
 
@@ -158,11 +172,8 @@ public final class LyraInventoryButtons {
     private static void tooltip(GuiGraphicsExtractor graphics, LyraConfig.InventoryButtonEntry button, int mouseX, int mouseY) {
         String text = button.tooltip.isBlank() ? sanitize(button.command) : button.tooltip;
         if (text.isBlank()) text = "Unconfigured button";
-        int width = Minecraft.getInstance().font.width(text);
-        int x = Math.min(mouseX + 9, Minecraft.getInstance().getWindow().getGuiScaledWidth() - width - 8);
-        int y = Math.max(4, mouseY - 15);
-        graphics.fill(x - 3, y - 3, x + width + 3, y + 11, 0xF0101018);
-        graphics.text(Minecraft.getInstance().font, text, x, y, 0xFFFFFFFF, true);
+        // ported from SkyOcean (MIT): features/inventory/buttons/InvButtons.kt
+        graphics.setTooltipForNextFrame(Minecraft.getInstance().font, Component.literal(text), mouseX, mouseY);
     }
 
     private static void updateHover(int index) {
