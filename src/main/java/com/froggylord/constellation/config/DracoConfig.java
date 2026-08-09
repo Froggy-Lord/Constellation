@@ -55,6 +55,18 @@ public class DracoConfig extends BaseConfigGroup {
     public boolean supplyObjectiveHud = true;  
     public boolean keyGuardianAlert = true;    
     public boolean heavyPearlsTracker = true;  
+    public boolean crimsonMinibossTimers = true;
+    public boolean crimsonMinibossShowUnknown = true;
+    public boolean crimsonMinibossShowAlive = true;
+    public boolean crimsonMinibossSoonAlert = true;
+    public boolean crimsonMinibossSoonChat = false;
+    public boolean crimsonMinibossWorldLabels = false;
+    public boolean crimsonMinibossWorldBeams = false;
+    public boolean crimsonMinibossThroughWalls = true;
+    public int crimsonMinibossRespawnSeconds = 120;
+    public int crimsonMinibossSoonSeconds = 10;
+    public int crimsonMinibossWorldRange = 256;
+    public int crimsonMinibossColor = 0xFFFFAA00;
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/crimsonisle/MatriarchHelperConfig.kt
     public boolean matriarchHelper = true;
     public boolean matriarchHighlight = true;

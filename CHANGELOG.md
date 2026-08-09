@@ -1943,3 +1943,8 @@
 - Accepted spaced experiment tier names using Devonian's current title matcher.
 - Moved Reforge status text behind native contents, themed its filter fields, and restored keyboard focus when either field is clicked.
 - Live-tested populated Superpairs, Anvil, Reforge, Chocolate Factory, Hoppity Collection, and Power Stones Guide states.
+## 0.9.866 - Crimson Isle miniboss timers
+
+- Added lobby-local respawn states for all five Crimson Isle minibosses from exact server announcements.
+- Added boss-area and beacon recovery for honest estimated timers after joining an encounter late.
+- Added a movable HUD, optional world labels/beams, soon alerts and manual correction commands.

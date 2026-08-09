@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.865.
+Current test build: 0.9.866.
+
+Draco includes a Crimson Isle miniboss respawn display for Bladesoul, Mage Outlaw, Barbarian Duke X, Ashfang and Magma Boss. Server death and spawn announcements give exact two-minute states; visiting a boss arena can recover an honest estimated range from its boss and beacon state. Unknown and alive rows, soon alerts, duration, world labels, beams, range, color and through-wall rendering are configurable. `/crimsonbosses` shows, resets or manually corrects lobby-local state.
 
 Draco includes a complete Matriarch Heavy Pearl helper. It identifies the real `COLLECT!` armor-stand/Slime pairs inside the Belly of the Beast, highlights each pearl, orders them by height or shortest traversal, draws the pearl chain, and can continue along the licensed Crimson Isle graph to the Heavy Pearls exit. Highlight, route, graph, label, beam, color, range, width, distance, HUD and through-wall behavior are independently configurable.
 

@@ -3117,3 +3117,11 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 4. Run `/inventorybuttons` from chat. Expected: it remains open after chat closes. Check Layout, Button, Reset Button and Reset All confirmation states at 640x480; no footer overlaps a control.
 5. Run `/refill config` and `/carry` at both sizes. Expected: wheel scrolling reaches every row; Carry left-click changes progress, right-click changes total, and Remove requires confirmation.
 6. Run `/storagepreview`, then test search focus, item tooltip, card scrolling, reorder and Rename. Expected: Enter saves a rename, Escape first cancels Rename or clears search, and a later Escape closes the browser.
+### Crimson Isle miniboss timers
+
+1. Enable Draco and Crimson Miniboss Timers, then enter the Crimson Isle. Expected: the movable Crimson Minibosses HUD lists all five bosses as Unknown until this lobby supplies evidence.
+2. Stand inside a miniboss arena without moving around the island. Expected: a visible named boss becomes Alive; otherwise its beacon state produces an explicitly approximate range rather than claiming an exact death.
+3. Observe a `BOSS DOWN!` message. Expected: that boss starts at the configured respawn duration and reaches Soon at the configured threshold. The server spawning warning changes it to Alive.
+4. Enable World Labels or World Beams and approach an arena. Expected: only configured markers inside the render range appear, with the configured color and occlusion behavior.
+5. Run `/crimsonbosses`, `/crimsonbosses mark ashfang dead`, `/crimsonbosses mark ashfang alive` and `/crimsonbosses reset`. Expected: status, correction and reset are local only and never send a server command.
+6. Warp to another island and return. Expected: stale lobby timers are gone. Disabling Draco or the timer hides every HUD and world element.
