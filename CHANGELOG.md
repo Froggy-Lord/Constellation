@@ -1958,3 +1958,8 @@
 - Added full Trevor quest, cooldown, persistent data and session-rate tracking.
 - Added maintained area waypoints, stable target-animal detection and Talbot height/circle solving.
 - Added configurable HUD ordering, alerts, world layers, colors, ranges, commands and optional hotkey actions.
+## 0.9.869 - The Mist Ghost Tracker
+
+- Added profile-specific lifetime and resettable session Ghost tracking from authoritative Bestiary deltas.
+- Added Sorrow distance, combo, Combat XP, average Magic Find, drops, coins, profit, hourly rate and active uptime.
+- Added ordered HUD rows, bounded gemstone pickup correlation, Bestiary guidance and configurable valuable-drop alerts.

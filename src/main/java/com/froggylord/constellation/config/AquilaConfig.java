@@ -530,4 +530,30 @@ public class AquilaConfig extends BaseConfigGroup {
     public int tunnelMapsSelectionCooldownSeconds = 5;
     public int tunnelMapsBeamHeight = 20;
     public int tunnelMapsGoalOutlineWidth = 4;
+
+    public boolean ghostTracker = true;
+    public boolean ghostTrackerLifetime = false;
+    public boolean ghostTrackerShowKills = true;
+    public boolean ghostTrackerShowSorrowDistance = true;
+    public boolean ghostTrackerShowMaxCombo = true;
+    public boolean ghostTrackerShowCombatXp = true;
+    public boolean ghostTrackerShowAverageMagicFind = true;
+    public boolean ghostTrackerShowBestiary = true;
+    public boolean ghostTrackerShowDrops = true;
+    public boolean ghostTrackerShowProfit = true;
+    public boolean ghostTrackerShowProfitPerHour = true;
+    public boolean ghostTrackerShowUptime = true;
+    public boolean ghostTrackerCompactNumbers = true;
+    public boolean ghostTrackerWarnMissingBestiary = true;
+    public boolean ghostTrackerTrackInventoryGems = true;
+    public boolean ghostTrackerDropAlerts = true;
+    public boolean ghostTrackerDropAlertChat = false;
+    public boolean ghostTrackerDropAlertTitle = true;
+    public boolean ghostTrackerDropAlertSound = true;
+    public boolean ghostTrackerOnlyInMist = true;
+    public int ghostTrackerAfkSeconds = 60;
+    public int ghostTrackerRecentDrops = 4;
+    public int ghostTrackerMinimumAlertValue = 5_000_000;
+    public int ghostTrackerBestiaryMax = 100_000;
+    public String ghostTrackerOrder = "kills,sorrow,combo,xp,mf,bestiary,drops,profit,rate,uptime";
 }

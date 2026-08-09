@@ -64,6 +64,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaCrystalWaypoints.init(cfg);
         AquilaHotmHelper.init(cfg);
         AquilaTunnelMaps.init(cfg);
+        AquilaGhostTracker.init(cfg);
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) AquilaOrderedWaypoints.draw(context); });
         registerRenderer(context -> { if (isEnabled() && cfg.enabled) { AquilaCorpseHelper.draw(context); AquilaMiningGuidance.draw(context); AquilaMiningAwareness.draw(context); AquilaMiningHighlights.draw(context); AquilaNucleusBarriers.draw(context); AquilaDeepCavernsGuide.draw(context); AquilaScathaMining.draw(context); AquilaCrystalWaypoints.draw(context); AquilaTunnelMaps.draw(context); AquilaPickobulus.draw(context); AquilaMetalDetector.draw(context); } });
     }
@@ -117,6 +118,8 @@ public class AquilaMining extends BaseConstellation {
             () -> c.enabled && c.hotmHelper && c.hotmHelperHud));
         hud.register(new com.froggylord.constellation.hud.TunnelMapsHudWidget(HudPosition.of(78, 250),
             () -> c.enabled && c.tunnelMaps && c.tunnelMapsHud));
+        hud.register(new HudWidget("aquila-ghost-tracker", "Ghost Tracker", AquilaGhostTracker::hudText,
+            HudPosition.of(50, 84), () -> c.enabled && c.ghostTracker));
     }
 
     @Override
@@ -139,6 +142,7 @@ public class AquilaMining extends BaseConstellation {
         AquilaCrystalWaypoints.registerCommands(dispatcher);
         AquilaHotmHelper.registerCommands(dispatcher);
         AquilaTunnelMaps.registerCommands(dispatcher);
+        AquilaGhostTracker.registerCommands(dispatcher);
     }
 
     private static boolean inMining() {

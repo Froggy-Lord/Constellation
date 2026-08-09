@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.868.
+Current test build: 0.9.869.
+
+Aquila includes a profile-aware Ghost Tracker for The Mist. Bestiary deltas provide authoritative kills and Ghosts-since-Sorrow; rare-drop messages provide Sorrow/Plasma/Volta/boots and Magic Find; combat XP, combo, Bag of Cash, kill-correlated scavenger coins and kill-correlated inventory gemstones feed session or lifetime profit. HUD row order, visibility, compactness, recent-drop depth, pricing, AFK timing, warnings and valuable-drop alert channels are configurable.
 
 Hercules includes a complete Trevor the Trapper suite for the Farming Islands. It tracks quests, pelts, kills, self-kills, rarity totals and session pelts/hour; follows the live quest area; detects the real target animal from stable entity/health evidence; and draws area or target guidance. Talbot readings refine target height and add geometric circles. Cooldown, ready/death alerts, movable HUD rows, tracker ordering, waypoint layers, colors, ranges, circle density, visibility and an optional deliberate hotkey are configurable.
 

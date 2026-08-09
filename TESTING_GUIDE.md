@@ -3146,3 +3146,15 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 8. Reorder `trevorTrackerOrder`, toggle rarity/rate rows, and change area/target colors, box, beam, line, range, beam height, circle segments and through-wall behavior. Expected: each setting affects only its named layer.
 9. Bind `key.constellation.trevor`. With Warp Hotkey enabled it runs `/warp trapper` only from gameplay on the Farming Islands. With Accept Hotkey enabled, it can replay only a server-provided YES command captured 0.2-5 seconds earlier; it never guesses or stores a command across world changes.
 10. Warp away and return. Expected: transient quest, target, circle and captured-prompt state is cleared while lifetime tracker totals remain stored.
+### The Mist Ghost Tracker
+
+1. Enable Aquila and Ghost Tracker, then enter the Dwarven Mines outside The Mist. Expected: the tracker remains hidden when Only In Mist is enabled.
+2. Enter The Mist with the Bestiary tab widget enabled. Expected: the movable Ghost Tracker appears and initializes the Ghost Bestiary baseline without claiming old kills as a new session.
+3. Kill one to several Ghosts. Expected: Bestiary deltas up to 50 increment Kills and Ghosts since Sorrow; a large first/synchronization jump updates only the baseline.
+4. Observe Combat XP and a kill-combo expiry. Expected: individual gains above 10,000 are rejected as unrelated bulk XP, while valid gains and the highest combo update their rows.
+5. Obtain Sorrow, Plasma, Volta or Ghostly Boots. Expected: the exact rare-drop line records one item and its Magic Find; Sorrow resets Ghosts since Sorrow. `/ghosttracker testdrop sorrow` provides a local presentation test.
+6. Pick up rough/flawed supported gemstones immediately after a Ghost kill. Expected: only positive lower-inventory deltas within three seconds of a Bestiary kill are attributed; inventory rearrangement or unrelated later gains are ignored.
+7. Watch purse gains from kills and Bag of Cash. Expected: ordinary gains are counted only at 200-15,000 coins within 2.5 seconds of a kill; the exact Bag of Cash message adds one million without double-counting.
+8. Disable the Bestiary widget. Expected: at most one clickable warning per minute offers `/widget`; disabling Missing Bestiary Warning removes it.
+9. Switch Session/Lifetime, reorder `ghostTrackerOrder`, toggle every row, compact values, recent-drop count, AFK timeout and alert channels/value. Expected: the HUD updates independently and pricing uses the shared live price provider.
+10. Switch SkyBlock profiles without restarting. Expected: session state resets and lifetime/bestiary/drop totals change to that profile rather than merging profiles.
