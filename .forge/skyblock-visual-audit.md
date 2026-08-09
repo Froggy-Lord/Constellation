@@ -51,6 +51,6 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 - [x] Forbidden-source grep is empty for every touched implementation and user document.
 - [x] Build reports exactly 11 successful and zero failed tests.
 - [x] Clean boot reaches expected timeout with 138 rooms, 14 constellations and no mixin/crash/fatal marker.
-- [x] Gather jar, private shelf and drip queue contain the same final version: 0.9.861, SHA-256 `f7b8dd3a7894e80d4ca9e0c88db01ff1cba1d66799ace921a1c1b2e652503e02`, drip `6d73cf0b8e` authored only by Froggy-Lord.
+- [x] Gather jar, private shelf and drip queue contain the same final version: 0.9.862, SHA-256 `5ac0201e95d0bfc760c0a6bd0e7b6a1cfc9ccdcbe98245e1923ebdc8d78263b0`, drip `94557b80a1` authored only by Froggy-Lord.
 - [x] `CODEX_HANDOFF.md`, overview and testing guide match the final visual behavior.
-- [ ] Send the completion email as Rowan Vale using the Studios self-delivery route.
+- [x] Send the completion email as Rowan Vale using the Studios self-delivery route. Sent from `assistant@zdstudios.com.au` to the configured self-delivery inbox with subject `Constellation SkyBlock visual pass complete - 0.9.862`; thread `eab3da794ced4ac9`.

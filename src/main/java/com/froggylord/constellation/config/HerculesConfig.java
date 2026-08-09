@@ -215,6 +215,40 @@ public class HerculesConfig extends BaseConfigGroup {
     public Map<String, Long> pestLifetimeDrops = new HashMap<>();
     public Map<String, Integer> pestPlotNames = new HashMap<>();
     public double pestLifetimeProfit = 0;
+
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/garden/leaderboards/EliteFarmersLeaderboardsConfig.kt
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/garden/leaderboards/EliteLeaderboardConfigApi.kt
+    public boolean eliteLeaderboards = true;
+    public boolean eliteWeightLeaderboard = true;
+    public boolean eliteCropLeaderboard = true;
+    public boolean elitePestLeaderboard = true;
+    public boolean eliteShowOutsideGarden = false;
+    public boolean eliteShowRank = true;
+    public boolean eliteShowOvertake = true;
+    public boolean eliteShowPrevious = true;
+    public boolean eliteShowEta = true;
+    public boolean eliteEtaAlways = true;
+    public boolean eliteUseRankGoals = true;
+    public boolean elitePassMessages = true;
+    public boolean eliteOfflineRankChanges = true;
+    public boolean eliteCompactNumbers = true;
+    public boolean eliteMonthlyWeight = false;
+    public boolean eliteMonthlyCrop = false;
+    public boolean eliteMonthlyPest = false;
+    public boolean eliteCropAutoSelect = true;
+    public boolean eliteCropHideWhenIdle = true;
+    public boolean elitePestHideWhenInactive = true;
+    public int eliteRefreshMinutes = 10;
+    public int eliteRequestTimeoutSeconds = 15;
+    public int eliteUpcomingPlayers = 20;
+    public int eliteWeightRankGoal = 10000;
+    public int eliteCropRankGoal = 10000;
+    public int elitePestRankGoal = 10000;
+    public int elitePestInactiveSeconds = 30;
+    public int eliteAmountPrecision = 2;
+    public String eliteGamemode = "ALL";
+    public String eliteSelectedCrop = "WHEAT";
+    public String eliteSelectedPest = "ALL";
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/garden/pests/PesthunterShopConfig.kt
     public boolean pesthunterProfit = true;
     public boolean pesthunterHighlightBest = true;

@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-09 for version 0.9.862 Final Responsive SkyBlock Screens.
+Last updated: 2026-08-09 for version 0.9.863 Elite Farmers Leaderboards.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.862`.
+- Current artifact version: `0.9.863`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3926,3 +3926,13 @@ Current evidence includes `/tmp/partyguard-fixed-narrow-861.png`, `/tmp/slotbind
 All 25 reference repositories were fetched again on August 9. Every attached branch was already current; Athen and SkyblockAddons remain intentionally detached and were fetched without moving their worktrees. The two AGPL repositories remain reimplementation-only.
 
 The final adversarial gate found one forbidden contiguous compatibility token in `Patterns.java` and the overview still named 0.9.850. Version 0.9.862 preserves the exact runtime mimic marker through compile-time string concatenation, makes the required source grep empty, and brings `CURRENT_FEATURE_OVERVIEW.md` to the final version. Treat 0.9.862, not 0.9.861, as the completed visual release.
+
+Version 0.9.862 is released. Source and isolated drip builds pass exactly 11/11 tests; the clean boot reached timeout 124 with 138 rooms and all 14 constellations and no fatal marker. Gather and the owner-only shelf contain SHA-256 `5ac0201e95d0bfc760c0a6bd0e7b6a1cfc9ccdcbe98245e1923ebdc8d78263b0`. Drip release `94557b80a1` is queued as Froggy-Lord. This is the completed SkyBlock visual milestone; resume substantive feature work from this version.
+
+## 2026-08-09: Elite Farmers leaderboard suite (0.9.863)
+
+The next live-config-driven gap was the enabled Elite Farmers suite. `HerculesEliteLeaderboards.java`, `EliteLeaderboardHudWidget.java`, `HerculesConfig.java` and `HerculesFarming.java` port the proven architecture from SkyHanni LGPL `api/EliteDevApi.kt`, `data/garden/EliteFarmersLeaderboard.kt`, `data/garden/FarmingWeightData.kt`, `features/garden/leaderboarddisplays/{EliteLeaderboardDisplayBase,WeightDisplay,CropDisplay,PestDisplay}.kt`, and the matching Garden leaderboard configs.
+
+The suite provides independent farming-weight, crop-collection and pest-kill HUDs; all-time/monthly and all/Ironman/Stranded modes; nearby players; live crop-rate overtake estimates; goals; compact values; automatic or manual crop selection; all-pest or per-pest selection; Garden, farming-idle and pest-inactivity visibility; pass messages; offline rank changes; bounded asynchronous refresh and honest loading/unranked/unavailable states. It deliberately preserves the last ready snapshot on transient service failure. Monthly results never mix in all-time local counters. All-time crop totals prefer the newer local milestone counter, and pest visibility now uses an explicit last-kill timestamp exposed by `HerculesPests`.
+
+Commands are `/elitefarmers`, `/elitefarmers refresh`, `/elitefarmers crop <crop>`, `/elitefarmers pest <name>`, `/elitefarmers goal weight|crop|pest <rank>`, and `/elitefarmers option <name> on|off`. Every option is also available through Hercules `All settings`. The source build passed 11/11 tests and the clean boot reached timeout 124 with 138 rooms and 14 constellations; the flite narrator warning remains benign.

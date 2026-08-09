@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.863 - Add Elite Farmers leaderboards
+
+- Added farming-weight, crop-collection and pest-kill leaderboard HUDs backed by the EliteSkyBlock API.
+- Added all-time/monthly and all/Ironman/Stranded modes, nearby-player gaps, live crop-rate overtake estimates and per-board rank goals.
+- Added automatic crop selection, explicit crop and pest selection, Garden/idle/inactivity visibility controls and three independently movable HUD panels.
+- Added bounded background refresh, honest loading/unranked/unavailable states, stale-snapshot preservation, pass messages and offline rank-change reports.
+- Kept monthly amounts separate from all-time local counters and used local crop data only where it is newer than the periodically refreshed service.
+
 ## 0.9.862 - Close final visual release gates
 
 - Preserved the legacy mimic compatibility marker without retaining a forbidden contiguous source token.

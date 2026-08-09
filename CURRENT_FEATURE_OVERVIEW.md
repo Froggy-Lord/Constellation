@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.862.
+Current test build: 0.9.863.
+
+Hercules now includes movable Elite Farmers farming-weight, crop-collection and pest-kill leaderboards. Each display supports all-time or monthly data, all/Ironman/Stranded ranking, nearby players, overtake estimates, rank goals, compact values, Garden visibility rules, manual crop/pest selection, periodic refresh, pass messages and offline rank-change messages. Requests run in the background and keep the last usable snapshot if the service is temporarily unavailable.
 
 The complete SkyBlock visual pass is closed. Current utility screens remain bounded at wide and 640x480 windows: Party Guard keeps validation inside its panel, Slot Binding scales its inventory grid and creates profiles only with Enter, Dungeon Records exposes every terminal split on hover, and Inventory Buttons keeps its final controls and safety text separate on short windows.
 

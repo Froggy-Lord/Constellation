@@ -45,6 +45,7 @@ public class HerculesFarming extends BaseConstellation {
         HerculesVisitorLogbook.init(cfg);
         HerculesPesthunterShop.init(cfg);
         HerculesPlotPrices.init(cfg);
+        HerculesEliteLeaderboards.init(cfg);
         registerRenderer(HerculesFarmingLanes::draw);
         registerRenderer(HerculesPests::draw);
         registerRenderer(HerculesPestWaypoint::draw);
@@ -123,6 +124,15 @@ public class HerculesFarming extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.RareCropHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 92),
             () -> cfg.enabled && cfg.rareCropTracker));
+        hud.register(new com.froggylord.constellation.hud.EliteLeaderboardHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 98), HerculesEliteLeaderboards.Kind.WEIGHT,
+            () -> cfg.enabled && cfg.eliteLeaderboards && cfg.eliteWeightLeaderboard));
+        hud.register(new com.froggylord.constellation.hud.EliteLeaderboardHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 104), HerculesEliteLeaderboards.Kind.CROP,
+            () -> cfg.enabled && cfg.eliteLeaderboards && cfg.eliteCropLeaderboard));
+        hud.register(new com.froggylord.constellation.hud.EliteLeaderboardHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(50, 110), HerculesEliteLeaderboards.Kind.PEST,
+            () -> cfg.enabled && cfg.eliteLeaderboards && cfg.elitePestLeaderboard));
     }
 
     @Override
@@ -157,5 +167,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesVisitorLogbook.registerCommands(dispatcher);
         HerculesPesthunterShop.registerCommands(dispatcher);
         HerculesPlotPrices.registerCommands(dispatcher);
+        HerculesEliteLeaderboards.registerCommands(dispatcher);
     }
 }

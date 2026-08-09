@@ -58,7 +58,7 @@ public final class HerculesPests {
     private static int alive;
     private static boolean ready,maxPests,warned;
     private static String cooldown="Unknown",lastPest="",lastDrop="";
-    private static long cooldownEnd,lastSpawnAt,lastHeldAt,sessionStarted,lastSaveAt;
+    private static long cooldownEnd,lastSpawnAt,lastHeldAt,sessionStarted,lastSaveAt,lastKillAt;
     private static double sessionProfit;
     private static Object levelIdentity;
 
@@ -98,6 +98,7 @@ public final class HerculesPests {
 
     private static void kill(int amount,String item,String pest){
         if(sessionStarted==0)sessionStarted=System.currentTimeMillis();
+        lastKillAt=System.currentTimeMillis();
         lastPest=clean(pest);lastDrop=clean(item);alive=Math.max(0,alive-1);
         decrementCurrentPlot();
         add(sessionKills,lastPest,1);add(cfg.pestLifetimeKills,lastPest,1);
@@ -129,6 +130,7 @@ public final class HerculesPests {
     public static State state(){if(!active())return null;return new State(alive,List.copyOf(plotCounts.keySet()),Map.copyOf(plotCounts),cooldown,ready,maxPests,lastSpawnAt,average());}
     public static Stats stats(){if(cfg==null||!cfg.enabled||!cfg.pestCore||cfg.pestStatsOnlyInGarden&&!inGarden())return null;long lifeKills=cfg.pestLifetimeKills.values().stream().mapToLong(Long::longValue).sum(),lifeDrops=cfg.pestLifetimeDrops.values().stream().mapToLong(Long::longValue).sum();return new Stats(total(sessionKills),lifeKills,total(sessionDrops),lifeDrops,sessionProfit,cfg.pestLifetimeProfit,sessionStarted==0?0:System.currentTimeMillis()-sessionStarted,lastPest,lastDrop);}
     public static HerculesConfig config(){return cfg;}
+    public static long lastKillAt(){return lastKillAt;}
 
     public static void draw(WorldRenderer.Ctx ctx){
         if(!active()||!cfg.pestFinderWorld||!showFinder())return;
@@ -171,6 +173,6 @@ public final class HerculesPests {
     private static String coins(double value){if(value>=1_000_000)return String.format(Locale.ROOT,"%.2fm",value/1_000_000);if(value>=1000)return String.format(Locale.ROOT,"%.1fk",value/1000);return String.format(Locale.ROOT,"%.0f",value);}
     private static void local(String text){Minecraft mc=Minecraft.getInstance();if(mc.player!=null)mc.player.sendSystemMessage(Component.literal("\u00a72[Pests] \u00a7f"+text));}
     private static void saveSoon(){lastSaveAt=System.currentTimeMillis();if(cfg.pestStatsPersistent)ConstellationClient.saveConfig();}
-    private static void resetSession(){alive=0;plotCounts.clear();spawnIntervals.clear();sessionKills.clear();sessionDrops.clear();pendingPrices.clear();sessionProfit=0;sessionStarted=0;lastSpawnAt=0;cooldownEnd=0;cooldown="Unknown";ready=false;maxPests=false;warned=false;lastPest="";lastDrop="";}
+    private static void resetSession(){alive=0;plotCounts.clear();spawnIntervals.clear();sessionKills.clear();sessionDrops.clear();pendingPrices.clear();sessionProfit=0;sessionStarted=0;lastSpawnAt=0;lastKillAt=0;cooldownEnd=0;cooldown="Unknown";ready=false;maxPests=false;warned=false;lastPest="";lastDrop="";}
     private static Map<String,String> itemIds(){Map<String,String> m=new HashMap<>();String[][] rows={{"Enchanted Potato","ENCHANTED_POTATO"},{"Enchanted Carrot","ENCHANTED_CARROT"},{"Enchanted Wheat","ENCHANTED_BREAD"},{"Enchanted Hay Bale","ENCHANTED_HAY_BLOCK"},{"Enchanted Cactus Green","ENCHANTED_CACTUS_GREEN"},{"Enchanted Sugar","ENCHANTED_SUGAR"},{"Enchanted Sugar Cane","ENCHANTED_SUGAR_CANE"},{"Enchanted Cocoa Beans","ENCHANTED_COCOA"},{"Enchanted Cocoa Bean","ENCHANTED_COCOA"},{"Enchanted Cookie","ENCHANTED_COOKIE"},{"Enchanted Pumpkin","ENCHANTED_PUMPKIN"},{"Polished Pumpkin","POLISHED_PUMPKIN"},{"Enchanted Red Mushroom","ENCHANTED_RED_MUSHROOM"},{"Enchanted Brown Mushroom","ENCHANTED_BROWN_MUSHROOM"},{"Enchanted Red Mushroom Block","ENCHANTED_HUGE_MUSHROOM_2"},{"Enchanted Brown Mushroom Block","ENCHANTED_HUGE_MUSHROOM_1"},{"Enchanted Melon Slice","ENCHANTED_MELON"},{"Enchanted Melon","ENCHANTED_MELON_BLOCK"},{"Enchanted Baked Potato","ENCHANTED_BAKED_POTATO"},{"Enchanted Golden Carrot","ENCHANTED_GOLDEN_CARROT"},{"Enchanted Cactus","ENCHANTED_CACTUS"},{"Mutant Nether Wart","MUTANT_NETHER_STALK"},{"Enchanted Nether Wart","ENCHANTED_NETHER_STALK"},{"Enchanted Sunflower","ENCHANTED_SUNFLOWER"},{"Enchanted Moonflower","ENCHANTED_MOONFLOWER"},{"Enchanted Wild Rose","ENCHANTED_WILD_ROSE"},{"Compacted Sunflower","COMPACTED_SUNFLOWER"},{"Compacted Moonflower","COMPACTED_MOONFLOWER"},{"Compacted Wild Rose","COMPACTED_WILD_ROSE"}};for(String[] row:rows)m.put(normal(row[0]),row[1]);return Map.copyOf(m);}
 }

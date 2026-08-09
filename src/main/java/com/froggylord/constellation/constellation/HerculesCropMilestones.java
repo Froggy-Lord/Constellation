@@ -404,6 +404,9 @@ public final class HerculesCropMilestones {
         return cfg.cropMilestoneCounters.getOrDefault(key(crop), -1L);
     }
 
+    public static long collection(HerculesGardenTracker.Crop crop) { return counter(crop); }
+    public static double collectionRate() { return rate(); }
+
     private static double averageTier() {
         double total = 0;
         int found = 0;

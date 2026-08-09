@@ -1,5 +1,17 @@
 # Constellation testing guide
 
+## Elite Farmers leaderboards (0.9.863)
+
+Enable Hercules, `eliteLeaderboards`, and the three individual leaderboard toggles. Enter your Garden and run `/elitefarmers refresh`.
+
+- [ ] Farm the selected crop. Expected: Farming Weight and Crop Leaderboard load without freezing the client; the crop panel follows the harvested crop when auto-select is enabled and hides after farming becomes idle.
+- [ ] Kill a pest. Expected: Pest Leaderboard appears for the configured inactivity period and then hides; selecting `ALL` uses total pest kills while `/elitefarmers pest <name>` selects one pest family.
+- [ ] Compare the three panels with your Elite profile. Expected: amount, rank, player ahead and player behind agree; an overtake ETA appears only when Constellation has a valid live crop rate.
+- [ ] Toggle monthly mode for each type and refresh. Expected: monthly API amounts are shown without being overwritten by larger all-time local totals.
+- [ ] Set rank goals with `/elitefarmers goal weight|crop|pest <rank>`, switch `eliteGamemode` among `ALL`, `IRONMAN` and `STRANDED`, then refresh. Expected: requests use the selected mode and each valid goal remains visible below the current rank.
+- [ ] Disconnect the network or retry while the Elite service is unavailable. Expected: the client remains responsive, an honest unavailable state appears before the first successful load, and a previously ready snapshot is retained.
+- [ ] Open `/cn hud`. Expected: all three leaderboard previews are separately movable and resize normally from 0.5x to 3.0x.
+
 ## Narrow Speed Presets (0.9.858)
 
 - [ ] Open `/speedpreset` at a 640x480 window with GUI scale 2. Expected: Save, Delete, Use and Reset share a centered row above the name/speed fields; Done remains on the bottom row and nothing leaves the viewport.
