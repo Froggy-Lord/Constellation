@@ -26,6 +26,47 @@ public class CygnusConfig extends BaseConfigGroup {
     public String eventCalendarIncludes = "";
     public String eventCalendarExcludes = "Jacob's Farming Contest,Cult of the Fallen Star";
 
+    // ported from SkyHanni (LGPL-2.1): features/combat/end/DragonFeatures.kt
+    // ported from SkyHanni (LGPL-2.1): features/combat/end/DragonProfitTracker.kt
+    public boolean endDragonSuite = true;
+    public boolean endDragonSuperiorNotify = true;
+    public boolean endDragonSuperiorTitle = true;
+    public boolean endDragonSuperiorChat = false;
+    public boolean endDragonSuperiorSound = true;
+    public boolean endDragonWeightHud = false;
+    public boolean endDragonWeightShowType = true;
+    public boolean endDragonWeightShowEyes = true;
+    public boolean endDragonWeightShowPlace = true;
+    public boolean endDragonWeightShowDamage = true;
+    public boolean endDragonWeightShowHp = true;
+    public boolean endDragonWeightChat = true;
+    public boolean endDragonProtectorWeightChat = true;
+    public boolean endDragonProfitTracker = true;
+    public boolean endDragonProfitHud = true;
+    public boolean endDragonCountLeeched = true;
+    public boolean endDragonSessionOnly = true;
+    public boolean endDragonPersistentProfiles = true;
+    public boolean endDragonShowKills = true;
+    public boolean endDragonShowEyes = true;
+    public boolean endDragonShowEyeCost = true;
+    public boolean endDragonShowItems = true;
+    public boolean endDragonShowProfit = true;
+    public boolean endDragonShowProfitPerHour = true;
+    public boolean endDragonShowUptime = true;
+    public boolean endDragonShowRecentDrops = true;
+    public boolean endDragonRareDropAlerts = true;
+    public boolean endDragonRareDropChat = true;
+    public boolean endDragonRareDropTitle = true;
+    public boolean endDragonRareDropSound = false;
+    public boolean endDragonLocalWorlds = false;
+    public int endDragonItemRows = 10;
+    public int endDragonRecentSeconds = 180;
+    public int endDragonAfkSeconds = 60;
+    public int endDragonLootWindowSeconds = 20;
+    public int endDragonMinimumChatMillions = 5;
+    public int endDragonMinimumTitleMillions = 5;
+    public String endDragonPriceSource = "SELL";
+
     
     public boolean dianaInquisitorAlert = true;
     public boolean dianaInquisitorShare = false; 

@@ -58,6 +58,7 @@ public class CygnusEvents extends BaseConstellation {
         CygnusMayor.init(cfg);
         CygnusGifts.init(cfg);
         CygnusUniqueGifts.init(cfg);
+        CygnusEndDragons.init(cfg);
         registerRenderer(CygnusCarnival::draw);
         registerRenderer(CygnusDiana::draw);
         registerRenderer(CygnusUniqueGifts::draw);
@@ -101,6 +102,10 @@ public class CygnusEvents extends BaseConstellation {
             HudPosition.of(76, 98), () -> cfg.enabled && cfg.giftProfitTracker && cfg.giftProfitHud));
         hud.register(new HudWidget("cygnus-unique-gifts", "Unique Gifts", CygnusUniqueGifts::hudText,
             HudPosition.of(76, 104), () -> cfg.enabled && cfg.uniqueGiftCounter && cfg.uniqueGiftHud));
+        hud.register(new HudWidget("cygnus-dragon-weight", "Dragon Weight", CygnusEndDragons::weightHud,
+            HudPosition.of(62, 18), () -> cfg.enabled && cfg.endDragonSuite && cfg.endDragonWeightHud));
+        hud.register(new HudWidget("cygnus-dragon-profit", "Dragon Profit", CygnusEndDragons::profitHud,
+            HudPosition.of(62, 30), () -> cfg.enabled && cfg.endDragonSuite && cfg.endDragonProfitTracker && cfg.endDragonProfitHud));
     }
 
     private static String calendarLine() {
@@ -163,5 +168,6 @@ public class CygnusEvents extends BaseConstellation {
         CygnusMayor.registerCommands(dispatcher);
         CygnusGifts.registerCommands(dispatcher);
         CygnusUniqueGifts.registerCommands(dispatcher);
+        CygnusEndDragons.registerCommands(dispatcher);
     }
 }

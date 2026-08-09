@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.873 - Add End Dragon fight and profit suite
+
+- Added exact eye tracking, dragon/protector reward-weight calculations, live fight HP/damage/placement and Superior alerts from the licensed reference implementation.
+- Added profile-scoped dragon kills and eye use, bounded inventory-authoritative loot capture, recent rewards, costs, profit, active profit/hour and configurable buy/sell prices.
+- Added independent weight/profit rows, leech rules, persistence, alert channels, thresholds, activity and reward-window controls plus `/dragontracker` diagnostics and commands.
+- Added private frozen in-browser testing guides with selection-anchored server-side feedback per release; no feedback download or upload is required.
+
 ## 0.9.865 - Add complete Matriarch Heavy Pearl routing
 
 - Added correct `COLLECT!` armor-stand to Heavy Pearl Slime association inside the Belly of the Beast.

@@ -1,5 +1,26 @@
 # Constellation testing guide
 
+## End Dragon fight and profit suite (0.9.873): test this release first
+
+Enable Cygnus and End Dragon Suite. The profit HUD defaults on; the live weight HUD defaults off to match the active 26.1.2 setup.
+
+- [ ] Run `/dragontracker test` in a safe local world or The End. Expected: both movable Dragon HUD samples remain visible for 15 seconds, a Superior notification uses only the enabled channels, and no server command or interaction is sent.
+- [ ] Place and recover Summoning Eyes. Expected: recovery reduces the pending count without going below zero; when a dragon spawns, that fight snapshots the actual eye count and the tracker records its cost only when Profit Tracker is enabled.
+- [ ] Fight a dragon with Weight HUD enabled. Expected: type, calculated current weight, eyes, placement, damage ratio and HP update from the Dragon scoreboard/tab data. Toggle each weight detail independently; Current remains visible as the essential value.
+- [ ] Finish a dragon. Expected: the weight chat reports the licensed placement/eye/damage formula. A zero-damage result is not counted; a damaging leech counts only while Count Leeched is enabled.
+- [ ] Check the Profit HUD after rewards enter inventory. Expected: tracked dragon armor, fragments, pets, AOTD, travel scroll, essence and maintained rare drops are counted only during the bounded post-kill window; unrelated inventory changes outside that window are ignored.
+- [ ] Test Session Only on and off, then change SkyBlock profile. Expected: session values reset on world/profile changes; lifetime eyes, kills and loot remain isolated to the selected profile when Persistent Profiles is enabled.
+- [ ] Toggle kills, eyes, eye cost, item list, profit, profit/hour, uptime and recent drops separately. Expected: each removes only its named row. Profit/hour advances only while recently active and stops accumulating after the configured AFK time.
+- [ ] Set a low rare-drop threshold and collect a tracked item during the reward window. Expected: chat/title/sound follow their independent switches and use the selected buy or sell price; unknown or unavailable prices do not manufacture an alert.
+- [ ] Complete an Endstone Protector and inspect its contribution result. Expected: the optional local weight message uses placement, top-damage ratio and Zealots Contributed, without party automation.
+- [ ] Run `/dragontracker`, `reset`, `price <sell|buy>`, `rows <1-20>`, `afk <5-600>` and `option <name> on|off`. Expected: invalid values fail locally, reset clears session values only, and accepted controls persist.
+
+## Leaving feedback in the browser
+
+- [ ] Open the private build page and choose this build's `test guide and feedback` link. Highlight any words, a sentence or a paragraph, write a comment, choose Issue, Suggestion or Good, then press Save feedback.
+- [ ] Refresh the page. Expected: the comment and its highlight return from the private server. There is no feedback file to download or upload.
+- [ ] Keep this guide open after a newer build is published. Expected: this version and its comments remain frozen; the new build receives a separate guide and feedback set.
+
 ## Quiver display and warning suite (0.9.872): test this release first
 
 Enable Lyra. True Hotbar Count, Low Warning, Warn Inside Dungeons and Remind After Dungeon default to the behavior enabled in the 26.1.2 instance; the separate Quiver HUD defaults off.

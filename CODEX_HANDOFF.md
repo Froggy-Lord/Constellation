@@ -4004,3 +4004,13 @@ The live 26.1.2 setup has Skyblocker's true quiver count and all warning paths e
 The observer reads container slot 44 normally and slot 9 during dungeon clear, matching Hypixel's quiver relocation. Arrow/feather identity plus exact `Arrows Remaining` lore supplies the cleaned arrow type and count. The hotbar override additionally requires the maintained `quiver_arrow` item marker, so unrelated slot-eight items keep their native decorations. The optional movable HUD supports Always, Bow in Inventory and Only Bow in Hand visibility, real count, arrow type/icon and capacity-aware coloring.
 
 Warnings are edge-triggered on a configured threshold and rearm only after recovery. Title, chat and sound channels are independent. A suppressed in-dungeon warning is retained for one post-run reminder; an immediate dungeon warning may also retain the separately configured reminder. World/module transitions clear transient state. `/quiverdisplay` exposes status, 15-second local visualization, visibility, threshold, capacity and all common Boolean controls.
+
+## 2026-08-09: End Dragon fight and profit suite (0.9.873)
+
+The next live-enabled gap was SkyHanni's End Dragon suite. `CygnusEndDragons.java`, `CygnusConfig.java` and `CygnusEvents.java` port SkyHanni LGPL `features/combat/end/{DragonFightAPI,DragonFeatures,DragonProfitTracker,ProfitPerDragon,DragonType}.kt`, the matching configs and the maintained DragonProfitTracker item list.
+
+The observer normalizes Hypixel's leading dragon glyph, tracks placed/recovered eyes and every dragon type, reads live HP/damage, restricts tab damage rows to actual online player names, and preserves the exact licensed dragon and Endstone Protector weight formulas. Superior title/chat/sound channels are independent. Weight HUD type, eyes, place, damage and HP are separately configurable.
+
+Profit tracking is profile-scoped and disabled cleanly with its master switch. It records qualifying kills and eye use, then uses a bounded post-down inventory delta so only rewards that actually enter the player's inventory count. Item lists, recent drops, kill/eye/cost/profit/hour/uptime rows, session/lifetime mode, leech counting, persistence, buy/sell price side, AFK timing, thresholds and alert channels are configurable. `/dragontracker` provides safe local diagnostics and common controls.
+
+The private release publisher renders `TESTING_GUIDE.md` into a version-frozen browser page. Text selections are anchored with quote/context, feedback is written server-side by the owner-only endpoint, and each version has its own JSON store. A later release cannot overwrite the guide or feedback currently under test; no download/upload workflow is involved. Continue from 0.9.873 after all release gates pass.

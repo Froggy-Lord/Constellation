@@ -1,6 +1,10 @@
 # Constellation feature overview
 
-Current test build: 0.9.872.
+Current test build: 0.9.873.
+
+Cygnus now includes an End Dragon fight and profit suite. It tracks placed and recovered eyes, every dragon type, live HP/damage/placement, the licensed reward-weight formula, Endstone Protector weight, Superior alerts, profile-scoped kills, bounded post-fight inventory loot, eye costs, recent drops, profit and active profit/hour. Weight rows, profit rows, leech counting, persistence, price side, alert channels, thresholds, activity timing and local diagnostics are independently configurable; `/dragontracker` exposes the common controls and a safe 15-second test.
+
+Every release also has a private frozen browser testing guide. Highlight any words, sentence or paragraph, choose Issue/Suggestion/Good and save a comment in place. Feedback is stored on the private share server against that exact build, remains visible on return, and can be read directly during the next development pass without downloading or uploading a file. Publishing a newer release creates a different frozen guide and cannot rewrite the copy being tested.
 
 Lyra now has a complete Quiver suite matching the active low-arrow and true-count settings. The actual server quiver item supplies arrow type and count, including the dungeon clear-slot relocation. It provides compact true counts on the quiver hotbar item, a movable optional arrow HUD, held-bow/inventory/always visibility, capacity-based coloring, a configurable low threshold, independent title/chat/sound channels, dungeon suppression and a deferred after-run reminder. `/quiverdisplay` exposes status, a 15-second visual test, visibility, threshold, capacity and every common toggle.
 
