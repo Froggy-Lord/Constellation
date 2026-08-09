@@ -152,7 +152,9 @@ public final class HerculesVisitorHelper {
         if (cfg.visitorShowVisitors) for (Visitor visitor : VISITORS.values()) {
             String value = visitor.rareRewards.isEmpty() ? visitor.economyComplete ? signedCompact(visitor.profit()) : "Loaded"
                 : "§d" + String.join(", ", visitor.rareRewards);
-            rows.add(new DisplayRow(visitor.name, value, visitor.rareRewards.isEmpty() ? 0xFFFFFFFF : 0xFFFF55FF));
+            String label = cfg.charmedMarkShoppingList && HerculesCharmedVisitors.isCharmed(visitor.name)
+                ? visitor.name + " [Charmed]" : visitor.name;
+            rows.add(new DisplayRow(label, value, visitor.rareRewards.isEmpty() ? 0xFFFFFFFF : 0xFFFF55FF));
         }
         return List.copyOf(rows);
     }

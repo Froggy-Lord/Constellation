@@ -16,6 +16,7 @@ public class HerculesFarming extends BaseConstellation {
     public void init(InitContext ctx) {
         var cfg = (com.froggylord.constellation.config.HerculesConfig) config;
         HerculesVisitorHelper.init(cfg);
+        HerculesCharmedVisitors.init(cfg);
         HerculesNoRodBreak.init(cfg);
         HerculesCarrolynHelper.init(cfg);
         HerculesGardenTracker.init(cfg);
@@ -61,6 +62,9 @@ public class HerculesFarming extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.GardenVisitorHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(76, 38),
             () -> cfg.enabled && cfg.visitorHelper && cfg.visitorShoppingList));
+        hud.register(new com.froggylord.constellation.hud.CharmedVisitorsHudWidget(
+            com.froggylord.constellation.hud.HudPosition.of(76, 44),
+            () -> cfg.enabled && cfg.charmedVisitors));
         hud.register(new com.froggylord.constellation.hud.GardenControlHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(2, 42),
             () -> cfg.enabled && cfg.farmingControlHud));
@@ -144,6 +148,7 @@ public class HerculesFarming extends BaseConstellation {
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         HerculesVisitorHelper.registerCommands(dispatcher);
+        HerculesCharmedVisitors.registerCommands(dispatcher);
         HerculesNoRodBreak.registerCommands(dispatcher);
         HerculesCarrolynHelper.registerCommands(dispatcher);
         HerculesGardenTracker.registerCommands(dispatcher);

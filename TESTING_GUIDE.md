@@ -1,5 +1,17 @@
 # Constellation testing guide
 
+## Charmed Visitors (0.9.870): test this release first
+
+Enable Hercules and Charmed Visitors. Use a real Garden visitor menu; the feature deliberately does not guess from chat alone.
+
+- [ ] Open a visitor who has been charmed with the Gift Vinyl Set. Expected: the visitor is saved only after the menu's slot 48 says the visitor has been charmed, and appears in the movable Charmed Visitors HUD.
+- [ ] Close and reopen Minecraft on the same profile. Expected: the saved list returns. Change SkyBlock profiles; expected: each profile has an independent list and no entry leaks between them.
+- [ ] Open the same visitor after their charm marker is absent. Expected: once the complete visitor menu is recognized, that visitor is removed from the saved list. Unrelated containers must not alter the list.
+- [ ] Keep Visitor Shopping List enabled and open a charmed visitor. Expected: its visitor row gains a plain `[Charmed]` marker without changing requirements, prices, rewards or protection behavior.
+- [ ] Toggle count, shopping mark, alphabetical sort, Garden-only visibility and change-chat independently. Change the row limit from 1 to 50. Expected: each setting changes only its named behavior and an overflow row reports the hidden count.
+- [ ] Run `/charmedvisitors`, `list`, `add <visitor>`, `remove <visitor>`, `clear`, `rows <1-50>` and `option <name> on|off`. Expected: invalid/missing profiles fail honestly; manual removal remains removed while the same menu is open and may be authoritatively restored after reopening it.
+- [ ] Open `/cn hud`. Expected: the Charmed Visitors preview is movable/resizable and the live HUD appears only when its configured scope contains at least one saved visitor.
+
 ## Matriarch Heavy Pearl helper (0.9.865)
 
 Enable Draco and `matriarchHelper`, then enter the Belly of the Beast naturally.

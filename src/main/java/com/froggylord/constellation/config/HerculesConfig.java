@@ -64,6 +64,16 @@ public class HerculesConfig extends BaseConfigGroup {
     public Map<String, String> visitorLogbookEntries = new HashMap<>();
     public Map<String, String> visitorLogbookPages = new HashMap<>();
 
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/garden/visitor/CharmedVisitorsConfig.kt
+    public boolean charmedVisitors = true;
+    public boolean charmedShowCount = true;
+    public boolean charmedMarkShoppingList = true;
+    public boolean charmedAlphabetical = false;
+    public boolean charmedOnlyInGarden = true;
+    public boolean charmedChatChanges = false;
+    public int charmedMaxRows = 12;
+    public Map<String, List<String>> charmedVisitorsByProfile = new HashMap<>();
+
     public boolean farmingControlHud = true;
     public boolean farmingShowCrop = true;
     public boolean farmingShowSpeed = true;

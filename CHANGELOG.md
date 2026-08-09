@@ -1958,6 +1958,12 @@
 - Added full Trevor quest, cooldown, persistent data and session-rate tracking.
 - Added maintained area waypoints, stable target-animal detection and Talbot height/circle solving.
 - Added configurable HUD ordering, alerts, world layers, colors, ranges, commands and optional hotkey actions.
+## 0.9.870 - Charmed Visitors
+
+- Added profile-specific Gift Vinyl charm detection from authoritative visitor-menu state.
+- Added a bounded Charmed Visitors HUD, optional shopping-list marks, count/sort/scope/message controls, and complete list management commands.
+- Kept empty charm slots authoritative for removal and prevented an intentional manual removal from being re-added until the visitor menu is reopened.
+
 ## 0.9.869 - The Mist Ghost Tracker
 
 - Added profile-specific lifetime and resettable session Ghost tracking from authoritative Bestiary deltas.

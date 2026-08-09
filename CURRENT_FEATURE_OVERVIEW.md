@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.869.
+Current test build: 0.9.870.
+
+Hercules now includes the live-enabled Charmed Visitors workflow. Opening a real Garden visitor menu reads the authoritative Gift Vinyl marker in slot 48, persists or removes that visitor only for the confirmed SkyBlock profile, marks charmed visitors in the shopping list, and exposes a separate bounded HUD. Count, sorting, row limit, Garden-only visibility, shopping-list marking and change messages are independent; `/charmedvisitors` provides status, list, add, remove, clear and option controls.
 
 Aquila includes a profile-aware Ghost Tracker for The Mist. Bestiary deltas provide authoritative kills and Ghosts-since-Sorrow; rare-drop messages provide Sorrow/Plasma/Volta/boots and Magic Find; combat XP, combo, Bag of Cash, kill-correlated scavenger coins and kill-correlated inventory gemstones feed session or lifetime profit. HUD row order, visibility, compactness, recent-drop depth, pricing, AFK timing, warnings and valuable-drop alert channels are configurable.
 
