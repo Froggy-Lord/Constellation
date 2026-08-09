@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.867.
+Current test build: 0.9.868.
+
+Hercules includes a complete Trevor the Trapper suite for the Farming Islands. It tracks quests, pelts, kills, self-kills, rarity totals and session pelts/hour; follows the live quest area; detects the real target animal from stable entity/health evidence; and draws area or target guidance. Talbot readings refine target height and add geometric circles. Cooldown, ready/death alerts, movable HUD rows, tracker ordering, waypoint layers, colors, ranges, circle density, visibility and an optional deliberate hotkey are configurable.
 
 Draco’s NPC item helpers recognize Sirih, Avorius and optionally Pablo’s maintained dialogue variants. They suppress offers when the requested item is already in the lower inventory, respect Barbarian/Mage faction where applicable, and show a customizable clickable `/gfs` action rather than taking an item automatically. Each NPC has an independent cooldown and toggle; inventory, faction, item-name, action and message-template behavior are configurable.
 

@@ -1953,3 +1953,8 @@
 - Added complete Sirih and Avorius helpers matching the active 26.1.2 configuration, plus an optional Pablo flower helper.
 - Added inventory-aware suppression, faction checks, independent cooldowns and customizable clickable sack requests.
 - Added safe local previews and command/config controls without automatic commands or inventory actions.
+## 0.9.868 - Trevor the Trapper suite
+
+- Added full Trevor quest, cooldown, persistent data and session-rate tracking.
+- Added maintained area waypoints, stable target-animal detection and Talbot height/circle solving.
+- Added configurable HUD ordering, alerts, world layers, colors, ranges, commands and optional hotkey actions.

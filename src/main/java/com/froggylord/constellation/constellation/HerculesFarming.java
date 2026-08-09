@@ -46,11 +46,13 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPesthunterShop.init(cfg);
         HerculesPlotPrices.init(cfg);
         HerculesEliteLeaderboards.init(cfg);
+        HerculesTrevorHelper.init(cfg);
         registerRenderer(HerculesFarmingLanes::draw);
         registerRenderer(HerculesPests::draw);
         registerRenderer(HerculesPestWaypoint::draw);
         registerRenderer(HerculesCropLocations::draw);
         registerRenderer(HerculesCarrolynHelper::draw);
+        registerRenderer(HerculesTrevorHelper::draw);
     }
 
     @Override
@@ -133,6 +135,10 @@ public class HerculesFarming extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.EliteLeaderboardHudWidget(
             com.froggylord.constellation.hud.HudPosition.of(50, 110), HerculesEliteLeaderboards.Kind.PEST,
             () -> cfg.enabled && cfg.eliteLeaderboards && cfg.elitePestLeaderboard));
+        hud.register(new com.froggylord.constellation.hud.HudWidget(
+            "hercules-trevor", "Trevor", HerculesTrevorHelper::hudText,
+            com.froggylord.constellation.hud.HudPosition.of(50, 116),
+            () -> cfg.enabled && cfg.trevorHelper && (cfg.trevorTracker || cfg.trevorCooldownHud)));
     }
 
     @Override
@@ -168,5 +174,6 @@ public class HerculesFarming extends BaseConstellation {
         HerculesPesthunterShop.registerCommands(dispatcher);
         HerculesPlotPrices.registerCommands(dispatcher);
         HerculesEliteLeaderboards.registerCommands(dispatcher);
+        HerculesTrevorHelper.registerCommands(dispatcher);
     }
 }

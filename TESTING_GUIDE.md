@@ -3134,3 +3134,15 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 5. Run `/crimsonnpc test sirih`, `avorius` and `pablo`. Expected: each previews locally even when the item is held and does not run `/gfs` until clicked.
 6. Edit `{npc}`, `{item}` and `{action}` in Crimson NPC Message, change the action text and independently toggle faction, inventory and clickable behavior. Expected: the next preview reflects every setting and never auto-clicks.
 7. Optionally enable Pablo and exercise each of his four flower request lines. Expected: the exact flower is placed in the text, hover and `/gfs` command.
+### Trevor the Trapper
+
+1. Enable Hercules and Trevor Helper, then enter the Farming Islands. Expected: no Trevor HUD or world marker appears before a quest or locally generated test state.
+2. Run `/trevor test quest`. Expected: the movable Trevor HUD reports an active Endangered quest and the Desert Mountain marker appears with the configured box, beam, label and distance.
+3. Run `/trevor test above`, then `/trevor test below`. Expected: orange Talbot circles appear at the measured heights and the area waypoint uses the intersected height estimate. `/trevor clearcircles` removes only the circles.
+4. Start a real Trevor quest. Expected: the exact rarity and one of six maintained areas are read from chat/tab, the quest and rarity totals increment once, and ordinary animals outside the health/name evidence are ignored.
+5. Approach the target. Expected: the same candidate must survive two scans, be within its species visibility range, be visible and pass line of sight before the marker moves to it. Ordinary Oasis rabbits/sheep are not claimed unless server naming identifies them.
+6. Kill the target and run `/trevor status`. Expected: pelts, killed animals and session pelts/hour update; random/self deaths use their separate total.
+7. Let a quest finish. Expected: the configured 20-second readiness state remains honest, then the selected title/chat/sound fires once. Mob-death alerts have independent title/chat/sound settings.
+8. Reorder `trevorTrackerOrder`, toggle rarity/rate rows, and change area/target colors, box, beam, line, range, beam height, circle segments and through-wall behavior. Expected: each setting affects only its named layer.
+9. Bind `key.constellation.trevor`. With Warp Hotkey enabled it runs `/warp trapper` only from gameplay on the Farming Islands. With Accept Hotkey enabled, it can replay only a server-provided YES command captured 0.2-5 seconds earlier; it never guesses or stores a command across world changes.
+10. Warp away and return. Expected: transient quest, target, circle and captured-prompt state is cleared while lifetime tracker totals remain stored.
