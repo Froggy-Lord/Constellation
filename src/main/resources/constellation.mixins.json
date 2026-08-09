@@ -24,6 +24,7 @@
         "GameRendererMixin",
         "HideStuckArrowsMixin",
         "HudRenderMixin",
+        "HudQuiverMixin",
         "HotbarScrollLockMixin",
         "InventoryAccessor",
         "LerpingBossEventAccessor",

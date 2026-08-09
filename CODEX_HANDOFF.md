@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-09 for version 0.9.865 Matriarch Heavy Pearl Helper.
+Last updated: 2026-08-09 for version 0.9.872 Quiver Display and Warnings.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.865`.
+- Current artifact version: `0.9.872`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3996,3 +3996,11 @@ The next explicit live-enabled missing consumer was SkyHanni's Personal Compacto
 The helper recognizes only exact `PERSONAL_(COMPACTOR|DELETOR)_(4000|5000|6000|7000)` identities and preserves capacities 1/3/7/12. It reads `personal_compact_N` or `personal_deletor_N` in numeric position order, reads the maintained `PERSONAL_DELETOR_ACTIVE` byte for status, and leaves holes visible instead of compacting the list. The native tooltip stays intact; a scale-clamped side panel renders repository-backed item icons, optional names, status and empty slots on the screen half opposite the cursor. The repository remains lazy and initializes only on a matching hover.
 
 Enabled/disabled E/D slot badges are independent of the large preview and choose a free slot-text corner. Preview visibility supports Always, Keybind Held and Except Keybind Held, matching the live profile's left-Shift except mode. Type filters, status, empty positions, names, marker, scale, key, background and explicit local-world diagnostics are independent. `/personalcompactor` exposes status, modes, keycode, scale, ARGB color and boolean options. No interaction or packet is sent.
+
+## 2026-08-09: Quiver display and warning suite (0.9.872)
+
+The live 26.1.2 setup has Skyblocker's true quiver count and all warning paths enabled, plus SkyHanni's low warning and after-run reminder. `LyraQuiver.java`, `QuiverHudWidget.java`, `HudQuiverMixin.java`, `LyraConfig.java`, `LyraEconomy.java` and `ConfigScreen.java` port Devonian GPL `features/misc/QuiverDisplay.kt`, NoFrills GPL `hud/elements/Quiver.java`, and Skyblocker LGPL `skyblock/QuiverWarning.java` plus its `HudMixin` count path.
+
+The observer reads container slot 44 normally and slot 9 during dungeon clear, matching Hypixel's quiver relocation. Arrow/feather identity plus exact `Arrows Remaining` lore supplies the cleaned arrow type and count. The hotbar override additionally requires the maintained `quiver_arrow` item marker, so unrelated slot-eight items keep their native decorations. The optional movable HUD supports Always, Bow in Inventory and Only Bow in Hand visibility, real count, arrow type/icon and capacity-aware coloring.
+
+Warnings are edge-triggered on a configured threshold and rearm only after recovery. Title, chat and sound channels are independent. A suppressed in-dungeon warning is retained for one post-run reminder; an immediate dungeon warning may also retain the separately configured reminder. World/module transitions clear transient state. `/quiverdisplay` exposes status, 15-second local visualization, visibility, threshold, capacity and all common Boolean controls.

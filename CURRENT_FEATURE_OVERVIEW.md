@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.871.
+Current test build: 0.9.872.
+
+Lyra now has a complete Quiver suite matching the active low-arrow and true-count settings. The actual server quiver item supplies arrow type and count, including the dungeon clear-slot relocation. It provides compact true counts on the quiver hotbar item, a movable optional arrow HUD, held-bow/inventory/always visibility, capacity-based coloring, a configurable low threshold, independent title/chat/sound channels, dungeon suppression and a deferred after-run reminder. `/quiverdisplay` exposes status, a 15-second visual test, visibility, threshold, capacity and every common toggle.
 
 Lyra now has the live-enabled Personal Compactor/Deletor overlay. Hovering any 4000-7000 tier item shows its authoritative stored entries as real item icons in a responsive side panel while preserving the native tooltip. Enabled/disabled slot badges, visibility mode/key, scale, status, empty slots, type filters, optional slot names, background and local diagnostic scope are independent. Repository icons initialize only after a matching hover. `/personalcompactor` exposes every non-boolean control and common toggles.
 

@@ -1964,6 +1964,13 @@
 - Added responsive real-item grids beside native tooltips, enabled/disabled slot badges, three visibility modes, key, scale, status, empty-slot, type, name and color controls.
 - Kept item-repository loading lazy until a matching item is hovered and avoided existing slot-text corners.
 
+## 0.9.872 - Complete Quiver Display and Warnings
+
+- Added real arrow-type/count parsing from the normal and dungeon-relocated quiver slots.
+- Added compact true hotbar counts and an optional movable HUD with held-bow, bow-inventory and always-visible modes.
+- Added capacity-aware count colors, configurable low threshold and independent title, chat and sound alerts.
+- Added dungeon warning suppression with a one-time after-run reminder, plus complete commands and a bounded local visual test.
+
 ## 0.9.870 - Charmed Visitors
 
 - Added profile-specific Gift Vinyl charm detection from authoritative visitor-menu state.

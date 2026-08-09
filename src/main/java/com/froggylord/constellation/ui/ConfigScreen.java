@@ -724,6 +724,10 @@ public class ConfigScreen extends Screen {
                     "recipeBrowserClickableChains", "recipeBrowserRememberSearch", "recipeBrowserRememberSelection",
                     "recipeBrowserReiIntegration", "recipeBrowserReiEntries", "recipeBrowserReiCollapsible",
                     "recipeBrowserSafeViewRecipe", "recipeBrowserUpdateOnRequest");
+                Set<String> quiverFields = Set.of("quiverHud", "quiverTrueHotbarCount", "quiverShowIcon",
+                    "quiverColorAmount", "quiverLowWarning", "quiverWarningInDungeons",
+                    "quiverReminderAfterDungeon", "quiverWarningTitle", "quiverWarningChat",
+                    "quiverWarningSound", "quiverLocalWorlds");
                 modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
                     () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
                     .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
@@ -777,9 +781,21 @@ public class ConfigScreen extends Screen {
                     .b("Allow requested repository updates", () -> c.recipeBrowserUpdateOnRequest, v -> { c.recipeBrowserUpdateOnRequest = v; ConstellationClient.saveConfig(); })
                     .sub("Open: /recipes  |  Refresh: /recipesupdate", true)
                     .sub("Result depth, visible rows and colors: All settings", true));
+                modules.add(new Module("quiverHud", "Quiver count, arrow HUD and low-stock reminders", "Features",
+                    () -> c.quiverHud, v -> { c.quiverHud = v; ConstellationClient.saveConfig(); })
+                    .b("True hotbar count", () -> c.quiverTrueHotbarCount, v -> { c.quiverTrueHotbarCount = v; ConstellationClient.saveConfig(); })
+                    .b("Arrow icon", () -> c.quiverShowIcon, v -> { c.quiverShowIcon = v; ConstellationClient.saveConfig(); })
+                    .b("Color by remaining amount", () -> c.quiverColorAmount, v -> { c.quiverColorAmount = v; ConstellationClient.saveConfig(); })
+                    .b("Low-arrow warning", () -> c.quiverLowWarning, v -> { c.quiverLowWarning = v; ConstellationClient.saveConfig(); })
+                    .b("Warn inside dungeons", () -> c.quiverWarningInDungeons, v -> { c.quiverWarningInDungeons = v; ConstellationClient.saveConfig(); })
+                    .b("Remind after dungeon", () -> c.quiverReminderAfterDungeon, v -> { c.quiverReminderAfterDungeon = v; ConstellationClient.saveConfig(); })
+                    .b("Warning title", () -> c.quiverWarningTitle, v -> { c.quiverWarningTitle = v; ConstellationClient.saveConfig(); })
+                    .b("Warning chat", () -> c.quiverWarningChat, v -> { c.quiverWarningChat = v; ConstellationClient.saveConfig(); })
+                    .b("Warning sound", () -> c.quiverWarningSound, v -> { c.quiverWarningSound = v; ConstellationClient.saveConfig(); })
+                    .sub("Visibility, threshold, capacity and local test: /quiverdisplay", true));
                 for (var field : LyraConfig.class.getFields()) {
                     String n = field.getName();
-                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || recipeFields.contains(n) || field.getType() != boolean.class) continue;
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || recipeFields.contains(n) || quiverFields.contains(n) || field.getType() != boolean.class) continue;
                     modules.add(new Module(n, autoLabel(n), "Features",
                         () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                         v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));

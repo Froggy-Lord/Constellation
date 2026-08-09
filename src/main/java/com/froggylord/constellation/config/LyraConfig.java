@@ -23,6 +23,23 @@ public class LyraConfig extends BaseConfigGroup {
     public String bitsHudStyle = "Bits: §b{bits}";
     public boolean bitsHud = false;
     public boolean quiverHud = false;
+    // ported from Devonian (GPL-3.0): features/misc/QuiverDisplay.kt
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/QuiverWarning.java
+    public boolean quiverTrueHotbarCount = true;
+    public boolean quiverShowIcon = true;
+    public boolean quiverColorAmount = false;
+    public boolean quiverLowWarning = true;
+    public boolean quiverWarningInDungeons = true;
+    public boolean quiverReminderAfterDungeon = true;
+    public boolean quiverWarningTitle = true;
+    public boolean quiverWarningChat = false;
+    public boolean quiverWarningSound = true;
+    public boolean quiverLocalWorlds = false;
+    public int quiverLowAmount = 100;
+    public int quiverCapacity = 2880;
+    public int quiverNormalColor = 0xFF55FF55;
+    public int quiverLowColor = 0xFFFF5555;
+    public String quiverVisibility = "ONLY_BOW_HAND";
 
     // compact text drawn on the item...
     public boolean slotText = true;

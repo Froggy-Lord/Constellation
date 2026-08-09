@@ -1,5 +1,19 @@
 # Constellation testing guide
 
+## Quiver display and warning suite (0.9.872): test this release first
+
+Enable Lyra. True Hotbar Count, Low Warning, Warn Inside Dungeons and Remind After Dungeon default to the behavior enabled in the 26.1.2 instance; the separate Quiver HUD defaults off.
+
+- [ ] Put the active quiver arrow item in its normal SkyBlock hotbar position. Expected: its decoration shows the real lore count in compact form rather than the physical stack count, and an ordinary item in the same hotbar position remains unchanged.
+- [ ] Enable Quiver HUD and select `only_bow_hand`. Expected: the movable panel appears only while a bow or shortbow-backed Bow item is held, showing the cleaned arrow type and exact amount.
+- [ ] Test `bow_inventory` and `always`. Expected: inventory mode remains visible while any Bow/Crossbow item is carried; always mode requires only known quiver state. Outside SkyBlock it remains hidden unless Local is explicitly enabled or `/quiverdisplay test` is active.
+- [ ] Run `/quiverdisplay test`. Expected: a low-arrow title/sound follows the selected channels and the deterministic Flint state remains available for HUD placement for 15 seconds.
+- [ ] Lower the real arrow count across the configured threshold. Expected: one warning fires on the downward crossing, does not repeat every update, and rearms only after the count rises above the threshold.
+- [ ] Cross the threshold during a dungeon with Warn Inside Dungeons disabled. Expected: no mid-run warning appears; after leaving the run, one reminder appears only when Remind After Dungeon is enabled.
+- [ ] Repeat with Warn Inside Dungeons enabled. Expected: the immediate alert appears, and the independently enabled after-run reminder still reports that the run ended low.
+- [ ] Toggle HUD, true count, icon, amount color, warning, dungeon warning, reminder, title, chat and sound independently. Expected: each changes only its named surface.
+- [ ] Run `/quiverdisplay visibility <always|bow_inventory|only_bow_hand>`, `threshold <0..100000>`, `capacity <1..100000>` and `option <name> on|off`. Expected: invalid values fail locally and accepted settings persist after restart.
+
 ## Personal Compactor and Deletor preview (0.9.871): test this release first
 
 Enable Lyra and Personal Compactor Preview. Test actual 4000, 5000, 6000 or 7000 tier accessories in an inventory or container.

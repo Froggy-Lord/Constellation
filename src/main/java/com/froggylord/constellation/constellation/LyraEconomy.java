@@ -45,6 +45,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraMarketSearch.init(cfg);
         LyraInventoryButtons.init(cfg);
         LyraPersonalCompactor.init(cfg);
+        LyraQuiver.init(cfg);
         LyraStorageValue.init(cfg);
         LyraBazaarHelper.init(cfg);
         LyraAuctionHelper.init(cfg);
@@ -81,6 +82,8 @@ public class LyraEconomy extends BaseConstellation {
         hud.register(new com.froggylord.constellation.hud.LyraCurrencyHudWidget(
             HudPosition.of(30, 40), () -> cfg != null && cfg.enabled
                 && (cfg.purseHud || cfg.coinSession || cfg.coinSessionRate || cfg.coinRecentChange || cfg.bitsHud)));
+        hud.register(new com.froggylord.constellation.hud.QuiverHudWidget(
+            HudPosition.of(82, 55), () -> cfg != null && cfg.enabled && cfg.quiverHud));
     }
 
     @Override
@@ -92,6 +95,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraMarketSearch.registerCommands(dispatcher);
         LyraInventoryButtons.registerCommands(dispatcher);
         LyraPersonalCompactor.registerCommands(dispatcher);
+        LyraQuiver.registerCommands(dispatcher);
         LyraStorageValue.registerCommands(dispatcher);
         LyraBazaarHelper.registerCommands(dispatcher);
         LyraAuctionHelper.registerCommands(dispatcher);
