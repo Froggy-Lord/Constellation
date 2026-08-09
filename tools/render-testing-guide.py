@@ -72,9 +72,15 @@ parser.add_argument("guide", type=Path)
 parser.add_argument("output", type=Path)
 parser.add_argument("version")
 args = parser.parse_args()
-body = markdown(args.guide.read_text(encoding="utf-8"))
 version = html.escape(args.version)
 version_js = json.dumps(args.version)
+body = markdown(args.guide.read_text(encoding="utf-8"))
+section_pattern = re.compile(r'(<h2>.*?\(0\.9\.\d+\).*?</h2>)')
+sections = list(section_pattern.finditer(body))
+older_at = next((match.start() for match in sections if f"({version})" not in match.group(1)), -1)
+if older_at >= 0:
+    body = (body[:older_at] + '<details class="older"><summary>Older build checklists (optional reference)</summary>'
+            + body[older_at:] + '</details>')
 page = f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Constellation {version} testing</title>
 <style>
@@ -85,10 +91,11 @@ header strong{{margin-right:12px}}header span,.muted{{color:var(--muted)}}main{{
 article,aside{{min-width:0}}h1{{font-size:2rem}}h2{{margin-top:2.4rem;border-top:1px solid var(--line);padding-top:1.5rem}}h3{{margin-top:1.8rem}}code{{padding:2px 5px;background:#1a2235;border-radius:4px}}pre{{overflow:auto;padding:14px;background:#0d111c;border:1px solid var(--line)}}a{{color:var(--blue)}}li{{margin:.38rem 0}}
 aside{{position:sticky;top:78px;align-self:start;max-height:calc(100vh - 100px);overflow:auto;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:10px}}
 .comment{{margin:12px 0;padding:12px;border-left:3px solid var(--suggestion);background:#0d111c;border-radius:4px}}.comment.good{{border-color:var(--good)}}.comment.issue{{border-color:var(--issue)}}.quote{{display:block;margin-bottom:6px;color:var(--muted);font-size:.83rem}}.empty{{color:var(--muted)}}
+.older{{margin-top:42px;padding:14px 18px;border:1px solid var(--line);border-radius:8px;color:var(--muted)}}.older summary{{cursor:pointer;color:var(--text);font-weight:650}}.older[open] summary{{margin-bottom:18px}}
 #composer{{display:none;position:fixed;z-index:5;right:24px;bottom:24px;width:min(430px,calc(100vw - 48px));padding:16px;background:#171d2c;border:1px solid #445372;border-radius:10px;box-shadow:0 18px 60px #000b}}#composer.open{{display:block}}textarea{{width:100%;min-height:100px;margin:10px 0;padding:10px;resize:vertical;background:#090d17;color:var(--text);border:1px solid #445372;border-radius:6px}}select,button{{padding:8px 11px;background:#202a40;color:var(--text);border:1px solid #536483;border-radius:6px}}button.primary{{background:#315fae;border-color:#5986d5}}#status{{margin-left:8px;color:var(--muted);font-size:.86rem}}::highlight(good){{background:#256f4f80}}::highlight(issue){{background:#9c354080}}::highlight(suggestion){{background:#99712580}}
 @media(max-width:850px){{main{{display:block}}aside{{position:static;max-height:none;margin-top:36px}}}}
 </style></head><body>
-<header><strong>Constellation {version}</strong><span>Frozen test guide. Select any instruction to leave feedback.</span></header>
+<header><strong>Constellation {version}</strong><span>Test the current section only. Older checklists are optional reference.</span></header>
 <main><article id="guide">{body}</article><aside><h2 style="margin-top:0;border:0;padding:0">Feedback</h2><p class="muted">Highlight words, a sentence, or a paragraph in the guide. Your comments stay attached to this build.</p><div id="comments"><p class="empty">No feedback yet.</p></div></aside></main>
 <div id="composer"><strong id="selected"></strong><textarea id="comment" placeholder="What is good, broken, unclear, or missing?"></textarea><select id="kind"><option value="issue">Issue</option><option value="suggestion">Suggestion</option><option value="good">Good</option></select> <button class="primary" id="save">Save feedback</button> <button id="cancel">Cancel</button><span id="status"></span></div>
 <script>

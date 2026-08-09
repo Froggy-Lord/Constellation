@@ -41,6 +41,30 @@ public class LyraConfig extends BaseConfigGroup {
     public int quiverLowColor = 0xFFFF5555;
     public String quiverVisibility = "ONLY_BOW_HAND";
 
+    // ported from SkyHanni (LGPL-2.1): features/inventory/SackDisplay.kt
+    // ported from SkyHanni (LGPL-2.1): config/features/inventory/SackDisplayConfig.kt
+    public boolean sackDisplay = false;
+    public boolean sackHighlightFull = true;
+    public boolean sackShowEmpty = true;
+    public boolean sackShowPrice = true;
+    public boolean sackShowTotal = true;
+    public boolean sackShowIcons = true;
+    public boolean sackShowCapacity = true;
+    public boolean sackHighlightHover = true;
+    public boolean sackLocalWorlds = false;
+    public int sackRows = 15;
+    public int sackRowSpacing = 1;
+    public int sackPanelWidth = 190;
+    public int sackBackground = 0xE0101018;
+    public int sackAccentColor = 0xFF55AAFF;
+    public int sackFullColor = 0x70FF5555;
+    public String sackNumberFormat = "FORMATTED";
+    public String sackSort = "STORED_DESC";
+    public String sackPriceSource = "BUY";
+    public String sackPriceFormat = "FORMATTED";
+    public String sackAlignment = "LEFT";
+    public String sackSearch = "";
+
     // compact text drawn on the item...
     public boolean slotText = true;
     public boolean slotTextPetLevel = true;

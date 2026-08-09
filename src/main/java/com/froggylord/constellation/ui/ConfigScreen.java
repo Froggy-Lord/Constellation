@@ -728,6 +728,8 @@ public class ConfigScreen extends Screen {
                     "quiverColorAmount", "quiverLowWarning", "quiverWarningInDungeons",
                     "quiverReminderAfterDungeon", "quiverWarningTitle", "quiverWarningChat",
                     "quiverWarningSound", "quiverLocalWorlds");
+                Set<String> sackFields = Set.of("sackDisplay", "sackHighlightFull", "sackShowEmpty", "sackShowPrice",
+                    "sackShowTotal", "sackShowIcons", "sackShowCapacity", "sackHighlightHover", "sackLocalWorlds");
                 modules.add(new Module("tooltipCreationTimestamp", "SkyBlock item creation time and live age", "Tooltips",
                     () -> c.tooltipCreationTimestamp, v -> { c.tooltipCreationTimestamp = v; ConstellationClient.saveConfig(); })
                     .b("Item age", () -> c.tooltipItemAge, v -> { c.tooltipItemAge = v; ConstellationClient.saveConfig(); })
@@ -793,9 +795,20 @@ public class ConfigScreen extends Screen {
                     .b("Warning chat", () -> c.quiverWarningChat, v -> { c.quiverWarningChat = v; ConstellationClient.saveConfig(); })
                     .b("Warning sound", () -> c.quiverWarningSound, v -> { c.quiverWarningSound = v; ConstellationClient.saveConfig(); })
                     .sub("Visibility, threshold, capacity and local test: /quiverdisplay", true));
+                modules.add(new Module("sackDisplay", "Searchable Sack contents, capacity and prices", "Storage",
+                    () -> c.sackDisplay, v -> { c.sackDisplay = v; ConstellationClient.saveConfig(); })
+                    .b("Highlight full slots", () -> c.sackHighlightFull, v -> { c.sackHighlightFull = v; ConstellationClient.saveConfig(); })
+                    .b("Show empty entries", () -> c.sackShowEmpty, v -> { c.sackShowEmpty = v; ConstellationClient.saveConfig(); })
+                    .b("Item prices", () -> c.sackShowPrice, v -> { c.sackShowPrice = v; ConstellationClient.saveConfig(); })
+                    .b("Total value", () -> c.sackShowTotal, v -> { c.sackShowTotal = v; ConstellationClient.saveConfig(); })
+                    .b("Item icons", () -> c.sackShowIcons, v -> { c.sackShowIcons = v; ConstellationClient.saveConfig(); })
+                    .b("Capacity", () -> c.sackShowCapacity, v -> { c.sackShowCapacity = v; ConstellationClient.saveConfig(); })
+                    .b("Hover row", () -> c.sackHighlightHover, v -> { c.sackHighlightHover = v; ConstellationClient.saveConfig(); })
+                    .b("Local-world visual testing", () -> c.sackLocalWorlds, v -> { c.sackLocalWorlds = v; ConstellationClient.saveConfig(); })
+                    .sub("Sort, search, number/price format, rows and width: /sackdisplay", true));
                 for (var field : LyraConfig.class.getFields()) {
                     String n = field.getName();
-                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || recipeFields.contains(n) || quiverFields.contains(n) || field.getType() != boolean.class) continue;
+                    if (n.equals("enabled") || n.equals("version") || ageFields.contains(n) || storageFields.contains(n) || marketSearchFields.contains(n) || recipeFields.contains(n) || quiverFields.contains(n) || sackFields.contains(n) || field.getType() != boolean.class) continue;
                     modules.add(new Module(n, autoLabel(n), "Features",
                         () -> { try { return field.getBoolean(c); } catch (Exception e) { return false; } },
                         v -> { try { field.setBoolean(c, v); ConstellationClient.saveConfig(); } catch (Exception ignored) {} }));

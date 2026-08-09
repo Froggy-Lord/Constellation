@@ -1,5 +1,12 @@
 # Constellation Changelog
 
+## 0.9.874 - Complete Sack displays and simplify browser testing
+
+- Added independent full-sack slot highlighting plus an optional responsive item/capacity/value panel.
+- Added ordinary, enchanted, rune, trophy and filtered/unfiltered gemstone parsing with quality-correct prices.
+- Added five sort modes, persistent search, empty rows, three number formats, buy/sell/NPC prices, two price formats, alignment, spacing, pagination, icons, totals and `/sackdisplay` diagnostics.
+- Changed frozen browser guides to keep only the current release checklist open and collapse all historical checks as optional reference.
+
 ## 0.9.873 - Add End Dragon fight and profit suite
 
 - Added exact eye tracking, dragon/protector reward-weight calculations, live fight HP/damage/placement and Superior alerts from the licensed reference implementation.

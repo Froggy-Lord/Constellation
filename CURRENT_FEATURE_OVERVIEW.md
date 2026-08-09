@@ -1,6 +1,10 @@
 # Constellation feature overview
 
-Current test build: 0.9.873.
+Current test build: 0.9.874.
+
+Lyra now has a complete Sack screen suite. The live-matching independent full-slot highlight remains enabled while the optional side panel defaults off. When enabled, the responsive panel parses ordinary, enchanted, rune, trophy and filtered/unfiltered gemstone sacks; displays actual icons, stored/capacity values, per-item and total prices; supports empty entries, search, five sort modes, three number formats, three price sources, two price formats, alignment, spacing, pagination and hover correlation. `/sackdisplay` exposes common controls and a safe local preview.
+
+Browser testing is now intentionally progressive: only the current build section stays open. Hundreds of older checks are collapsed under one optional reference control, while all selection-based feedback remains attached to the frozen build.
 
 Cygnus now includes an End Dragon fight and profit suite. It tracks placed and recovered eyes, every dragon type, live HP/damage/placement, the licensed reward-weight formula, Endstone Protector weight, Superior alerts, profile-scoped kills, bounded post-fight inventory loot, eye costs, recent drops, profit and active profit/hour. Weight rows, profit rows, leech counting, persistence, price side, alert channels, thresholds, activity timing and local diagnostics are independently configurable; `/dragontracker` exposes the common controls and a safe 15-second test.
 

@@ -1,5 +1,18 @@
 # Constellation testing guide
 
+## Sack display and full-slot highlighting (0.9.874): test only this section
+
+Enable Lyra. Full-slot highlighting defaults on to match the tested profile; the optional Sack contents panel defaults off.
+
+- [ ] Open an ordinary or Enchanted Sack containing empty, partial and full entries. Expected: full server slots receive a translucent red overlay even while the side panel is disabled; empty and partial slots remain readable and unchanged.
+- [ ] Enable Sack Display. Expected: a bounded panel uses whichever side of the container has more room, never covers native sack slots, and shows real item icons, stored/capacity amounts, item prices and a total.
+- [ ] Test Runes Sack, Gemstones Sack with no filter, and Rough/Flawed/Fine filters. Expected: rune levels aggregate without losing quantities; gemstone value uses each displayed quality rather than treating every unit as Rough.
+- [ ] Toggle Empty, Price, Total, Icons, Capacity and Hover independently. Expected: each changes only its named surface; Highlight Full remains independent of the panel master switch.
+- [ ] Test stored ascending/descending, price ascending/descending and name sorting; then search by visible name and internal ID. Expected: results and page counts update consistently, and `search clear` restores all eligible rows.
+- [ ] Compare Default, Formatted and Unformatted counts and buy, sell and NPC price sources. Expected: Default uses exact stored plus compact capacity, Formatted compacts both, Unformatted shows both exactly, and unavailable prices remain absent rather than invented.
+- [ ] Resize to 640x480 and use the wheel over the panel. Expected: row count adapts to the available height, scrolling changes only Sack pages, and native container scrolling/clicking works outside the panel.
+- [ ] Run `/sackdisplay test`, then open any local container within 15 seconds. Expected: deterministic sample rows prove full/partial/empty colors and layout without connecting or sending a command. Test `rows`, `width`, `sort`, `format`, `price`, `search`, `next`, `previous` and `option`; invalid values fail locally and accepted values persist.
+
 ## End Dragon fight and profit suite (0.9.873): test this release first
 
 Enable Cygnus and End Dragon Suite. The profit HUD defaults on; the live weight HUD defaults off to match the active 26.1.2 setup.
