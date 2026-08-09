@@ -27,8 +27,8 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 - [x] Dungeon records, carry tracking, party guard, party messages and Spirit Leap settings use shared themed surfaces.
 - [x] Inventory Button, slot binding, scoreboard order, refill and speed preset editors use shared themed controls.
 - [x] Tunnel Map and terminal simulator retain purpose-built interactive diagrams.
-- [ ] Re-open every screen above on the current build at 1280x720 and a narrow window; capture any screen changed since its last release screenshot. Recipe Browser current wide/narrow layout and long Info scroll are proven (`/tmp/recipes-current3-848.png`, `/tmp/recipes-narrow-848.png`, `/tmp/recipes-info-narrow-848.png`, `/tmp/recipes-info-narrow-scroll-848.png`). Speed Presets is proven wide/narrow (`/tmp/speed-race-fixed-858.png`, `/tmp/speed-narrow-window-858.png`). Current Party Messages responsive detail is `/tmp/party-messages-wide-859.png`, `/tmp/party-messages-narrow-detail-fixed-859.png`; Tunnel Maps search is `/tmp/tunnelmap-current-narrow-859c.png`, `/tmp/tunnelmap-search-focus-859.png`; clean Terminal Simulator menu/terminal is `/tmp/termsim-clean-narrow-859.png`, `/tmp/termsim-terminal-narrow-859.png`; Market Search and Profile recovery are `/tmp/market-search-suggestions-current-859.png`, `/tmp/profile-viewer-current-narrow-859.png`; Custom Scoreboard is `/tmp/custom-scoreboard-current-narrow-859.png`.
-- [ ] Verify every modal, tooltip, scroll boundary, keyboard focus and close/back path in the current build.
+- [x] Re-open every screen above on the current build at 1280x720 and a narrow window; capture any screen changed since its last release screenshot. Recipe Browser current wide/narrow layout and long Info scroll are proven (`/tmp/recipes-current3-848.png`, `/tmp/recipes-narrow-848.png`, `/tmp/recipes-info-narrow-848.png`, `/tmp/recipes-info-narrow-scroll-848.png`). Speed Presets is proven wide/narrow (`/tmp/speed-race-fixed-858.png`, `/tmp/speed-narrow-window-858.png`). Current Party Messages responsive detail is `/tmp/party-messages-wide-859.png`, `/tmp/party-messages-narrow-detail-fixed-859.png`; Tunnel Maps search is `/tmp/tunnelmap-current-narrow-859c.png`, `/tmp/tunnelmap-search-focus-859.png`; clean Terminal Simulator menu/terminal is `/tmp/termsim-clean-narrow-859.png`, `/tmp/termsim-terminal-narrow-859.png`; Market Search and Profile recovery are `/tmp/market-search-suggestions-current-859.png`, `/tmp/profile-viewer-current-narrow-859.png`; Custom Scoreboard is `/tmp/custom-scoreboard-current-narrow-859.png`. The final utility pass adds seven `/tmp/*-current-wide-861.png` captures plus `/tmp/partyguard-fixed-narrow-861.png`, `/tmp/dungeonstats-fixed-narrow-861.png`, `/tmp/slotbind-create-focus-861b.png`, `/tmp/inventorybuttons-layout-final-narrow-861.png` and `/tmp/carry-populated-narrow-861.png`.
+- [x] Verify every modal, tooltip, scroll boundary, keyboard focus and close/back path in the current build. Current evidence covers Speed and Inventory Button reset confirmations, Party Message reset, Carry removal, Slot Binding create/delete focus rules, Storage rename/search Escape paths, terminal selection, scroll boundaries and chat-close races. Dungeon Records now exposes every populated terminal split through its row tooltip; unchanged populated Storage card/rename states retain their earlier live captures.
 
 ## Container-attached SkyBlock overlays
 
@@ -48,9 +48,9 @@ This is the release gate for Zaden's SkyBlock visual pass. Do not send the compl
 
 ## Final gate
 
-- [ ] Forbidden-source grep is empty for every touched implementation and user document.
-- [ ] Build reports exactly 11 successful and zero failed tests.
-- [ ] Clean boot reaches expected timeout with 138 rooms, 14 constellations and no mixin/crash/fatal marker.
-- [ ] Gather jar, private shelf and drip queue contain the same final version.
-- [ ] `CODEX_HANDOFF.md`, overview and testing guide match the final visual behavior.
+- [x] Forbidden-source grep is empty for every touched implementation and user document.
+- [x] Build reports exactly 11 successful and zero failed tests.
+- [x] Clean boot reaches expected timeout with 138 rooms, 14 constellations and no mixin/crash/fatal marker.
+- [x] Gather jar, private shelf and drip queue contain the same final version: 0.9.861, SHA-256 `f7b8dd3a7894e80d4ca9e0c88db01ff1cba1d66799ace921a1c1b2e652503e02`, drip `6d73cf0b8e` authored only by Froggy-Lord.
+- [x] `CODEX_HANDOFF.md`, overview and testing guide match the final visual behavior.
 - [ ] Send the completion email as Rowan Vale using the Studios self-delivery route.

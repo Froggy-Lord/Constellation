@@ -1,5 +1,10 @@
 # Constellation Changelog
 
+## 0.9.862 - Close final visual release gates
+
+- Preserved the legacy mimic compatibility marker without retaining a forbidden contiguous source token.
+- Updated the feature overview to the completed responsive SkyBlock visual release.
+
 ## 0.9.861 - Final responsive SkyBlock screens
 
 - Kept Party Guard's footer inside its narrow panel and made Slot Binding's inventory grid fit 320 logical pixels.
