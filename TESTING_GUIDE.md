@@ -3125,3 +3125,12 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 4. Enable World Labels or World Beams and approach an arena. Expected: only configured markers inside the render range appear, with the configured color and occlusion behavior.
 5. Run `/crimsonbosses`, `/crimsonbosses mark ashfang dead`, `/crimsonbosses mark ashfang alive` and `/crimsonbosses reset`. Expected: status, correction and reset are local only and never send a server command.
 6. Warp to another island and return. Expected: stale lobby timers are gone. Disabling Draco or the timer hides every HUD and world element.
+### Crimson NPC item helpers
+
+1. Enable Draco, Sirih Helper and Avorius Helper. Expected: Sirih only responds for a detected Barbarian profile and Avorius only for a detected Mage profile unless Require Faction is disabled.
+2. Speak to Sirih without Sulphur or Avorius without a Cup of Blood. Expected: matching maintained dialogue produces one customized message with a green clickable sack action.
+3. Hover the action. Expected: it states the exact requested item. Click it only when deliberately testing; expected: Minecraft runs one normal `/gfs <item> 1` command.
+4. Put the requested item in a main inventory slot and repeat after the configured cooldown. Expected: no offer appears. Armor/equipment does not count as lower inventory.
+5. Run `/crimsonnpc test sirih`, `avorius` and `pablo`. Expected: each previews locally even when the item is held and does not run `/gfs` until clicked.
+6. Edit `{npc}`, `{item}` and `{action}` in Crimson NPC Message, change the action text and independently toggle faction, inventory and clickable behavior. Expected: the next preview reflects every setting and never auto-clicks.
+7. Optionally enable Pablo and exercise each of his four flower request lines. Expected: the exact flower is placed in the text, hover and `/gfs` command.

@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.866.
+Current test build: 0.9.867.
+
+Draco’s NPC item helpers recognize Sirih, Avorius and optionally Pablo’s maintained dialogue variants. They suppress offers when the requested item is already in the lower inventory, respect Barbarian/Mage faction where applicable, and show a customizable clickable `/gfs` action rather than taking an item automatically. Each NPC has an independent cooldown and toggle; inventory, faction, item-name, action and message-template behavior are configurable.
 
 Draco includes a Crimson Isle miniboss respawn display for Bladesoul, Mage Outlaw, Barbarian Duke X, Ashfang and Magma Boss. Server death and spawn announcements give exact two-minute states; visiting a boss arena can recover an honest estimated range from its boss and beacon state. Unknown and alive rows, soon alerts, duration, world labels, beams, range, color and through-wall rendering are configurable. `/crimsonbosses` shows, resets or manually corrects lobby-local state.
 

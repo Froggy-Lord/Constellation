@@ -1948,3 +1948,8 @@
 - Added lobby-local respawn states for all five Crimson Isle minibosses from exact server announcements.
 - Added boss-area and beacon recovery for honest estimated timers after joining an encounter late.
 - Added a movable HUD, optional world labels/beams, soon alerts and manual correction commands.
+## 0.9.867 - Crimson NPC item helpers
+
+- Added complete Sirih and Avorius helpers matching the active 26.1.2 configuration, plus an optional Pablo flower helper.
+- Added inventory-aware suppression, faction checks, independent cooldowns and customizable clickable sack requests.
+- Added safe local previews and command/config controls without automatic commands or inventory actions.

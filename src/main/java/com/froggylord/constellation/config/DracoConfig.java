@@ -67,6 +67,18 @@ public class DracoConfig extends BaseConfigGroup {
     public int crimsonMinibossSoonSeconds = 10;
     public int crimsonMinibossWorldRange = 256;
     public int crimsonMinibossColor = 0xFFFFAA00;
+    public boolean crimsonSirihHelper = true;
+    public boolean crimsonAvoriusHelper = true;
+    public boolean crimsonPabloHelper = false;
+    public boolean crimsonNpcRequireFaction = true;
+    public boolean crimsonNpcCheckInventory = true;
+    public boolean crimsonNpcClickableGfs = true;
+    public boolean crimsonNpcShowItemName = true;
+    public int crimsonSirihCooldownSeconds = 60;
+    public int crimsonAvoriusCooldownSeconds = 15;
+    public int crimsonPabloCooldownSeconds = 300;
+    public String crimsonNpcMessage = "{npc} needs {item}. {action}";
+    public String crimsonNpcActionText = "[Get from sacks]";
     // ported from SkyHanni (LGPL-3.0-or-later): config/features/crimsonisle/MatriarchHelperConfig.kt
     public boolean matriarchHelper = true;
     public boolean matriarchHighlight = true;

@@ -49,6 +49,7 @@ public class DracoCrimson extends BaseConstellation {
         AshfangHelper.init(cfg);
         MatriarchHelper.init(cfg);
         CrimsonMinibossTimers.init(cfg);
+        CrimsonNpcHelpers.init(cfg);
         registerRenderer(KuudraSupplyHelper::draw);
         registerRenderer(KuudraBuildHelper::draw);
         registerRenderer(KuudraStunHelper::draw);
@@ -123,6 +124,7 @@ public class DracoCrimson extends BaseConstellation {
         AshfangHelper.registerCommands(dispatcher);
         MatriarchHelper.registerCommands(dispatcher);
         CrimsonMinibossTimers.registerCommands(dispatcher);
+        CrimsonNpcHelpers.registerCommands(dispatcher);
         var colorValue = RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
             .executes(context -> setSupplyColor(StringArgumentType.getString(context, "target"),
                 StringArgumentType.getString(context, "argb")));
