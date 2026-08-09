@@ -47,11 +47,13 @@ public class DracoCrimson extends BaseConstellation {
         KuudraStunHelper.init();
         KuudraSplits.init();
         AshfangHelper.init(cfg);
+        MatriarchHelper.init(cfg);
         registerRenderer(KuudraSupplyHelper::draw);
         registerRenderer(KuudraBuildHelper::draw);
         registerRenderer(KuudraStunHelper::draw);
         registerRenderer(KuudraTeammateHighlight::draw);
         registerRenderer(AshfangHelper::draw);
+        registerRenderer(MatriarchHelper::draw);
         every(2, "draco-kuudra-state", KuudraState::tick);
         every(2, "draco-kuudra-supplies", KuudraSupplyHelper::tick);
         every(2, "draco-kuudra-build", KuudraBuildHelper::tick);
@@ -102,6 +104,9 @@ public class DracoCrimson extends BaseConstellation {
         hud.register(new HudWidget("draco-ashfang-reset", "Ashfang Reset",
             AshfangHelper::resetHudText, HudPosition.of(72, 78),
             () -> cfg.ashfangHelper && cfg.ashfangNextResetTimer));
+        hud.register(new HudWidget("draco-matriarch", "Heavy Pearls",
+            MatriarchHelper::hudText, HudPosition.of(72, 82),
+            () -> cfg.matriarchHelper && cfg.matriarchHud));
     }
 
     @Override
@@ -111,6 +116,7 @@ public class DracoCrimson extends BaseConstellation {
         KuudraTitles.registerCommands(dispatcher);
         KuudraTeammateHighlight.registerCommands(dispatcher);
         AshfangHelper.registerCommands(dispatcher);
+        MatriarchHelper.registerCommands(dispatcher);
         var colorValue = RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
             .executes(context -> setSupplyColor(StringArgumentType.getString(context, "target"),
                 StringArgumentType.getString(context, "argb")));

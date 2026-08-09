@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.864.
+Current test build: 0.9.865.
+
+Draco includes a complete Matriarch Heavy Pearl helper. It identifies the real `COLLECT!` armor-stand/Slime pairs inside the Belly of the Beast, highlights each pearl, orders them by height or shortest traversal, draws the pearl chain, and can continue along the licensed Crimson Isle graph to the Heavy Pearls exit. Highlight, route, graph, label, beam, color, range, width, distance, HUD and through-wall behavior are independently configurable.
 
 Draco now has a complete Ashfang encounter helper. It identifies the active encounter and new blaze waves, highlights Followers, Underlings and Acolytes separately, marks Blazing Souls and Gravity Orbs, suppresses selected encounter clutter within a bounded arena radius, and provides movable freeze and next-reset timers. Every marker, label, beam, hide rule, color, range, duration, precision and notification is independently configurable.
 

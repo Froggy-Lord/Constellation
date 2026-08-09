@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-09 for version 0.9.864 Ashfang Encounter Helper.
+Last updated: 2026-08-09 for version 0.9.865 Matriarch Heavy Pearl Helper.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.864`.
+- Current artifact version: `0.9.865`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3944,3 +3944,11 @@ The live SkyHanni config enables essentially the entire Ashfang package while Dr
 The helper recognizes the active encounter from its real armor-stand name, associates named blaze stands to nearby Blaze entities, assigns separate configurable Follower/Underling/Acolyte colors, and recognizes Blazing Souls and Gravity Orbs by the licensed exact skull texture hashes. Souls and orbs each own box, beam, label, color and render range options. Render cleanup separately controls encounter particles, Glowstone equipment stands, full-health blaze names and damage splashes. Particle and entity suppression is spatially bounded around the detected boss rather than affecting the entire island.
 
 The Cryogenic Blast regex starts an accurate configurable three-second ability-freeze countdown. New Ashfang wave stand UUIDs start the configurable 46.1-second reset countdown; persistent mobs cannot retrigger it every scan. Freeze and reset are separate movable HUDs with precision, ready-state hold and optional chat/title controls. All transient state clears on world, area, master-module and helper disable. `/ashfang` exposes status, reset, detection range and common option toggles; every low-level field remains available in Draco `All settings`.
+
+## 2026-08-09: Matriarch Heavy Pearl helper (0.9.865)
+
+The authoritative live config showed Reputation Helper disabled but Matriarch Helper enabled with highlight and route lines. The feature selection was corrected before implementation. `MatriarchHelper.java`, `DracoConfig.java` and `DracoCrimson.java` port SkyHanni LGPL `features/nether/MatriarchHelper.kt`, `config/features/crimsonisle/MatriarchHelperConfig.kt`, plus its `IslandGraphs`/`GraphUtils` Dijkstra architecture. It reuses the already-shipped SkyHanni Repo MIT `assets/constellation/hoppity/island_graphs/CRIMSON_ISLE.json` instead of duplicating graph data.
+
+The real server entity model is a formatted `COLLECT!` armor stand attached to a Slime; the adversarial parser pass caught and corrected an initial match against SkyHanni's internal renamed mob value. Detection is restricted to the Belly of the Beast and associates the nearest Slime. Pearls can be ordered by height like the reference or by a bounded permutation search for shortest player traversal. The route then uses Dijkstra from the last pearl to the graph node named `Heavy Pearls`; Simple Line omits the exit section.
+
+Options cover fill, outline, label, beam, per-layer colors, line width, through-walls, render/scan range, shortest order, graph exit, look-ahead, exit label/distance, expected count and HUD. `/matriarch` provides status, reset, range and common option controls. Route rebuilding is keyed to pearl entity/position signatures, material player movement and a five-second bound, avoiding continuous searches over the 5,000-node graph. World, area and module transitions clear all transient state.

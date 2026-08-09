@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.865 - Add complete Matriarch Heavy Pearl routing
+
+- Added correct `COLLECT!` armor-stand to Heavy Pearl Slime association inside the Belly of the Beast.
+- Added independently configurable pearl fill, outline, labels, beams, colors, ranges and through-wall rendering.
+- Added height-order and bounded shortest-distance pearl traversal modes.
+- Reused the licensed Crimson Isle navigation graph to continue the pearl chain to the Heavy Pearls exit, with simple-line and graph-path modes.
+- Added route distance HUD, exit label/distance, line width, look-ahead, expected-pearl and scan controls plus `/matriarch` commands.
+- Added signature and movement-aware route caching so the 5,000-node graph is not searched continuously, with full area/world/module cleanup.
+
 ## 0.9.864 - Complete the Ashfang encounter helper
 
 - Added exact Blazing Soul and Gravity Orb texture detection with independently configurable world boxes, beams, labels, colors, ranges and through-wall rendering.

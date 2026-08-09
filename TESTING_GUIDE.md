@@ -1,5 +1,19 @@
 # Constellation testing guide
 
+## Matriarch Heavy Pearl helper (0.9.865)
+
+Enable Draco and `matriarchHelper`, then enter the Belly of the Beast naturally.
+
+- [ ] Approach each Heavy Pearl. Expected: the helper associates the real `COLLECT!` stand with its nearby Slime and highlights the Slime body; unrelated collectible labels elsewhere on Crimson Isle remain untouched.
+- [ ] Leave height ordering enabled. Expected: the route visits pearls from lowest to highest, then follows the Crimson Isle navigation graph to the Heavy Pearls exit.
+- [ ] Enable shortest-distance ordering. Expected: the route chooses the shortest of the available pearl orders from the current player position without stalling when unexpected extra entities exist.
+- [ ] Toggle Simple Line. Expected: simple mode draws only player-to-pearl segments; disabling it restores the graph route to the exit and optional exit label/distance.
+- [ ] Toggle fill, outline, labels, beams and through-walls separately. Expected: each option changes only its own visual layer and every marker respects the configured render range.
+- [ ] Collect and despawn pearls one at a time. Expected: counts, ordering and route update when the real entity set changes; stale pearls disappear and the route does not rebuild continuously while nothing changes.
+- [ ] Leave the Belly, change island or disable Draco. Expected: all pearl entities, route nodes, distance and HUD state clear immediately.
+- [ ] Run `/matriarch status`, `/matriarch option shortest on`, `/matriarch option graph off`, `/matriarch range 64`, and `/matriarch reset`. Expected: status reports pearl/route/graph counts and every command changes only its named option.
+- [ ] Open `/cn hud`. Expected: Heavy Pearls is a separately movable and resizable panel showing live pearl count and route distance.
+
 ## Ashfang encounter helper (0.9.864)
 
 Enable Draco and `ashfangHelper`, then enter the Ruins of Ashfang. Use `/ashfang status` to confirm detection without interacting with the boss.
