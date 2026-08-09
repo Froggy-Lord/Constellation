@@ -52,7 +52,7 @@ This is the readable map of what Constellation currently contains. It is organiz
 - Most individual features have their own toggle and detailed settings inside their constellation.
 - Puzzle, combat, movement, and aiming helpers are advisory overlays. They do not click or aim for you.
 
-Verified builds and this guide are mirrored to the private Constellation release shelf at `https://home.zadenzeus.dev/pages/constellation/`. `Current` contains the newest release; superseded builds move under `Archived Releases`.
+Verified builds are mirrored to the private Constellation release shelf at `https://home.zadenzeus.dev/pages/constellation/`. Every version has an immutable browser test guide: select any wording to save anchored Good, Issue or Suggestion feedback directly on the server. `Current` points to the newest release while superseded jars and their unchanged feedback guides remain available by version.
 
 ## Lyra: Profile Viewer
 

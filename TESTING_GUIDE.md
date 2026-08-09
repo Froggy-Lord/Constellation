@@ -2791,7 +2791,7 @@ Open `/cn config`, select Andromeda, and compare visible settings with the Andro
 - [ ] Disable Enabled. Expected: all title theming returns to vanilla without changing either child option.
 - [ ] Enable Reduced Motion. Expected: the static background remains but shooting-star motion stops immediately.
 - [ ] Open the HUD editor in a world. Expected: it remains the same mostly transparent, chrome-free positioning overlay and is never affected by title theming.
-- [ ] Sign in to `https://home.zadenzeus.dev/pages/constellation/`. Expected: Current contains the matching jar, Testing Guide and SHA-256 file; old builds appear only under Archived Releases. In a private browser, the same URL must require authentication.
+- [ ] Sign in to `https://home.zadenzeus.dev/pages/constellation/`. Expected: Current contains the matching jar, SHA-256 and a browser-only test guide. Highlight any guide text, choose Good, Issue or Suggestion, write a comment and save it. Reload the page; expected: the anchored comment remains on that exact version. New builds get separate frozen guides and old builds remain under Archived Releases. In a private browser, the shelf and feedback API must require authentication.
 
 ## Allowlisted menu visuals
 

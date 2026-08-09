@@ -9,22 +9,25 @@ PUBLIC_URL="https://home.zadenzeus.dev/pages/constellation/"
 version="$(sed -n 's/^mod_version=//p' "$ROOT/gradle.properties" | tr -d '[:space:]')"
 jar="$ROOT/build/libs/constellation-$version.jar"
 guide="$ROOT/TESTING_GUIDE.md"
+renderer="$ROOT/tools/render-testing-guide.py"
 
 [[ -n "$version" ]] || { printf 'missing mod_version\n' >&2; exit 2; }
 [[ -f "$jar" ]] || { printf 'missing release jar: %s\n' "$jar" >&2; exit 2; }
 [[ -f "$guide" ]] || { printf 'missing testing guide: %s\n' "$guide" >&2; exit 2; }
+[[ -f "$renderer" ]] || { printf 'missing testing guide renderer: %s\n' "$renderer" >&2; exit 2; }
 
 stamp="$(date +%Y%m%d-%H%M%S)"
 stage="/tmp/constellation-private-release-$stamp"
 mkdir -p "$stage/Current"
+mkdir -p "$stage/Version"
 
 cp "$jar" "$stage/Current/"
-cp "$guide" "$stage/Current/TESTING_GUIDE.md"
+python3 "$renderer" "$guide" "$stage/Version/testing.html" "$version"
 sha256sum "$stage/Current/constellation-$version.jar" > "$stage/Current/SHA256SUMS.txt"
 
 docker exec "$CONTAINER" sh -c "
 set -eu
-mkdir -p '$SHARE_ROOT/Current' '$SHARE_ROOT/Archived Releases'
+mkdir -p '$SHARE_ROOT/Current' '$SHARE_ROOT/Archived Releases' '$SHARE_ROOT/Versions'
 old=\$(find '$SHARE_ROOT/Current' -maxdepth 1 -type f -name 'constellation-*.jar' -print -quit)
 if [ -n \"\$old\" ]; then
     old_name=\$(basename \"\$old\" .jar)
@@ -37,19 +40,36 @@ if [ -n \"\$old\" ]; then
 fi
 "
 
+version_dir="$SHARE_ROOT/Versions/constellation-$version"
+if docker exec "$CONTAINER" test -e "$version_dir/testing.html"; then
+    docker cp "$CONTAINER:$version_dir/testing.html" "$stage/frozen-testing.html"
+    cmp -s "$stage/Version/testing.html" "$stage/frozen-testing.html" || {
+        printf 'refusing to replace frozen testing guide for %s\n' "$version" >&2
+        exit 3
+    }
+else
+    docker exec "$CONTAINER" mkdir -p "$version_dir"
+    docker cp "$stage/Version/testing.html" "$CONTAINER:$version_dir/testing.html"
+fi
+
 index_tmp="$stage/index.html"
 {
     printf '%s\n' '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
     printf '%s\n' '<title>Constellation builds</title><style>body{max-width:760px;margin:48px auto;padding:0 20px;background:#08081a;color:#f0ede0;font:16px system-ui}a{color:#ffcc55}section{margin:24px 0;padding:20px;background:#14142e;border:1px solid #36365e}li{margin:10px 0}.muted{color:#b5b0a5}</style>'
-    printf '<h1>Constellation builds</h1><p class="muted">Private test releases. Current always contains the newest verified build and testing guide.</p>'
-    printf '<section><h2>Current</h2><ul><li><a href="Current/constellation-%s.jar">Constellation %s</a></li><li><a href="Current/TESTING_GUIDE.md">Testing guide</a></li><li><a href="Current/SHA256SUMS.txt">SHA-256</a></li></ul></section>' "$version" "$version"
+    printf '<h1>Constellation builds</h1><p class="muted">Private test releases. Each build has a frozen browser guide where you can select text and leave comments.</p>'
+    printf '<section><h2>Current</h2><ul><li><a href="Current/constellation-%s.jar">Constellation %s</a></li><li><a href="Versions/constellation-%s/testing.html">Open test guide and leave feedback</a></li><li><a href="Current/SHA256SUMS.txt">SHA-256</a></li></ul></section>' "$version" "$version" "$version"
     printf '<section><h2>Archived Releases</h2><ul>'
     while IFS= read -r archived_path; do
         [[ -n "$archived_path" ]] || continue
         directory="$(dirname "$archived_path")"
         jar_name="$(basename "$archived_path")"
         name="$(basename "$directory")"
-        printf '<li><a href="Archived%%20Releases/%s/%s">%s</a></li>' "$name" "$jar_name" "$name"
+        guide_link="Versions/$name/testing.html"
+        if docker exec "$CONTAINER" test -f "$SHARE_ROOT/$guide_link"; then
+            printf '<li><a href="Archived%%20Releases/%s/%s">%s</a> &middot; <a href="%s">test guide and feedback</a></li>' "$name" "$jar_name" "$name" "$guide_link"
+        else
+            printf '<li><a href="Archived%%20Releases/%s/%s">%s</a></li>' "$name" "$jar_name" "$name"
+        fi
     done < <(docker exec "$CONTAINER" sh -c \
         "find '$SHARE_ROOT/Archived Releases' -mindepth 2 -maxdepth 2 -type f -name 'constellation-*.jar' -print 2>/dev/null" \
         | sort -r)
