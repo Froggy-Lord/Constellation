@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.863.
+Current test build: 0.9.864.
+
+Draco now has a complete Ashfang encounter helper. It identifies the active encounter and new blaze waves, highlights Followers, Underlings and Acolytes separately, marks Blazing Souls and Gravity Orbs, suppresses selected encounter clutter within a bounded arena radius, and provides movable freeze and next-reset timers. Every marker, label, beam, hide rule, color, range, duration, precision and notification is independently configurable.
 
 Hercules now includes movable Elite Farmers farming-weight, crop-collection and pest-kill leaderboards. Each display supports all-time or monthly data, all/Ironman/Stranded ranking, nearby players, overtake estimates, rank goals, compact values, Garden visibility rules, manual crop/pest selection, periodic refresh, pass messages and offline rank-change messages. Requests run in the background and keep the last usable snapshot if the service is temporarily unavailable.
 

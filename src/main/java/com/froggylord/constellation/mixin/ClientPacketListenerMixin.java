@@ -136,6 +136,7 @@ public class ClientPacketListenerMixin {
         boolean hideLiving = com.froggylord.constellation.constellation.AndromedaLivingCave.onParticle(packet);
         com.froggylord.constellation.constellation.AndromedaStillgore.onParticle(packet);
         if (com.froggylord.constellation.constellation.MageBeamHelper.onParticle(packet) || hideHotspot || hidePest || hideMotes || hideBerberis || hideLiving
+            || com.froggylord.constellation.constellation.AshfangHelper.shouldHideParticle(packet)
             || com.froggylord.constellation.constellation.DungeonEndingPresentation.shouldHideParticles()) ci.cancel();
     }
 

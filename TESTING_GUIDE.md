@@ -1,5 +1,18 @@
 # Constellation testing guide
 
+## Ashfang encounter helper (0.9.864)
+
+Enable Draco and `ashfangHelper`, then enter the Ruins of Ashfang. Use `/ashfang status` to confirm detection without interacting with the boss.
+
+- [ ] Start an Ashfang encounter. Expected: status changes to encounter on only while Ashfang is present; leaving the island or disabling Draco clears all markers and timers immediately.
+- [ ] Observe Followers, Underlings and Acolytes. Expected: each blaze type receives its configured grey, red or blue highlight; optional labels identify the type and full-health server nametags hide only when that setting is enabled.
+- [ ] Observe a Blazing Soul and Gravity Orb. Expected: each exact skull texture receives its independently configured box, beam and label; unrelated player heads remain untouched.
+- [ ] Enable particle, glowstone-stand and damage-splash hiding one at a time. Expected: only clutter inside the configured Ashfang radius disappears, with ordinary Crimson Isle particles and armor stands outside the encounter unaffected.
+- [ ] Let a new wave appear. Expected: the reset timer starts once and counts down from the configured default 46.1 seconds; it does not restart every few seconds while the same mobs remain alive.
+- [ ] Take a Cryogenic Blast. Expected: the freeze HUD counts down from 3.0 seconds with configured precision, then disappears; optional chat/title alerts fire once.
+- [ ] Open `/cn hud`. Expected: Ashfang Freeze and Ashfang Reset are separate movable panels with readable previews and normal 0.5x-3.0x resizing.
+- [ ] Run `/ashfang option particles off`, `/ashfang option blazes off`, `/ashfang range 64`, and `/ashfang reset`. Expected: each command changes only its named behavior and the status output reflects current encounter counts.
+
 ## Elite Farmers leaderboards (0.9.863)
 
 Enable Hercules, `eliteLeaderboards`, and the three individual leaderboard toggles. Enter your Garden and run `/elitefarmers refresh`.

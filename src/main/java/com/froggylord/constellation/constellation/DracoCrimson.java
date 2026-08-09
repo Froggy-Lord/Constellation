@@ -46,10 +46,12 @@ public class DracoCrimson extends BaseConstellation {
         KuudraBuildHelper.init();
         KuudraStunHelper.init();
         KuudraSplits.init();
+        AshfangHelper.init(cfg);
         registerRenderer(KuudraSupplyHelper::draw);
         registerRenderer(KuudraBuildHelper::draw);
         registerRenderer(KuudraStunHelper::draw);
         registerRenderer(KuudraTeammateHighlight::draw);
+        registerRenderer(AshfangHelper::draw);
         every(2, "draco-kuudra-state", KuudraState::tick);
         every(2, "draco-kuudra-supplies", KuudraSupplyHelper::tick);
         every(2, "draco-kuudra-build", KuudraBuildHelper::tick);
@@ -94,6 +96,12 @@ public class DracoCrimson extends BaseConstellation {
         hud.register(new HudWidget("draco-kuudra-progress", "Supply Progress",
             KuudraTitles::hudText, HudPosition.of(72, 70),
             () -> cfg.kuudraTitles && cfg.kuudraSupplyProgressHud));
+        hud.register(new HudWidget("draco-ashfang-freeze", "Ashfang Freeze",
+            AshfangHelper::freezeHudText, HudPosition.of(72, 74),
+            () -> cfg.ashfangHelper && cfg.ashfangFreezeTimer));
+        hud.register(new HudWidget("draco-ashfang-reset", "Ashfang Reset",
+            AshfangHelper::resetHudText, HudPosition.of(72, 78),
+            () -> cfg.ashfangHelper && cfg.ashfangNextResetTimer));
     }
 
     @Override
@@ -102,6 +110,7 @@ public class DracoCrimson extends BaseConstellation {
         KuudraBreakdown.registerCommands(dispatcher);
         KuudraTitles.registerCommands(dispatcher);
         KuudraTeammateHighlight.registerCommands(dispatcher);
+        AshfangHelper.registerCommands(dispatcher);
         var colorValue = RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
             .executes(context -> setSupplyColor(StringArgumentType.getString(context, "target"),
                 StringArgumentType.getString(context, "argb")));

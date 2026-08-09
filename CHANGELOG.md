@@ -1,5 +1,14 @@
 # Constellation Changelog
 
+## 0.9.864 - Complete the Ashfang encounter helper
+
+- Added exact Blazing Soul and Gravity Orb texture detection with independently configurable world boxes, beams, labels, colors, ranges and through-wall rendering.
+- Added separate Follower, Underling and Acolyte blaze highlights with optional labels and per-type colors.
+- Added bounded encounter particle, glowstone stand, full-health nametag and damage-splash cleanup instead of globally hiding Crimson Isle effects.
+- Added accurate three-second Cryogenic Blast and 46.1-second wave-reset HUD timers with configurable durations, precision, ready hold and optional notifications.
+- Added wave identity tracking so a live wave cannot repeatedly restart the reset countdown, plus complete world, island and module lifecycle cleanup.
+- Added `/ashfang` status, reset, range and option controls and exposed every detailed setting through Draco's searchable settings page.
+
 ## 0.9.863 - Add Elite Farmers leaderboards
 
 - Added farming-weight, crop-collection and pest-kill leaderboard HUDs backed by the EliteSkyBlock API.

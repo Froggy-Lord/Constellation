@@ -20,7 +20,12 @@ public final class EntityRenderDispatcherMixin {
                                                                      CallbackInfoReturnable<Boolean> cir) {
         // Slayer nametag suppression ported from Athen (BSD-3-Clause): modules/impl/slayer/SlayerInfo.kt
         if (cir.getReturnValue() && (DungeonEncounterVisibility.shouldHide(entity)
+            // ported from SkyHanni (LGPL-3.0-or-later): features/foraging/ClearTreeLogs.kt
+            || com.froggylord.constellation.constellation.ArtemisTreeCleanup.shouldHide(entity)
+            || com.froggylord.constellation.constellation.AndromedaMirrorverse.shouldHide(entity)
+            || com.froggylord.constellation.constellation.AndromedaEverywhere.shouldHide(entity)
             || com.froggylord.constellation.constellation.PerseusSlayers.shouldHideSlayerStand(entity)
+            || com.froggylord.constellation.constellation.AshfangHelper.shouldHide(entity)
             // ported from SkyHanni (LGPL-3.0-or-later): features/fishing/FishingHookDisplay.kt
             || com.froggylord.constellation.constellation.HydraFishingState.shouldHideHookLabel(entity))) {
             cir.setReturnValue(false);

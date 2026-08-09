@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-09 for version 0.9.863 Elite Farmers Leaderboards.
+Last updated: 2026-08-09 for version 0.9.864 Ashfang Encounter Helper.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.863`.
+- Current artifact version: `0.9.864`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3936,3 +3936,11 @@ The next live-config-driven gap was the enabled Elite Farmers suite. `HerculesEl
 The suite provides independent farming-weight, crop-collection and pest-kill HUDs; all-time/monthly and all/Ironman/Stranded modes; nearby players; live crop-rate overtake estimates; goals; compact values; automatic or manual crop selection; all-pest or per-pest selection; Garden, farming-idle and pest-inactivity visibility; pass messages; offline rank changes; bounded asynchronous refresh and honest loading/unranked/unavailable states. It deliberately preserves the last ready snapshot on transient service failure. Monthly results never mix in all-time local counters. All-time crop totals prefer the newer local milestone counter, and pest visibility now uses an explicit last-kill timestamp exposed by `HerculesPests`.
 
 Commands are `/elitefarmers`, `/elitefarmers refresh`, `/elitefarmers crop <crop>`, `/elitefarmers pest <name>`, `/elitefarmers goal weight|crop|pest <rank>`, and `/elitefarmers option <name> on|off`. Every option is also available through Hercules `All settings`. The source build passed 11/11 tests and the clean boot reached timeout 124 with 138 rooms and 14 constellations; the flite narrator warning remains benign.
+
+## 2026-08-09: Ashfang encounter suite (0.9.864)
+
+The live SkyHanni config enables essentially the entire Ashfang package while Draco previously had only an unused rough freeze field. `AshfangHelper.java`, `DracoConfig.java`, `DracoCrimson.java`, `ClientPacketListenerMixin.java` and `EntityRenderDispatcherMixin.java` port SkyHanni LGPL `features/nether/ashfang/{AshfangManager,AshfangHighlights,AshfangHider,AshfangFreezeCooldown,AshfangNextResetCooldown}.kt` and the matching `config/features/crimsonisle/ashfang` group.
+
+The helper recognizes the active encounter from its real armor-stand name, associates named blaze stands to nearby Blaze entities, assigns separate configurable Follower/Underling/Acolyte colors, and recognizes Blazing Souls and Gravity Orbs by the licensed exact skull texture hashes. Souls and orbs each own box, beam, label, color and render range options. Render cleanup separately controls encounter particles, Glowstone equipment stands, full-health blaze names and damage splashes. Particle and entity suppression is spatially bounded around the detected boss rather than affecting the entire island.
+
+The Cryogenic Blast regex starts an accurate configurable three-second ability-freeze countdown. New Ashfang wave stand UUIDs start the configurable 46.1-second reset countdown; persistent mobs cannot retrigger it every scan. Freeze and reset are separate movable HUDs with precision, ready-state hold and optional chat/title controls. All transient state clears on world, area, master-module and helper disable. `/ashfang` exposes status, reset, detection range and common option toggles; every low-level field remains available in Draco `All settings`.
