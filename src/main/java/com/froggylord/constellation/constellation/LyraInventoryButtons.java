@@ -280,7 +280,7 @@ public final class LyraInventoryButtons {
                         .executes(context -> option(StringArgumentType.getString(context, "name"), StringArgumentType.getString(context, "state")))))));
     }
 
-    private static int edit(int index) { Minecraft mc = Minecraft.getInstance(); mc.setScreenAndShow(new InventoryButtonEditorScreen(mc.gui.screen(), index)); return 1; }
+    private static int edit(int index) { Minecraft mc = Minecraft.getInstance(); mc.execute(() -> mc.setScreenAndShow(new InventoryButtonEditorScreen(mc.gui.screen(), index))); return 1; }
     private static int status() { local("§eInventory buttons " + on(cfg.inventoryButtons) + ", top " + on(cfg.inventoryButtonsTop) + ", bottom " + on(cfg.inventoryButtonsBottom) + ", tooltips " + on(cfg.inventoryButtonsShowTooltips) + ", size §f" + cfg.inventoryButtonsSize + "§e."); return 1; }
     private static int size(int value) { cfg.inventoryButtonsSize = value; save(); local("§aInventory-button size updated."); return 1; }
     private static int resetCommand(int index) { if (index < 0) resetAll(); else reset(index); local("§aInventory button defaults restored."); return 1; }

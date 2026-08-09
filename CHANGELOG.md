@@ -1,5 +1,13 @@
 # Constellation Changelog
 
+## 0.9.861 - Final responsive SkyBlock screens
+
+- Kept Party Guard's footer inside its narrow panel and made Slot Binding's inventory grid fit 320 logical pixels.
+- Made Slot Binding profile creation explicit with Enter instead of committing on background clicks.
+- Split Dungeon Records into readable summary and terminal rows with a complete hover breakdown for every recorded split.
+- Kept the Inventory Buttons layout footer clear of its last control on short windows and fixed its chat-close opening race.
+- Verified Carry Tracker's progress, total, removal and scrolling states with populated local test data.
+
 ## 0.9.860 (2026-08-09) — Finish Responsive SkyBlock HUD Placement
 
 - add `/partymessages` and make Party Messages search, sorting, filtering, template view and confirmation controls responsive at 640x480

@@ -72,8 +72,8 @@ public class OrionConfig extends BaseConfigGroup {
 
     
     public boolean dungeonMap = true;
-    public int mapScale = 1; 
-    public int mapX = 36;     
+    public int mapScale = 1;
+    public int mapX = 36;
     public int mapY = 2;
 
     

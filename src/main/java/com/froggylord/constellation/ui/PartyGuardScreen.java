@@ -103,7 +103,7 @@ public final class PartyGuardScreen extends Screen {
         String footer = validationError.isEmpty()
             ? "Whitelist wins; blacklist forces a kick; API errors fail open."
             : validationError;
-        g.text(font, ConstellationUi.fit(font, footer, 240), x - 5, 195,
+        g.text(font, ConstellationUi.fit(font, footer, 240), x - 5, Math.min(195, height - 48),
             validationError.isEmpty() ? ConstellationTheme.TEXT : 0xFFFF7777, false);
         if (height >= 280) {
             g.text(font, ConstellationUi.fit(font,

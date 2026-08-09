@@ -47,12 +47,14 @@ public final class DungeonStatsScreen extends Screen {
             g.text(font, f, fx + (30 - font.width(f)) / 2, fy + 5,
                 f.equals(floor) ? 0xFFFFFFFF : ConstellationTheme.TEXT_MUTED, false);
         }
-        g.text(font, ConstellationUi.fit(font, "Date          Score   Total    Blood    Boss     Terminal milestones", w - 8),
+        String heading = w < 300 ? "Run details (hover a row for every split)"
+            : "Date          Score   Total    Blood    Boss     Terminal milestones";
+        g.text(font, ConstellationUi.fit(font, heading, w - 8),
             panelX, 33, ConstellationTheme.TEXT_MUTED, false);
         int top = 49, bottom = height - 34, y = top - (int) scroll;
         g.enableScissor(panelX - 2, top, width - 10, bottom);
         for (OrionConfig.DungeonRunRecord r : rows) {
-            if (y + 27 >= top && y < bottom) drawRow(g, r, panelX, y, w);
+            if (y + 27 >= top && y < bottom) drawRow(g, r, panelX, y, w, mx, my);
             y += 31;
         }
         g.disableScissor();
@@ -63,12 +65,23 @@ public final class DungeonStatsScreen extends Screen {
             confirmClear.equals(floor) ? "Confirm" : "Clear " + floor, mx, my);
     }
 
-    private void drawRow(GuiGraphicsExtractor g, OrionConfig.DungeonRunRecord r, int x, int y, int w) {
+    private void drawRow(GuiGraphicsExtractor g, OrionConfig.DungeonRunRecord r, int x, int y, int w, int mx, int my) {
         ConstellationTheme.surface(g, x, y, w, 27, 0xC0181825, ConstellationTheme.BORDER_SOFT);
         String terminals = r.terminalMs == null || r.terminalMs.isEmpty() ? "-" : r.terminalMs.stream().limit(8).map(DungeonStatsScreen::time).reduce((a,b) -> a + " " + b).orElse("-");
-        String line = DATE.format(Instant.ofEpochMilli(r.timestamp)) + "  " + r.floor + " " + r.score + " " + r.grade
-            + "  " + time(r.totalMs) + "  " + time(r.bloodMs) + "  " + time(r.bossMs) + "  " + terminals;
-        g.text(font, ConstellationUi.fit(font, line, w - 12), x + 6, y + 9, ConstellationTheme.TEXT, false);
+        String summary = DATE.format(Instant.ofEpochMilli(r.timestamp)) + "  " + r.floor + " " + r.score + " " + r.grade
+            + "  total " + time(r.totalMs) + "  blood " + time(r.bloodMs) + "  boss " + time(r.bossMs);
+        g.text(font, ConstellationUi.fit(font, summary, w - 12), x + 6, y + 4, ConstellationTheme.TEXT, false);
+        g.text(font, ConstellationUi.fit(font, "terminals " + terminals, w - 12), x + 6, y + 16,
+            ConstellationTheme.TEXT_MUTED, false);
+        if (inside(mx, my, x, y, w, 27)) {
+            List<Component> details = new java.util.ArrayList<>();
+            details.add(Component.literal(DATE.format(Instant.ofEpochMilli(r.timestamp)) + "  " + r.floor + "  " + r.score + " " + r.grade));
+            details.add(Component.literal("Total " + time(r.totalMs) + "  Blood " + time(r.bloodMs) + "  Boss " + time(r.bossMs)));
+            if (r.terminalMs == null || r.terminalMs.isEmpty()) details.add(Component.literal("No terminal splits recorded"));
+            else for (int i = 0; i < r.terminalMs.size(); i++)
+                details.add(Component.literal("Terminal " + (i + 1) + "  " + time(r.terminalMs.get(i))));
+            g.setComponentTooltipForNextFrame(font, details, mx, my);
+        }
     }
 
     @Override

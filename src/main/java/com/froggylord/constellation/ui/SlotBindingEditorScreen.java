@@ -88,9 +88,9 @@ public final class SlotBindingEditorScreen extends Screen {
     }
 
     private void drawInventory(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        int cell = 21, size = 18;
+        int cell = inventoryCell(), size = cell - 3;
         int gridWidth = 9 * cell - 3;
-        int startX = Math.max(126, 126 + (width - 126 - gridWidth) / 2);
+        int startX = 126 + Math.max(0, (width - 126 - gridWidth) / 2);
         int startY = Math.max(39, (height - 4 * cell) / 2);
         ConstellationUi.panel(graphics, startX - 9, startY - 22, gridWidth + 18, 4 * cell + 49);
         graphics.text(font, "Inventory", startX, startY - 13, ConstellationTheme.TEXT_MUTED, false);
@@ -130,7 +130,8 @@ public final class SlotBindingEditorScreen extends Screen {
         int mouseX = (int) event.x(), mouseY = (int) event.y(), button = event.button();
         if (creating) {
             if (inside(mouseX, mouseY, 10, height - 31, 104, 18)) return super.mouseClicked(event, doubled);
-            createProfile();
+            profileName.setFocused(true);
+            setFocused(profileName);
             return true;
         }
         int profile = profileAt(mouseX, mouseY);
@@ -221,8 +222,8 @@ public final class SlotBindingEditorScreen extends Screen {
     }
 
     private int slotAt(int mouseX, int mouseY) {
-        int cell = 21, size = 18, gridWidth = 9 * cell - 3;
-        int startX = Math.max(126, 126 + (width - 126 - gridWidth) / 2);
+        int cell = inventoryCell(), size = cell - 3, gridWidth = 9 * cell - 3;
+        int startX = 126 + Math.max(0, (width - 126 - gridWidth) / 2);
         int startY = Math.max(39, (height - 4 * cell) / 2);
         for (int row = 0; row < 3; row++) for (int column = 0; column < 9; column++)
             if (inside(mouseX, mouseY, startX + column * cell, startY + row * cell, size, size))
@@ -231,6 +232,10 @@ public final class SlotBindingEditorScreen extends Screen {
         for (int column = 0; column < 9; column++)
             if (inside(mouseX, mouseY, startX + column * cell, hotbarY, size, size)) return column;
         return -1;
+    }
+
+    private int inventoryCell() {
+        return Math.clamp((width - 135) / 9, 17, 21);
     }
 
     private static boolean boundInventory(Map<Integer, List<Integer>> binds, int canonical) {

@@ -125,8 +125,9 @@ public final class InventoryButtonEditorScreen extends Screen {
         numeric(graphics, x + col + gap, y, col, "Size", cfg.inventoryButtonsSize + " px", mouseX, mouseY); y += 24;
         numeric(graphics, x, y, col, "Gap", cfg.inventoryButtonsGap + " px", mouseX, mouseY);
         numeric(graphics, x + col + gap, y, col, "Overlap", cfg.inventoryButtonsOffset + " px", mouseX, mouseY); y += 24;
-        numeric(graphics, x, y, col, "Tooltip delay", cfg.inventoryButtonsTooltipDelayMs + " ms", mouseX, mouseY);
-        graphics.text(font, ConstellationUi.fit(font,
+        numeric(graphics, x, y, col, width < 380 ? "Delay" : "Tooltip delay",
+            cfg.inventoryButtonsTooltipDelayMs + " ms", mouseX, mouseY);
+        if (height >= 280) graphics.text(font, ConstellationUi.fit(font,
             "Colors remain editable as ARGB values in Lyra configuration.", width - 24),
             12, height - 24, ConstellationTheme.TEXT_MUTED, false);
         graphics.text(font, "Every command requires a deliberate left click.", 12, height - 11, ConstellationTheme.TEXT_MUTED, false);

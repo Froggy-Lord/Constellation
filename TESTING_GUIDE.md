@@ -3069,3 +3069,12 @@ Enable Lyra and `Bazaar, Auction and Museum search overlay` under Lyra > Search.
 3. In a throwaway local world run `/petdisplay preview`. Expected: an icon-first two-row pet panel appears between Location and Movement, with no server command and no collision with Custom Scoreboard. Run it again to hide it.
 4. On a real dungeon map, compare GUI scales and narrow/wide windows. Expected: untouched legacy defaults migrate once to a compact top-center map; customized map position/scale is not changed.
 5. Open `/termsim` while Inventory Search and Inventory Buttons are enabled. Expected: neither generic helper appears on the simulator menu or terminal, and selecting a terminal opens its clean training board.
+
+### Final utility-screen checks
+
+1. Run `/dungeonstats` at wide and 640x480 sizes. Expected: every row has a summary and terminal line; hovering a populated row exposes every recorded terminal split, including values that do not fit inline. Clear requires a second click.
+2. Run `/partyguard` at both sizes. Tab through every field, enter an invalid number, then Cancel. Expected: validation remains inside the panel and Cancel restores unsaved toggle changes.
+3. Run `/slotbind`, choose New Profile, type a draft and click the inventory grid. Expected: the draft remains focused and is created only with Enter; Escape cancels it. Right-clicking a profile requires a left-click confirmation before deletion.
+4. Run `/inventorybuttons` from chat. Expected: it remains open after chat closes. Check Layout, Button, Reset Button and Reset All confirmation states at 640x480; no footer overlaps a control.
+5. Run `/refill config` and `/carry` at both sizes. Expected: wheel scrolling reaches every row; Carry left-click changes progress, right-click changes total, and Remove requires confirmation.
+6. Run `/storagepreview`, then test search focus, item tooltip, card scrolling, reorder and Rename. Expected: Enter saves a rename, Escape first cancels Rename or clears search, and a later Escape closes the browser.

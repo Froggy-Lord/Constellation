@@ -1,6 +1,6 @@
 # Codex handoff: Constellation dungeon feature work
 
-Last updated: 2026-08-09 for version 0.9.856 Clear Dungeon Container Overlays.
+Last updated: 2026-08-09 for version 0.9.861 Final Responsive SkyBlock Screens.
 
 This file is the durable continuation prompt for a new coding chat. Read it completely, then read `.forge/build-principles.md` before changing anything. Keep this file updated in every feature run, before the final build and deployment.
 
@@ -10,7 +10,7 @@ This file is the durable continuation prompt for a new coding chat. Read it comp
 - Minecraft 26.2 Fabric client for Hypixel SkyBlock.
 - Java package: `com.froggylord.constellation`
 - License: GPL-3.0-only.
-- Current artifact version: `0.9.856`.
+- Current artifact version: `0.9.861`.
 - Main objective: build the useful main SkyBlock features in depth from the user's live `Froggy__Lord Skyblock 26.1.2` Prism settings and licensed local references. Dungeon selection is now broad enough; prioritize Kuudra, slayers, general inventory/UI, Garden, mining, Rift, fishing/hunting, Diana/events, and Crimson Isle based on actual enabled settings.
 - User priority correction from August 1: stop shipping one release per vanilla Minecraft screen. Prioritize actual SkyBlock screens and gameplay features. After the substantive SkyBlock queue is complete, add one conservative vanilla-container catch-all with the existing puzzle, market, subclass and Hypixel protections instead of more bespoke vanilla workstation releases.
 - Work in one small feature run at a time. Research, port, build, boot, audit, update this document, and deploy each feature independently.
@@ -3890,6 +3890,8 @@ An actual locally created filled map under a fake Catacombs sidebar proved the l
 
 Shared HUD audit row 15 is now closed. Full-screen rows 30/31 remain open for the untouched records/carry/guard/refill/binding/storage paths, so do not send the completion email yet.
 
+Version 0.9.860 is released. Source and isolated drip builds pass exactly 11/11 tests. Clean boot reached timeout 124 with 138 rooms and all 14 constellations and no mixin-apply, crash-report or fatal-error marker. Gather and the owner-only shelf contain SHA-256 `167744588d1152d54e0898321801f110e6f415653db636adf613a5037e1d34d2`. Drip release `ecf30c2d04` is queued as Froggy-Lord with subject `finish responsive skyblock hud placement`.
+
 Inventory Search now uses compact Constellation surfaces for both prompt and focused input, keeps calculator output in its own chip and consumes the first Escape to dismiss only search. `/tmp/inventory-search-themed-852.png` proves match/dim rendering and the themed field; `/tmp/inventory-search-escape-852.png` proves the prompt returns while the container remains open. `/tmp/accessory-page1-852.png` and `/tmp/accessory-page-next-852.png` prove the populated responsive accessory list, page transition and row hover. The same real local fake-SkyBlock chest proves year `312` and enchantment level `5` slot annotations remain visible. Auction and Bazaar combinations remain open, so the completion email is still forbidden.
 
 Version 0.9.852 is released. Source and isolated drip builds pass exactly 11/11 tests; clean boot reached timeout 124 with 138 rooms and all 14 constellations and no mixin-apply, crash-report or fatal-error marker. Gather and the owner-only shelf contain SHA-256 `07fc977f4a926e259d0b5a4d324ac8313187680ec0f12ca9661b15924e0a498e`. Drip release `ed20ede1ca` is queued as Froggy-Lord with subject `fix accessory catalogue and theme inventory search`. The drip helper allowlist now includes Inventory Search as well as Accessory Helper. Continue with Auction and Bazaar live combinations before closing the economy-container audit row.
@@ -3915,3 +3917,10 @@ The 0.9.857 candidate closes the title/boss-bar/scoreboard and local reduced-noi
 Version 0.9.857 is released at SHA-256 `e2d110ac76e0f24fd464c659ef1a0a87a1bbcc7a5222c0a30154625cc6837e1d`; source and drip pass 11/11, the clean boot reached the required timeout with 138 rooms and 14 constellations, and drip `838e49e115` is queued as Froggy-Lord. The final adversarial screen audit then found `SpeedPresetScreen` pushed Reset off-screen at 320 logical pixels and let Done overlap the action row. The 0.9.858 candidate gives narrow screens a separate centered action row with matching click geometry, reserves it from list scrolling and moves Currency from the scoreboard footprint. Rows 15, 30 and 31 remain open; do not email yet.
 
 Version 0.9.858 is released at SHA-256 `a2af87b83a790fb99210c2368c9fa8979c271dd95fc36caca55ec6467f63aafc`. Source and isolated drip builds pass exactly 11/11; clean boot reached timeout 124 with 138 rooms and 14 constellations and no fatal marker. Gather/private shelf/drip are synchronized and drip `8ffa63be22` is queued as Froggy-Lord. Finish rows 15, 30 and 31 next: specialized HUD captures at multiple scales, current-build screen recaptures, and complete modal/tooltip/scroll/focus/back interaction checks. Do not send the email before those rows and final gates are checked.
+## August 9 version 0.9.861 final responsive screen pass
+
+The final current-build screen audit found four narrow/interactivity defects after 0.9.860. `PartyGuardScreen` now keeps its footer above the panel border at 320 logical pixels. `SlotBindingEditorScreen` scales the 9-column inventory grid down within its right pane and no longer creates a profile from an accidental background, right or middle click; Enter is the only create action and Escape cancels. `DungeonStatsScreen` renders separate run and terminal summaries and exposes the complete set of recorded terminal splits in a native hover breakdown instead of irreversibly fitting one long line. `InventoryButtonEditorScreen` omits only its redundant ARGB-location hint on short windows, keeping the last numeric row and deliberate-click warning separate. `LyraInventoryButtons.edit` also schedules screen creation so chat closing cannot overwrite it.
+
+Current evidence includes `/tmp/partyguard-fixed-narrow-861.png`, `/tmp/slotbind-create-focus-861b.png`, `/tmp/dungeonstats-fixed-narrow-861.png`, `/tmp/inventorybutton-states-861.png`, `/tmp/carry-states-861.png`, `/tmp/carry-populated-narrow-861.png`, and the seven `/tmp/*-current-wide-861.png` captures. Carry testing used six temporary local entries to prove progress, right-click total, removal confirmation and scrolling; `/carry clear` removed all six afterward. The local storage cache fixture did not publish into the newly randomized development identity, so populated Storage card/rename evidence remains the unchanged earlier current-code captures rather than a fabricated runtime state. Do not claim a stationary Hypixel interaction was performed.
+
+All 25 reference repositories were fetched again on August 9. Every attached branch was already current; Athen and SkyblockAddons remain intentionally detached and were fetched without moving their worktrees. The two AGPL repositories remain reimplementation-only.
