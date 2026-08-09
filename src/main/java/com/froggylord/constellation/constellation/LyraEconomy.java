@@ -44,6 +44,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraInventorySearch.init(cfg);
         LyraMarketSearch.init(cfg);
         LyraInventoryButtons.init(cfg);
+        LyraPersonalCompactor.init(cfg);
         LyraStorageValue.init(cfg);
         LyraBazaarHelper.init(cfg);
         LyraAuctionHelper.init(cfg);
@@ -90,6 +91,7 @@ public class LyraEconomy extends BaseConstellation {
         LyraInventorySearch.registerCommands(dispatcher);
         LyraMarketSearch.registerCommands(dispatcher);
         LyraInventoryButtons.registerCommands(dispatcher);
+        LyraPersonalCompactor.registerCommands(dispatcher);
         LyraStorageValue.registerCommands(dispatcher);
         LyraBazaarHelper.registerCommands(dispatcher);
         LyraAuctionHelper.registerCommands(dispatcher);

@@ -1958,6 +1958,12 @@
 - Added full Trevor quest, cooldown, persistent data and session-rate tracking.
 - Added maintained area waypoints, stable target-animal detection and Talbot height/circle solving.
 - Added configurable HUD ordering, alerts, world layers, colors, ranges, commands and optional hotkey actions.
+## 0.9.871 - Personal Compactor and Deletor Preview
+
+- Added complete 4000-7000 Personal Compactor and Deletor content previews from their authoritative item data.
+- Added responsive real-item grids beside native tooltips, enabled/disabled slot badges, three visibility modes, key, scale, status, empty-slot, type, name and color controls.
+- Kept item-repository loading lazy until a matching item is hovered and avoided existing slot-text corners.
+
 ## 0.9.870 - Charmed Visitors
 
 - Added profile-specific Gift Vinyl charm detection from authoritative visitor-menu state.

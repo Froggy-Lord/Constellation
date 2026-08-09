@@ -1,5 +1,19 @@
 # Constellation testing guide
 
+## Personal Compactor and Deletor preview (0.9.871): test this release first
+
+Enable Lyra and Personal Compactor Preview. Test actual 4000, 5000, 6000 or 7000 tier accessories in an inventory or container.
+
+- [ ] Hover a configured Personal Compactor. Expected: the normal item tooltip remains visible and a separate bounded panel shows Personal Compactor, its Enabled/Disabled state, every tier slot and the stored item icons in correct numeric-slot order.
+- [ ] Hover a configured Personal Deletor. Expected: the same presentation uses the Deletor title/accent and reads `personal_deletor_0..N`; compactor entries cannot leak into it.
+- [ ] Test tiers 4000, 5000, 6000 and 7000. Expected: capacities are exactly 1, 3, 7 and 12. Empty positions remain in place when Empty Slots is enabled rather than collapsing later entries forward.
+- [ ] Test Always, Keybind and Except Keybind modes while holding/releasing the configured key. Expected: only the large hover panel follows the mode; the separately enabled E/D slot badge remains visible.
+- [ ] Toggle Compactors and Deletors independently. Expected: disabling one type hides its panel and marker without affecting the other.
+- [ ] Toggle status, empty slots, slot names and marker independently; test scales 50%, 100% and 200% in wide and narrow windows. Expected: the panel remains entirely on-screen, text is fitted, native tooltip remains readable and existing pet/star/cake/level slot text is not covered.
+- [ ] Hover the first matching item after launch. Expected: icon data begins loading only then; temporary named fallback icons may improve in place when the repository finishes, without freezing rendering or downloading during unrelated startup.
+- [ ] Run `/personalcompactor`, `mode <always|keybind|except_keybind>`, `key <-1..512>`, `scale <50..200>`, `color <ARGB>` and `option <name> on|off`. Expected: invalid values fail with a clear local message and every accepted value survives restart.
+- [ ] Hover unrelated accessories, ordinary items, malformed IDs and matching items outside SkyBlock. Expected: no preview or badge appears. Local-world testing requires the explicit Local option.
+
 ## Charmed Visitors (0.9.870): test this release first
 
 Enable Hercules and Charmed Visitors. Use a real Garden visitor menu; the feature deliberately does not guess from chat alone.

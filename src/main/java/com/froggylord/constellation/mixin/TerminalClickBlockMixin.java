@@ -79,6 +79,13 @@ public class TerminalClickBlockMixin {
         if (OrionTerminals.shouldHideTooltip((AbstractContainerScreen<?>) (Object) this)) ci.cancel();
     }
 
+    @Inject(method = "extractTooltip", at = @At("TAIL"))
+    private void constellation$personalCompactorPreview(GuiGraphicsExtractor graphics, int mouseX,
+                                                         int mouseY, CallbackInfo ci) {
+        com.froggylord.constellation.constellation.LyraPersonalCompactor.renderPreview(
+            (AbstractContainerScreen<?>) (Object) this, graphics, mouseX, mouseY);
+    }
+
     @Inject(method = "extractLabels", at = @At("HEAD"), cancellable = true)
     private void constellation$hideTerminalLabels(GuiGraphicsExtractor graphics, int mouseX,
                                                    int mouseY, CallbackInfo ci) {

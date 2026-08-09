@@ -92,6 +92,21 @@ public class LyraConfig extends BaseConfigGroup {
     public int inventorySearchDimColor = 0xB0000000;
     public int inventorySearchHighlightColor = 0x8055FF55;
 
+    // ported from SkyHanni (LGPL-3.0-or-later): config/features/inventory/PersonalCompactorConfig.kt
+    // ported from Skyblocker (LGPL-3.0-or-later): skyblock/item/tooltip/CompactorDeletorPreview.java
+    public boolean personalCompactorPreview = true;
+    public boolean personalCompactorShowToggle = true;
+    public boolean personalCompactorShowStatus = true;
+    public boolean personalCompactorShowEmptySlots = true;
+    public boolean personalCompactorCompactors = true;
+    public boolean personalCompactorDeletors = true;
+    public boolean personalCompactorSlotNames = false;
+    public boolean personalCompactorLocalWorlds = false;
+    public int personalCompactorKey = 340;
+    public int personalCompactorScalePercent = 100;
+    public int personalCompactorBackground = 0xF0101018;
+    public String personalCompactorVisibility = "EXCEPT_KEYBIND";
+
     public boolean inventoryButtons = true;
     public boolean inventoryButtonsTop = true;
     public boolean inventoryButtonsBottom = true;

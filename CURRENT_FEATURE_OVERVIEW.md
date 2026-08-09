@@ -1,6 +1,8 @@
 # Constellation feature overview
 
-Current test build: 0.9.870.
+Current test build: 0.9.871.
+
+Lyra now has the live-enabled Personal Compactor/Deletor overlay. Hovering any 4000-7000 tier item shows its authoritative stored entries as real item icons in a responsive side panel while preserving the native tooltip. Enabled/disabled slot badges, visibility mode/key, scale, status, empty slots, type filters, optional slot names, background and local diagnostic scope are independent. Repository icons initialize only after a matching hover. `/personalcompactor` exposes every non-boolean control and common toggles.
 
 Hercules now includes the live-enabled Charmed Visitors workflow. Opening a real Garden visitor menu reads the authoritative Gift Vinyl marker in slot 48, persists or removes that visitor only for the confirmed SkyBlock profile, marks charmed visitors in the shopping list, and exposes a separate bounded HUD. Count, sorting, row limit, Garden-only visibility, shopping-list marking and change messages are independent; `/charmedvisitors` provides status, list, add, remove, clear and option controls.
 
