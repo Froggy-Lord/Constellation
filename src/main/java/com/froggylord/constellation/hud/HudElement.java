@@ -17,7 +17,14 @@ public interface HudElement {
     int width();
     int height();
 
+    default int previewWidth() { return width(); }
+    default int previewHeight() { return height(); }
+
     void render(GuiGraphicsExtractor g, int px, int py);
+
+    default void renderPreview(GuiGraphicsExtractor g, int px, int py) {
+        render(g, px, py);
+    }
 
     default String editorLabel() { return id(); }
 }
