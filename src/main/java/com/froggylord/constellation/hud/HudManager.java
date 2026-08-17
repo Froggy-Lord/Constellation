@@ -8,7 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HudManager {
 
-    private static final long EDIT_GRACE_MS = 10_000;
+    private static final long EDIT_GRACE_MS = 5_000;
 
     private final List<HudElement> elements = new CopyOnWriteArrayList<>();
     private final Map<String, Long> lastVisible = new ConcurrentHashMap<>();
@@ -25,9 +25,16 @@ public class HudManager {
         for (HudElement el : elements) {
             if (!el.visibleNow()) continue;
             lastVisible.put(el.id(), now);
-            int px = el.position().x() * screenW / 100;
-            int py = el.position().y() * screenH / 100;
-            el.render(g, px, py);
+            HudPosition position = position(el);
+            int px = position.x() * screenW / 100;
+            int py = position.y() * screenH / 100;
+            float scale = scale(el);
+            // ported from Athen (BSD-3-Clause): hud/HUDEditor.kt
+            g.pose().pushMatrix();
+            g.pose().translate(px, py);
+            g.pose().scale(scale, scale);
+            el.render(g, 0, 0);
+            g.pose().popMatrix();
         }
     }
 
@@ -45,6 +52,29 @@ public class HudManager {
     public void setEditorOpen(boolean open) { this.editorOpen = open; }
     public boolean isEditorOpen() { return editorOpen; }
     public int elementCount() { return elements.size(); }
+
+    public float scale(HudElement element) {
+        Float value = com.froggylord.constellation.ConstellationClient.cfg().hudScales.get(element.id());
+        return value == null ? 1.0f : Math.clamp(value, 0.5f, 3.0f);
+    }
+
+    public void setScale(HudElement element, float scale) {
+        com.froggylord.constellation.ConstellationClient.cfg().hudScales.put(
+            element.id(), Math.clamp(scale, 0.5f, 3.0f));
+    }
+
+    // ported from Athen (BSD-3-Clause): hud/HUDElement.kt
+    public HudPosition position(HudElement element) {
+        HudPosition saved = com.froggylord.constellation.ConstellationClient.cfg().hudPositions.get(element.id());
+        HudPosition value = saved == null ? element.position() : saved;
+        return new HudPosition(Math.clamp(value.x(), 0, 98), Math.clamp(value.y(), 0, 92));
+    }
+
+    public void setPosition(HudElement element, HudPosition position) {
+        HudPosition safe = new HudPosition(Math.clamp(position.x(), 0, 98), Math.clamp(position.y(), 0, 92));
+        com.froggylord.constellation.ConstellationClient.cfg().hudPositions.put(element.id(), safe);
+        element.setPosition(safe);
+    }
 
     public Optional<HudElement> get(String id) {
         return elements.stream().filter(e -> e.id().equals(id)).findFirst();
