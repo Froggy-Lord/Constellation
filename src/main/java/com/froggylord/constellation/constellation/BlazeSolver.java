@@ -2,83 +2,88 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.OrionConfig;
+import com.froggylord.constellation.data.RoomMatch;
 import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.monster.Blaze;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+// ported from Odin (BSD-3): src/main/kotlin/com/odtheking/odin/features/impl/dungeon/puzzlesolvers/BlazeSolver.kt
+// Blaze puzzle: kill the blazes in max-HP order. The direction depends on which of the two
+// blaze rooms you are in — the room NAME resolves it (Odin's "Higher Blaze" / "Lower Blaze"):
+//   Blaze-Room-1-High  == "Higher Blaze" -> lowest max-HP first  (ascending)
+//   Blaze-Room-1-Low   == "Lower Blaze"  -> highest max-HP first (descending)
+// The HP comes from the floating nametag armour stand, not the blaze entity.
 public final class BlazeSolver {
 
-    private static final int LOW = 0xFF55FF55;  // green — smallest health
-    private static final int HIGH = 0xFFFF5555; 
+    private static final int NEXT = 0xFF55FF55;   // green  — hit this one next
+    private static final int SECOND = 0xFFFFFF55; // yellow — the one after
+    private static final int REST = 0xFFFF5555;   // red    — remaining, in order
+
+    // [Lv15] ♨ Blaze 1,000/2,000❤  — group 1 = max HP
+    private static final Pattern BLAZE = Pattern.compile("^\\[Lv15] ♨ Blaze [\\d,]+/([\\d,]+)❤$");
 
     private BlazeSolver() {}
 
-    private record Tagged(Blaze blaze, long hp) {}
+    private static boolean sawBlazes;
+    private static boolean announced;
+    private static int lastBlazeCount;
+
+    private record Tagged(ArmorStand stand, long hp) {}
 
     public static void draw(WorldRenderer.Ctx ctx) {
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.blazeSolver) return;
         if (!ConstellationClient.loc().inDungeons()) return;
+
+        // gate on the confirmed blaze room — the name tells us which way to order the kills
+        if (!RoomMatch.isMatched()) return;
+        String room = RoomMatch.currentRoom().toLowerCase(Locale.ROOT);
+        boolean high = room.contains("blaze") && room.contains("high");
+        boolean low = room.contains("blaze") && room.contains("low");
+        if (!high && !low) { sawBlazes = false; announced = false; lastBlazeCount = 0; return; }
+
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        List<Blaze> blazes = new ArrayList<>();
-        List<ArmorStand> tags = new ArrayList<>();
-        for (Entity e : mc.level.entitiesForRendering()) {
-            if (e instanceof Blaze b) blazes.add(b);
-            else if (e instanceof ArmorStand a && a.getCustomName() != null
-                && a.getCustomName().getString().indexOf('❤') >= 0) tags.add(a);
-        }
-        if (blazes.size() < 2) return;
-
         List<Tagged> list = new ArrayList<>();
-        for (Blaze b : blazes) {
-            ArmorStand near = null;
-            double best = 4.0;
-            Vec3 bp = b.position();
-            for (ArmorStand a : tags) {
-                double d = a.position().distanceToSqr(bp.x, bp.y + 1.0, bp.z);
-                if (d < best) { best = d; near = a; }
+        for (Entity e : mc.level.entitiesForRendering()) {
+            if (!(e instanceof ArmorStand a) || a.getCustomName() == null) continue;
+            Matcher m = BLAZE.matcher(a.getCustomName().getString());
+            if (!m.matches()) continue;
+            long hp;
+            try { hp = Long.parseLong(m.group(1).replace(",", "")); }
+            catch (NumberFormatException ex) { continue; }
+            list.add(new Tagged(a, hp));
+        }
+        if (list.isEmpty()) {
+            if (sawBlazes && lastBlazeCount == 1 && !announced) {
+                announced = true;
+                PartyMessages.send("blaze-done");
             }
-            if (near == null) continue;
-            long hp = parseHp(near.getCustomName().getString());
-            if (hp > 0) list.add(new Tagged(b, hp));
+            return;
         }
-        if (list.size() < 2) return;
+        sawBlazes = true;
+        lastBlazeCount = list.size();
 
-        Tagged lo = list.get(0), hi = list.get(0);
-        for (Tagged t : list) {
-            if (t.hp < lo.hp) lo = t;
-            if (t.hp > hi.hp) hi = t;
-        }
-        ctx.outline(lo.blaze.getBoundingBox().inflate(0.1), LOW, true);
-        ctx.label(lo.blaze.position().add(0, 1.2, 0), "LOW", LOW, true);
-        ctx.outline(hi.blaze.getBoundingBox().inflate(0.1), HIGH, true);
-        ctx.label(hi.blaze.position().add(0, 1.2, 0), "HIGH", HIGH, true);
-    }
+        // Lower Blaze -> descending (highest first); Higher Blaze -> ascending (lowest first)
+        if (low) list.sort((x, y) -> Long.compare(y.hp, x.hp));
+        else list.sort((x, y) -> Long.compare(x.hp, y.hp));
 
-    private static long parseHp(String name) {
-        
-        
-        int heart = name.indexOf('❤');
-        if (heart < 0) return 0;
-        int i = heart - 1;
-        StringBuilder rev = new StringBuilder();
-        while (i >= 0) {
-            char c = name.charAt(i--);
-            if (c >= '0' && c <= '9') rev.append(c);
-            else if (c == ',' || c == '.' || c == ' ') continue;
-            else break;
+        for (int i = 0; i < list.size(); i++) {
+            int col = i == 0 ? NEXT : i == 1 ? SECOND : REST;
+            // Odin's box: inflate around the nametag and drop it 1 block onto the blaze body
+            AABB box = list.get(i).stand.getBoundingBox().inflate(0.5, 1.0, 0.5).move(0, -1.0, 0);
+            ctx.outline(box, col, true);
         }
-        if (rev.length() == 0) return 0;
-        try { return Long.parseLong(rev.reverse().toString()); }
-        catch (NumberFormatException e) { return 0; }
+        // call out the next blaze to hit
+        ctx.label(list.get(0).stand.position().add(0, 0.3, 0), "HIT NEXT", NEXT, true);
     }
 }
