@@ -22,57 +22,43 @@ public final class CassiopeiaAlerts {
         if (cfg == null) return;
 
         // mention alert — ping when someone says your name
-        if (cfg.mentionAlert) {
-            pipeline.onGame(msg -> {
-                String s = msg.getString().toLowerCase(Locale.ROOT);
-                var mc = Minecraft.getInstance();
-                if (mc.player == null) return;
-                String name = mc.player.getName().getString().toLowerCase(Locale.ROOT);
-                if (s.contains(name)) {
-                    mc.player.sendOverlayMessage(Component.literal("§e✦ Mentioned in chat"));
-                    mc.player.playSound(net.minecraft.sounds.SoundEvents.BELL_BLOCK, 0.6f, 1.2f);
-                }
-            });
-            // duplicate for the sound-only variant (yes there are two mention handlers)
-            pipeline.onGame(msg -> {
-                var mc = Minecraft.getInstance();
-                if (mc.player == null) return;
-                String myName = mc.player.getName().getString();
-                if (myName.isEmpty()) return;
-                if (msg.getString().toLowerCase(Locale.ROOT).contains(myName.toLowerCase(Locale.ROOT)))
-                    mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 1.8f);
-            });
-        }
+        pipeline.onGame(msg -> {
+            if (!cfg.mentionAlert) return;
+            String s = msg.getString().toLowerCase(Locale.ROOT);
+            var mc = Minecraft.getInstance();
+            if (mc.player == null) return;
+            String name = mc.player.getName().getString().toLowerCase(Locale.ROOT);
+            if (!name.isEmpty() && s.contains(name)) {
+                mc.player.sendOverlayMessage(Component.literal("§eMentioned in chat"));
+                mc.player.playSound(net.minecraft.sounds.SoundEvents.BELL_BLOCK, 0.6f, 1.2f);
+            }
+        });
 
         // timestamps — dim [HH:MM] prefix on every message
-        if (cfg.timestamps) {
-            var fmt = DateTimeFormatter.ofPattern("HH:mm");
-            pipeline.modify(msg -> {
-                String time = "§7[" + LocalTime.now().format(fmt) + "]§r ";
-                return Component.literal(time).append(msg);
-            });
-        }
+        var fmt = DateTimeFormatter.ofPattern("HH:mm");
+        pipeline.modify(msg -> {
+            if (!cfg.timestamps) return msg;
+            String time = "§7[" + LocalTime.now().format(fmt) + "]§r ";
+            return Component.literal(time).append(msg);
+        });
 
         // clickable links — make http/https urls blue and underlined
-        if (cfg.clickableLinks) {
-            pipeline.modify(msg -> {
-                String s = msg.getString();
-                if (!s.contains("http://") && !s.contains("https://")) return msg;
-                s = s.replaceAll("(https?://[^\\s]+)", "§9$1§r");
-                return Component.literal(s);
-            });
-        }
+        pipeline.modify(msg -> {
+            if (!cfg.clickableLinks) return msg;
+            String s = msg.getString();
+            if (!s.contains("http://") && !s.contains("https://")) return msg;
+            s = s.replaceAll("(https?://[^\\s]+)", "§9$1§r");
+            return Component.literal(s);
+        });
 
-        // auto-gg — party-chat "gg" on dungeon/kuudra completion
-        if (cfg.autoGG) {
-            pipeline.onGame(msg -> {
-                String s = msg.getString();
-                if ((s.contains("Dungeon") && s.contains("complete")) || (s.contains("Kuudra") && s.contains("defeated"))) {
-                    var mc = Minecraft.getInstance();
-                    if (mc.player != null) mc.player.connection.sendCommand("pc gg");
-                }
-            });
-        }
+        // ported from devonian (GPL-3.0): features/dungeons/AutoRequeueDungeons.kt
+        // completion reminder only, never sends chat for the player
+        pipeline.onGame(msg -> {
+            if (!cfg.autoGG || !msg.getString().trim().equals("> EXTRA STATS <")) return;
+            var mc = Minecraft.getInstance();
+            if (mc.player != null)
+                mc.player.sendSystemMessage(Component.literal("§aRun complete. Say gg when ready."));
+        });
 
         // inventory full warning
         pipeline.onGame(msg -> {
@@ -80,7 +66,7 @@ public final class CassiopeiaAlerts {
             if (s.contains("Your inventory is full") || s.contains("cannot fit") || s.contains("inventory full")) {
                 var mc = Minecraft.getInstance();
                 if (mc.player != null) {
-                    mc.player.sendSystemMessage(Component.literal("§c⚠ INVENTORY FULL!"));
+                    mc.player.sendSystemMessage(Component.literal("§cINVENTORY FULL!"));
                     mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_BASS.value(), 1f, 0.5f);
                 }
             }
@@ -93,7 +79,7 @@ public final class CassiopeiaAlerts {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
                         mc.gui.hud.resetTitleTimes();
-                        mc.gui.hud.setTitle(Component.literal("§b🐟 LEGENDARY SEA CREATURE!"));
+                        mc.gui.hud.setTitle(Component.literal("§bLEGENDARY SEA CREATURE!"));
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.ELDER_GUARDIAN_CURSE, 0.8f, 1.0f);
                     }
                 }
