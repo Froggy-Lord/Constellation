@@ -22,7 +22,7 @@ public class CassiopeiaChat extends BaseConstellation {
     @Override public String description() { return "Chat filters, timestamps, shortcuts, party triggers"; }
 
     private CassiopeiaConfig cfg;
-    private final ChatPipeline pipeline = new ChatPipeline();
+    private final ChatPipeline pipeline = new ChatPipeline(() -> isEnabled() && cfg != null && cfg.enabled);
 
     
     private final Map<String, Long> triggerLastUsed = new HashMap<>();
@@ -38,6 +38,7 @@ public class CassiopeiaChat extends BaseConstellation {
         
         if (cfg.actionBarCleaner) {
             net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((msg, overlay) -> {
+                if (!isEnabled() || !cfg.enabled) return true;
                 if (!overlay || !cfg.actionBarCleaner) return true;
                 String s = msg.getString();
                 
@@ -196,8 +197,6 @@ public class CassiopeiaChat extends BaseConstellation {
             .executes(ctx -> { sendCmd("gfs spirit_leap 16"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getboom")
             .executes(ctx -> { sendCmd("gfs superboom_tnt 16"); return 1; }));
-        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("getdraft")
-            .executes(ctx -> { sendCmd("gfs architects_draft 1"); return 1; }));
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("sendcoords")
             .executes(ctx -> {
                 var mc = Minecraft.getInstance();
