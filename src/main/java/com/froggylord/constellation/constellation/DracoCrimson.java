@@ -8,6 +8,15 @@ import com.froggylord.constellation.core.LocationManager.SkyblockArea;
 import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
+import com.froggylord.constellation.hud.KuudraSplitsHudWidget;
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.network.chat.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,42 +41,22 @@ public class DracoCrimson extends BaseConstellation {
 
     @Override
     public void init(InitContext ctx) {
-        cfg = (DracoConfig) getConfig();
-        net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.GAME.register((msg, overlay) -> {
-            if (overlay || cfg == null || !ConstellationClient.loc().onHypixel()) return;
-            String s = msg.getString();
-
-            
-            
-            if (cfg.vanquisherAlert && s.contains("Vanquisher is spawning")) {
-                var mc = net.minecraft.client.Minecraft.getInstance();
-                if (mc.player != null) {
-                    mc.gui.hud.resetTitleTimes();
-                    mc.gui.hud.setTitle(net.minecraft.network.chat.Component.literal("§c☠ VANQUISHER!"));
-                    mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.7f, 1.3f);
-                    if (cfg.vanquisherShare) {
-                        var p = mc.player.blockPosition();
-                        mc.player.connection.sendCommand("pc Vanquisher @ " + Math.round(p.getX()) + " " + Math.round(p.getY()) + " " + Math.round(p.getZ()));
-                    }
-                }
-            }
-            
-            if (cfg.kuudraPhaseHud) {
-                String ph = kuudraPhaseOf(s);
-                if (ph != null) { kuudraPhase = ph; kuudraPhaseAt = System.currentTimeMillis(); }
-            }
-            
-            if (cfg.abiphoneHud && s.contains("Abiphone") && (s.contains("calling") || s.contains("ringing"))) {
-                String name = s.replaceAll(".*?:\\s*", "").replace("is calling", "").replace("is ringing", "").trim();
-                if (!name.isEmpty() && name.length() < 30) { abiphoneCaller = name; abiphoneCallAt = System.currentTimeMillis(); }
-            }
-            // ashfang freeze — you're locked...
-            if (cfg.ashfangFreezeTimer && s.contains("Ashfang") && s.contains("freezes you")) {
-                ashfangFrozenUntil = System.currentTimeMillis() + 5000;
-                var mc = net.minecraft.client.Minecraft.getInstance();
-                if (mc.player != null) mc.player.playSound(net.minecraft.sounds.SoundEvents.GLASS_BREAK, 0.8f, 0.6f);
-            }
-        });
+        cfg = (DracoConfig) config;
+        KuudraState.init();
+        KuudraBuildHelper.init();
+        KuudraStunHelper.init();
+        KuudraSplits.init();
+        registerRenderer(KuudraSupplyHelper::draw);
+        registerRenderer(KuudraBuildHelper::draw);
+        registerRenderer(KuudraStunHelper::draw);
+        registerRenderer(KuudraTeammateHighlight::draw);
+        every(2, "draco-kuudra-state", KuudraState::tick);
+        every(2, "draco-kuudra-supplies", KuudraSupplyHelper::tick);
+        every(2, "draco-kuudra-build", KuudraBuildHelper::tick);
+        every(2, "draco-kuudra-stun", KuudraStunHelper::tick);
+        every(2, "draco-kuudra-timers", KuudraTimers::tick);
+        every(2, "draco-kuudra-breakdown", KuudraBreakdown::tick);
+        every(2, "draco-kuudra-titles", KuudraTitles::tick);
     }
 
     private static String kuudraPhaseOf(String s) {
@@ -82,189 +71,355 @@ public class DracoCrimson extends BaseConstellation {
 
     @Override
     public void registerHud(HudManager hud) {
-        cfg = (DracoConfig) getConfig();
-        if (cfg == null) return;
+        if (cfg == null) cfg = (DracoConfig) config;
+        hud.register(new HudWidget("draco-kuudra-phase", "Kuudra",
+            KuudraSupplyHelper::phaseHudText, HudPosition.of(72, 42), () -> cfg.kuudraPhaseHud));
+        hud.register(new HudWidget("draco-kuudra-supplies", "Supplies",
+            KuudraSupplyHelper::supplyHudText, HudPosition.of(72, 46),
+            () -> cfg.kuudraSupplyHelper && cfg.kuudraSupplyCounter));
+        hud.register(new HudWidget("draco-kuudra-build", "Build",
+            KuudraBuildHelper::buildHudText, HudPosition.of(72, 50),
+            () -> cfg.kuudraBuildInfo && cfg.kuudraBuildHud));
+        hud.register(new HudWidget("draco-kuudra-fresh", "Fresh",
+            KuudraBuildHelper::freshHudText, HudPosition.of(72, 54),
+            () -> cfg.kuudraFreshTools && cfg.kuudraFreshHud));
+        hud.register(new HudWidget("draco-kuudra-supply-timer", "Supply Spawn",
+            KuudraTimers::supplyText, HudPosition.of(72, 58),
+            () -> cfg.kuudraTimers && cfg.kuudraSupplySpawnTimer));
+        hud.register(new HudWidget("draco-kuudra-build-timer", "Build Start",
+            KuudraTimers::buildText, HudPosition.of(72, 62),
+            () -> cfg.kuudraTimers && cfg.kuudraBuildStartTimer));
+        hud.register(new KuudraSplitsHudWidget(HudPosition.of(72, 66),
+            () -> cfg.kuudraSplits && cfg.kuudraSplitsHud));
+        hud.register(new HudWidget("draco-kuudra-progress", "Supply Progress",
+            KuudraTitles::hudText, HudPosition.of(72, 70),
+            () -> cfg.kuudraTitles && cfg.kuudraSupplyProgressHud));
+    }
 
-        if (cfg.activityHud) {
-            hud.register(new HudWidget("draco-rep", "Rep",
-                () -> inCrimson() ? repLine() : null,
-                HudPosition.of(2, 130), cfg.activityHud));
-            hud.register(new HudWidget("draco-dojo", "Dojo",
-                () -> inCrimson() ? dojoLine() : null,
-                HudPosition.of(2, 140), cfg.activityHud));
+    @Override
+    public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        KuudraSplits.registerCommands(dispatcher);
+        KuudraBreakdown.registerCommands(dispatcher);
+        KuudraTitles.registerCommands(dispatcher);
+        KuudraTeammateHighlight.registerCommands(dispatcher);
+        var colorValue = RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
+            .executes(context -> setSupplyColor(StringArgumentType.getString(context, "target"),
+                StringArgumentType.getString(context, "argb")));
+        var colorTarget = RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("target", StringArgumentType.word())
+            .then(colorValue);
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("kuudrahelper")
+            .executes(context -> kuudraStatus())
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status").executes(context -> kuudraStatus()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("color").then(colorTarget))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("message")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("template", StringArgumentType.greedyString())
+                    .executes(context -> setSupplyMessage(StringArgumentType.getString(context, "template")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stun")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("percent", IntegerArgumentType.integer(1, 100))
+                    .executes(context -> setStunPercent(IntegerArgumentType.getInteger(context, "percent")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("freshduration")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("seconds", IntegerArgumentType.integer(1, 30))
+                    .executes(context -> setFreshDuration(IntegerArgumentType.getInteger(context, "seconds")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("freshmessage")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("template", StringArgumentType.greedyString())
+                    .executes(context -> setFreshMessage(StringArgumentType.getString(context, "template")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunmessage")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("message", StringArgumentType.greedyString())
+                    .executes(context -> setStunMessage(StringArgumentType.getString(context, "message")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunpod")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("pod", StringArgumentType.word())
+                    .executes(context -> setStunPod(StringArgumentType.getString(context, "pod")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunmode")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("mode", StringArgumentType.word())
+                    .executes(context -> setStunMode(StringArgumentType.getString(context, "mode")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunrange")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("blocks", IntegerArgumentType.integer(8, 64))
+                    .executes(context -> setStunRange(IntegerArgumentType.getInteger(context, "blocks")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunwidth")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Float>argument("width", FloatArgumentType.floatArg(0.1f, 10f))
+                    .executes(context -> setStunWidth(FloatArgumentType.getFloat(context, "width")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stuncolor")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("target", StringArgumentType.word())
+                    .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("argb", StringArgumentType.word())
+                        .executes(context -> setStunColor(StringArgumentType.getString(context, "target"),
+                            StringArgumentType.getString(context, "argb"))))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("stunwarning")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("message", StringArgumentType.greedyString())
+                    .executes(context -> setStunWarning(StringArgumentType.getString(context, "message")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("supplytimer")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("milliseconds", IntegerArgumentType.integer(100, 60_000))
+                    .executes(context -> setTimerDuration(true, IntegerArgumentType.getInteger(context, "milliseconds")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("buildtimer")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("milliseconds", IntegerArgumentType.integer(100, 60_000))
+                    .executes(context -> setTimerDuration(false, IntegerArgumentType.getInteger(context, "milliseconds")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("timerprecision")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("decimals", IntegerArgumentType.integer(0, 2))
+                    .executes(context -> setTimerPrecision(IntegerArgumentType.getInteger(context, "decimals")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("supplytimerstyle")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("template", StringArgumentType.greedyString())
+                    .executes(context -> setTimerStyle(true, StringArgumentType.getString(context, "template")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("buildtimerstyle")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("template", StringArgumentType.greedyString())
+                    .executes(context -> setTimerStyle(false, StringArgumentType.getString(context, "template")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("timerreadyhold")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument("milliseconds", IntegerArgumentType.integer(0, 10_000))
+                    .executes(context -> setTimerReadyHold(IntegerArgumentType.getInteger(context, "milliseconds")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("supplytimerready")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("text", StringArgumentType.greedyString())
+                    .executes(context -> setTimerReadyText(true, StringArgumentType.getString(context, "text")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("buildtimerready")
+                .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("text", StringArgumentType.greedyString())
+                    .executes(context -> setTimerReadyText(false, StringArgumentType.getString(context, "text"))))));
+    }
+
+    private int kuudraStatus() {
+        local("Kuudra " + (KuudraState.inRun() ? KuudraState.phase().name() : "idle")
+            + "; supply helper " + on(cfg.kuudraSupplyHelper)
+            + "; pickup/drop/fuel " + on(cfg.kuudraSupplyPickupWaypoints) + "/"
+            + on(cfg.kuudraSupplyDropOffWaypoints) + "/" + on(cfg.kuudraFuelWaypoints));
+        local("Use /kuudrahelper color <pickup|drop|fuel|nearby|build> <RRGGBB|AARRGGBB>");
+        local("Message variables: {player} {time} {current} {total}");
+        local("Build " + KuudraBuildHelper.buildProgress() + "% with " + KuudraBuildHelper.builders()
+            + " builders; stun alert " + cfg.kuudraBuildStunPercent + "%");
+        local("Stun helper " + on(cfg.kuudraStunHelper) + "; role "
+            + (KuudraStunHelper.stunning() ? "active" : "idle") + "; belly " + on(KuudraStunHelper.inBelly())
+            + "; exact pod " + KuudraStunHelper.selectedPod());
+        local("Timers " + on(cfg.kuudraTimers) + "; supply/build "
+            + cfg.kuudraSupplySpawnDurationMs + "ms/" + cfg.kuudraBuildStartDurationMs
+            + "ms; precision " + cfg.kuudraTimerDecimals);
+        return 1;
+    }
+
+    private int setSupplyColor(String target, String value) {
+        Integer colour = parseColour(value);
+        if (colour == null) {
+            local("Invalid color. Use RRGGBB or AARRGGBB.");
+            return 0;
         }
-        if (cfg.kuudraPhaseHud) {
-            hud.register(new HudWidget("draco-kuudra", "Kuudra",
-                () -> {
-                    if (kuudraPhase.isEmpty() || System.currentTimeMillis() - kuudraPhaseAt > 120_000) return null;
-                    long elapsed = (System.currentTimeMillis() - kuudraPhaseAt) / 1000;
-                    String timer = kuudraPhase.equals("Done") ? "" : " §7(" + elapsed + "s)";
-                    return "§6Kuudra: §f" + kuudraPhase + timer;
-                },
-                HudPosition.of(50, 80), cfg.kuudraPhaseHud));
+        switch (target.toLowerCase(java.util.Locale.ROOT)) {
+            case "pickup" -> cfg.kuudraSupplyPickupColour = colour;
+            case "drop", "dropoff" -> cfg.kuudraSupplyDropOffColour = colour;
+            case "fuel" -> cfg.kuudraSupplyFuelColour = colour;
+            case "nearby", "player" -> cfg.kuudraSupplyNearbyColour = colour;
+            case "build" -> cfg.kuudraBuildColour = colour;
+            default -> {
+                local("Unknown target. Use pickup, drop, fuel, nearby, or build.");
+                return 0;
+            }
         }
-        if (cfg.ashfangFreezeTimer) {
-            hud.register(new HudWidget("draco-ashfang", "Frozen",
-                () -> {
-                    long left = ashfangFrozenUntil - System.currentTimeMillis();
-                    if (left <= 0) return null;
-                    return "§b❄ Frozen " + String.format("%.1fs", left / 1000.0);
-                },
-                HudPosition.of(50, 72), cfg.ashfangFreezeTimer));
+        ConstellationClient.saveConfig();
+        local("Updated Kuudra " + target + " color.");
+        return 1;
+    }
+
+    private int setSupplyMessage(String template) {
+        String clean = template.trim();
+        if (clean.isEmpty() || clean.length() > 240) {
+            local("Supply message must be 1-240 characters.");
+            return 0;
         }
-        if (cfg.dojoScoreHud) {
-            hud.register(new HudWidget("draco-dojo-score", "DojoScore",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        var m = java.util.regex.Pattern.compile("Score:?\\s*(\\d+)").matcher(line);
-                        if (m.find()) return "§e🥋 " + m.group(1) + " pts";
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 64), cfg.dojoScoreHud));
+        cfg.kuudraSupplyMessage = clean;
+        ConstellationClient.saveConfig();
+        local("Updated Kuudra supply message.");
+        return 1;
+    }
+
+    private int setStunPercent(int percent) {
+        cfg.kuudraBuildStunPercent = Math.clamp(percent, 1, 100);
+        ConstellationClient.saveConfig();
+        local("Kuudra stun alert set to " + cfg.kuudraBuildStunPercent + "%.");
+        return 1;
+    }
+
+    private int setFreshDuration(int seconds) {
+        cfg.kuudraFreshDurationMs = Math.clamp(seconds, 1, 30) * 1_000;
+        ConstellationClient.saveConfig();
+        local("Fresh Tools duration set to " + seconds + "s.");
+        return 1;
+    }
+
+    private int setFreshMessage(String template) {
+        String clean = template.trim();
+        if (clean.isEmpty() || clean.length() > 120) {
+            local("Fresh party message must be 1-120 characters.");
+            return 0;
         }
-        if (cfg.abiphoneHud) {
-            hud.register(new HudWidget("draco-abiphone", "Abiphone",
-                () -> {
-                    if (abiphoneCaller.isEmpty() || System.currentTimeMillis() - abiphoneCallAt > 15_000) return null;
-                    return "§d📞 " + abiphoneCaller;
-                },
-                HudPosition.of(50, 56), cfg.abiphoneHud));
+        cfg.kuudraFreshPartyMessage = clean;
+        ConstellationClient.saveConfig();
+        local("Updated Fresh Tools party message. Variable: {build}");
+        return 1;
+    }
+
+    private int setStunMessage(String message) {
+        String clean = message.trim();
+        if (clean.isEmpty() || clean.length() > 120) {
+            local("Stun message must be 1-120 characters.");
+            return 0;
         }
-        if (cfg.factionQuestHud) {
-            hud.register(new HudWidget("draco-faction", "Quest",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Quest") || line.contains("Barbarian") || line.contains("Mage")) return "§c⚔ " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 50), cfg.factionQuestHud));
+        cfg.kuudraBuildStunMessage = clean;
+        ConstellationClient.saveConfig();
+        local("Updated Kuudra stun message.");
+        return 1;
+    }
+
+    private int setStunPod(String value) {
+        int pod = switch (value.toLowerCase(java.util.Locale.ROOT)) {
+            case "left", "l", "0" -> 0;
+            case "middle", "mid", "m", "1" -> 1;
+            case "right", "r", "2" -> 2;
+            default -> -1;
+        };
+        if (pod < 0) {
+            local("Unknown pod. Use left, middle, or right.");
+            return 0;
         }
-        if (cfg.dojoChallengeHelper) {
-            hud.register(new HudWidget("draco-dojo-challenge", "DojoChal",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Challenge") || line.contains("Discipline")) return "§e🥋 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 44), cfg.dojoChallengeHelper));
+        cfg.kuudraStunExactPod = pod;
+        ConstellationClient.saveConfig();
+        local("Exact stun pod set to " + KuudraStunHelper.selectedPod() + ".");
+        return 1;
+    }
+
+    private int setStunMode(String value) {
+        int mode = switch (value.toLowerCase(java.util.Locale.ROOT)) {
+            case "outside", "0" -> 0;
+            case "aim", "inside", "1" -> 1;
+            case "both", "2" -> 2;
+            default -> -1;
+        };
+        if (mode < 0) {
+            local("Unknown mode. Use outside, aim, or both.");
+            return 0;
         }
-        if (cfg.trophyFishingHud) {
-            hud.register(new HudWidget("draco-trophy", "CrimsonTrophy",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Trophy") || line.contains("Fishing")) return "§6🏆 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 38), cfg.trophyFishingHud));
+        cfg.kuudraStunBlockMode = mode;
+        ConstellationClient.saveConfig();
+        local("Stun ability block mode updated.");
+        return 1;
+    }
+
+    private int setStunRange(int blocks) {
+        cfg.kuudraStunAimRange = Math.clamp(blocks, 8, 64);
+        ConstellationClient.saveConfig();
+        local("Stun aim range set to " + cfg.kuudraStunAimRange + " blocks.");
+        return 1;
+    }
+
+    private int setStunWidth(float width) {
+        cfg.kuudraStunLineWidth = Math.clamp(width, 0.1f, 10f);
+        ConstellationClient.saveConfig();
+        local("Stun outline width updated.");
+        return 1;
+    }
+
+    private int setStunColor(String target, String value) {
+        Integer colour = parseColour(value);
+        if (colour == null) {
+            local("Invalid color. Use RRGGBB or AARRGGBB.");
+            return 0;
         }
-        if (cfg.freshToolsTimer) {
-            hud.register(new HudWidget("draco-freshtools", "FreshTools",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Fresh") || line.contains("Tools")) return "§a🛠 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 32), cfg.freshToolsTimer));
+        switch (target.toLowerCase(java.util.Locale.ROOT)) {
+            case "pod", "pods", "outline" -> cfg.kuudraStunPodColour = colour;
+            case "podfill", "fill" -> cfg.kuudraStunPodFillColour = colour;
+            case "exact" -> cfg.kuudraStunExactColour = colour;
+            case "exactfill" -> cfg.kuudraStunExactFillColour = colour;
+            default -> {
+                local("Unknown target. Use pod, podfill, exact, or exactfill.");
+                return 0;
+            }
         }
-        if (cfg.supplyObjectiveHud) {
-            hud.register(new HudWidget("draco-supply", "Supplies",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Supply") || line.contains("Pile") || line.contains("Fuel Cell")) return "§c📦 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 26), cfg.supplyObjectiveHud));
-        if (cfg.magmafishCounter) {
-            hud.register(new HudWidget("draco-magmafish", "Magmafish",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Magmafish") || line.contains("Magma")) return "§c🐟 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 20), cfg.magmafishCounter));
+        ConstellationClient.saveConfig();
+        local("Updated stun " + target + " color.");
+        return 1;
+    }
+
+    private int setStunWarning(String message) {
+        String clean = message.trim();
+        if (clean.isEmpty() || clean.length() > 120) {
+            local("Stun warning must be 1-120 characters.");
+            return 0;
         }
-        if (cfg.trophyBestDisplay) {
-            hud.register(new HudWidget("draco-trophybest", "TrophyBest",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Trophy") || line.contains("Best")) return "§6🏆 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 14), cfg.trophyBestDisplay));
-        if (cfg.bladeVolcanoTimer) {
-            hud.register(new HudWidget("draco-blade", "Blade",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines()) {
-                        if (line.contains("Blade") || line.contains("Volcano")) return "§c🌋 " + line.trim();
-                    }
-                    return null;
-                },
-                HudPosition.of(50, 8), cfg.bladeVolcanoTimer));
-        if (cfg.heavyPearlsTracker) {
-            hud.register(new HudWidget("draco-pearls", "HeavyPearls",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines())
-                        if (line.contains("Heavy") || line.contains("Pearl")) return "§b🫧 " + line.trim();
-                    return null;
-                },
-                HudPosition.of(50, 2), cfg.heavyPearlsTracker));
-        if (false && cfg.kuudraSupplyCounter) {
-            hud.register(new HudWidget("draco-supplycount", "SupplyCount",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines())
-                        if (line.contains("Supply") || line.contains("Pile")) return "§c📦 " + line.trim();
-                    return null;
-                },
-                HudPosition.of(50, -4), cfg.kuudraSupplyCounter));
+        cfg.kuudraStunWarningMessage = clean;
+        ConstellationClient.saveConfig();
+        local("Updated stun ability warning.");
+        return 1;
+    }
+
+    private int setTimerDuration(boolean supply, int milliseconds) {
+        int value = Math.clamp(milliseconds, 100, 60_000);
+        if (supply) cfg.kuudraSupplySpawnDurationMs = value;
+        else cfg.kuudraBuildStartDurationMs = value;
+        KuudraTimers.reset();
+        ConstellationClient.saveConfig();
+        local((supply ? "Supply spawn" : "Build start") + " timer set to " + value + "ms.");
+        return 1;
+    }
+
+    private int setTimerPrecision(int decimals) {
+        cfg.kuudraTimerDecimals = Math.clamp(decimals, 0, 2);
+        ConstellationClient.saveConfig();
+        local("Kuudra timer precision set to " + cfg.kuudraTimerDecimals + ".");
+        return 1;
+    }
+
+    private int setTimerStyle(boolean supply, String template) {
+        String clean = template.trim();
+        if (clean.isEmpty() || clean.length() > 160 || !clean.contains("{time}") && !clean.contains("#time")) {
+            local("Timer template must be 1-160 characters and contain {time} or #time.");
+            return 0;
         }
-        if (false && cfg.freshToolsPing) {
-            hud.register(new HudWidget("draco-freshtools-ping", "FreshPing",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines())
-                        if (line.contains("Fresh") || line.contains("Tools")) return "§a🛠 " + line.trim();
-                    return null;
-                },
-                HudPosition.of(50, -10), cfg.freshToolsPing));
-        if (false && cfg.trophyDetailHud) {
-            hud.register(new HudWidget("draco-trophy-detail", "TrophyDetail",
-                () -> {
-                    if (!ConstellationClient.loc().onHypixel()) return null;
-                    for (String line : ConstellationClient.loc().getSidebarLines())
-                        if (line.contains("Trophy") && (line.contains("Bronze") || line.contains("Silver") || line.contains("Gold") || line.contains("Diamond")))
-                            return "§6🏆 " + line.trim();
-                    return null;
-                },
-                HudPosition.of(50, -16), cfg.trophyDetailHud));
+        if (supply) cfg.kuudraSupplyTimerStyle = clean;
+        else cfg.kuudraBuildTimerStyle = clean;
+        ConstellationClient.saveConfig();
+        local((supply ? "Supply" : "Build") + " timer template updated. Variables: {time} {elapsed}");
+        return 1;
+    }
+
+    private int setTimerReadyHold(int milliseconds) {
+        cfg.kuudraTimerReadyHoldMs = Math.clamp(milliseconds, 0, 10_000);
+        ConstellationClient.saveConfig();
+        local("Kuudra timer ready hold set to " + cfg.kuudraTimerReadyHoldMs + "ms.");
+        return 1;
+    }
+
+    private int setTimerReadyText(boolean supply, String text) {
+        String clean = text.trim();
+        if (clean.isEmpty() || clean.length() > 120) {
+            local("Timer ready text must be 1-120 characters.");
+            return 0;
         }
-        }
-        }
-        }
-        }
+        if (supply) cfg.kuudraSupplyTimerReadyText = clean;
+        else cfg.kuudraBuildTimerReadyText = clean;
+        ConstellationClient.saveConfig();
+        local((supply ? "Supply" : "Build") + " timer ready text updated.");
+        return 1;
+    }
+
+    private static Integer parseColour(String value) {
+        String clean = value.startsWith("#") ? value.substring(1) : value;
+        if (!clean.matches("(?i)[0-9a-f]{6}|[0-9a-f]{8}")) return null;
+        try {
+            long parsed = Long.parseUnsignedLong(clean, 16);
+            if (clean.length() == 6) parsed |= 0xFF000000L;
+            return (int) parsed;
+        } catch (NumberFormatException ignored) {
+            return null;
         }
     }
 
+    private static String on(boolean value) { return value ? "on" : "off"; }
+
+    private static void local(String text) {
+        var player = net.minecraft.client.Minecraft.getInstance().player;
+        if (player != null) player.sendSystemMessage(Component.literal(text));
+    }
+
     private static boolean inCrimson() {
-        return ConstellationClient.loc().area() == SkyblockArea.CRIMSON_ISLE;
+        return ConstellationClient.loc().area() == SkyblockArea.CRIMSON_ISLE
+            || ConstellationClient.loc().area() == SkyblockArea.KUUDRA;
+    }
+
+    @Override
+    protected void onDisable() {
+        KuudraState.reset();
     }
 
     // all crimson isle faction/dojo/vanq info is in the tab list, not sidebar
