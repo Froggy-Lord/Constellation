@@ -2,6 +2,8 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.OrionConfig;
+import com.froggylord.constellation.data.RoomMatch;
+import com.froggylord.constellation.data.RoomTransform;
 import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -10,97 +12,113 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-// ice fill = walk over every ice tile once, single path (hamiltonian path).
-// my own backtracking dfs. finds the order, draws a numbered route. cached per room so
-// we dont resolve every frame.
+// ported from Skyblocker (LGPL-3.0-or-later):
+// src/main/java/de/hysky/skyblocker/skyblock/dungeon/puzzle/IceFill.java
 public final class IceFillHelper {
+
+    private static final BlockPos[] ORIGINS = {
+        new BlockPos(16, 70, 9),
+        new BlockPos(17, 71, 16),
+        new BlockPos(18, 72, 25)
+    };
+    private static final int[] SIZES = {3, 5, 7};
+    private static final List<List<int[]>> paths = new ArrayList<>(List.of(List.of(), List.of(), List.of()));
+    private static String roomKey = "";
 
     private IceFillHelper() {}
 
-    private static List<int[]> cached;
-    private static long cacheKey = Long.MIN_VALUE;
-    private static int yPlane;
-
     public static void draw(WorldRenderer.Ctx ctx) {
+        if (!RoomMatch.isMatched() || !RoomMatch.currentRoom().contains("ice-path")) return;
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.iceFillSolver) return;
         if (!ConstellationClient.loc().inDungeons()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        var pp = mc.player.blockPosition();
-        // collect the ice floor (one block under foot level)
-        Set<Long> ice = new HashSet<>();
-        int floorY = pp.getY() - 1;
-        for (int dx = -10; dx <= 10; dx++)
-            for (int dz = -10; dz <= 10; dz++) {
-                var bp = pp.offset(dx, -1, dz);
-                if (mc.level.getBlockState(bp).getBlock().getDescriptionId().contains("ice"))
-                    ice.add(key(bp.getX(), bp.getZ()));
-            }
-        if (ice.size() < 2 || ice.size() > 64) return; // too big to brute force, bail
-
-        long ck = ice.hashCode();
-        if (ck != cacheKey) {
-            // start where the player stands if its on the ice, else any edge cell
-            int startX = pp.getX(), startZ = pp.getZ();
-            if (!ice.contains(key(startX, startZ))) {
-                int[] e = pickStart(ice);
-                startX = e[0]; startZ = e[1];
-            }
-            cached = hamiltonian(ice, startX, startZ);
-            cacheKey = ck;
-            yPlane = floorY;
+        String key = RoomMatch.currentRoom() + ':' + RoomMatch.anchorX() + ':' + RoomMatch.anchorZ() + ':' + RoomMatch.currentDir();
+        if (!key.equals(roomKey)) {
+            roomKey = key;
+            paths.set(0, List.of());
+            paths.set(1, List.of());
+            paths.set(2, List.of());
         }
-        if (cached == null) return;
 
-        for (int i = 0; i < cached.size() - 1; i++) {
-            int[] a = cached.get(i), b = cached.get(i + 1);
-            ctx.line(new Vec3(a[0]+0.5, yPlane+1.05, a[1]+0.5),
-                     new Vec3(b[0]+0.5, yPlane+1.05, b[1]+0.5), 0xFF55FFFF, false);
+        for (int board = 0; board < 3; board++) {
+            List<int[]> solved = scanAndSolve(mc, board);
+            if (!solved.isEmpty()) paths.set(board, solved);
+            render(ctx, board, paths.get(board));
         }
-        // mark the start so you know where to step on first
-        int[] s = cached.get(0);
-        ctx.highlight(new AABB(s[0], yPlane+1, s[1], s[0]+1, yPlane+1.1, s[1]+1), 0x8055FF55, false);
     }
 
-    // backtracking hamiltonian path over the ice set
-    private static List<int[]> hamiltonian(Set<Long> ice, int sx, int sz) {
+    private static List<int[]> scanAndSolve(Minecraft mc, int boardIndex) {
+        int size = SIZES[boardIndex];
+        boolean[][] blocked = new boolean[size][size];
+        BlockPos origin = ORIGINS[boardIndex];
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                BlockPos pos = worldPos(origin.getX() - col, origin.getY(), origin.getZ() - row);
+                if (mc.level.getBlockState(pos.below()).isAir()) return List.of();
+                blocked[row][col] = !mc.level.getBlockState(pos).isAir();
+            }
+        }
+        return solve(blocked);
+    }
+
+    private static List<int[]> solve(boolean[][] blocked) {
+        int size = blocked.length;
+        int startRow = size - 1;
+        int startCol = size / 2;
+        int open = size * size;
+        for (boolean[] row : blocked) for (boolean cell : row) if (cell) open--;
+        if (blocked[startRow][startCol] || open == 0) return List.of();
+
+        boolean[][] visited = new boolean[size][size];
         List<int[]> path = new ArrayList<>();
-        Set<Long> seen = new HashSet<>();
-        path.add(new int[]{sx, sz});
-        seen.add(key(sx, sz));
-        return dfs(ice, seen, path, sx, sz) ? path : null;
+        visited[startRow][startCol] = true;
+        path.add(new int[]{startRow, startCol});
+        return dfs(blocked, visited, path, open - 1) ? List.copyOf(path) : List.of();
     }
 
-    private static final int[][] DIRS = {{1,0},{-1,0},{0,1},{0,-1}};
+    private static final int[][] DIRS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-    private static boolean dfs(Set<Long> ice, Set<Long> seen, List<int[]> path, int x, int z) {
-        if (seen.size() == ice.size()) return true;
-        for (int[] d : DIRS) {
-            int nx = x + d[0], nz = z + d[1];
-            long nk = key(nx, nz);
-            if (!ice.contains(nk) || seen.contains(nk)) continue;
-            seen.add(nk);
-            path.add(new int[]{nx, nz});
-            if (dfs(ice, seen, path, nx, nz)) return true;
-            seen.remove(nk);
-            path.remove(path.size() - 1);
+    private static boolean dfs(boolean[][] blocked, boolean[][] visited, List<int[]> path, int remaining) {
+        int[] current = path.getLast();
+        if (remaining == 0) return current[0] == 0 && current[1] == blocked.length / 2;
+
+        for (int[] dir : DIRS) {
+            int row = current[0] + dir[0];
+            int col = current[1] + dir[1];
+            if (row < 0 || row >= blocked.length || col < 0 || col >= blocked.length) continue;
+            if (blocked[row][col] || visited[row][col]) continue;
+            visited[row][col] = true;
+            path.add(new int[]{row, col});
+            if (dfs(blocked, visited, path, remaining - 1)) return true;
+            path.removeLast();
+            visited[row][col] = false;
         }
         return false;
     }
 
-    // corner/edge cell makes the best start for a hamiltonian path
-    private static int[] pickStart(Set<Long> ice) {
-        for (long k : ice) {
-            int x = (int)(k >> 32), z = (int) k;
-            int nbrs = 0;
-            for (int[] d : DIRS) if (ice.contains(key(x+d[0], z+d[1]))) nbrs++;
-            if (nbrs <= 2) return new int[]{x, z}; // corner-ish
+    private static void render(WorldRenderer.Ctx ctx, int boardIndex, List<int[]> path) {
+        if (path.isEmpty()) return;
+        BlockPos origin = ORIGINS[boardIndex];
+        for (int i = 0; i < path.size() - 1; i++) {
+            int[] a = path.get(i);
+            int[] b = path.get(i + 1);
+            ctx.line(center(origin, a), center(origin, b), 0xFF55FFFF, false);
         }
-        long any = ice.iterator().next();
-        return new int[]{(int)(any >> 32), (int) any};
+        int[] start = path.getFirst();
+        BlockPos pos = worldPos(origin.getX() - start[1], origin.getY(), origin.getZ() - start[0]);
+        ctx.highlight(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + .1, pos.getZ() + 1),
+            0x8055FF55, false);
     }
 
-    private static long key(int x, int z) { return (((long) x) << 32) ^ (z & 0xffffffffL); }
+    private static Vec3 center(BlockPos origin, int[] point) {
+        return Vec3.atCenterOf(worldPos(origin.getX() - point[1], origin.getY(), origin.getZ() - point[0])).add(0, .1, 0);
+    }
+
+    private static BlockPos worldPos(int x, int y, int z) {
+        long[] world = RoomTransform.relativeToActual(RoomMatch.currentDir(), RoomMatch.anchorX(), RoomMatch.anchorZ(), x, y, z);
+        return new BlockPos((int) world[0], (int) world[1], (int) world[2]);
+    }
 }
