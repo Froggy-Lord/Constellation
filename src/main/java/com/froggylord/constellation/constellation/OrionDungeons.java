@@ -9,6 +9,7 @@ import com.froggylord.constellation.data.RoomMatch;
 import com.froggylord.constellation.hud.HudManager;
 import com.froggylord.constellation.hud.HudPosition;
 import com.froggylord.constellation.hud.HudWidget;
+import com.froggylord.constellation.hud.PuzzleHudWidget;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -24,6 +25,9 @@ public class OrionDungeons extends BaseConstellation {
     private OrionConfig cfg;
     private boolean wasInDungeon = false;
     private int doorsOpened = 0;
+    // party-ping guards: fire at most once per run and never on our own party echo (see onChat below)
+    private boolean mimicPinged = false;
+    private boolean princePinged = false;
     private static long fireFreezeMs = 0;
     private static long spiritBowUntil = 0;
     private static long saVanishUntil = 0;
@@ -31,7 +35,10 @@ public class OrionDungeons extends BaseConstellation {
     private static void rareRoomAlert(String room, String colour) {
         var mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.sendSystemMessage(Component.literal(colour + "✦ Rare room: " + room));
+            // use the title hud - sendSystemMessage re-fires the chat receive event and our own
+            // listener re-matches "trinity"/etc and loops forever (stackoverflow)
+            mc.gui.hud.resetTitleTimes();
+            mc.gui.hud.setTitle(Component.literal(colour + "Rare room: " + room));
             mc.player.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 0.7f, 1.3f);
         }
     }
@@ -43,11 +50,34 @@ public class OrionDungeons extends BaseConstellation {
 
         
         DungeonData.load();
+        SecretWaypoints.init();
+        SecretCompassHelper.init(cfg);
+        Routes.init();
+        BossTickTimers.init();
+        TerminalBreakdown.init();
+        DungeonPartyAlerts.init();
+        ArchitectNotifier.init(cfg);
+        DungeonMilestone.init();
+        M7RelicTimer.init();
+        SpiritBearTimer.init();
+        SpiritMaskState.init(cfg);
+        DungeonBreakerCharges.init();
+        LividInvulnerableTimer.init();
+        LeapCounter.init();
+        TerracottaTimer.init();
 
         
         OrionTerminals.init(cfg);
+        TeleportMazeOverlay.init();
         
         OrionSpiritLeap.init(cfg);
+        PartyFinderOverlay.init(cfg);
+        AutoRequeue.init(cfg);
+        DungeonQueueHelper.init(cfg);
+        PartyGuard.init(cfg);
+        SmartRefill.init(cfg);
+        SpringBootsHelper.init(cfg);
+        MageBeamHelper.init();
         
         DoorHighlighter.init();
         // puzzle solvers — simon says, t...
@@ -58,47 +88,76 @@ public class OrionDungeons extends BaseConstellation {
         LividFinder.init();
 
         
-        ConstellationClient.world().register(SecretWaypoints::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) SecretWaypoints.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) SecretCompassHelper.draw(ctx2); });
         
-        ConstellationClient.world().register(Routes::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) Routes.draw(ctx2); });
         
-        ConstellationClient.world().register(CombatEsp::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) CombatEsp.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) MageBeamHelper.draw(ctx2); });
         // f3/m3 blaze puzzle — mark lowe...
-        ConstellationClient.world().register(BlazeSolver::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) BlazeSolver.draw(ctx2); });
         
-        ConstellationClient.world().register(DropEsp::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) DropEsp.draw(ctx2); });
         
-        ConstellationClient.world().register(DoorHighlighter::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) DoorHighlighter.draw(ctx2); });
+        // advisory etherwarp target box — render only, never warps
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) EtherwarpHelper.draw(ctx2); });
         
-        ConstellationClient.world().register(OrionPuzzles::drawBeams);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) OrionPuzzles.drawBeams(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) ThreeWeirdosSolver.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) QuizSolver.draw(ctx2); });
         
-        ConstellationClient.world().register(M7Dragons::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) M7Dragons.draw(ctx2); });
+        M7Dragons.init();
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) M7RelicHighlight.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) WitherHighlight.draw(ctx2); });
+
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) TerracottaTimer.draw(ctx2); });
         
-        ConstellationClient.world().register(GoldorWaypoints::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) GoldorWaypoints.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) HealerPlatformHighlight.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) TargetPracticeSolver.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) ArrowAlignDevice.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) LightsOnDevice.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) TeleportMazeOverlay.draw(ctx2); });
         // water puzzle gate highlighter
-        ConstellationClient.world().register(WaterPuzzleHelper::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) WaterPuzzleHelper.draw(ctx2); });
         
-        ConstellationClient.world().register(IceFillHelper::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) IceFillHelper.draw(ctx2); });
         
-        ConstellationClient.world().register(BoulderSolver::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) BoulderSolver.draw(ctx2); });
         // silverfish solver — highlight ...
-        ConstellationClient.world().register(SilverfishSolver::draw);
-        ConstellationClient.world().register(LightsOnSolver::draw);
-        ConstellationClient.world().register(ArrowAlignSolver::draw);
-        ConstellationClient.world().register(TargetPracticeSolver::draw);
-        ConstellationClient.world().register(TeleportMazeSolver::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) SilverfishSolver.draw(ctx2); });
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) SpringBootsHelper.draw(ctx2); });
 
         LividFinder.init();
-        ConstellationClient.world().register(LividFinder::draw);
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) LividFinder.draw(ctx2); });
 
-        
+        BloodTimer.init();
+        BloodCampHelper.init();
+        registerRenderer(ctx2 -> { if (isEnabled() && cfg.enabled) BloodCampHelper.draw(ctx2); });
+
+
         // sees boss dialogue even if the...
         net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents.ALLOW_GAME.register((message, overlay) -> {
+            if (!isEnabled() || !cfg.enabled) return true;
             if (!overlay && ConstellationClient.loc().inDungeons()) {
                 String s = message.getString();
+                // ported from Odin (BSD-3-Clause): features/impl/dungeon/LeapMenu.kt
+                if (s.matches("^You have teleported to \\w{1,16}!$"))
+                    PartyMessages.send("leap", java.util.Map.of("leaped-player",
+                        s.substring("You have teleported to ".length(), s.length() - 1)));
+                if (cfg.ticTacToeSolver && RoomMatch.isMatched()
+                    && RoomMatch.currentRoom().contains("tic-tac-toe")
+                    && s.matches("^PUZZLE SOLVED! \\w{1,16} tied Tic Tac Toe! Good job!$"))
+                    PartyMessages.send("ttt-done");
                 com.froggylord.constellation.data.DungeonScore.onChat(s);
+                com.froggylord.constellation.data.RunStats.onChat(s);
                 com.froggylord.constellation.data.DefensiveTracker.onChat(s);
+                SecretWaypoints.onChat(s);
                 if (cfg.blessingDisplay) OrionBlessings.onChat(s);
+                if (cfg.bloodTimer || cfg.bloodCampHelper || cfg.partyMessages) BloodTimer.onChat(s);
                 
                 if (cfg.rareRoomAlerts) {
                     String low = s.toLowerCase(java.util.Locale.ROOT);
@@ -108,18 +167,34 @@ public class OrionDungeons extends BaseConstellation {
                     else if (low.contains("this room seems") && low.contains("empty")) rareRoomAlert("Empty Room", "§8");
                 }
                 
-                if (cfg.mimicPartyPing && !cfg.streamerMode && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!"))) {
+                // ported from Odin (BSD-3-Clause): features/impl/dungeon/Mimic.kt
+                if (cfg.mimicPartyPing && !cfg.streamerMode && !mimicPinged
+                    && (s.endsWith("Mimic dead!") || s.endsWith("Mimic Killed!")) && !isPartyEcho(s)) {
                     var mc = Minecraft.getInstance();
-                    if (mc.player != null) mc.player.connection.sendCommand("pc Mimic dead!");
+                    if (mc.player != null) {
+                        PartyMessages.send("mimic");
+                        mimicPinged = true;
+                    }
+                }
+                // prince mini-boss (F4/M4) — the hypixel bonus-score line is authoritative and never
+                // matches our own "pc Prince Killed!" echo, but we still guard once-per-run + skip echoes.
+                if (cfg.princePartyPing && !cfg.streamerMode && !princePinged
+                    && s.equals("A Prince falls. +1 Bonus Score") && !isPartyEcho(s)) {
+                    var mc = Minecraft.getInstance();
+                    if (mc.player != null) {
+                        PartyMessages.send("prince");
+                        princePinged = true;
+                    }
                 }
                 // spirit bow — pickup starts a 3...
                 if (cfg.spiritBowTimer && s.contains("Spirit Bow") && s.contains("picked up"))
                     spiritBowUntil = System.currentTimeMillis() + 30_000;
 
-                // fire freeze staff cooldown — c...
-                if (cfg.fireFreezeTimer && s.contains("Fire Freeze")) {
-                    if (s.contains("ready")) fireFreezeMs = 0;
-                    else fireFreezeMs = System.currentTimeMillis() + 5700;
+                // ported from devonian (GPL-3.0): features/dungeons/FireFreezeTimer.kt
+                if (cfg.fireFreezeTimer
+                    && s.equals("[BOSS] The Professor: Oh? You found my Guardians' one weakness?")
+                    && ConstellationClient.dungeon().floor().endsWith("3")) {
+                    fireFreezeMs = System.currentTimeMillis() + 5500;
                 }
 
                 
@@ -127,7 +202,7 @@ public class OrionDungeons extends BaseConstellation {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
                         mc.gui.hud.resetTitleTimes();
-                        mc.gui.hud.setTitle(Component.literal("§5🗡 Shadow Assassin!"));
+                        mc.gui.hud.setTitle(Component.literal("§5Shadow Assassin!"));
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.WITHER_SPAWN, 0.5f, 0.8f);
                     }
                     
@@ -141,29 +216,26 @@ public class OrionDungeons extends BaseConstellation {
                         var mc = Minecraft.getInstance();
                         if (mc.player != null) {
                             mc.gui.hud.resetTitleTimes();
-                            mc.gui.hud.setTitle(Component.literal("§c🔑 " + s.trim()));
+                            mc.gui.hud.setTitle(Component.literal("§cKey: " + s.trim()));
                         }
                     }
                 }
                 // wither door open — notify party
                 if (s.contains("opened a Wither door") || s.contains("opened a Blood door")) {
                     doorsOpened++;
+                    if ((cfg.bloodTimer || cfg.bloodCampHelper) && s.contains("Blood door")) BloodTimer.onBloodDoor();
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
                         mc.gui.hud.resetTitleTimes();
-                        mc.gui.hud.setTitle(Component.literal("§5🚪 " + s.trim()));
+                        mc.gui.hud.setTitle(Component.literal("§5Door: " + s.trim()));
                     }
                 }
                 
-                if (s.contains("Recombobulator 3000") || s.contains("Giant's Sword")
-                    || s.contains("Necron's Handle") || s.contains("Shadow Fury")
-                    || s.contains("Wither Chestplate") || s.contains("Precursor Eye")
-                    || s.contains("Dark Claymore") || s.contains("Shadow Assassin Chestplate")
-                    || s.contains("Master Star") || s.contains("Diamond Head")) {
+                if (cfg.rareDropAlerts && isRareDungeonDrop(s)) {
                     var mc = Minecraft.getInstance();
                     if (mc.player != null) {
                         mc.gui.hud.resetTitleTimes();
-                        mc.gui.hud.setTitle(Component.literal("§6✨ RARE DROP: " + s.trim()));
+                        mc.gui.hud.setTitle(Component.literal("§6RARE DROP: " + s.trim()));
                         mc.player.playSound(net.minecraft.sounds.SoundEvents.NOTE_BLOCK_PLING.value(), 1f, 0.8f);
                     }
                 }
@@ -181,19 +253,20 @@ public class OrionDungeons extends BaseConstellation {
         });
 
         // dungeon copilot — occasional c...
-        ConstellationClient.tick().every(200, "orion-copilot", () -> {
-            if (cfg == null || !cfg.dungeonCopilot || !ConstellationClient.loc().inDungeons()) return;
+        every(200, "orion-copilot", () -> {
+            if (!isEnabled() || cfg == null || !cfg.enabled || !cfg.dungeonCopilot || !ConstellationClient.loc().inDungeons()) return;
             var mc2 = Minecraft.getInstance();
             if (mc2.player == null) return;
             int s = com.froggylord.constellation.data.DungeonScore.score();
             String grade = com.froggylord.constellation.data.DungeonScore.grade();
-            if (s >= 270) mc2.player.sendSystemMessage(Component.literal("§a✦ Copilot: Score is " + s + " (" + grade + ") — looking good!"));
-            else if (s >= 230) mc2.player.sendSystemMessage(Component.literal("§e✦ Copilot: " + s + " — find more secrets for S+"));
-            else mc2.player.sendSystemMessage(Component.literal("§c✦ Copilot: " + s + " — need secrets + crypts for higher score"));
+            if (s >= 270) mc2.player.sendSystemMessage(Component.literal("§aCopilot: Score is " + s + " (" + grade + ") — looking good!"));
+            else if (s >= 230) mc2.player.sendSystemMessage(Component.literal("§eCopilot: " + s + " — find more secrets for S+"));
+            else mc2.player.sendSystemMessage(Component.literal("§cCopilot: " + s + " — need secrets + crypts for higher score"));
         });
 
         
-        ConstellationClient.tick().every(4, "orion-room-match", () -> {
+        every(2, "orion-room-match", () -> {
+            if (!isEnabled() || cfg == null || !cfg.enabled) return;
             if (ConstellationClient.loc().inDungeons()) {
                 RoomMatch.update();
                 com.froggylord.constellation.data.SkeletonScraper.tick();
@@ -202,30 +275,45 @@ public class OrionDungeons extends BaseConstellation {
             } else if (wasInDungeon) {
                 
                 doorsOpened = 0;
+                mimicPinged = false;
+                princePinged = false;
                 com.froggylord.constellation.data.RunStats.finishRun();
+                com.froggylord.constellation.data.DungeonSplits.finishRun();
                 com.froggylord.constellation.data.MapSegments.reset();
                 RoomMatch.resetCache();
                 com.froggylord.constellation.data.DungeonScore.reset();
                 com.froggylord.constellation.data.DefensiveTracker.reset();
                 OrionBlessings.reset();
+                PartyMessages.reset();
                 wasInDungeon = false;
                 
-                if (cfg.autoRequeue && !cfg.requeueSafeMode) {
-                    ConstellationClient.tick().once(cfg.requeueDelaySec * 20, "orion-requeue", () -> {
-                        var mc = Minecraft.getInstance();
-                        if (mc.player != null && !ConstellationClient.loc().inDungeons()) {
-                            String floor = com.froggylord.constellation.data.DungeonScore.lastFloor();
-                            mc.player.connection.sendCommand("joindungeon catacombs " + (floor != null ? floor : "F7"));
-                        }
-                    });
-                }
             }
         });
 
         
-        ConstellationClient.tick().every(20, "orion-score", () -> {
+        every(20, "orion-score", () -> {
+            if (!isEnabled() || cfg == null || !cfg.enabled) return;
             if (ConstellationClient.loc().inDungeons()) com.froggylord.constellation.data.DungeonScore.update();
         });
+    }
+
+    // ported from Skyblocker (LGPL-3.0-or-later):
+    // skyblock/special/DungeonsSpecialEffects.java (rare dungeon reward names)
+    private static boolean isRareDungeonDrop(String value) {
+        return value.contains("Recombobulator 3000") || value.contains("Giant's Sword")
+            || value.contains("Necron's Handle") || value.contains("Shiny Necron's Handle")
+            || value.contains("Shadow Fury") || value.contains("Dark Claymore")
+            || value.contains("Spirit Mask") || value.contains("Necron Dye")
+            || value.contains("Master Skull - Tier 5") || value.contains("Shadow Warp")
+            || value.contains("Wither Shield") || value.contains("Implosion")
+            || value.contains("Master Star") || value.contains("Wither Chestplate")
+            || value.contains("Precursor Eye") || value.contains("Shadow Assassin Chestplate")
+            || value.contains("Diamond Head");
+    }
+
+    @Override
+    protected void onDisable() {
+        RoomMatch.resetCache();
     }
 
     @Override
@@ -234,41 +322,40 @@ public class OrionDungeons extends BaseConstellation {
         Minecraft mc = Minecraft.getInstance();
 
         
-        if (cfg.saVanishTimer) {
-            hud.register(new HudWidget("orion-sa", "SA",
+        hud.register(new HudWidget("orion-sa", "SA",
                 () -> {
                     long left = saVanishUntil - System.currentTimeMillis();
                     if (left <= 0) return null;
-                    return "§5🗡 Vanish " + (left / 1000) + "s";
+                    return "§5Vanish " + (left / 1000) + "s";
                 },
-                HudPosition.of(6, 36), cfg.saVanishTimer));
-        }
-        if (cfg.spiritBowTimer) {
-            hud.register(new HudWidget("orion-spiritbow", "SpiritBow",
+                HudPosition.of(6, 36), () -> cfg.saVanishTimer));
+        hud.register(new HudWidget("orion-spiritbow", "SpiritBow",
                 () -> {
                     long left = spiritBowUntil - System.currentTimeMillis();
                     if (left <= 0) return null;
-                    return "§b🏹 Bow " + (left / 1000) + "s";
+                    return "§bBow " + (left / 1000) + "s";
                 },
-                HudPosition.of(6, 38), cfg.spiritBowTimer));
-        }
-        if (cfg.fireFreezeTimer) {
-            hud.register(new HudWidget("orion-freeze", "Freeze",
+                HudPosition.of(6, 38), () -> cfg.spiritBowTimer));
+        hud.register(new HudWidget("orion-spiritbear", "SpiritBear",
+                SpiritBearTimer::hudText,
+                HudPosition.of(6, 39), () -> cfg.spiritBearTimer));
+        hud.register(new HudWidget("orion-livid-invulnerable", "LividInvulnerable",
+                LividInvulnerableTimer::hudText,
+                HudPosition.of(6, 41), () -> cfg.lividInvulnerableTimer));
+        hud.register(new HudWidget("orion-freeze", "Freeze",
                 () -> {
                     long left = fireFreezeMs - System.currentTimeMillis();
                     if (left <= 0) return null;
-                    return "§b❄ " + String.format("%.1fs", left / 1000.0);
+                    return "§bFreeze " + String.format("%.1fs", left / 1000.0);
                 },
-                HudPosition.of(6, 40), cfg.fireFreezeTimer));
-        }
-        if (cfg.dungeonPotionsHud) {
-            hud.register(new HudWidget("orion-dpotions", "DungeonPotions",
+                HudPosition.of(6, 40), () -> cfg.fireFreezeTimer));
+        hud.register(new HudWidget("orion-dpotions", "DungeonPotions",
                 () -> {
                     if (!ConstellationClient.loc().inDungeons()) return null;
                     if (mc.player == null) return null;
                     var effects = mc.player.getActiveEffects();
                     if (effects.isEmpty()) return null;
-                    StringBuilder sb = new StringBuilder("§5⚗ ");
+                    StringBuilder sb = new StringBuilder("§5Potions ");
                     int shown = 0;
                     for (var e : effects) {
                         if (shown++ > 0) sb.append(" ");
@@ -279,96 +366,107 @@ public class OrionDungeons extends BaseConstellation {
                     }
                     return sb.toString();
                 },
-                HudPosition.of(6, 32), cfg.dungeonPotionsHud));
-        }
-        if (cfg.blessingDisplay) {
-            hud.register(new HudWidget("orion-blessings", "Blessings",
-                () -> ConstellationClient.loc().inDungeons() ? OrionBlessings.display() : null,
-                HudPosition.of(6, 46), cfg.blessingDisplay));
-        }
-        if (cfg.scoreHud) {
-            hud.register(new HudWidget("orion-score", "Score",
-                () -> !scoreReady() ? null
-                    : com.froggylord.constellation.data.DungeonScore.score() + " " + com.froggylord.constellation.data.DungeonScore.grade(),
-                HudPosition.of(6, 54), cfg.scoreHud));
-        }
-        if (cfg.secretsHud) {
-            hud.register(new HudWidget("orion-secrets", "Secrets",
+                HudPosition.of(6, 32), () -> cfg.dungeonPotionsHud));
+        hud.register(new HudWidget("orion-dungeon-breaker", "DungeonBreaker",
+                DungeonBreakerCharges::hudText,
+                HudPosition.of(6, 44), () -> cfg.dungeonBreakerDisplay));
+        hud.register(new HudWidget("orion-spring-boots", "SpringBoots",
+                SpringBootsHelper::hudText,
+                HudPosition.of(25, 46), () -> cfg.springBootsHelper && cfg.springBootsHud));
+        hud.register(new HudWidget("orion-queue-cooldown", "QueueCooldown",
+                DungeonQueueHelper::hudText,
+                HudPosition.of(25, 48), () -> cfg.dungeonQueueCooldown));
+        hud.register(new HudWidget("orion-route-recording", "RouteRecording",
+                Routes::recordingHudText,
+                HudPosition.of(25, 50), () -> cfg.routeRecordingHud));
+        hud.register(new HudWidget("orion-chest-profit", "ChestProfit",
+                ChestProfitCalc::hudText,
+                HudPosition.of(25, 52), () -> cfg.chestProfitCalc && cfg.chestProfitHud));
+        hud.register(new com.froggylord.constellation.hud.BlessingsHudWidget(
+                "orion-blessings", HudPosition.of(6, 46), () -> cfg.blessingDisplay));
+        // consolidated skyhanni-style score panel: live 0-300 score + grade and a compact
+        // breakdown (secrets %, crypts, deaths, room completion). replaces the old single line.
+        hud.register(new com.froggylord.constellation.hud.ScoreHudWidget(
+                "orion-score", HudPosition.of(6, 54), () -> cfg.scoreHud));
+        hud.register(new PuzzleHudWidget(
+            "orion-puzzles", HudPosition.of(6, 74), () -> cfg.puzzlesDisplay, () -> cfg.puzzlesCompact));
+        hud.register(new HudWidget("orion-secrets", "Secrets",
                 () -> !scoreReady() ? null : com.froggylord.constellation.data.DungeonScore.secretPercent() + "%",
-                HudPosition.of(6, 66), cfg.secretsHud));
-        }
-        if (cfg.m7DragonMarkers) {
-            hud.register(new HudWidget("orion-m7phase", "M7Phase",
+                HudPosition.of(6, 66), () -> cfg.secretsHud));
+        hud.register(new HudWidget("orion-secret-compass", "SecretCompass",
+                SecretCompassHelper::hudText,
+                HudPosition.of(25, 66), () -> cfg.secretCompassHelper && cfg.secretCompassHud));
+        hud.register(new HudWidget("orion-m7phase", "M7Phase",
                 () -> {
-                    String p = com.froggylord.constellation.data.DungeonScore.m7Phase();
-                    return p.isEmpty() ? null : "§5☠ " + p;
+                    String p = ConstellationClient.dungeon().bossPhase();
+                    return p.isEmpty() ? null : "§5" + p;
                 },
-                HudPosition.of(6, 42), cfg.m7DragonMarkers));
-        }
-        if (cfg.cryptsHud) {
-            hud.register(new HudWidget("orion-crypts", "Crypts",
+                HudPosition.of(6, 42), () -> cfg.m7DragonMarkers));
+        hud.register(new HudWidget("orion-m7-stack", "DragonStack",
+                M7Dragons::stackHudText,
+                HudPosition.of(6, 43), () -> cfg.m7DragonStackAimer && cfg.m7DragonStackHud));
+        hud.register(new HudWidget("orion-m7-hits", "DragonHits",
+                M7Dragons::hitHudText,
+                HudPosition.of(6, 44), () -> cfg.m7DragonHitCounter && cfg.m7DragonHitHud));
+        hud.register(new HudWidget("orion-m7-relic-timer", "Relics",
+                M7RelicTimer::hudText,
+                HudPosition.of(6, 44), () -> cfg.m7RelicTimer));
+        hud.register(new HudWidget("orion-crypts", "Crypts",
                 () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.crypts()),
-                HudPosition.of(6, 78), cfg.cryptsHud));
-        }
-        if (cfg.deathsHud) {
-            hud.register(new HudWidget("orion-deaths", "Deaths",
-                () -> !scoreReady() ? null : String.valueOf(com.froggylord.constellation.data.DungeonScore.deaths()),
-                HudPosition.of(6, 90), cfg.deathsHud));
-        }
-        if (cfg.timerHud) {
-            hud.register(new HudWidget("orion-timer", "Timer",
+                HudPosition.of(6, 78), () -> cfg.cryptsHud));
+        hud.register(new HudWidget("orion-deaths", "Deaths",
+                () -> !scoreReady() ? null : String.valueOf(ConstellationClient.dungeon().deaths()),
+                HudPosition.of(6, 90), () -> cfg.deathsHud));
+        hud.register(new HudWidget("orion-timer", "Timer",
                 () -> !scoreReady() ? null : formatTime(com.froggylord.constellation.data.DungeonScore.timeSeconds()),
-                HudPosition.of(6, 102), cfg.timerHud));
-        }
-        if (cfg.splitsHud) {
-            hud.register(new HudWidget("orion-splits", "Splits",
-                () -> {
-                    if (!scoreReady()) return null;
-                    var ds = com.froggylord.constellation.data.DungeonScore.class;
-                    long blood = com.froggylord.constellation.data.DungeonScore.bloodSplitMs();
-                    long boss = com.froggylord.constellation.data.DungeonScore.bossSplitMs();
-                    if (blood == 0 && boss == 0) return null;
-                    StringBuilder sb = new StringBuilder("§7Splits");
-                    if (blood > 0) sb.append(" §cBlood ").append(formatTimeMs(blood));
-                    if (boss > 0) sb.append(sb.length() > 0 ? " §7|" : "").append(" §4Boss ").append(formatTimeMs(boss));
-                    return sb.toString();
-                },
-                HudPosition.of(6, 114), cfg.splitsHud));
-        }
-        if (cfg.roomNameHud) {
-            hud.register(new HudWidget("orion-room", "Room",
+                HudPosition.of(25, 54), () -> cfg.timerHud));
+        hud.register(new HudWidget("orion-boss-ticks", "BossTicks",
+                BossTickTimers::hudText,
+                HudPosition.of(25, 62), () -> cfg.timerHud));
+        hud.register(new HudWidget("orion-milestone", "Milestone",
+                DungeonMilestone::hudText,
+                HudPosition.of(25, 70), () -> cfg.milestoneHud));
+        hud.register(new HudWidget("orion-terminal-display", "Terminals",
+                TerminalBreakdown::hudText,
+                HudPosition.of(6, 60), () -> cfg.terminalDisplay));
+        hud.register(new HudWidget("orion-leap-counter", "Leaps",
+            LeapCounter::hudText, HudPosition.of(6, 64), () -> cfg.leapCounter));
+        hud.register(new HudWidget("orion-terracotta", "Terracotta",
+            TerracottaTimer::hudText, HudPosition.of(6, 68), () -> cfg.terracottaTimer && cfg.terracottaPhaseHud));
+        // themed run panel: deaths + blood/boss/clear splits with per-floor PB comparison
+        hud.register(new com.froggylord.constellation.hud.SplitsHudWidget(
+                "orion-splits", HudPosition.of(25, 78), () -> cfg.splitsHud));
+        hud.register(new HudWidget("orion-room", "Room",
                 () -> {
                     if (!inDungeon()) return null;
-                    return RoomMatch.currentRoom().isEmpty() ? "-" : RoomMatch.currentRoom();
+                    return ConstellationClient.dungeon().currentRoom().isEmpty() ? "-" : ConstellationClient.dungeon().currentRoom();
                 },
-                HudPosition.of(6, 114), cfg.roomNameHud));
-        }
-        if (cfg.mimicIndicator) {
-            hud.register(new HudWidget("orion-mimic", "Mimic",
+                HudPosition.of(25, 86), () -> cfg.roomNameHud));
+        hud.register(new HudWidget("orion-mimic", "Mimic",
                 () -> {
                     if (!scoreReady() || !com.froggylord.constellation.data.DungeonScore.isMimicFloor()) return null;
                     return com.froggylord.constellation.data.DungeonScore.mimicKilled() ? "§adead" : "§calive";
                 },
-                HudPosition.of(6, 126), cfg.mimicIndicator));
-            hud.register(new HudWidget("orion-doors", "Doors",
+                HudPosition.of(45, 54), () -> cfg.mimicIndicator));
+        hud.register(new HudWidget("orion-doors", "Doors",
                 () -> scoreReady() ? "§5Doors " + doorsOpened : null,
-                HudPosition.of(6, 138), cfg.mimicIndicator));
-        }
-        if (cfg.perRoomCount) {
-            hud.register(new HudWidget("orion-roomsecrets", "Room",
+                HudPosition.of(45, 62), () -> cfg.mimicIndicator));
+        hud.register(new HudWidget("orion-roomsecrets", "Secrets",
                 () -> {
-                    if (!inDungeon() || SecretWaypoints.totalCount() == 0) return null;
+                    if (!inDungeon() || !RoomMatch.isMatched()) return null;
                     return SecretWaypoints.collectedCount() + "/" + SecretWaypoints.totalCount();
                 },
-                HudPosition.of(6, 138), cfg.perRoomCount));
-        }
-        if (cfg.abilityTracker) {
-            hud.register(new HudWidget("orion-defensive", "Defensive",
+                HudPosition.of(45, 70), () -> cfg.perRoomCount));
+        hud.register(new HudWidget("orion-blood", "Blood",
+                () -> inDungeon() ? BloodTimer.hudText() : null,
+                HudPosition.of(45, 78), () -> cfg.bloodTimer));
+        hud.register(new HudWidget("orion-defensive", "Defensive",
                 () -> inDungeon() ? com.froggylord.constellation.data.DefensiveTracker.hudLine() : null,
-                HudPosition.of(6, 150), cfg.abilityTracker));
-        }
-        if (cfg.dungeonCopilot) {
-            hud.register(new HudWidget("orion-copilot", "Copilot",
+                HudPosition.of(45, 86), () -> cfg.abilityTracker));
+        hud.register(new HudWidget("orion-spiritmask", "Spirit Mask",
+                SpiritMaskState::hudText,
+                HudPosition.of(45, 94), () -> cfg.spiritMaskTracker && cfg.spiritMaskHud));
+        hud.register(new HudWidget("orion-copilot", "Copilot",
                 () -> {
                     if (!scoreReady()) return null;
                     int c = com.froggylord.constellation.data.DungeonScore.crypts();
@@ -383,19 +481,108 @@ public class OrionDungeons extends BaseConstellation {
                     if (c < 4) return "§e" + (5 - c) + " crypts missing";
                     return "§aOn track for S+";
                 },
-                HudPosition.of(6, 162), cfg.dungeonCopilot));
-        }
+                HudPosition.of(65, 54), () -> cfg.dungeonCopilot));
         
         hud.register(new com.froggylord.constellation.hud.MapHudElement());
     }
 
     @Override
     public void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        ArchitectNotifier.registerCommands(dispatcher);
+        DungeonQueueHelper.registerCommands(dispatcher);
+        SecretCompassHelper.registerCommands(dispatcher);
+        DungeonLootHelper.registerCommands(dispatcher);
+        MageBeamHelper.registerCommands(dispatcher);
+        OrionSpiritLeap.registerCommands(dispatcher);
+        TerracottaTimer.registerCommands(dispatcher);
+        GoldorWaypoints.registerCommands(dispatcher);
+        WitherHighlight.registerCommands(dispatcher);
+        WatcherBossBar.registerCommands(dispatcher);
+        SpiritMaskState.registerCommands(dispatcher);
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dwaypoint")
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("add")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "name", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                    .executes(ctx -> CustomDungeonWaypoints.add(
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "name")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("remove")
+                .executes(ctx -> CustomDungeonWaypoints.removeNearest()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("list")
+                .executes(ctx -> CustomDungeonWaypoints.list()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("export")
+                .executes(ctx -> CustomDungeonWaypoints.exportRoom()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("import")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "json", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                    .executes(ctx -> CustomDungeonWaypoints.importRoom(
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "json"))))));
+
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("termsim")
+            .executes(ctx -> {
+                Minecraft.getInstance().execute(TerminalSimulatorScreen::openMenu);
+                return 1;
+            }));
+
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("requeue")
+            .executes(ctx -> AutoRequeue.status())
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("now")
+                .executes(ctx -> AutoRequeue.schedule(true)))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("cancel")
+                .executes(ctx -> AutoRequeue.cancel()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("status")
+                .executes(ctx -> AutoRequeue.status()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("delay")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument(
+                        "seconds", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 30))
+                    .executes(ctx -> AutoRequeue.delay(
+                        com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "seconds"))))));
+
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("partyguard")
+            .executes(ctx -> PartyGuard.open())
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("config").executes(ctx -> PartyGuard.open()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("list").executes(ctx -> PartyGuard.list()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("check")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> PartyGuard.check(com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("whitelist")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> PartyGuard.addList(true, com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("blacklist")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> PartyGuard.addList(false, com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("remove")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                        "player", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> PartyGuard.removeList(com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "player"))))));
+
+        SmartRefill.registerCommands(dispatcher);
+
+        dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("dungeonstats")
+            .executes(ctx -> com.froggylord.constellation.data.RunStats.open())
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("export").executes(ctx -> com.froggylord.constellation.data.RunStats.export()))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("limit")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, Integer>argument(
+                    "runs", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, 10000))
+                    .executes(ctx -> com.froggylord.constellation.data.RunStats.limit(
+                        com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "runs")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("folder")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                    "path", com.mojang.brigadier.arguments.StringArgumentType.greedyString())
+                    .executes(ctx -> com.froggylord.constellation.data.RunStats.folder(
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "path")))))
+            .then(LiteralArgumentBuilder.<FabricClientCommandSource>literal("clear")
+                .then(com.mojang.brigadier.builder.RequiredArgumentBuilder.<FabricClientCommandSource, String>argument(
+                    "floor", com.mojang.brigadier.arguments.StringArgumentType.word())
+                    .executes(ctx -> com.froggylord.constellation.data.RunStats.clear(
+                        com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "floor"))))));
         
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("roomdebug")
             .executes(ctx -> {
                 var loc = ConstellationClient.loc();
-                int roomCount = DungeonData.ROOMS.values().stream().mapToInt(java.util.Map::size).sum();
+                int roomCount = com.froggylord.constellation.data.DungeonRoomData.roomCount();
                 String msg = "§e[Orion debug]§r\n"
                     + "§7data loaded:§r " + DungeonData.isLoaded() + " (" + roomCount + " rooms)\n"
                     + "§7onHypixel:§r " + loc.onHypixel() + "\n"
@@ -495,6 +682,19 @@ public class OrionDungeons extends BaseConstellation {
         return ConstellationClient.loc().inDungeons();
     }
 
+    /**
+     * true if a chat line is our own party-chat echo — a "Party >" line, or one that contains the
+     * local player's name. guards the mimic/prince pings against re-matching the very message we
+     * just sent ("Party > IGN: Mimic dead!" ends with "Mimic dead!"), which would loop forever.
+     */
+    private static boolean isPartyEcho(String s) {
+        if (s.contains("Party >")) return true;
+        var mc = Minecraft.getInstance();
+        if (mc.player == null) return false;
+        String own = mc.player.getGameProfile().name();
+        return own != null && !own.isEmpty() && s.contains(own);
+    }
+
     
     private static boolean scoreReady() {
         return inDungeon() && com.froggylord.constellation.data.DungeonScore.isActive();
@@ -502,10 +702,5 @@ public class OrionDungeons extends BaseConstellation {
 
     private static String formatTime(int secs) {
         return secs / 60 + ":" + String.format("%02d", secs % 60);
-    }
-
-    private static String formatTimeMs(long ms) {
-        int s = (int) (ms / 1000);
-        return s / 60 + ":" + String.format("%02d", s % 60);
     }
 }
