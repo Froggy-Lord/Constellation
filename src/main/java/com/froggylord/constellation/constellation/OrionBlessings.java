@@ -22,6 +22,9 @@ public final class OrionBlessings {
 
     public static void reset() { levels.clear(); }
 
+    /** Ordered blessing name -> level map for the themed HUD. Empty until blessings are seen. */
+    public static Map<String, Integer> levels() { return levels; }
+
     public static String display() {
         if (levels.isEmpty()) return null;
         StringBuilder sb = new StringBuilder("§5✦ ");
