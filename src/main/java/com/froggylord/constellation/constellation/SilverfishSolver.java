@@ -2,6 +2,8 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.OrionConfig;
+import com.froggylord.constellation.data.RoomMatch;
+import com.froggylord.constellation.data.RoomTransform;
 import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -11,79 +13,106 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
-// silverfish maze. the fish runs to a button — trace the actual corridor path with bfs
-// through walkable blocks (not a straight line through walls). my own pathfind.
+// ported from Skyblocker (LGPL-3.0-or-later):
+// src/main/java/de/hysky/skyblocker/skyblock/dungeon/puzzle/IcePath.java
 public final class SilverfishSolver {
+
+    private static final boolean[][] board = new boolean[17][17];
+    private static final List<int[]> path = new ArrayList<>();
 
     private SilverfishSolver() {}
 
     public static void draw(WorldRenderer.Ctx ctx) {
+        if (!RoomMatch.isMatched() || !RoomMatch.currentRoom().contains("ice-silverfish-room")) return;
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.silverfishSolver) return;
         if (!ConstellationClient.loc().inDungeons()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        Silverfish fish = null;
-        double best = 900;
-        for (var e : mc.level.entitiesForRendering()) {
-            if (e instanceof Silverfish sf) {
-                double d = e.distanceToSqr(mc.player.position());
-                if (d < best) { best = d; fish = sf; }
-            }
-        }
+        scanBoard(mc);
+        Silverfish fish = findFish(mc);
         if (fish == null) return;
+
+        long[] relative = RoomTransform.actualToRelative(RoomMatch.currentDir(), RoomMatch.anchorX(), RoomMatch.anchorZ(),
+            fish.blockPosition().getX(), fish.blockPosition().getY(), fish.blockPosition().getZ());
+        int row = 24 - (int) relative[2];
+        int col = 23 - (int) relative[0];
+        if (row < 0 || row >= 17 || col < 0 || col >= 17) return;
+
+        solve(row, col);
         ctx.outline(fish.getBoundingBox().inflate(0.1), 0xFFAAAAFF, false);
-
-        // target = the button/lever in range
-        BlockPos goal = null;
-        var pp = fish.blockPosition();
-        for (int dx = -14; dx <= 14 && goal == null; dx++)
-            for (int dz = -14; dz <= 14 && goal == null; dz++)
-                for (int dy = -3; dy <= 3; dy++) {
-                    var bp = pp.offset(dx, dy, dz);
-                    String id = mc.level.getBlockState(bp).getBlock().getDescriptionId();
-                    if (id.contains("button") || id.contains("lever")) { goal = bp.immutable(); break; }
-                }
-        if (goal == null) return;
-
-        List<BlockPos> route = bfs(mc.level, pp, goal);
-        if (route == null) { ctx.line(fish.position(), Vec3.atCenterOf(goal), 0x60AAAAFF, false); return; }
-        for (int i = 0; i < route.size() - 1; i++)
-            ctx.line(Vec3.atCenterOf(route.get(i)), Vec3.atCenterOf(route.get(i+1)), 0xFFAAAAFF, false);
-        ctx.outline(new AABB(goal), 0xFF55FF55, false);
+        for (int i = 0; i < path.size() - 1; i++) {
+            Vec3 from = worldCenter(path.get(i));
+            Vec3 to = worldCenter(path.get(i + 1));
+            ctx.line(from, to, 0xFFAAAAFF, false);
+        }
     }
 
-    // bfs over walkable cells (block passable + headroom). 6-dir so it can step up/down a level.
-    private static List<BlockPos> bfs(net.minecraft.world.level.Level lvl, BlockPos start, BlockPos goal) {
-        Deque<BlockPos> q = new ArrayDeque<>();
-        Map<BlockPos, BlockPos> prev = new HashMap<>();
-        q.add(start); prev.put(start, null);
-        int[][] dirs = {{1,0,0},{-1,0,0},{0,0,1},{0,0,-1},{0,1,0},{0,-1,0}};
-        int budget = 4000;
-        while (!q.isEmpty() && budget-- > 0) {
-            BlockPos c = q.poll();
-            if (c.closerThan(goal, 1.8)) return rebuild(prev, c);
-            for (int[] d : dirs) {
-                BlockPos n = c.offset(d[0], d[1], d[2]);
-                if (prev.containsKey(n) || !c.closerThan(n, 1.5)) continue;
-                if (n.distSqr(start) > 400) continue;
-                if (!passable(lvl, n)) continue;
-                prev.put(n, c);
-                q.add(n);
+    private static void scanBoard(Minecraft mc) {
+        for (int row = 0; row < 17; row++) {
+            for (int col = 0; col < 17; col++) {
+                BlockPos pos = worldPos(23 - col, 67, 24 - row);
+                board[row][col] = !mc.level.getBlockState(pos).isAir();
             }
         }
-        return null;
     }
 
-    private static boolean passable(net.minecraft.world.level.Level lvl, BlockPos p) {
-        return lvl.getBlockState(p).getCollisionShape(lvl, p).isEmpty()
-            && lvl.getBlockState(p.above()).getCollisionShape(lvl, p.above()).isEmpty();
+    private static Silverfish findFish(Minecraft mc) {
+        BlockPos center = worldPos(15, 66, 16);
+        List<Silverfish> fish = mc.level.getEntitiesOfClass(Silverfish.class,
+            AABB.ofSize(Vec3.atCenterOf(center), 16, 16, 16), ignored -> true);
+        return fish.isEmpty() ? null : fish.getFirst();
     }
 
-    private static List<BlockPos> rebuild(Map<BlockPos, BlockPos> prev, BlockPos end) {
-        LinkedList<BlockPos> out = new LinkedList<>();
-        for (BlockPos c = end; c != null; c = prev.get(c)) out.addFirst(c);
-        return out;
+    private static void solve(int startRow, int startCol) {
+        path.clear();
+        Set<Long> visited = new HashSet<>();
+        Deque<List<int[]>> queue = new ArrayDeque<>();
+        queue.add(List.of(new int[]{startRow, startCol}));
+        visited.add(key(startRow, startCol));
+
+        while (!queue.isEmpty()) {
+            List<int[]> current = queue.poll();
+            int[] pos = current.getLast();
+            if (pos[0] == 0 && pos[1] >= 7 && pos[1] <= 9) {
+                path.addAll(current);
+                return;
+            }
+
+            int row = pos[0];
+            while (row < 17 && !board[row][pos[1]]) row++;
+            add(queue, visited, current, row - 1, pos[1]);
+            row = pos[0];
+            while (row >= 0 && !board[row][pos[1]]) row--;
+            add(queue, visited, current, row + 1, pos[1]);
+
+            int col = pos[1];
+            while (col < 17 && !board[pos[0]][col]) col++;
+            add(queue, visited, current, pos[0], col - 1);
+            col = pos[1];
+            while (col >= 0 && !board[pos[0]][col]) col--;
+            add(queue, visited, current, pos[0], col + 1);
+        }
+    }
+
+    private static void add(Deque<List<int[]>> queue, Set<Long> visited, List<int[]> current, int row, int col) {
+        if (row < 0 || row >= 17 || col < 0 || col >= 17 || !visited.add(key(row, col))) return;
+        List<int[]> next = new ArrayList<>(current);
+        next.add(new int[]{row, col});
+        queue.add(next);
+    }
+
+    private static Vec3 worldCenter(int[] point) {
+        return Vec3.atCenterOf(worldPos(23 - point[1], 67, 24 - point[0]));
+    }
+
+    private static BlockPos worldPos(int x, int y, int z) {
+        long[] world = RoomTransform.relativeToActual(RoomMatch.currentDir(), RoomMatch.anchorX(), RoomMatch.anchorZ(), x, y, z);
+        return new BlockPos((int) world[0], (int) world[1], (int) world[2]);
+    }
+
+    private static long key(int row, int col) {
+        return ((long) row << 32) ^ (col & 0xffffffffL);
     }
 }
