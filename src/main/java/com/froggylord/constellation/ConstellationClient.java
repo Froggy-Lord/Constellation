@@ -2,19 +2,15 @@ package com.froggylord.constellation;
 
 import com.froggylord.constellation.config.ConfigManager;
 import com.froggylord.constellation.config.ConstellationConfig;
+import com.froggylord.constellation.command.CommandRegistry;
 import com.froggylord.constellation.core.*;
 import com.froggylord.constellation.hud.HudManager;
+import com.froggylord.constellation.data.DungeonState;
 import com.froggylord.constellation.keybind.KeybindRegistry;
 import com.froggylord.constellation.network.PacketBus;
-import com.froggylord.constellation.render.BatchRenderer;
 import com.froggylord.constellation.render.HudRenderer;
-import com.froggylord.constellation.render.NebulaTheme;
 import com.froggylord.constellation.render.WorldRenderer;
-import com.froggylord.constellation.ui.ConfigScreen;
-import com.froggylord.constellation.ui.HubScreen;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.Minecraft;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +30,9 @@ public class ConstellationClient implements ClientModInitializer {
     private ConfigManager configManager;
     private HudManager hudManager;
     private WorldRenderer worldRenderer;
-    private BatchRenderer batchRenderer;
     private KeybindRegistry keybindRegistry;
     private PacketBus packetBus;
+    private DungeonState dungeonState;
 
     @Override
     public void onInitializeClient() {
@@ -45,23 +41,26 @@ public class ConstellationClient implements ClientModInitializer {
 
         configManager = new ConfigManager();
         configManager.load();
-        NebulaTheme.init();
+        verifyMode = configManager.get().verifyMode;
 
         eventBus = new EventBus();
         tickManager = new TickManager();
         locationManager = new LocationManager();
         packetBus = new PacketBus();
         keybindRegistry = new KeybindRegistry();
+        com.froggylord.constellation.constellation.ItemProtection.init();
 
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(tickManager::onEndTick);
         locationManager.init();
+        dungeonState = new DungeonState();
+        dungeonState.init();
+        com.froggylord.constellation.data.RoomMatch.init();
         com.froggylord.constellation.core.ActionBar.init();
         com.froggylord.constellation.core.StatStore.init();
         com.froggylord.constellation.core.Scraper.init();
 
         
         worldRenderer = new WorldRenderer();
-        batchRenderer = new BatchRenderer();
         worldRenderer.init();
 
         featureManager = new FeatureManager();
@@ -73,64 +72,7 @@ public class ConstellationClient implements ClientModInitializer {
 
         
         
-        net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            var mc = Minecraft.getInstance();
-
-            
-            dispatcher.register(
-                com.mojang.brigadier.builder.LiteralArgumentBuilder
-                    .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("constellation")
-                    .executes(ctx -> { mc.execute(() -> mc.setScreenAndShow(new HubScreen(null))); return 1; })
-            );
-            
-            dispatcher.register(
-                com.mojang.brigadier.builder.LiteralArgumentBuilder
-                    .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("cn")
-                    .executes(ctx -> { mc.execute(() -> mc.setScreenAndShow(new HubScreen(null))); return 1; })
-                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
-                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("hud")
-                        .executes(ctx -> {
-                            mc.execute(() -> mc.setScreenAndShow(new com.froggylord.constellation.hud.HudEditScreen(null)));
-                            return 1;
-                        }))
-                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
-                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("config")
-                        .executes(ctx -> {
-                            var ids = ConstellationClient.featureManager().getLoadedIds();
-                            String first = ids.isEmpty() ? "apollo" : ids.iterator().next();
-                            mc.execute(() -> mc.setScreenAndShow(new ConfigScreen(first, null)));
-                            return 1;
-                        }))
-                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
-                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("scrape")
-                        .then(com.mojang.brigadier.builder.RequiredArgumentBuilder
-                            .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource, String>argument("mode", com.mojang.brigadier.arguments.StringArgumentType.word())
-                            .executes(ctx -> {
-                                String mode = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "mode");
-                                com.froggylord.constellation.core.Scraper.scrape(mode);
-                                return 1;
-                            })))
-                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
-                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("autoscrape")
-                        .then(com.mojang.brigadier.builder.RequiredArgumentBuilder
-                            .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource, String>argument("onoff", com.mojang.brigadier.arguments.StringArgumentType.word())
-                            .executes(ctx -> {
-                                String val = com.mojang.brigadier.arguments.StringArgumentType.getString(ctx, "onoff");
-                                com.froggylord.constellation.core.Scraper.setAutoScrape(val.equalsIgnoreCase("on"));
-                                return 1;
-                            })))
-                    .then(com.mojang.brigadier.builder.LiteralArgumentBuilder
-                        .<net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource>literal("verify")
-                        .executes(ctx -> {
-                            verifyMode = !verifyMode;
-                            if (mc.player != null)
-                                mc.player.sendSystemMessage(net.minecraft.network.chat.Component.literal(
-                                    verifyMode ? "§a/cn verify ON — logging match/no-match per feature" : "§7/cn verify OFF"));
-                            return 1;
-                        }))
-            );
-            featureManager.registerCommands(dispatcher);
-        });
+        CommandRegistry.register(featureManager);
 
         keybindRegistry.registerHubKey();
 
@@ -146,9 +88,9 @@ public class ConstellationClient implements ClientModInitializer {
     public ConfigManager configManager() { return configManager; }
     public HudManager hud() { return hudManager; }
     public WorldRenderer worldRender() { return worldRenderer; }
-    public BatchRenderer batchRender() { return batchRenderer; }
     public KeybindRegistry keys() { return keybindRegistry; }
     public PacketBus packets() { return packetBus; }
+    public DungeonState dungeonState() { return dungeonState; }
 
     
     public static ConstellationConfig cfg() { return instance.configManager.get(); }
@@ -158,7 +100,18 @@ public class ConstellationClient implements ClientModInitializer {
     public static HudManager hudManager() { return instance.hudManager; }
     public static FeatureManager featureManager() { return instance.featureManager; }
     public static WorldRenderer world() { return instance.worldRenderer; }
+    public static DungeonState dungeon() { return instance.dungeonState; }
     public static void saveConfig() { instance.configManager.save(); }
+
+    public static void setVerify(boolean enabled) {
+        verifyMode = enabled;
+        cfg().verifyMode = enabled;
+        saveConfig();
+    }
+
+    public static void verifyNoMatch(String context) {
+        if (verifyMode) LOGGER.info("[verify] NO-MATCH: {}", context);
+    }
 
     /** log whether a feature matched its data source. call from sidebar/GUI-reading widgets when verify mode is on */
     public static void verifyLog(String feature, boolean matched, String source) {
