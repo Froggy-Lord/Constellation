@@ -2,87 +2,161 @@ package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
 import com.froggylord.constellation.config.OrionConfig;
+import com.froggylord.constellation.data.RoomMatch;
+import com.froggylord.constellation.data.RoomTransform;
 import com.froggylord.constellation.render.WorldRenderer;
+import com.google.gson.*;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-// waterboard. the lever->gate wiring isnt in the block geometry so i cant auto-solve it
-// blind — but the live water IS in the world, so trace it: flood the actual water blocks
-// from the source and show which coloured goal it currently reaches. plus label the goals.
+// ported from Odin (BSD-3-Clause):
+// src/main/kotlin/com/odtheking/odin/features/impl/dungeon/puzzlesolvers/WaterSolver.kt
+// src/main/resources/assets/odin/puzzles/waterSolutions.json
 public final class WaterPuzzleHelper {
+
+    private record Step(Lever lever, double seconds) {}
+
+    private enum Lever {
+        COAL("coal_block", new BlockPos(20, 61, 10)),
+        GOLD("gold_block", new BlockPos(20, 61, 15)),
+        QUARTZ("quartz_block", new BlockPos(20, 61, 20)),
+        DIAMOND("diamond_block", new BlockPos(10, 61, 20)),
+        EMERALD("emerald_block", new BlockPos(10, 61, 15)),
+        CLAY("hardened_clay", new BlockPos(10, 61, 10)),
+        WATER("water", new BlockPos(15, 60, 5));
+
+        final String jsonName;
+        final BlockPos relativePos;
+        int used;
+
+        Lever(String jsonName, BlockPos relativePos) {
+            this.jsonName = jsonName;
+            this.relativePos = relativePos;
+        }
+    }
+
+    private static final BlockPos[] WOOL = {
+        new BlockPos(15, 56, 19), new BlockPos(15, 56, 18), new BlockPos(15, 56, 17),
+        new BlockPos(15, 56, 16), new BlockPos(15, 56, 15)
+    };
+    private static final Map<Lever, List<Double>> solution = new EnumMap<>(Lever.class);
+    private static JsonObject solutionData;
+    private static String roomKey = "";
+    private static int pattern = -1;
+    private static long openedWaterTick = -1;
+    private static boolean initialized;
 
     private WaterPuzzleHelper() {}
 
     public static void draw(WorldRenderer.Ctx ctx) {
+        if (!RoomMatch.isMatched() || !RoomMatch.currentRoom().contains("water-puzzle")) return;
         OrionConfig cfg = ConstellationClient.cfg().orion;
         if (cfg == null || !cfg.waterboardSolver) return;
         if (!ConstellationClient.loc().inDungeons()) return;
         Minecraft mc = Minecraft.getInstance();
         if (mc.level == null || mc.player == null) return;
 
-        var pp = mc.player.blockPosition();
+        init();
+        syncRoom();
+        if (pattern == -1) scan(mc);
+        Step next = nextStep();
+        if (next == null) return;
 
-        // label every coloured goal so you know which lever you're aiming for
-        Map<Long, Integer> goals = new HashMap<>();
-        for (int dx = -20; dx <= 20; dx++)
-            for (int dz = -20; dz <= 20; dz++)
-                for (int dy = -6; dy <= 6; dy++) {
-                    var bp = pp.offset(dx, dy, dz);
-                    String id = mc.level.getBlockState(bp).getBlock().getDescriptionId();
-                    int col = goalColour(id);
-                    if (col != 0) {
-                        goals.put(k(bp), col);
-                        ctx.highlight(new AABB(bp), (col & 0xFFFFFF) | 0x50000000, true);
-                    }
-                }
+        BlockPos pos = worldPos(next.lever.relativePos);
+        long remainingTicks = openedWaterTick < 0 ? 0 : openedWaterTick + Math.round(next.seconds * 20) - mc.level.getGameTime();
+        boolean ready = next.seconds == 0 || openedWaterTick >= 0 && remainingTicks <= 0;
+        int colour = ready ? 0xFF55FF55 : 0xFFFFAA00;
+        String label = ready ? "PULL NEXT" : String.format(Locale.ROOT, "PULL IN %.1fs", remainingTicks / 20.0);
+        ctx.highlight(new AABB(pos), ready ? 0x8055FF55 : 0x80FFAA00, true);
+        ctx.label(Vec3.atCenterOf(pos).add(0, .9, 0), label, colour, true);
+        ctx.line(mc.player.getEyePosition(), Vec3.atCenterOf(pos), colour, true);
+    }
 
-        // trace the live water — flood from any water block near the top, mark where it lands
-        BlockPos src = null;
-        for (int dx = -20; dx <= 20 && src == null; dx++)
-            for (int dz = -20; dz <= 20 && src == null; dz++)
-                for (int dy = 6; dy >= 0; dy--) {
-                    var bp = pp.offset(dx, dy, dz);
-                    if (!mc.level.getFluidState(bp).getType().isSame(Fluids.EMPTY) && mc.level.getFluidState(bp).getType().isSame(Fluids.WATER)) { src = bp.immutable(); break; }
-                }
-        if (src == null) return;
-
-        Set<Long> water = new HashSet<>();
-        Deque<BlockPos> q = new ArrayDeque<>();
-        q.add(src); water.add(k(src));
-        int budget = 3000;
-        int[][] flow = {{1,0,0},{-1,0,0},{0,0,1},{0,0,-1},{0,-1,0}}; // water spreads sideways + down
-        while (!q.isEmpty() && budget-- > 0) {
-            BlockPos c = q.poll();
-            // did the stream hit a goal? light it bright
-            for (int[] d : new int[][]{{0,-1,0},{1,0,0},{-1,0,0},{0,0,1},{0,0,-1}}) {
-                Long gk = k(c.offset(d[0], d[1], d[2]));
-                if (goals.containsKey(gk)) {
-                    ctx.beam(c.getX()+0.5, c.getY()+2, c.getZ()+0.5, goals.get(gk) | 0xFF000000, 12, true);
-                }
+    private static void init() {
+        if (initialized) return;
+        initialized = true;
+        loadSolutions();
+        UseBlockCallback.EVENT.register((player, level, hand, hit) -> {
+            if (!RoomMatch.isMatched() || !RoomMatch.currentRoom().contains("water-puzzle") || solution.isEmpty())
+                return InteractionResult.PASS;
+            for (Lever lever : Lever.values()) {
+                if (!worldPos(lever.relativePos).equals(hit.getBlockPos())) continue;
+                List<Double> times = solution.get(lever);
+                if (times != null && lever.used < times.size()) lever.used++;
+                if (lever == Lever.WATER && openedWaterTick < 0) openedWaterTick = level.getGameTime();
+                break;
             }
-            for (int[] d : flow) {
-                BlockPos n = c.offset(d[0], d[1], d[2]);
-                if (water.contains(k(n)) || n.distSqr(src) > 600) continue;
-                if (mc.level.getFluidState(n).getType().isSame(Fluids.WATER)) { water.add(k(n)); q.add(n); }
-            }
+            return InteractionResult.PASS;
+        });
+    }
+
+    private static void syncRoom() {
+        String key = RoomMatch.currentRoom() + ':' + RoomMatch.anchorX() + ':' + RoomMatch.anchorZ() + ':' + RoomMatch.currentDir();
+        if (key.equals(roomKey)) return;
+        roomKey = key;
+        pattern = -1;
+        openedWaterTick = -1;
+        solution.clear();
+        for (Lever lever : Lever.values()) lever.used = 0;
+    }
+
+    private static void scan(Minecraft mc) {
+        StringBuilder extended = new StringBuilder();
+        for (int i = 0; i < WOOL.length; i++)
+            if (!mc.level.getBlockState(worldPos(WOOL[i])).isAir()) extended.append(i);
+        if (extended.length() != 3) return;
+
+        if (mc.level.getBlockState(worldPos(new BlockPos(14, 77, 27))).is(Blocks.TERRACOTTA)) pattern = 0;
+        else if (mc.level.getBlockState(worldPos(new BlockPos(16, 78, 27))).is(Blocks.EMERALD_BLOCK)) pattern = 1;
+        else if (mc.level.getBlockState(worldPos(new BlockPos(14, 78, 27))).is(Blocks.DIAMOND_BLOCK)) pattern = 2;
+        else if (mc.level.getBlockState(worldPos(new BlockPos(14, 78, 27))).is(Blocks.QUARTZ_BLOCK)) pattern = 3;
+        else return;
+
+        if (solutionData == null) return;
+        JsonObject patterns = solutionData.getAsJsonObject("false");
+        JsonObject variants = patterns == null ? null : patterns.getAsJsonObject(Integer.toString(pattern));
+        JsonObject selected = variants == null ? null : variants.getAsJsonObject(extended.toString());
+        if (selected == null) return;
+        solution.clear();
+        for (Lever lever : Lever.values()) {
+            JsonArray times = selected.getAsJsonArray(lever.jsonName);
+            if (times == null) continue;
+            List<Double> values = new ArrayList<>();
+            for (JsonElement time : times) values.add(time.getAsDouble());
+            solution.put(lever, List.copyOf(values));
         }
-        // faint trace of where the water actually is right now
-        for (long wk : water) ctx.highlight(box(wk, src.getY()), 0x3055AAFF, true);
     }
 
-    private static int goalColour(String id) {
-        if (id.contains("red_terracotta") || id.contains("red_wool") || id.contains("red_concrete")) return 0xFF3333;
-        if (id.contains("orange") || id.contains("gold")) return 0xFFAA00;
-        if (id.contains("green") || id.contains("emerald")) return 0x55FF55;
-        if (id.contains("blue") || id.contains("diamond")) return 0x55FFFF;
-        if (id.contains("white") || id.contains("quartz")) return 0xFFFFFF;
-        return 0;
+    private static Step nextStep() {
+        return solution.entrySet().stream()
+            .flatMap(entry -> entry.getValue().subList(Math.min(entry.getKey().used, entry.getValue().size()), entry.getValue().size())
+                .stream().map(time -> new Step(entry.getKey(), time)))
+            .min(Comparator.comparing((Step step) -> step.seconds != 0)
+                .thenComparingInt(step -> step.seconds == 0 ? step.lever.ordinal() : Integer.MAX_VALUE)
+                .thenComparingDouble(Step::seconds))
+            .orElse(null);
     }
 
-    private static long k(BlockPos p) { return p.asLong(); }
-    private static AABB box(long packed, int approxY) { BlockPos p = BlockPos.of(packed); return new AABB(p); }
+    private static void loadSolutions() {
+        try (var in = WaterPuzzleHelper.class.getResourceAsStream("/assets/constellation/dungeons/waterSolutions.json")) {
+            if (in != null) solutionData = JsonParser.parseReader(new InputStreamReader(in, StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (Exception e) {
+            ConstellationClient.LOGGER.error("failed loading water puzzle solutions", e);
+        }
+    }
+
+    private static BlockPos worldPos(BlockPos relative) {
+        long[] world = RoomTransform.relativeToActual(RoomMatch.currentDir(), RoomMatch.anchorX(), RoomMatch.anchorZ(),
+            relative.getX(), relative.getY(), relative.getZ());
+        return new BlockPos((int) world[0], (int) world[1], (int) world[2]);
+    }
 }
