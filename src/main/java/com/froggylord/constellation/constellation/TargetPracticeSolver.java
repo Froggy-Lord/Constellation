@@ -1,36 +1,43 @@
 package com.froggylord.constellation.constellation;
 
 import com.froggylord.constellation.ConstellationClient;
-import com.froggylord.constellation.config.OrionConfig;
 import com.froggylord.constellation.render.WorldRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-// target practice puzzle — highlight the target block (emerald/quartz)
+// ported from NoFrills (GPL-3.0): features/dungeons/DeviceSolvers.java (Sharpshooter)
 public final class TargetPracticeSolver {
+    private static final AABB ACTIVE_AREA = new AABB(63.2, 127, 35.2, 63.8, 128, 35.8);
 
     private TargetPracticeSolver() {}
 
     public static void draw(WorldRenderer.Ctx ctx) {
-        OrionConfig cfg = ConstellationClient.cfg().orion;
+        var cfg = ConstellationClient.cfg().orion;
+        var dungeon = ConstellationClient.dungeon();
         if (cfg == null || !cfg.targetPracticeSolver) return;
-        if (!ConstellationClient.loc().inDungeons()) return;
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) return;
+        if (!ConstellationClient.loc().inDungeons() || !dungeon.inBoss() || !dungeon.floor().endsWith("7")) return;
 
-        var pp = mc.player.blockPosition();
-        for (int dx = -15; dx <= 15; dx++)
-            for (int dz = -15; dz <= 15; dz++)
-                for (int dy = -3; dy <= 5; dy++) {
-                    var bp = pp.offset(dx, dy, dz);
-                    var bs = mc.level.getBlockState(bp);
-                    String id = bs.getBlock().getDescriptionId();
-                    // target blocks are emerald, quartz, gold — anything shiny that stands out
-                    if (id.contains("emerald_block") || id.contains("quartz_block") || id.contains("gold_block")) {
-                        ctx.highlight(new AABB(bp), 0x60FF3333, true);
-                        ctx.beam(bp.getX()+0.5, bp.getY()+2, bp.getZ()+0.5, 0xFFFF3333, 6, true);
-                    }
-                }
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null || mc.level == null || !ACTIVE_AREA.intersects(mc.player.getBoundingBox())) return;
+
+        BlockPos target = findTarget(mc);
+        if (target == null) return;
+        AABB box = new AABB(target.getX(), target.getY(), target.getZ(),
+            target.getX() + 1, target.getY() + 1, target.getZ() + 1);
+        ctx.highlight(box, 0xFF55FF55, true);
+        ctx.label(Vec3.atCenterOf(target).add(0, .8, 0), "Target", 0xFF55FF55, true);
+    }
+
+    private static BlockPos findTarget(Minecraft mc) {
+        for (int x = 64; x <= 68; x++) {
+            for (int y = 126; y <= 130; y++) {
+                BlockPos pos = new BlockPos(x, y, 50);
+                if (mc.level.getBlockState(pos).is(Blocks.EMERALD_BLOCK)) return pos;
+            }
+        }
+        return null;
     }
 }
